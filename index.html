@@ -2094,34 +2094,43 @@
                     if (logoChanged) { sidebardaLogoyuGoster(); }
                     if (anyChanged) { yenileAktifSayfa(); fsShowStatus('OK ' + Object.keys(data).length + ' keys ' + new Date().toLocaleTimeString()); }
                     else { fsShowStatus('nochg ' + new Date().toLocaleTimeString()); }
-                    try { var _x = JSON.parse(localStorage.getItem('tm_musteriler_db')||'[]'); console.log('fsSyncDb', _x.length, 'cards, ids:', _x.map(function(c){return c.id;}).join(',')); } catch(e){}
                 }
             }
-            function fsStartListener() {
-                fsUnsubscribe = fdb.collection(FS_COLLECTION).doc(FS_DOC).onSnapshot(function(snap) {
-                    fsSnapshotHandler(snap);
-                }, function() {
-                    setTimeout(fsStartListener, 5000);
-                });
-            }
-            fsStartListener();
             if (!document.getElementById('fsDebug')) {
                 var d = document.createElement('div'); d.id = 'fsDebug'; d.style.cssText = 'position:fixed;bottom:0;right:0;background:#333;color:#0f0;font-size:11px;padding:2px 6px;z-index:9999;font-family:monospace;';
                 document.body.appendChild(d);
             }
             function fsShowStatus(txt) { var e = document.getElementById('fsDebug'); if(e) e.textContent = txt; }
-            function fsPoll() {
-                fdb.collection(FS_COLLECTION).doc(FS_DOC).get({ source: 'server' }).then(function(snap) {
-                    if (snap && snap.exists) fsSnapshotHandler(snap);
-                }).catch(function(e) { console.error('fsPoll error', e); });
+            function fsPollRest() {
+                var _url = "https://firestore.googleapis.com/v1/projects/" + firebaseConfig.projectId + "/databases/(default)/documents/" + FS_COLLECTION + "/" + FS_DOC + "?key=" + firebaseConfig.apiKey + "&_=" + Date.now();
+                fetch(_url, { cache: 'no-store' }).then(function(r) { if (!r.ok) throw new Error("HTTP "+r.status); return r.json(); }).then(function(d) {
+                    if (!d || !d.fields) return;
+                    function _cv(v) {
+                        if (v === null || v === undefined) return null;
+                        if (v.stringValue !== undefined) return v.stringValue;
+                        if (v.integerValue !== undefined) return Number(v.integerValue);
+                        if (v.doubleValue !== undefined) return Number(v.doubleValue);
+                        if (v.booleanValue !== undefined) return v.booleanValue;
+                        if (v.nullValue !== undefined) return null;
+                        if (v.arrayValue !== undefined) return (v.arrayValue.values || []).map(function(x) { return _cv(x); });
+                        if (v.mapValue !== undefined) { var o = {}; Object.keys(v.mapValue.fields || {}).forEach(function(k) { o[k] = _cv(v.mapValue.fields[k]); }); return o; }
+                        if (v.timestampValue !== undefined) return v.timestampValue;
+                        if (v.referenceValue !== undefined) return v.referenceValue;
+                        if (v.bytesValue !== undefined) return v.bytesValue;
+                        if (v.geoPointValue !== undefined) return { latitude: v.geoPointValue.latitude, longitude: v.geoPointValue.longitude };
+                        return v;
+                    }
+                    var obj = {}; Object.keys(d.fields).forEach(function(k) { obj[k] = _cv(d.fields[k]); });
+                    fsSnapshotHandler({ exists: true, data: function() { return obj; } });
+                }).catch(function(e) { console.warn('fsPollRest', e.message); });
             }
-            fsPoll();
-            setInterval(function() { fsPoll(); fsShowStatus('poll '+new Date().toLocaleTimeString()); }, 2000);
+            fsPollRest();
+            setInterval(function() { fsPollRest(); fsShowStatus('poll '+new Date().toLocaleTimeString()); }, 2000);
             document.addEventListener('visibilitychange', function() {
-                if (!document.hidden) fsPoll();
+                if (!document.hidden) fsPollRest();
             });
             window.addEventListener('focus', function() {
-                setTimeout(fsPoll, 100);
+                setTimeout(fsPollRest, 100);
             });
         }
         var fsDirtyKeys = {};
