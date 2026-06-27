@@ -2088,6 +2088,7 @@
                                 try { origSetItem(k, strVal); } catch(e) {}
                                 if (k === "tm_sirket_logo") { logoChanged = true; }
                                 anyChanged = true;
+                                console.log('fsChange', k, 'len', strVal.length, 'vs', (curVal||'').length, strVal.slice(0,80), '|', (curVal||'').slice(0,80));
                             }
                         }
                     });
