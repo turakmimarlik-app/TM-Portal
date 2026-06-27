@@ -2081,7 +2081,7 @@
                     var logoChanged = false;
                     var anyChanged = false;
                     Object.keys(data).forEach(function(k) {
-                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_admin_creds_final" && k !== "tm_active_page") {
+                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_admin_creds_final" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean") {
                             var strVal = JSON.stringify(data[k]);
                             var curVal = localStorage.getItem(k);
                             if (curVal !== strVal) {
@@ -2092,7 +2092,7 @@
                         }
                     });
                     if (logoChanged) { sidebardaLogoyuGoster(); }
-                    if (anyChanged) { yenileAktifSayfa(); } else if (Object.keys(data).length > 0) { yenileAktifSayfa(); }
+                    if (anyChanged) { yenileAktifSayfa(); }
                 }
             }
             function fsStartListener() {
@@ -2157,7 +2157,7 @@
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
             origSetItem(key, value);
-            if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page") {
+            if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean") {
                 fsDirtyKeys[key] = true;
                 if (fsReady) { fsSync(); }
             }
@@ -3971,7 +3971,7 @@
             const temizlenecekler = gorevler.filter(function(g) { return g.durum === "tamamlandi" && g.tamamlanmaTarihi && (simdi - g.tamamlanmaTarihi) > birGun; });
             if (temizlenecekler.length > 0) {
                 gorevler = gorevler.filter(function(g) { return !(g.durum === "tamamlandi" && g.tamamlanmaTarihi && (simdi - g.tamamlanmaTarihi) > birGun); });
-                localStorage.setItem("tm_gorevler", JSON.stringify(gorevler));
+                origSetItem("tm_gorevler", JSON.stringify(gorevler));
             }
             function tamamlanmaStr(ts) {
                 if (!ts) return "";
@@ -5626,7 +5626,7 @@
             if(!db || !db.aktifYil) {
                 db = { aktifYil: simdi, yillar: {}, tamamlananYillar: [] };
                 db.yillar[simdi] = { baslangicBakiye:0, gelirKategorileri:[...YB_GELIR_VARSAYILAN], giderKategorileri:[...YB_GIDER_VARSAYILAN], aylar:{} };
-                localStorage.setItem("tm_yillik_butce_db", JSON.stringify(db));
+                origSetItem("tm_yillik_butce_db", JSON.stringify(db));
             } else if(db.aktifYil !== simdi) {
                 const eskiYil = db.yillar[db.aktifYil];
                 if(eskiYil) {
@@ -5637,7 +5637,7 @@
                 db.aktifYil = simdi;
                 const kalan = eskiYil ? Math.max(0, (eskiYil.baslangicBakiye||0) + ybYilToplam(eskiYil,"gelir") - ybYilToplam(eskiYil,"gider")) : 0;
                 if(!db.yillar[simdi]) db.yillar[simdi] = { baslangicBakiye:kalan, gelirKategorileri:[...YB_GELIR_VARSAYILAN], giderKategorileri:[...YB_GIDER_VARSAYILAN], aylar:{} };
-                localStorage.setItem("tm_yillik_butce_db", JSON.stringify(db));
+                origSetItem("tm_yillik_butce_db", JSON.stringify(db));
             }
             return db;
         }
@@ -6175,12 +6175,12 @@
         function htVeriYukle() {
             if(localStorage.getItem("tm_ht_clean") !== "v1.20.0") {
                 localStorage.removeItem("tm_hesap_takip_db");
-                localStorage.setItem("tm_ht_clean", "v1.20.0");
+                origSetItem("tm_ht_clean", "v1.20.0");
             }
             var db = JSON.parse(localStorage.getItem("tm_hesap_takip_db"));
             if(db && db.hesaplar && db.islemler !== undefined) return db;
             db = { hesaplar:JSON.parse(JSON.stringify(HT_ORNEK_HESAPLAR)), nakit:0, islemler:JSON.parse(JSON.stringify(HT_ORNEK_ISLEMLER)) };
-            localStorage.setItem("tm_hesap_takip_db", JSON.stringify(db));
+            origSetItem("tm_hesap_takip_db", JSON.stringify(db));
             return db;
         }
 
@@ -6783,7 +6783,7 @@
             let db = JSON.parse(localStorage.getItem(TMF_DB_KEY));
             if (!db || !Array.isArray(db) || db.length === 0) {
                 db = TMF_DEFAULT_PAGES.map((n, i) => ({ id: i + 1, name: n }));
-                localStorage.setItem(TMF_DB_KEY, JSON.stringify(db));
+                origSetItem(TMF_DB_KEY, JSON.stringify(db));
                 TMF_DEFAULT_PAGES.forEach((n, i) => tmfVeriYukle(i + 1));
             }
             return db;
@@ -7050,7 +7050,7 @@
         function ftDbYukle() {
             if(localStorage.getItem("tm_ft_clean") !== "v1.0.0") {
                 localStorage.removeItem(FT_DB_KEY);
-                localStorage.setItem("tm_ft_clean", "v1.0.0");
+                origSetItem("tm_ft_clean", "v1.0.0");
             }
             var db = JSON.parse(localStorage.getItem(FT_DB_KEY));
             if (!db || !db.yillar) db = { aktifYil: new Date().getFullYear(), yillar: {} };
@@ -7096,7 +7096,7 @@
             yeni.push({ id: maxId, baslik: "Kurumlar Vergisi Beyannamesi", tur: "Kurumlar Vergisi", tarih: yil + "-04-30", aciklama: "Bir önceki yılın kurumlar vergisi beyannamesi verilecek", tamamlandi: false, otomatik: true });
             db.yillar[y].vergiEtkinlikleri = etkinlikler.concat(yeni);
             db.yillar[y]._otomatikEklendi = true;
-            ftDbKaydet(db);
+            origSetItem(FT_DB_KEY, JSON.stringify(db));
         }
 
         function faturaSayfayiYukle() {
