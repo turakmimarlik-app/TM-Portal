@@ -2084,7 +2084,7 @@
                         if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_admin_creds_final" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean") {
                             var strVal = JSON.stringify(data[k]);
                             var curVal = localStorage.getItem(k);
-                            if (curVal !== strVal) {
+                            if (curVal !== strVal && !fsDirtyKeys[k]) {
                                 try { origSetItem(k, strVal); } catch(e) {}
                                 if (k === "tm_sirket_logo") { logoChanged = true; }
                                 anyChanged = true;
@@ -2135,9 +2135,10 @@
                 var allData = {};
                 dirtyList.forEach(function(k) {
                     try { allData[k] = JSON.parse(localStorage.getItem(k)); } catch(e) { allData[k] = localStorage.getItem(k); }
-                    delete fsDirtyKeys[k];
                 });
-                fdb.collection(FS_COLLECTION).doc(FS_DOC).set(allData, { merge: true }).catch(function(e){ console.error('fsSync write error', e, JSON.stringify(allData).slice(0,200)); });
+                fdb.collection(FS_COLLECTION).doc(FS_DOC).set(allData, { merge: true }).then(function() {
+                    dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; });
+                }).catch(function(e){ console.error('fsSync write error', e); });
             }, 100);
         }
         var origSetItem = localStorage.setItem.bind(localStorage);
