@@ -2094,6 +2094,7 @@
                     if (logoChanged) { sidebardaLogoyuGoster(); }
                     if (anyChanged) { yenileAktifSayfa(); fsShowStatus('OK ' + Object.keys(data).length + ' keys ' + new Date().toLocaleTimeString()); }
                     else { fsShowStatus('nochg ' + new Date().toLocaleTimeString()); }
+                    try { var _x = JSON.parse(localStorage.getItem('tm_musteriler_db')||'[]'); console.log('fsSyncDb', _x.length, 'cards, ids:', _x.map(function(c){return c.id;}).join(',')); } catch(e){}
                 }
             }
             function fsStartListener() {
