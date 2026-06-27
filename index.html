@@ -2088,7 +2088,6 @@
                                 try { origSetItem(k, strVal); } catch(e) {}
                                 if (k === "tm_sirket_logo") { logoChanged = true; }
                                 anyChanged = true;
-                                console.log('fsChange', k, 'len', strVal.length, 'vs', (curVal||'').length, strVal.slice(0,80), '|', (curVal||'').slice(0,80));
                             }
                         }
                     });
@@ -2105,45 +2104,23 @@
                 });
             }
             fsStartListener();
-            function fsFetchFromServer() {
-                var url = "https://firestore.googleapis.com/v1/projects/" + firebaseConfig.projectId + "/databases/(default)/documents/" + FS_COLLECTION + "/" + FS_DOC + "?key=" + firebaseConfig.apiKey + "&_=" + Date.now();
-                console.log('fsFetch poll start');
-                fetch(url, { cache: 'no-store' }).then(function(r) {
-                    if (!r.ok) throw new Error("HTTP " + r.status);
-                    return r.json();
-                }).then(function(d) {
-                    if (d && d.fields) {
-                        function fsConvertVal(v) {
-                            if (v === null || v === undefined) return null;
-                            if (v.stringValue !== undefined) return v.stringValue;
-                            if (v.integerValue !== undefined) return Number(v.integerValue);
-                            if (v.doubleValue !== undefined) return Number(v.doubleValue);
-                            if (v.booleanValue !== undefined) return v.booleanValue;
-                            if (v.nullValue !== undefined) return null;
-                            if (v.arrayValue !== undefined) return (v.arrayValue.values || []).map(function(x) { return fsConvertVal(x); });
-                            if (v.mapValue !== undefined) { var o = {}; Object.keys(v.mapValue.fields || {}).forEach(function(k) { o[k] = fsConvertVal(v.mapValue.fields[k]); }); return o; }
-                            if (v.timestampValue !== undefined) return v.timestampValue;
-                            if (v.referenceValue !== undefined) return v.referenceValue;
-                            return v;
-                        }
-                        var obj = {};
-                        Object.keys(d.fields).forEach(function(k) { obj[k] = fsConvertVal(d.fields[k]); });
-                        fsSnapshotHandler({ exists: true, data: function() { return obj; } });
-                    }
-                }).catch(function(e) { console.error('fsFetch error', e); });
-            }
             if (!document.getElementById('fsDebug')) {
                 var d = document.createElement('div'); d.id = 'fsDebug'; d.style.cssText = 'position:fixed;bottom:0;right:0;background:#333;color:#0f0;font-size:11px;padding:2px 6px;z-index:9999;font-family:monospace;';
                 document.body.appendChild(d);
             }
             function fsShowStatus(txt) { var e = document.getElementById('fsDebug'); if(e) e.textContent = txt; }
-            fsFetchFromServer();
-            setInterval(function() { fsFetchFromServer(); fsShowStatus('poll '+new Date().toLocaleTimeString()); }, 2000);
+            function fsPoll() {
+                fdb.collection(FS_COLLECTION).doc(FS_DOC).get({ source: 'server' }).then(function(snap) {
+                    if (snap && snap.exists) fsSnapshotHandler(snap);
+                }).catch(function(e) { console.error('fsPoll error', e); });
+            }
+            fsPoll();
+            setInterval(function() { fsPoll(); fsShowStatus('poll '+new Date().toLocaleTimeString()); }, 2000);
             document.addEventListener('visibilitychange', function() {
-                if (!document.hidden) fsFetchFromServer();
+                if (!document.hidden) fsPoll();
             });
             window.addEventListener('focus', function() {
-                setTimeout(fsFetchFromServer, 100);
+                setTimeout(fsPoll, 100);
             });
         }
         var fsDirtyKeys = {};
