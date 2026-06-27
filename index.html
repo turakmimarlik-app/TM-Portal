@@ -2092,7 +2092,7 @@
                         }
                     });
                     if (logoChanged) { sidebardaLogoyuGoster(); }
-                    if (anyChanged) { yenileAktifSayfa(); }
+                    if (anyChanged) { yenileAktifSayfa(); fsShowStatus('OK ' + Object.keys(data).length + ' keys ' + new Date().toLocaleTimeString()); }
                 }
             }
             function fsStartListener() {
@@ -2104,8 +2104,8 @@
             }
             fsStartListener();
             function fsFetchFromServer() {
-                var url = "https://firestore.googleapis.com/v1/projects/" + firebaseConfig.projectId + "/databases/(default)/documents/" + FS_COLLECTION + "/" + FS_DOC + "?key=" + firebaseConfig.apiKey;
-                fetch(url).then(function(r) {
+                var url = "https://firestore.googleapis.com/v1/projects/" + firebaseConfig.projectId + "/databases/(default)/documents/" + FS_COLLECTION + "/" + FS_DOC + "?key=" + firebaseConfig.apiKey + "&_=" + Date.now();
+                fetch(url, { cache: 'no-store' }).then(function(r) {
                     if (!r.ok) throw new Error("HTTP " + r.status);
                     return r.json();
                 }).then(function(d) {
@@ -2129,7 +2129,13 @@
                     }
                 }).catch(function(e) { console.error('fsFetch error', e); });
             }
-            setInterval(fsFetchFromServer, 2000);
+            if (!document.getElementById('fsDebug')) {
+                var d = document.createElement('div'); d.id = 'fsDebug'; d.style.cssText = 'position:fixed;bottom:0;right:0;background:#333;color:#0f0;font-size:11px;padding:2px 6px;z-index:9999;font-family:monospace;';
+                document.body.appendChild(d);
+            }
+            function fsShowStatus(txt) { var e = document.getElementById('fsDebug'); if(e) e.textContent = txt; }
+            fsFetchFromServer();
+            setInterval(function() { fsFetchFromServer(); fsShowStatus('poll '+new Date().toLocaleTimeString()); }, 2000);
             document.addEventListener('visibilitychange', function() {
                 if (!document.hidden) fsFetchFromServer();
             });
