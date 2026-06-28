@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-main: #f4f6f9;
@@ -431,147 +432,198 @@
         .tm-autocomplete-item { padding: 10px 14px; cursor: pointer; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--bg-main); transition: 0.15s; }
         .tm-autocomplete-item:hover { background: var(--bg-main); color: var(--accent-red); }
 
-        /* ==================== ARCHITECTURAL MINIMALIST PDF TEMPLATE ==================== */
+        /* ==================== PROFESSIONAL PRICE OFFER PDF TEMPLATE ==================== */
         #pdf-export-template { 
             width: 210mm; 
             min-height: 297mm; 
-            padding: 25mm 20mm; 
+            padding: 22mm 18mm; 
             box-sizing: border-box; 
             background: white; 
             margin: 0 auto; 
             display: none; 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            color: #111111; 
-            line-height: 1.6; 
+            font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif; 
+            color: #1a1a1a; 
+            line-height: 1.5; 
             text-transform: uppercase; 
         }
-        .pdf-out-header { 
+        .pdf-header { 
             display: flex; 
             justify-content: space-between; 
             align-items: flex-start;
-            border-bottom: 2px solid #111111; 
-            padding-bottom: 20px; 
-            margin-bottom: 35px; 
+            border-bottom: 3px solid #9E2A2B; 
+            padding-bottom: 18px; 
+            margin-bottom: 28px; 
         }
-        .pdf-out-logo h1 { 
-            margin: 0; 
-            font-size: 26px; 
-            letter-spacing: 4px; 
-            font-weight: 900; 
-            color: #111111; 
+        .pdf-header-left { flex: 1; }
+        .pdf-firma-adi { 
+            font-family: 'Archivo Black', 'Arial Black', sans-serif;
+            font-size: 24px; 
+            letter-spacing: 3px; 
+            color: #1a1a1a; 
             line-height: 1.1;
         }
-        .pdf-out-logo p { 
-            margin: 6px 0 0 0; 
+        .pdf-firma-unvan { 
+            margin: 5px 0 8px 0; 
             font-size: 9px; 
             color: #9E2A2B; 
             font-weight: 700; 
-            letter-spacing: 1.5px; 
+            letter-spacing: 1.2px; 
         }
-        .pdf-out-meta { 
+        .pdf-firma-adres {
+            font-size: 10px;
+            color: #555;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .pdf-firma-tel {
+            font-size: 10px;
+            color: #555;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+        .pdf-header-right { 
             text-align: right; 
             font-size: 10px; 
-            color: #555555; 
-            line-height: 1.7; 
-            letter-spacing: 0.5px;
+            color: #444; 
+            line-height: 1.8; 
+            font-weight: 600;
+            padding-top: 4px;
         }
-        .pdf-box-grid { 
+        .pdf-header-right .vergino {
+            font-size: 11px;
+            color: #9E2A2B;
+        }
+        .pdf-info-grid { 
             display: flex; 
             justify-content: space-between; 
-            margin-bottom: 40px; 
+            margin-bottom: 30px; 
+            gap: 15px;
         }
-        .pdf-client-card { 
-            width: 50%; 
-            border-left: 3px solid #111111; 
-            padding-left: 15px; 
+        .pdf-musteri, .pdf-proje { 
+            flex: 1; 
+            border-left: 3px solid #9E2A2B; 
+            padding-left: 12px; 
         }
-        .pdf-client-card div.section-title {
-            font-size: 11px; 
+        .pdf-tarih { 
+            text-align: right; 
+            min-width: 140px;
+            padding-top: 2px;
+        }
+        .pdf-section-title {
+            font-size: 10px; 
             font-weight: 800; 
             letter-spacing: 1px; 
-            color: #777777; 
-            margin-bottom: 8px;
+            color: #9E2A2B; 
+            margin-bottom: 6px;
         }
-        .pdf-client-card p {
-            margin: 4px 0;
-            font-size: 12px;
-            color: #111111;
+        .pdf-musteri p, .pdf-proje p {
+            margin: 3px 0;
+            font-size: 11px;
+            color: #1a1a1a;
         }
-        .pdf-info-card { 
-            width: 40%; 
-            text-align: right;
-            font-size: 12px;
-            }
-        .pdf-info-card p {
-            margin: 4px 0;
+        .pdf-tarih p {
+            margin: 3px 0;
+            font-size: 11px;
+        }
+        .pdf-tarih .tarih-deger {
+            font-weight: 700;
+            font-size: 13px;
+            color: #9E2A2B;
         }
         .pdf-table { 
             width: 100%; 
             border-collapse: collapse; 
-            margin-top: 20px; 
+            margin-top: 5px; 
         }
-        .pdf-table th { 
-            border-bottom: 2px solid #111111; 
-            color: #111111; 
-            padding: 12px 8px; 
+        .pdf-table thead th { 
+            background: #1a1a1a;
+            color: white; 
+            padding: 10px 8px; 
+            font-size: 10px; 
+            letter-spacing: 0.8px;
+            font-weight: 700; 
+        }
+        .pdf-table tbody td { 
+            border-bottom: 1px solid #e0e0e0; 
+            padding: 10px 8px; 
             font-size: 11px; 
-            letter-spacing: 1px;
-            font-weight: 800; 
+            color: #222;
         }
-        .pdf-table td { 
-            border-bottom: 1px solid #e2e8f0; 
-            padding: 14px 8px; 
-            font-size: 12px; 
-            color: #222222;
+        .pdf-table tbody tr:nth-child(even) td {
+            background: #f8f8f8;
         }
-        .pdf-total-wrapper { 
+        .pdf-bottom { 
             display: flex; 
-            justify-content: flex-end; 
+            justify-content: space-between; 
+            align-items: flex-end;
             margin-top: 30px; 
+            gap: 20px;
+        }
+        .pdf-bottom-left { 
+            flex: 1; 
+            border-top: 2px solid #1a1a1a;
+            padding-top: 14px;
+        }
+        .pdf-notes { 
+            font-size: 9px; 
+            line-height: 1.7; 
+            color: #555; 
+        }
+        .pdf-notes strong {
+            color: #9E2A2B;
+            font-size: 10px;
+        }
+        .pdf-bottom-right { 
+            text-align: right; 
+            min-width: 220px;
         }
         .pdf-total-table { 
-            width: 40%; 
+            width: 100%; 
             border-collapse: collapse; 
         }
         .pdf-total-table td { 
-            padding: 10px 8px; 
-            font-size: 12px; 
-            border-bottom: 1px solid #e2e8f0;
+            padding: 7px 8px; 
+            font-size: 11px; 
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .pdf-total-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+        }
+        .pdf-total-table td:last-child {
+            text-align: right;
+            font-weight: 600;
         }
         .pdf-total-table tr.grand-total {
             font-weight: 800;
-            font-size: 14px;
-            color: #9E2A2B;
+            font-size: 13px;
         }
         .pdf-total-table tr.grand-total td {
-            border-bottom: 2px solid #111111;
-            padding-top: 15px;
+            border-bottom: 2px solid #1a1a1a;
+            padding-top: 10px;
+            color: #9E2A2B;
         }
-        .pdf-footer-terms { 
-            margin-top: 60px; 
-            font-size: 10px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-start;
-            border-top: 1px solid #111111;
-            padding-top: 20px;
+        .pdf-total-table tr.grand-total td:first-child {
+            color: #1a1a1a;
         }
-        .pdf-notes { 
-            width: 55%; 
-            line-height: 1.8; 
-            color: #555555; 
+        .pdf-signature {
+            margin-top: 18px;
+            padding-top: 12px;
+            border-top: 1px dashed #999;
+            font-size: 10px;
+            color: #444;
         }
-        .pdf-sign-area { 
-            width: 35%; 
-            text-align: center; 
+        .pdf-signature strong {
+            color: #1a1a1a;
             font-size: 11px;
         }
-        .signature-line {
-            margin-top: 45px;
-            border-top: 1px dashed #777777;
-            padding-top: 5px;
+        .pdf-signature .hazirlayan-isim {
             font-weight: 700;
-            color: #111111;
+            color: #9E2A2B;
+            font-size: 13px;
+            margin-top: 3px;
         }
         /* FATURA TAKİP SİSTEMİ */
         .ft-wrap { max-width:1400px; margin:0 auto; }
@@ -2025,70 +2077,73 @@
             </div>
 
     <div id="pdf-export-template">
-        <div class="pdf-out-header">
-            <div class="pdf-out-logo">
-                <h1>TURAK MİMARLIK</h1>
-                <p>ARCHITECTURAL STUDIO & CONSULTANCY</p>
+        <div class="pdf-header">
+            <div class="pdf-header-left">
+                <div id="pOutLogoArea" class="pdf-firma-adi">TURAK MİMARLIK</div>
+                <div class="pdf-firma-unvan">TURAK MİMARLIK VE MİMARİ DANIŞMANLIK</div>
+                <div class="pdf-firma-adres">KIRKLARELİ / DEMİRKÖY / İĞNEADA</div>
+                <div class="pdf-firma-tel">TEL: 0288 692 25 62 &nbsp;|&nbsp; GSM: 0544 235 98 32</div>
             </div>
-            <div class="pdf-out-meta">
-                KIRKLARELİ / DEMİRKÖY / İĞNEADA<br>
-                V.D: DEMİRKÖY &nbsp;|&nbsp; NO: 8670608801<br>
-                TEL: 0288 692 25 62 &nbsp;|&nbsp; GSM: 0544 235 98 32
+            <div class="pdf-header-right">
+                V.D: DEMİRKÖY<br>
+                <span class="vergino">VERGİ NO: 8670608801</span>
             </div>
         </div>
-        <div class="pdf-box-grid">
-            <div class="pdf-client-card">
-                <div class="section-title">PROJECT CLIENT</div>
-                <p><strong>PROJE SAHİBİ:</strong> <span id="pOutClientName"></span></p>
-                <p><strong>FİRMA / ÜNVAN:</strong> <span id="pOutFirma"></span></p>
-                <p><strong>PROJE / İŞ TANIMI:</strong> <span id="pOutJob"></span></p>
-                <p><strong>İLETİŞİM / TEL:</strong> <span id="pOutPhone"></span></p>
+        <div class="pdf-info-grid">
+            <div class="pdf-musteri">
+                <div class="pdf-section-title">MÜŞTERİ</div>
+                <p><strong>AD SOYAD:</strong> <span id="pOutClientName"></span></p>
+                <p><strong>FİRMA:</strong> <span id="pOutFirma"></span></p>
             </div>
-            <div class="pdf-info-card">
-                <p style="font-size: 14px; font-weight: 800; color: #9E2A2B; margin-bottom: 12px;" id="pOutId">-</p>
-                <p><strong>DOKÜMAN:</strong> FİYAT TEKLİF BELGESİ</p>
-                <p><strong>TARİH:</strong> <span id="pOutDate"></span></p>
-                <p><strong>GEÇERLİLİK:</strong> 14 TAKVİM GÜNÜ</p>
+            <div class="pdf-proje">
+                <div class="pdf-section-title">PROJE</div>
+                <p><strong>İŞİN ADI:</strong> <span id="pOutJob"></span></p>
+                <p><strong>TEL. NO:</strong> <span id="pOutPhone"></span></p>
+            </div>
+            <div class="pdf-tarih">
+                <p><strong>TEKLİF TARİHİ</strong></p>
+                <p class="tarih-deger" id="pOutDate">-</p>
             </div>
         </div>
         <table class="pdf-table">
             <thead>
                 <tr>
-                    <th style="text-align: left; width: 50%;">HİZMET VE PROJE AÇIKLAMASI</th>
-                    <th style="text-align: center; width: 12%;">METRAJ</th>
-                    <th style="text-align: right; width: 18%;">BİRİM FİYAT</th>
-                    <th style="text-align: center; width: 8%;">KDV</th>
-                    <th style="text-align: right; width: 12%;">TOPLAM</th>
+                    <th style="text-align: left; width: 44%;">HİZMET</th>
+                    <th style="text-align: center; width: 12%;">MİKTAR</th>
+                    <th style="text-align: right; width: 16%;">BR. FİYAT</th>
+                    <th style="text-align: center; width: 10%;">KDV</th>
+                    <th style="text-align: right; width: 18%;">TOPLAM</th>
                 </tr>
             </thead>
             <tbody id="pOutTableBody"></tbody>
         </table>
-        <div class="pdf-total-wrapper">
-            <table class="pdf-total-table">
-                <tr>
-                    <td style="color: #777777;">ARA TOPLAM</td>
-                    <td id="pOutAra" style="text-align: right; font-weight: 600;">0,00 ₺</td>
-                </tr>
-                <tr>
-                    <td style="color: #777777;">TOPLAM K.D.V.</td>
-                    <td id="pOutKdv" style="text-align: right; font-weight: 600;">0,00 ₺</td>
-                </tr>
-                <tr class="grand-total">
-                    <td>GENEL TOPLAM</td>
-                    <td id="pOutGenel" style="text-align: right;">0,00 ₺</td>
-                </tr>
-            </table>
-        </div>
-        <div class="pdf-footer-terms">
-            <div class="pdf-notes">
-                <strong>ŞARTLAR VE NOTLAR:</strong><br>
-                * BU BELGE BELİRTİLEN PROJE İÇİN ÖZEL OLARAK HAZIRLANMIŞ MİMARİ HİZMET TEKLİFİDİR.<br>
-                * SÖZLEŞME İMZALANMADAN PROJE ÇALIŞMALARINA BAŞLANMAYACAKTIR.<br>
-                * İŞVEREN KAYNAKLI MAHKEME, BELEDİYE VEYA REVİZYON DEĞİŞİKLİKLERİ EK PROTOKOLE TABİDİR.
+        <div class="pdf-bottom">
+            <div class="pdf-bottom-left">
+                <div class="pdf-notes">
+                    <strong>NOT:</strong><br>
+                    FİYAT TEKLİFİ TEKLİF TARİHİNDEN İTİBAREN 14 GÜN İÇİN GEÇERLİDİR.<br>
+                    TARAFIMIZ DIŞINDA GELİŞEN PROJE RESTORASYONU VEYA REVİZYON DEĞİŞİKLİKLERİ AYRICA ÜCRETLENDİRİLECEKTİR.
+                </div>
             </div>
-            <div class="pdf-sign-area">
-                <p><strong>HAZIRLAYAN STÜDYO:</strong></p>
-                <div class="signature-line" id="pOutSignName">TURAK ARCHITECTURE</div>
+            <div class="pdf-bottom-right">
+                <table class="pdf-total-table">
+                    <tr>
+                        <td>ARA TOPLAM</td>
+                        <td id="pOutAra">0,00 ₺</td>
+                    </tr>
+                    <tr>
+                        <td>TOPLAM K.D.V</td>
+                        <td id="pOutKdv">0,00 ₺</td>
+                    </tr>
+                    <tr class="grand-total">
+                        <td>GENEL TOPLAM</td>
+                        <td id="pOutGenel">0,00 ₺</td>
+                    </tr>
+                </table>
+                <div class="pdf-signature">
+                    <strong>TEKLİFİ HAZIRLAYAN:</strong>
+                    <div class="hazirlayan-isim" id="pOutHazirlayan">TUGAY TURAK</div>
+                </div>
             </div>
         </div>
     </div>
@@ -4217,14 +4272,20 @@
         }
 
         function pdfSablonunuDoldurVeIndir(veri) {
-            const formatliId = "TEKLİF NO: #" + String(veri.id).padStart(4, '0');
-            document.getElementById("pOutId").innerText = formatliId;
             document.getElementById("pOutClientName").innerText = veri.musteriAd;
             document.getElementById("pOutFirma").innerText = veri.firma;
             document.getElementById("pOutJob").innerText = veri.isAdi;
             document.getElementById("pOutPhone").innerText = veri.telefon;
             document.getElementById("pOutDate").innerText = veri.sTarih;
-            document.getElementById("pOutSignName").innerText = veri.hazirlayan;
+            document.getElementById("pOutHazirlayan").innerText = veri.hazirlayan;
+
+            var logoData = localStorage.getItem("tm_sirket_logo");
+            var logoArea = document.getElementById("pOutLogoArea");
+            if (logoData && logoData !== "null" && logoData.length > 100) {
+                logoArea.innerHTML = '<img src="' + logoData + '" style="max-height:50px;max-width:200px;display:block;">';
+            } else {
+                logoArea.innerText = "TURAK MİMARLIK";
+            }
 
             const pBody = document.getElementById("pOutTableBody"); pBody.innerHTML = "";
             veri.kalemler.forEach(k => {
