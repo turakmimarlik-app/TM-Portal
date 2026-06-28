@@ -5477,6 +5477,187 @@
             return JSON.parse(localStorage.getItem("tm_nakit_dekont_db")) || [];
         }
 
+        function tutarYaziyla(tutar) {
+            if (tutar === 0) return "SIFIR TL";
+            const birler = ["","BİR","İKİ","ÜÇ","DÖRT","BEŞ","ALTI","YEDİ","SEKİZ","DOKUZ"];
+            const onlar = ["","ON","YİRMİ","OTUZ","KIRK","ELLİ","ALTMIŞ","YETMİŞ","SEKSEN","DOKSAN"];
+            const basamaklar = ["","BİN","MİLYON","MİLYAR","TRİLYON"];
+            function ucBasamakOku(n) {
+                let s = Math.floor(n);
+                if (s === 0) return "";
+                let str = "";
+                let yz = Math.floor(s / 100);
+                let kl = s % 100;
+                if (yz > 0) str += yz === 1 ? "YÜZ" : birler[yz] + "YÜZ";
+                if (kl > 0) {
+                    let on = Math.floor(kl / 10);
+                    let br = kl % 10;
+                    str += onlar[on] + birler[br];
+                }
+                return str;
+            }
+            let tl = Math.floor(tutar);
+            let kurus = Math.round((tutar - tl) * 100);
+            if (kurus >= 100) { tl += 1; kurus = 0; }
+            let result = "";
+            let idx = 0;
+            while (tl > 0) {
+                let uc = tl % 1000;
+                if (uc > 0) {
+                    let oku = ucBasamakOku(uc);
+                    if (idx === 1 && uc === 1) result = "BİN" + result;
+                    else result = oku + basamaklar[idx] + result;
+                }
+                tl = Math.floor(tl / 1000);
+                idx++;
+            }
+            result += "TL";
+            if (kurus > 0) {
+                result += " " + ucBasamakOku(kurus) + "KURUŞ";
+            }
+            return result;
+        }
+
+        function nakitDekontPdfOlustur(d) {
+            const formatliId = String(d.id).padStart(5, '0');
+            const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " TL";
+            const yaziyla = tutarYaziyla(d.tutar);
+            const tarihStr = d.tarih ? new Date(d.tarih).toLocaleDateString("tr-TR", {day:'2-digit',month:'long',year:'numeric'}) : "-";
+            const tipRenk = d.islemTuru === "Gelen Nakit Ödeme" ? "#2E7D32" : "#9E2A2B";
+            const tipArkaPlan = d.islemTuru === "Gelen Nakit Ödeme" ? "rgba(46,125,50,0.08)" : "rgba(158,42,43,0.08)";
+            const filigranYazi = d.islemTuru === "Gelen Nakit Ödeme" ? "TAHSİL EDİLDİ" : "ÖDEME YAPILDI";
+
+            const logoData = localStorage.getItem("tm_sirket_logo");
+            let logoHtml = '';
+            if (logoData && logoData !== "null" && logoData.length > 100) {
+                logoHtml = '<img src="' + logoData + '" style="max-height:22mm;max-width:40mm;width:auto;height:auto;vertical-align:middle;" alt="Logo">';
+            }
+
+            const firmaBilgi = (function() {
+                try { return JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { return {}; }
+            })();
+            const firmaAd = firmaBilgi.ad || "TURAK MİMARLIK";
+            const firmaAdres = firmaBilgi.adres || "Deniz Mah. Selvi Sk. No: 14/D İĞNEADA / DEMİRKÖY / KIRKLARELİ";
+            const firmaTel = firmaBilgi.gsm || firmaBilgi.telefon || "0543 123 45 67";
+            const firmaEposta = firmaBilgi.email || "info@turakmimarlik.com";
+
+            const sayfaHtml = `
+                <div style="width:210mm;min-height:297mm;padding:8mm 10mm;box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;background:#fff;position:relative;color:#222;">
+                    <div style="position:absolute;top:3mm;left:3mm;right:3mm;bottom:3mm;border:2px solid #1a1a2e;pointer-events:none;border-radius:1px;"></div>
+                    <div style="position:absolute;bottom:15mm;right:10mm;font-size:55px;font-weight:900;color:rgba(26,26,46,0.035);letter-spacing:8px;transform:rotate(-25deg);pointer-events:none;white-space:nowrap;">${filigranYazi}</div>
+
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:5mm;border-bottom:3px solid #1a1a2e;margin-bottom:5mm;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            ${logoHtml ? '<div>' + logoHtml + '</div>' : ''}
+                            <div>
+                                <div style="font-size:20px;font-weight:900;letter-spacing:2.5px;color:#1a1a2e;line-height:1.2;">${firmaAd}</div>
+                                <div style="font-size:8px;color:#888;letter-spacing:0.5px;">MİMARLIK • MÜHENDİSLİK • DANIŞMANLIK</div>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:10px;font-weight:700;color:#666;letter-spacing:1px;">DEKONT NO</div>
+                            <div style="font-size:24px;font-weight:900;color:#9E2A2B;letter-spacing:1px;">#${formatliId}</div>
+                        </div>
+                    </div>
+
+                    <div style="text-align:center;margin-bottom:6mm;">
+                        <div style="font-size:26px;font-weight:900;color:#1a1a2e;letter-spacing:5px;">NAKİT ÖDEME DEKONTU</div>
+                        <div style="width:50mm;height:2.5px;background:linear-gradient(to right,#9E2A2B,#1a1a2e);margin:3mm auto 0;"></div>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5mm;">
+                        <div style="font-size:10px;color:#555;"><b>DÜZENLEME TARİHİ:</b> ${tarihStr}</div>
+                        <div style="padding:2.5px 14px;border-radius:2px;font-size:11px;font-weight:800;color:#fff;background:${tipRenk};">${d.islemTuru}</div>
+                    </div>
+
+                    <div style="border:1.5px solid #ddd;border-radius:3px;padding:4mm 5mm;margin-bottom:5mm;background:#fafafa;">
+                        <div style="font-size:9px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:2.5mm;">MÜŞTERİ / İŞ ORTAĞI BİLGİLERİ</div>
+                        <table style="width:100%;border-collapse:collapse;font-size:10.5px;">
+                            <tr>
+                                <td style="padding:2px 4px;width:14%;color:#999;white-space:nowrap;">ADI SOYADI</td>
+                                <td style="padding:2px 4px;font-weight:700;width:36%;">${d.musteriAd}</td>
+                                <td style="padding:2px 4px;width:14%;color:#999;white-space:nowrap;">TELEFON</td>
+                                <td style="padding:2px 4px;font-weight:700;width:36%;">${d.tel}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:2px 4px;color:#999;white-space:nowrap;">FİRMA / KURUM</td>
+                                <td style="padding:2px 4px;font-weight:700;">${d.firma}</td>
+                                <td style="padding:2px 4px;color:#999;white-space:nowrap;">İŞLEM TARİHİ</td>
+                                <td style="padding:2px 4px;font-weight:700;">${tarihStr}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div style="border:1.5px solid #ddd;border-radius:3px;padding:3.5mm 5mm;margin-bottom:5mm;min-height:18mm;">
+                        <div style="font-size:9px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:2mm;">AÇIKLAMA</div>
+                        <div style="font-size:10.5px;color:#444;line-height:1.6;">${d.aciklama || "-"}</div>
+                    </div>
+
+                    <div style="border:1.5px solid #ddd;border-radius:3px;margin-bottom:5mm;overflow:hidden;">
+                        <table style="width:100%;border-collapse:collapse;font-size:10.5px;">
+                            <thead>
+                                <tr style="background:#1a1a2e;color:#fff;">
+                                    <th style="padding:2.5mm 5mm;text-align:left;font-size:9px;letter-spacing:1px;">İŞLEM AÇIKLAMASI</th>
+                                    <th style="padding:2.5mm 5mm;text-align:right;font-size:9px;letter-spacing:1px;width:45%;">TUTAR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding:2.5mm 5mm;color:#444;">${d.islemTuru === "Gelen Nakit Ödeme" ? "Nakit tahsilat" : "Nakit ödeme"}</td>
+                                    <td style="padding:2.5mm 5mm;text-align:right;font-weight:700;font-size:12px;">${formatliTutar}</td>
+                                </tr>
+                                <tr style="background:${tipArkaPlan};">
+                                    <td style="padding:3mm 5mm;font-weight:800;font-size:13px;color:#1a1a2e;">TOPLAM TUTAR</td>
+                                    <td style="padding:3mm 5mm;text-align:right;font-weight:900;font-size:17px;color:${tipRenk};">${formatliTutar}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="border:1.5px solid #ddd;border-radius:3px;padding:3.5mm 6mm;margin-bottom:6mm;">
+                        <div style="font-size:9px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:2mm;">YAZIYLA TUTAR</div>
+                        <div style="font-size:11px;font-weight:700;color:#333;letter-spacing:0.5px;">${yaziyla}</div>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;gap:15mm;margin-bottom:5mm;">
+                        <div style="flex:1;text-align:center;">
+                            <div style="height:14mm;border-bottom:1.5px solid #1a1a2e;margin-bottom:1.5mm;"></div>
+                            <div style="font-size:10px;font-weight:700;color:#1a1a2e;">ÖDEMEYİ ALAN</div>
+                            <div style="font-size:8px;color:#999;">Ad Soyad / İmza / Tarih</div>
+                        </div>
+                        <div style="flex:1;text-align:center;">
+                            <div style="height:14mm;border-bottom:1.5px solid #1a1a2e;margin-bottom:1.5mm;"></div>
+                            <div style="font-size:10px;font-weight:700;color:#1a1a2e;">ÖDEMEYİ YAPAN / ONAY</div>
+                            <div style="font-size:8px;color:#999;">Ad Soyad / İmza / Tarih</div>
+                        </div>
+                    </div>
+
+                    <div style="border-top:2px solid #1a1a2e;padding-top:2.5mm;text-align:center;">
+                        <div style="font-size:7.5px;color:#888;line-height:1.5;">
+                            <b>${firmaAd}</b> • ${firmaAdres}<br>
+                            Tel: ${firmaTel} • E-posta: ${firmaEposta}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const sayfaEl = document.createElement("div");
+            sayfaEl.style.cssText = "position:fixed;left:-9999px;top:0;width:210mm;min-height:297mm;overflow:hidden;";
+            sayfaEl.innerHTML = sayfaHtml;
+            document.body.appendChild(sayfaEl);
+
+            html2canvas(sayfaEl, {scale:2.5,useCORS:true,logging:false,width:793.7,height:1122.5}).then(function(cv){
+                var dt = cv.toDataURL('image/jpeg',0.92);
+                var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
+                doc.addImage(dt,'JPEG',0,0,210,297);
+                doc.save("NAKIT_DEKONT_" + formatliId + ".pdf");
+                document.body.removeChild(sayfaEl);
+            }).catch(function(e){
+                tmNotify("PDF oluşturulurken hata: " + (e.message||e), "error");
+                try { document.body.removeChild(sayfaEl); } catch(ex) {}
+            });
+        }
+
         function nakitDekontKaydet() {
             const musteriAd = trToUpper(document.getElementById("ndMusteriAd").value.trim());
             const firma = trToUpper(document.getElementById("ndFirma").value.trim());
@@ -5622,51 +5803,7 @@
             const db = nakitDekontVerileriniYukle();
             const d = db.find(item => item.id === id);
             if(!d) { tmNotify("Dekont bulunamadı!", "error"); return; }
-
-            const formatliId = "DEKONT NO: #" + String(d.id).padStart(5, '0');
-            const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " ₺";
-
-            const pdfContent = `
-                <div style="width:210mm; padding:20mm; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; color:#111; text-transform:uppercase;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #111; padding-bottom:15px; margin-bottom:25px;">
-                        <div><h1 style="margin:0 0 2px 0;font-size:26px;font-weight:900;letter-spacing:4px;color:#111;line-height:1.1;">TURAK MİMARLIK</h1><p style="margin:3px 0 0 0; font-size:9px; color:#9E2A2B; font-weight:700;">NAKİT ÖDEMEK DEKONTU</p></div>
-                        <div style="text-align:right; font-size:14px; font-weight:800; color:#9E2A2B;">${formatliId}</div>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
-                        <div style="border-left:3px solid #111; padding-left:12px; width:50%;">
-                            <p style="font-size:11px; font-weight:800; color:#777; letter-spacing:1px;">MÜŞTERİ BİLGİLERİ</p>
-                            <p style="margin:4px 0;"><b>ADI SOYADI:</b> ${d.musteriAd}</p>
-                            <p style="margin:4px 0;"><b>FİRMA:</b> ${d.firma}</p>
-                            <p style="margin:4px 0;"><b>TEL:</b> ${d.tel}</p>
-                        </div>
-                        <div style="text-align:right; width:40%; font-size:12px;">
-                            <p><b>İŞLEM TÜRÜ:</b> ${d.islemTuru}</p>
-                            <p><b>TARİH:</b> ${d.tarih ? new Date(d.tarih).toLocaleDateString("tr-TR") : "-"}</p>
-                        </div>
-                    </div>
-                    <div style="background:#f5f5f5; padding:15px; border-radius:4px; margin-bottom:20px;">
-                        <p style="font-size:11px; font-weight:800; color:#777; letter-spacing:1px;">AÇIKLAMA</p>
-                        <p style="font-size:13px;">${d.aciklama}</p>
-                    </div>
-                    <div style="display:flex; justify-content:flex-end; margin-top:20px; padding-top:15px; border-top:2px solid #111;">
-                        <div style="width:50%;">
-                            <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:900;">
-                                <span>TOPLAM TUTAR:</span>
-                                <span style="color:#9E2A2B;">${formatliTutar}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="margin-top:60px; font-size:10px; border-top:1px solid #111; padding-top:15px; display:flex; justify-content:space-between;">
-                        <div>KIRKLARELİ / DEMİRKÖY / İĞNEADA</div>
-                        <div style="font-weight:700;">TURAK ARCHITECTURE</div>
-                    </div>
-                </div>
-            `;
-
-            const pdfWindow = window.open('', '_blank');
-            pdfWindow.document.write(pdfContent);
-            pdfWindow.document.close();
-            setTimeout(() => pdfWindow.print(), 500);
+            nakitDekontPdfOlustur(d);
         }
 
         function nakitDekontListesiniFiltrele() {
@@ -5694,49 +5831,17 @@
             let db = nakitDekontVerileriniYukle();
             const maxId = db.reduce((max, item) => item.id > max ? item.id : max, 0);
             const geciciId = maxId + 1;
-            const formatliId = "DEKONT NO: #" + String(geciciId).padStart(5, '0');
 
-            const pdfContent = `
-                <div style="width:210mm; padding:20mm; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; color:#111; text-transform:uppercase;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #111; padding-bottom:15px; margin-bottom:25px;">
-                        <div><h1 style="margin:0 0 2px 0;font-size:26px;font-weight:900;letter-spacing:4px;color:#111;line-height:1.1;">TURAK MİMARLIK</h1><p style="margin:3px 0 0 0; font-size:9px; color:#9E2A2B; font-weight:700;">NAKİT ÖDEMEK DEKONTU</p></div>
-                        <div style="text-align:right; font-size:14px; font-weight:800; color:#9E2A2B;">${formatliId}</div>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
-                        <div style="border-left:3px solid #111; padding-left:12px; width:50%;">
-                            <p style="font-size:11px; font-weight:800; color:#777; letter-spacing:1px;">MÜŞTERİ BİLGİLERİ</p>
-                            <p style="margin:4px 0;"><b>ADI SOYADI:</b> ${musteriAd}</p>
-                            <p style="margin:4px 0;"><b>FİRMA:</b> ${firma}</p>
-                            <p style="margin:4px 0;"><b>TEL:</b> ${tel}</p>
-                        </div>
-                        <div style="text-align:right; width:40%; font-size:12px;">
-                            <p><b>İŞLEM TÜRÜ:</b> ${islemTuru}</p>
-                            <p><b>TARİH:</b> ${tarih ? new Date(tarih).toLocaleDateString("tr-TR") : "-"}</p>
-                        </div>
-                    </div>
-                    <div style="background:#f5f5f5; padding:15px; border-radius:4px; margin-bottom:20px;">
-                        <p style="font-size:11px; font-weight:800; color:#777; letter-spacing:1px;">AÇIKLAMA</p>
-                        <p style="font-size:13px;">${aciklama}</p>
-                    </div>
-                    <div style="display:flex; justify-content:flex-end; margin-top:20px; padding-top:15px; border-top:2px solid #111;">
-                        <div style="width:50%;">
-                            <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:900;">
-                                <span>TOPLAM TUTAR:</span>
-                                <span style="color:#9E2A2B;">${tutar.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2})} ₺</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="margin-top:60px; font-size:10px; border-top:1px solid #111; padding-top:15px; display:flex; justify-content:space-between;">
-                        <div>KIRKLARELİ / DEMİRKÖY / İĞNEADA</div>
-                        <div style="font-weight:700;">TURAK ARCHITECTURE</div>
-                    </div>
-                </div>
-            `;
-
-            const pdfWindow = window.open('', '_blank');
-            pdfWindow.document.write(pdfContent);
-            pdfWindow.document.close();
-            setTimeout(() => pdfWindow.print(), 500);
+            nakitDekontPdfOlustur({
+                id: geciciId,
+                musteriAd: musteriAd,
+                firma: firma,
+                tel: tel,
+                islemTuru: islemTuru,
+                tarih: tarih || anlikTarihGetir(),
+                aciklama: aciklama,
+                tutar: tutar
+            });
         }
 
         /* ================= YILLIK BÜTÇE MODÜLÜ ================= */
