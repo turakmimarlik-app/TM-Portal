@@ -2141,7 +2141,7 @@
         }
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
-            console.log('OVERRIDE setItem:', key, 'fsReady:', fsReady);
+            console.error('OVERRIDE setItem:', key, 'fsReady:', fsReady);
             origSetItem(key, value);
             if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean") {
                 fsDirtyKeys[key] = true;
