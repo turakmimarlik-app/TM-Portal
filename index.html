@@ -556,24 +556,34 @@
         }
         .pdf-bottom-content {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
             flex: 1;
         }
         .pdf-signature {
-            align-self: flex-end;
-            margin-top: 30px;
+            text-align: center;
             font-size: 10px;
             color: #444;
         }
-        .pdf-signature strong {
-            color: #1a1a1a;
+        .pdf-signature .signature-title {
+            font-weight: 700;
             font-size: 11px;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+        }
+        .pdf-signature .signature-subtitle {
+            font-size: 8px;
+            color: #888;
+            margin-top: 1px;
         }
         .pdf-signature .hazirlayan-isim {
-            font-weight: 700;
+            border-top: 1px solid #9E2A2B;
+            padding-top: 4px;
+            margin-top: 4px;
+            font-weight: 800;
             color: #9E2A2B;
             font-size: 14px;
-            margin-top: 2px;
         }
         .pdf-notes { 
             max-width: 50%;
@@ -2146,7 +2156,8 @@
                     TARAFIMIZ DIŞINDA GELİŞEN PROJE RESTORASYONU VEYA REVİZYON DEĞİŞİKLİKLERİ AYRICA ÜCRETLENDİRİLECEKTİR.
                 </div>
                 <div class="pdf-signature">
-                    <strong>TEKLİFİ HAZIRLAYAN:</strong>
+                    <div class="signature-title">TEKLİFİ HAZIRLAYAN</div>
+                    <div class="signature-subtitle" style="text-transform:none;">(teklifi hazırlayan)</div>
                     <div class="hazirlayan-isim" id="pOutHazirlayan">TUGAY TURAK</div>
                 </div>
             </div>
