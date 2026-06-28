@@ -2085,9 +2085,16 @@
                             var strVal = JSON.stringify(data[k]);
                             var curVal = localStorage.getItem(k);
                             if (curVal !== strVal && !fsDirtyKeys[k]) {
-                                try { origSetItem(k, strVal); } catch(e) {}
-                                if (k === "tm_sirket_logo") { logoChanged = true; }
-                                anyChanged = true;
+                                var localArr, serverArr;
+                                try { localArr = JSON.parse(curVal); } catch(e) {}
+                                try { serverArr = JSON.parse(strVal); } catch(e) {}
+                                if (Array.isArray(localArr) && Array.isArray(serverArr) && localArr.length > serverArr.length) {
+                                    console.log('fsSnapshotHandler PRESERVED ' + k + ' (local ' + localArr.length + ' > server ' + serverArr.length + ' items)');
+                                } else {
+                                    try { origSetItem(k, strVal); } catch(e) {}
+                                    if (k === "tm_sirket_logo") { logoChanged = true; }
+                                    anyChanged = true;
+                                }
                             }
                         }
                     });
@@ -2101,36 +2108,18 @@
                 document.body.appendChild(d);
             }
             function fsShowStatus(txt) { var e = document.getElementById('fsDebug'); if(e) e.textContent = txt; }
-            function fsPollRest() {
-                var _url = "https://firestore.googleapis.com/v1/projects/" + firebaseConfig.projectId + "/databases/(default)/documents/" + FS_COLLECTION + "/" + FS_DOC + "?key=" + firebaseConfig.apiKey + "&_=" + Date.now();
-                fetch(_url, { cache: 'no-store' }).then(function(r) { if (!r.ok) throw new Error("HTTP "+r.status); return r.json(); }).then(function(d) {
-                    if (!d || !d.fields) return;
-                    function _cv(v) {
-                        if (v === null || v === undefined) return null;
-                        if (v.stringValue !== undefined) return v.stringValue;
-                        if (v.integerValue !== undefined) return Number(v.integerValue);
-                        if (v.doubleValue !== undefined) return Number(v.doubleValue);
-                        if (v.booleanValue !== undefined) return v.booleanValue;
-                        if (v.nullValue !== undefined) return null;
-                        if (v.arrayValue !== undefined) return (v.arrayValue.values || []).map(function(x) { return _cv(x); });
-                        if (v.mapValue !== undefined) { var o = {}; Object.keys(v.mapValue.fields || {}).forEach(function(k) { o[k] = _cv(v.mapValue.fields[k]); }); return o; }
-                        if (v.timestampValue !== undefined) return v.timestampValue;
-                        if (v.referenceValue !== undefined) return v.referenceValue;
-                        if (v.bytesValue !== undefined) return v.bytesValue;
-                        if (v.geoPointValue !== undefined) return { latitude: v.geoPointValue.latitude, longitude: v.geoPointValue.longitude };
-                        return v;
-                    }
-                    var obj = {}; Object.keys(d.fields).forEach(function(k) { obj[k] = _cv(d.fields[k]); });
-                    fsSnapshotHandler({ exists: true, data: function() { return obj; } });
-                }).catch(function(e) { console.warn('fsPollRest', e.message); });
+            function fsPollSdk() {
+                fdb.collection(FS_COLLECTION).doc(FS_DOC).get({ source: 'server' }).then(function(snap) {
+                    fsSnapshotHandler(snap);
+                }).catch(function(e) { console.warn('fsPollSdk', e.message); });
             }
-            fsPollRest();
-            setInterval(function() { fsPollRest(); fsShowStatus('poll '+new Date().toLocaleTimeString()); }, 2000);
+            fsPollSdk();
+            setInterval(function() { fsPollSdk(); }, 2000);
             document.addEventListener('visibilitychange', function() {
-                if (!document.hidden) fsPollRest();
+                if (!document.hidden) fsPollSdk();
             });
             window.addEventListener('focus', function() {
-                setTimeout(fsPollRest, 100);
+                setTimeout(fsPollSdk, 100);
             });
         }
         var fsDirtyKeys = {};
@@ -3141,6 +3130,7 @@
                 tmNotify("Müşteri profil kartı güncellendi.", "success");
             }
             
+            console.log('KART KAYDEDILDI:', JSON.stringify(db));
             localStorage.setItem("tm_musteriler_db", JSON.stringify(db));
             musteriFormTemizle();
             musteriKartlariniYenile();
