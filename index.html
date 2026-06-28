@@ -72,7 +72,7 @@
         .logo-upload-area img { max-width: 200px; max-height: 80px; display: block; margin: 10px auto; border-radius: 4px; }
         .logo-upload-area .logo-placeholder { color: var(--text-light); font-size: 13px; }
         
-        .menu-list { list-style: none; padding: 0 26px 0 0; margin: 20px 0; flex-grow: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a5568 transparent; }
+        .menu-list { list-style: none; padding: 0; margin: 20px 0; flex-grow: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a5568 transparent; }
         .menu-list::-webkit-scrollbar { width: 5px; }
         .menu-list::-webkit-scrollbar-track { background: transparent; }
         .menu-list::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 8px; }
@@ -85,7 +85,7 @@
         .submenu-item { padding: 12px 20px 12px 40px; cursor: pointer; font-size: 14px; font-weight: 500; color: #a0aec0; transition: 0.2s; border-left: 4px solid transparent; display: block; }
         .submenu-item:hover, .submenu-item.active { color: #fff; background: var(--sidebar-active); border-left-color: var(--accent-red); }
         
-        .sidebar-users-section { padding: 8px 32px 4px 12px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-users-section { padding: 8px 12px 4px 12px; border-top: 1px solid rgba(255,255,255,0.05); }
         .sidebar-section-title { font-size: 9px; color: var(--text-light); font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase; }
         .sidebar-users-list { max-height: 100px; overflow-y: auto; }
         .sidebar-users-list::-webkit-scrollbar { width: 3px; }
@@ -96,7 +96,7 @@
         .sidebar-user-item .user-status-dot.offline { background: #718096; }
         .sidebar-user-item .user-name { font-weight: 600; }
         .sidebar-user-item .user-title { font-size: 9px; color: #a0aec0; margin-left: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px; }
-        .sidebar-footer { padding: 8px 32px 8px 12px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-footer { padding: 8px 12px; border-top: 1px solid rgba(255,255,255,0.05); }
         .sidebar-footer-row { display: flex; gap: 6px; align-items: center; }
         .theme-toggle { flex: 1; cursor: pointer; user-select: none; position: relative; height: 28px; }
         .theme-toggle-track { position: relative; display: flex; align-items: center; height: 100%; background: var(--sidebar-active); border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
@@ -113,17 +113,18 @@
         /* SOL MENÜ DARALTMA */
         .sidebar { transition: width 0.3s ease; }
         .sidebar-toggle {
-            position: absolute; right: 0; top: 0; bottom: 0;
-            width: 26px;
-            background: rgba(255,255,255,0.02);
+            position: absolute; right: -18px; top: 0; bottom: 0;
+            width: 20px;
+            background: var(--sidebar-bg);
             border-left: 1px solid rgba(255,255,255,0.06);
+            border-right: 1px solid rgba(255,255,255,0.06);
             cursor: pointer; z-index: 20;
             display: flex; align-items: center; justify-content: center;
-            font-size: 11px; color: rgba(255,255,255,0.3);
-            transition: background 0.25s, color 0.25s;
+            font-size: 10px; color: rgba(255,255,255,0.25);
+            transition: background 0.2s, color 0.2s;
             user-select: none;
         }
-        .sidebar-toggle:hover { background: rgba(255,255,255,0.08); color: #fff; border-left-color: var(--accent-red); }
+        .sidebar-toggle:hover { background: var(--sidebar-active); color: #fff; }
         .sidebar.collapsed { width: 60px; }
         .sidebar.collapsed .menu-text { display: none; }
         .sidebar.collapsed .sidebar-header h3,
@@ -138,7 +139,6 @@
         .sidebar.collapsed .theme-toggle { display: none; }
         .sidebar.collapsed .btn-logout span { display: none; }
         .sidebar.collapsed .sidebar-header { padding: 10px 0; }
-        .sidebar.collapsed .menu-list { padding-right: 0; }
         .main-content { transition: margin-left 0.3s ease, width 0.3s ease; }
         .sidebar.collapsed + .main-content { margin-left: 60px; width: calc(100% - 60px); }
 
@@ -2836,6 +2836,14 @@
             btn.textContent = collapsed ? '▶' : '◀';
             localStorage.setItem('tm_sidebar_collapsed', collapsed ? '1' : '0');
         }
+        function sidebarAc() {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+                document.getElementById('sidebarToggle').textContent = '◀';
+                localStorage.setItem('tm_sidebar_collapsed', '0');
+            }
+        }
         function menuyuInsaEt(yetkiler) {
             if (localStorage.getItem('tm_sidebar_collapsed') === '1') {
                 document.querySelector('.sidebar').classList.add('collapsed');
@@ -2852,6 +2860,7 @@
         }
 
         function toggleSubmenu(id, arrowId) {
+            sidebarAc();
             const sub = document.getElementById(id);
             const arrow = document.getElementById(arrowId);
             if(!sub) return;
@@ -2863,6 +2872,7 @@
         }
 
         function menudenSayfaAc(yetkiKodu, pageId, element) {
+            sidebarAc();
             sayfaDegistir(pageId, element);
             document.querySelectorAll(".page-lock-overlay").forEach(lock => lock.classList.remove("active"));
             document.getElementById("lockPopupOverlay").classList.remove("active");
