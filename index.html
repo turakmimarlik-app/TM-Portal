@@ -8876,7 +8876,7 @@ function itDurumMetni(o) {
                 v = bul;
             }
             var idStr = typeof v.id === 'number' ? dlkIdStr(v.id, v.tarih) : "TASLAK";
-            var trh = v.tarih ? new Date(v.tarih).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', year: 'numeric' }) : "";
+            var trh = v.tarih ? new Date(v.tarih).toLocaleDateString("tr-TR") : "";
 
             var logoData = localStorage.getItem("tm_sirket_logo");
             var ci = {};
@@ -8901,29 +8901,29 @@ function itDurumMetni(o) {
             function pdfOlustur(logoHtml) {
                 var logoHtmlStr = logoHtml || '<div style="font-size:14pt;font-weight:700;letter-spacing:1.5px;text-align:center;">' + firmaAd + '</div>';
 
-                // A4(297mm) - padding(15+5=20mm) = 277mm; sec1-9: 265mm, sec10: 12mm; s = 265/9
-                var s = 29.44;
+                // A4(297mm) - padding(15+5=20mm) = 277mm / 10 = 27.7mm
+                var s = 27.7;
 
-                // Bolum 1: Logo (sabit)
+                // Bolum 1: Logo (sabit, ortali)
                 var sec1 = '<div style="height:' + s + 'mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">' + logoHtmlStr + '</div>';
 
-                // Bolum 2: Sayi / Konu / Tarih (sabit)
+                // Bolum 2: Sayi / Konu / Tarih (sabit, sol-sag)
                 var sec2 = '<div style="height:' + s + 'mm;display:flex;flex-direction:column;justify-content:center;font-size:9.5pt;">' +
                     '<div style="display:flex;justify-content:space-between;"><div><b>Sayı</b> : ' + idStr + '</div><div>' + trh + '</div></div>' +
                     '<div style="margin-top:4px;"><b>Konu</b> : ' + esc(v.konu) + '</div></div>';
 
-                // Bolum 3: Gonderilecek Yer (sabit)
+                // Bolum 3: Gonderilecek Yer (sabit, ortali)
                 var yerHtml = v.gonderilecekYer.split('\n').filter(function(l){return l.trim();}).map(function(l){
                     return '<div style="text-align:center;font-size:12pt;font-weight:700;">' + trToUpper(esc(l.trim())) + '</div>';
                 }).join('');
-                var sec3 = '<div style="height:' + s + 'mm;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:6px;">' + yerHtml + '</div>';
+                var sec3 = '<div style="height:' + s + 'mm;display:flex;flex-direction:column;align-items:center;justify-content:center;">' + yerHtml + '</div>';
 
-                // Bolum 4: Ilgi (sabit, varsa)
-                var sec4 = '<div style="height:' + s + 'mm;display:flex;align-items:flex-start;padding-top:6px;font-size:9.5pt;">' +
+                // Bolum 4: Ilgi (sabit, sol)
+                var sec4 = '<div style="height:' + s + 'mm;display:flex;align-items:center;font-size:9.5pt;">' +
                     (v.ilgi ? '<b>İlgi</b> : ' + esc(v.ilgi) : '') + '</div>';
 
-                // Bolum 10: Altlik (sabit)
-                var sec10 = '<div style="height:12mm;border-top:1px solid #1a1a2e;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#555;line-height:1.4;text-align:center;">' + footerStr + '</div>';
+                // Bolum 10: Altlik (sabit, sayfa en alti)
+                var sec10 = '<div style="height:' + s + 'mm;border-top:1px solid #1a1a2e;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#555;line-height:1.4;text-align:center;">' + footerStr + '</div>';
 
                 // Olcum
                 var olcu = document.createElement("div");
@@ -8954,17 +8954,15 @@ function itDurumMetni(o) {
                 // Piksel katsayisi ve sayfa CSS
                 var px = 3.78;
                 var secPx = s * px;            // 1 bolumun px karsiligi
-                var text5H = 5 * s;              // bolum 5-9 mm (tek sayfada)
-                var text9H = 277 - 12;           // icerik - sec10 = 265mm (2+ sayfada)
-                var text5Px = text5H * px;
-                var text9Px = text9H * px;
+                var text5Px = 5 * secPx;        // bolum 5-9 = metin alani (tek sayfada)
+                var text9Px = 9 * secPx;        // bolum 1-9 haric sec10 (2+ sayfada)
                 var pageCss = 'width:210mm;height:297mm;padding:15mm 20mm 5mm 20mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#000;font-size:11pt;line-height:1.5;overflow:hidden;';
 
                 // ---- TEK SAYFA KONTROLU ----
                 if (textH + imzaH <= text5Px) {
                     var html = '<div style="' + pageCss + '">' +
                         sec1 + sec2 + sec3 + sec4 +
-                        '<div style="height:' + text5H + 'mm;">' +
+                        '<div style="height:' + (5 * s) + 'mm;">' +
                         paragrafHtml(paragraflar) + imzaHtml + '</div>' +
                         sec10 + '</div>';
                     var el = document.createElement("div");
