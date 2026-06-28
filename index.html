@@ -2092,15 +2092,9 @@
                         }
                     });
                     if (logoChanged) { sidebardaLogoyuGoster(); }
-                    if (anyChanged) { yenileAktifSayfa(); fsShowStatus('OK ' + Object.keys(data).length + ' keys ' + new Date().toLocaleTimeString()); }
-                    else { fsShowStatus('nochg ' + new Date().toLocaleTimeString()); }
+                    if (anyChanged) { yenileAktifSayfa(); }
                 }
             }
-            if (!document.getElementById('fsDebug')) {
-                var d = document.createElement('div'); d.id = 'fsDebug'; d.style.cssText = 'position:fixed;bottom:0;right:0;background:#333;color:#0f0;font-size:11px;padding:2px 6px;z-index:9999;font-family:monospace;';
-                document.body.appendChild(d);
-            }
-            function fsShowStatus(txt) { var e = document.getElementById('fsDebug'); if(e) e.textContent = txt; }
             function fsPollSdk() {
                 fdb.collection(FS_COLLECTION).doc(FS_DOC).get({ source: 'server' }).then(function(snap) {
                     fsSnapshotHandler(snap);
