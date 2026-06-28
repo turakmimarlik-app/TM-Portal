@@ -3542,6 +3542,9 @@
 
         /* ================= ŞİRKET BİLGİLERİ & LOGO ================= */
         function sirketBilgileriYukle() {
+            var aktifAlan = document.activeElement;
+            var ciIds = ["ciAd","ciTelefon","ciGsm","ciVergiDaire","ciVergiNo","ciEmail","ciImzaAd","ciAdres","ciDilekceAltBilgi"];
+            for (var i = 0; i < ciIds.length; i++) { if (aktifAlan && aktifAlan.id === ciIds[i]) return; }
             var d = {};
             try { d = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { d = {}; }
             ["ad","telefon","gsm","vergiDaire","vergiNo","email","imzaAd","adres","dilekceAltBilgi"].forEach(function(k) {
