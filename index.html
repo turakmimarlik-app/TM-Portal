@@ -8893,7 +8893,11 @@ function itDurumMetni(o) {
                 var telNo = ci.gsm || ci.telefon || "";
                 if (telNo) footerInfo.push("Tel: " + telNo);
                 if (ci.email) footerInfo.push("E-posta: " + ci.email);
-                footerStr = footerInfo.length ? footerInfo.join(" &nbsp;&nbsp;|&nbsp;&nbsp; ") : "Adres: Deniz Mah. Selvi Sk. No: 14/D &nbsp;&nbsp;|&nbsp;&nbsp; İĞNEADA | DEMİRKÖY | KIRKLARELİ<br>Tel: +90 544 235 98 32 &nbsp;&nbsp;|&nbsp;&nbsp; E-posta: turakmimarlik@gmail.com";
+                if (footerInfo.length) {
+                    footerStr = footerInfo[0] + "<br>" + footerInfo.slice(1).join(" &nbsp;&nbsp;|&nbsp;&nbsp; ");
+                } else {
+                    footerStr = "Adres: Deniz Mah. Selvi Sk. No: 14/D &nbsp;&nbsp;|&nbsp;&nbsp; İĞNEADA | DEMİRKÖY | KIRKLARELİ<br>Tel: +90 544 235 98 32 &nbsp;&nbsp;|&nbsp;&nbsp; E-posta: turakmimarlik@gmail.com";
+                }
             }
 
             var paragraflar = v.metin.split(/\n+/).map(function(p){ return p.trim(); }).filter(function(p){ return p; });
@@ -8915,12 +8919,12 @@ function itDurumMetni(o) {
                 var sec1 = '<div style="height:20mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">' + logoHtmlStr + '</div>';
                 var h1 = 20;
 
-                // ---- Bolum 2: Sayi (sol) + Tarih (sag) - 8mm ----
-                var secSayi = '<div style="height:8mm;display:flex;align-items:center;justify-content:space-between;font-size:9pt;">' +
+                // ---- Bolum 2: Sayi (sol) + Tarih (sag) - 12mm ----
+                var secSayi = '<div style="height:12mm;display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:2mm;box-sizing:border-box;font-size:10pt;">' +
                     '<div><b>Sayı</b> : ' + idStr + '</div>' +
                     '<div><b>Tarih</b> : ' + trh + '</div>' +
                     '</div>';
-                var hSayi = 8;
+                var hSayi = 12;
 
                 // ---- Bolum 3: Konu - 10mm ----
                 var sec2 = '<div style="height:10mm;display:flex;align-items:center;font-size:10pt;"><b>Konu</b> : ' + esc(v.konu) + '</div>';
@@ -8933,12 +8937,12 @@ function itDurumMetni(o) {
                 var sec3 = '<div style="height:20mm;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12pt;font-weight:700;background:#f5f5f5;">' + yerLines + '</div>';
                 var h3 = 20;
 
-                // ---- Bolum 5: Ilgi - 8mm (varsa) ----
+                // ---- Bolum 5: Ilgi - 12mm (varsa) ----
                 var sec4 = '';
                 var h4 = 0;
                 if (v.ilgi) {
-                    sec4 = '<div style="height:8mm;display:flex;align-items:center;font-size:9pt;"><b>İlgi</b> : ' + esc(v.ilgi) + '</div>';
-                    h4 = 8;
+                    sec4 = '<div style="height:12mm;display:flex;align-items:flex-end;padding-bottom:2mm;box-sizing:border-box;font-size:10pt;"><b>İlgi</b> : ' + esc(v.ilgi) + '</div>';
+                    h4 = 12;
                 }
 
                 // ---- Sabit bolumler toplami ----
@@ -8955,15 +8959,15 @@ function itDurumMetni(o) {
                     '<div style="border-top:1px solid #1a1a2e;margin-bottom:3mm;"></div>' +
                     '<div style="display:flex;align-items:center;justify-content:center;font-size:7pt;color:#555;line-height:1.3;text-align:center;">' + footerStr + '</div></div>';
 
-                // ---- Metin HTML ----
-                var bodyHtml = paragraflar.map(function(p){
+                // ---- Metin HTML (basinda 1 satir bosluk) ----
+                var bodyHtml = '<div style="height:4mm;"></div>' + paragraflar.map(function(p){
                     return '<p style="margin:0 0 7px 0;text-indent:1.5em;text-align:justify;font-size:11pt;line-height:1.6;">' + esc(p) + '</p>';
                 }).join('');
 
-                // ---- Kullanilabilir metin yukseklikleri (mm) ----
-                var textHmm1 = pageHmm - fixedHmm - sigHmm - footHmm;   // ilk sayfa
-                var textHmmN = pageHmm - sigHmm - footHmm;              // son sayfa (imzali)
-                var textHmmX = pageHmm - footHmm;                       // ara sayfalar
+                // ---- Kullanilabilir metin yukseklikleri (mm), +4mm bosluk ----
+                var textHmm1 = pageHmm - fixedHmm - sigHmm - footHmm - 4;
+                var textHmmN = pageHmm - sigHmm - footHmm - 4;
+                var textHmmX = pageHmm - footHmm - 4;
 
                 // ---- Olcum ----
                 var olcu = document.createElement("div");
@@ -8986,7 +8990,7 @@ function itDurumMetni(o) {
                 if (totalPx <= textPx1) {
                     var html = '<div style="width:210mm;height:297mm;padding:15mm 20mm 10mm 20mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#000;font-size:11pt;line-height:1.5;overflow:hidden;">' +
                         sec1 + secSayi + sec2 + sec3 + sec4 +
-                        '<div style="height:' + (textHmm1 + sigHmm) + 'mm;">' + bodyHtml + imzaHtml + '</div>' +
+                        '<div style="height:' + (textHmm1 + sigHmm + 4) + 'mm;">' + bodyHtml + imzaHtml + '</div>' +
                         secFoot + '</div>';
                     var el = document.createElement("div");
                     el.innerHTML = html;
@@ -9020,7 +9024,7 @@ function itDurumMetni(o) {
                     olcu = document.createElement("div");
                     olcu.style.cssText = "position:fixed;left:-9999px;top:0;width:" + pageWmm + "mm;font-family:Arial,Helvetica,sans-serif;font-size:11pt;line-height:1.6;";
                     document.body.appendChild(olcu);
-                    var sonMetin = sayfaList[sonIx].map(function(p){
+                    var sonMetin = '<div style="height:4mm;"></div>' + sayfaList[sonIx].map(function(p){
                         return '<p style="margin:0 0 7px 0;text-indent:1.5em;text-align:justify;font-size:11pt;line-height:1.6;">' + esc(p) + '</p>';
                     }).join('');
                     olcu.innerHTML = sonMetin + imzaHtml;
@@ -9037,7 +9041,7 @@ function itDurumMetni(o) {
                 for (var si = 0; si < sayfaList.length; si++) {
                     var sonSayfa = (si === sayfaList.length - 1);
                     var pb = sonSayfa ? '' : 'page-break-after:always;';
-                    var sayfaMetin = sayfaList[si].map(function(p){
+                    var sayfaMetin = '<div style="height:4mm;"></div>' + sayfaList[si].map(function(p){
                         return '<p style="margin:0 0 7px 0;text-indent:1.5em;text-align:justify;font-size:11pt;line-height:1.6;">' + esc(p) + '</p>';
                     }).join('');
 
