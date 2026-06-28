@@ -545,22 +545,17 @@
         .pdf-bottom-main {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             gap: 16px;
         }
         .pdf-bottom-left { 
             flex: 1; 
         }
-        .pdf-bottom-divider {
-            border-top: 2px solid #1a1a1a;
-            margin: 3px 0 4px 0;
-        }
         .pdf-bottom-content {
             display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex: 1;
-            padding-top: 24px;
+            justify-content: center;
+            padding-top: 40px;
+            padding-right: 80px;
         }
         .pdf-signature {
             text-align: center;
@@ -580,11 +575,10 @@
             font-size: 16px;
         }
         .pdf-notes { 
-            max-width: 50%;
             font-size: 9px; 
             line-height: 1.7; 
             color: #555; 
-            padding-top: 4px;
+            padding-top: 8px;
         }
         .pdf-notes strong {
             color: #9E2A2B;
@@ -2124,6 +2118,11 @@
         <div class="pdf-bottom">
             <div class="pdf-bottom-main">
                 <div class="pdf-bottom-left">
+                    <div class="pdf-notes">
+                        <strong>NOT:</strong><br>
+                        FİYAT TEKLİFİ TEKLİF TARİHİNDEN İTİBAREN 14 GÜN İÇİN GEÇERLİDİR.<br>
+                        TARAFIMIZ DIŞINDA GELİŞEN PROJE RESTORASYONU VEYA REVİZYON DEĞİŞİKLİKLERİ AYRICA ÜCRETLENDİRİLECEKTİR.
+                    </div>
                 </div>
                 <div class="pdf-bottom-right">
                     <table class="pdf-total-table">
@@ -2142,13 +2141,7 @@
                     </table>
                 </div>
             </div>
-            <div class="pdf-bottom-divider"></div>
             <div class="pdf-bottom-content">
-                <div class="pdf-notes">
-                    <strong>NOT:</strong><br>
-                    FİYAT TEKLİFİ TEKLİF TARİHİNDEN İTİBAREN 14 GÜN İÇİN GEÇERLİDİR.<br>
-                    TARAFIMIZ DIŞINDA GELİŞEN PROJE RESTORASYONU VEYA REVİZYON DEĞİŞİKLİKLERİ AYRICA ÜCRETLENDİRİLECEKTİR.
-                </div>
                 <div class="pdf-signature">
                     <div class="signature-title">TEKLİFİ HAZIRLAYAN</div>
                     <div class="hazirlayan-isim" id="pOutHazirlayan">TUGAY TURAK</div>
