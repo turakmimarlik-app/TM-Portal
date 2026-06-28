@@ -2127,19 +2127,16 @@
         var fsSentKeys = {};
         function fsSync() {
             if (!fsReady) return;
-            clearTimeout(fsTimer);
-            fsTimer = setTimeout(function() {
-                var dirtyList = Object.keys(fsDirtyKeys);
-                if (dirtyList.length === 0) return;
-                console.log('fsSync yaziyor:', dirtyList.join(','), new Date().toLocaleTimeString());
-                var allData = {};
-                dirtyList.forEach(function(k) {
-                    try { allData[k] = JSON.parse(localStorage.getItem(k)); } catch(e) { allData[k] = localStorage.getItem(k); }
-                });
-                fdb.collection(FS_COLLECTION).doc(FS_DOC).set(allData, { merge: true }).then(function() {
-                    dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; });
-                }).catch(function(e){ console.error('fsSync write error', e); });
-            }, 100);
+            var dirtyList = Object.keys(fsDirtyKeys);
+            if (dirtyList.length === 0) return;
+            alert('fsSync yaziyor: ' + dirtyList.join(',')); console.error('fsSync yaziyor:', dirtyList.join(','), new Date().toLocaleTimeString());
+            var allData = {};
+            dirtyList.forEach(function(k) {
+                try { allData[k] = JSON.parse(localStorage.getItem(k)); } catch(e) { allData[k] = localStorage.getItem(k); }
+            });
+            fdb.collection(FS_COLLECTION).doc(FS_DOC).set(allData, { merge: true }).then(function() {
+                dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; });
+            }).catch(function(e){ console.error('fsSync write error', e); });
         }
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
