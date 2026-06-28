@@ -58,7 +58,7 @@
         
         /* SOL MENÜ */
         .sidebar { width: var(--sidebar-width); height: 100vh; background-color: var(--sidebar-bg); color: white; position: fixed; display: flex; flex-direction: column; z-index: 10; }
-        .sidebar-header { padding: 15px 5px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-header { padding: 15px 5px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; }
         .sidebar-header h3 { margin: 0; font-size: 20px; letter-spacing: 1.5px; color: #ffffff; }
         .sidebar-header p { margin: 5px 0 0 0; font-size: 9px; color: var(--accent-red); font-weight: bold; letter-spacing: 1px; }
         .sidebar-header .sidebar-logo-img { width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 4px; }
@@ -109,6 +109,34 @@
         
         .sidebar-copyright-area { text-align: center; font-size: 9px; color: #718096; line-height: 1.3; font-weight: 600; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px; margin-top: 4px; }
         .version-tag { font-size: 10px; color: #e2e8f0; font-weight: bold; letter-spacing: 0.5px; }
+
+        /* SOL MENÜ DARALTMA */
+        .sidebar { transition: width 0.3s ease; }
+        .sidebar-toggle {
+            position: absolute; top: 50%; right: -14px; transform: translateY(-50%);
+            width: 28px; height: 28px; background: var(--sidebar-bg);
+            border: 2px solid rgba(255,255,255,0.15); border-radius: 50%;
+            color: #fff; cursor: pointer; font-size: 12px; line-height: 1;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 20; transition: 0.3s;
+        }
+        .sidebar-toggle:hover { border-color: var(--accent-red); background: var(--sidebar-active); }
+        .sidebar.collapsed { width: 60px; }
+        .sidebar.collapsed .menu-text { display: none; }
+        .sidebar.collapsed .sidebar-header h3,
+        .sidebar.collapsed .sidebar-header p,
+        .sidebar.collapsed .sidebar-header .sidebar-logo-img { display: none; }
+        .sidebar.collapsed .submenu-list { display: none !important; }
+        .sidebar.collapsed .sidebar-users-section { display: none; }
+        .sidebar.collapsed .sidebar-copyright-area { display: none; }
+        .sidebar.collapsed .menu-item { justify-content: center; padding: 16px 0; border-left-width: 0; font-size: 18px; }
+        .sidebar.collapsed .menu-item span[id$="-icon"] { display: none; }
+        .sidebar.collapsed .sidebar-footer-row { justify-content: center; }
+        .sidebar.collapsed .theme-toggle { display: none; }
+        .sidebar.collapsed .btn-logout span { display: none; }
+        .sidebar.collapsed .sidebar-header { padding: 10px 0; }
+        .main-content { transition: margin-left 0.3s ease, width 0.3s ease; }
+        .sidebar.collapsed + .main-content { margin-left: 60px; width: calc(100% - 60px); }
 
         .tm-notif { position:sticky; top:0; z-index:999; padding:14px 20px; border-radius:8px; margin-bottom:20px; font-weight:700; font-size:14px; display:none; align-items:center; gap:12px; border:1px solid; }
         .tm-notif.show { display:flex; }
@@ -849,49 +877,50 @@
         <h3>TM-PORTAL</h3>
         <p>TURAK MİMARLIK</p>
             </div>
+            <div class="sidebar-toggle" id="sidebarToggle" onclick="sidebarToggle()">◀</div>
             <ul class="menu-list">
-                <li id="menu-anasayfa" class="menu-item" onclick="menudenSayfaAc('anasayfa', 'anasayfa-page', this)"><span>🏠 Ana Sayfa</span></li>
+                <li id="menu-anasayfa" class="menu-item" onclick="menudenSayfaAc('anasayfa', 'anasayfa-page', this)"><span>🏠 <span class="menu-text">Ana Sayfa</span></span></li>
                 
                 <li id="menu-teklif-root" class="menu-item" onclick="toggleSubmenu('teklif-submenu', 'arrow-icon')">
-                    <span>📄 Fiyatlandırma</span>
+                    <span>📄 <span class="menu-text">Fiyatlandırma</span></span>
                     <span id="arrow-icon">▼</span>
                 </li>
                 <div id="teklif-submenu" class="submenu-list">
-                    <div id="sub-teklif-olustur" class="submenu-item" onclick="menudenSayfaAc('teklif-olustur', 'teklif-olustur-page', this)">↳ Teklif Oluştur</div>
-                    <div id="sub-teklif-liste" class="submenu-item" onclick="menudenSayfaAc('teklif-liste', 'teklif-liste-page', this)">↳ Geçmiş Teklifler</div>
-                    <div id="sub-piyasa-fiyatlari" class="submenu-item" onclick="menudenSayfaAc('piyasa-fiyatlari', 'piyasa-fiyatlari-page', this)">↳ Piyasa Fiyatları</div>
-                    <div id="sub-tm-fiyatlar" class="submenu-item" onclick="menudenSayfaAc('tm-fiyatlar', 'tm-fiyatlar-page', this)">↳ TM Fiyatlar</div>
+                    <div id="sub-teklif-olustur" class="submenu-item" onclick="menudenSayfaAc('teklif-olustur', 'teklif-olustur-page', this)">↳ <span class="menu-text">Teklif Oluştur</span></div>
+                    <div id="sub-teklif-liste" class="submenu-item" onclick="menudenSayfaAc('teklif-liste', 'teklif-liste-page', this)">↳ <span class="menu-text">Geçmiş Teklifler</span></div>
+                    <div id="sub-piyasa-fiyatlari" class="submenu-item" onclick="menudenSayfaAc('piyasa-fiyatlari', 'piyasa-fiyatlari-page', this)">↳ <span class="menu-text">Piyasa Fiyatları</span></div>
+                    <div id="sub-tm-fiyatlar" class="submenu-item" onclick="menudenSayfaAc('tm-fiyatlar', 'tm-fiyatlar-page', this)">↳ <span class="menu-text">TM Fiyatlar</span></div>
 
                 </div>
 
-                <li id="menu-dilekce" class="menu-item" onclick="menudenSayfaAc('dilekce', 'dilekce-page', this)"><span>📝 Dilekçe Oluştur</span></li>
-                <li id="menu-istakibi" class="menu-item" onclick="menudenSayfaAc('istakibi', 'istakibi-page', this)"><span>📅 İş Takibi</span></li>
+                <li id="menu-dilekce" class="menu-item" onclick="menudenSayfaAc('dilekce', 'dilekce-page', this)"><span>📝 <span class="menu-text">Dilekçe Oluştur</span></span></li>
+                <li id="menu-istakibi" class="menu-item" onclick="menudenSayfaAc('istakibi', 'istakibi-page', this)"><span>📅 <span class="menu-text">İş Takibi</span></span></li>
 
 
                 <li id="menu-portfoy-root" class="menu-item" onclick="toggleSubmenu('portfoy-submenu', 'arrow-portfoy-icon')">
-                    <span>🗂️ Portföy</span>
+                    <span>🗂️ <span class="menu-text">Portföy</span></span>
                     <span id="arrow-portfoy-icon">▼</span>
                 </li>
                 <div id="portfoy-submenu" class="submenu-list">
-                    <div id="sub-musteriler" class="submenu-item" onclick="menudenSayfaAc('musteriler', 'musteriler-page', this)">↳ Müşteriler</div>
-                    <div id="sub-isortaklari" class="submenu-item" onclick="menudenSayfaAc('isortaklari', 'isortaklari-page', this)">↳ İş Ortakları</div>
+                    <div id="sub-musteriler" class="submenu-item" onclick="menudenSayfaAc('musteriler', 'musteriler-page', this)">↳ <span class="menu-text">Müşteriler</span></div>
+                    <div id="sub-isortaklari" class="submenu-item" onclick="menudenSayfaAc('isortaklari', 'isortaklari-page', this)">↳ <span class="menu-text">İş Ortakları</span></div>
                 </div>
 
                 <li id="menu-muhasebe-root" class="menu-item" onclick="toggleSubmenu('muhasebe-submenu', 'arrow-muhasebe-icon')">
-                    <span>💰 Muhasebe</span>
+                    <span>💰 <span class="menu-text">Muhasebe</span></span>
                     <span id="arrow-muhasebe-icon">▼</span>
                 </li>
                 <div id="muhasebe-submenu" class="submenu-list">
-                    <div id="sub-nakit-dekont" class="submenu-item" onclick="menudenSayfaAc('nakit-dekont', 'nakit-dekont-page', this)">↳ Nakit Ödeme Dekontu</div>
-                    <div id="sub-is-muhasebe-olustur" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe-olustur', 'is-muhasebe-olustur-page', this)">↳ İş Muhasebesi Oluştur</div>
-                    <div id="sub-is-muhasebe" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe', 'is-muhasebe-page', this)">↳ İş Muhasebesi Takibi</div>
-                    <div id="sub-tamamlanan-is-muhasebe" class="submenu-item" onclick="menudenSayfaAc('tamamlanan-is-muhasebe', 'tamamlanan-is-muhasebeleri-page', this)">↳ Tamamlanan İş Muhasebeleri</div>
-                    <div id="sub-hesap-takip" class="submenu-item" onclick="menudenSayfaAc('hesap-takip', 'hesap-takip-page', this)">↳ Hesap Takip Sistemi</div>
-                    <div id="sub-fatura-takip" class="submenu-item" onclick="menudenSayfaAc('fatura-takip', 'fatura-takip-page', this)">↳ Fatura Takip Sistemi</div>
-                    <div id="sub-yillik-butce" class="submenu-item" onclick="menudenSayfaAc('yillik-butce', 'yillik-butce-page', this)">↳ Yıllık Bütçeler</div>
+                    <div id="sub-nakit-dekont" class="submenu-item" onclick="menudenSayfaAc('nakit-dekont', 'nakit-dekont-page', this)">↳ <span class="menu-text">Nakit Ödeme Dekontu</span></div>
+                    <div id="sub-is-muhasebe-olustur" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe-olustur', 'is-muhasebe-olustur-page', this)">↳ <span class="menu-text">İş Muhasebesi Oluştur</span></div>
+                    <div id="sub-is-muhasebe" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe', 'is-muhasebe-page', this)">↳ <span class="menu-text">İş Muhasebesi Takibi</span></div>
+                    <div id="sub-tamamlanan-is-muhasebe" class="submenu-item" onclick="menudenSayfaAc('tamamlanan-is-muhasebe', 'tamamlanan-is-muhasebeleri-page', this)">↳ <span class="menu-text">Tamamlanan İş Muhasebeleri</span></div>
+                    <div id="sub-hesap-takip" class="submenu-item" onclick="menudenSayfaAc('hesap-takip', 'hesap-takip-page', this)">↳ <span class="menu-text">Hesap Takip Sistemi</span></div>
+                    <div id="sub-fatura-takip" class="submenu-item" onclick="menudenSayfaAc('fatura-takip', 'fatura-takip-page', this)">↳ <span class="menu-text">Fatura Takip Sistemi</span></div>
+                    <div id="sub-yillik-butce" class="submenu-item" onclick="menudenSayfaAc('yillik-butce', 'yillik-butce-page', this)">↳ <span class="menu-text">Yıllık Bütçeler</span></div>
                 </div>
 
-                <li id="menu-yonetim" class="menu-item" onclick="menudenSayfaAc('yonetim', 'yonetim-page', this)"><span>⚙️ Portal Yönetimi</span></li>
+                <li id="menu-yonetim" class="menu-item" onclick="menudenSayfaAc('yonetim', 'yonetim-page', this)"><span>⚙️ <span class="menu-text">Portal Yönetimi</span></span></li>
             </ul>
 
             <div class="sidebar-users-section">
@@ -908,9 +937,13 @@
                             <span class="theme-toggle-option right">🌙</span>
                         </div>
                     </div>
-                    <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 Çıkış</button>
+                    <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 <span>Çıkış</span></button>
                 </div>
-
+            </div>
+            <div class="sidebar-copyright-area">
+                <div class="version-tag">V1.84.6</div>
+                <div>Powered by Turak Mimarlık</div>
+                <div>All Rights Reserved</div>
             </div>
         </div>
 
@@ -2791,7 +2824,19 @@
             }
         }
 
+        function sidebarToggle() {
+            const sidebar = document.querySelector('.sidebar');
+            const btn = document.getElementById('sidebarToggle');
+            sidebar.classList.toggle('collapsed');
+            const collapsed = sidebar.classList.contains('collapsed');
+            btn.textContent = collapsed ? '▶' : '◀';
+            localStorage.setItem('tm_sidebar_collapsed', collapsed ? '1' : '0');
+        }
         function menuyuInsaEt(yetkiler) {
+            if (localStorage.getItem('tm_sidebar_collapsed') === '1') {
+                document.querySelector('.sidebar').classList.add('collapsed');
+                document.getElementById('sidebarToggle').textContent = '▶';
+            }
             sayfaDegistir('anasayfa-page', document.getElementById('menu-anasayfa'));
             kullaniciListesiniYenile();
             sidebarKullanicilariYenile();
@@ -8741,133 +8786,143 @@ function itDurumMetni(o) {
                 footerStr = footerInfo.length ? footerInfo.join(" &nbsp;&nbsp;|&nbsp;&nbsp; ") : "Adres: Deniz Mah. Selvi Sk. No: 14/D &nbsp;&nbsp;|&nbsp;&nbsp; İĞNEADA | DEMİRKÖY | KIRKLARELİ<br>Tel: +90 544 235 98 32 &nbsp;&nbsp;|&nbsp;&nbsp; E-posta: turakmimarlik@gmail.com";
             }
 
-            // Metni paragraflara böl
             var paragraflar = v.metin.split(/\n+/).map(function(p){ return p.trim(); }).filter(function(p){ return p; });
 
-            // Başlık HTML'i (sabit, her sayfada tekrarlanır)
-            function baslikHtml(logoHtml) {
-                var l = logoHtml || '<div style="font-size:14pt;font-weight:700;letter-spacing:1.5px;text-align:center;">' + firmaAd + '</div>';
-                return '<div style="text-align:center;flex-shrink:0;">' + l + '</div>' +
-                    '<div style="height:2em;flex-shrink:0;"></div>' +
-                    '<div style="display:flex;justify-content:space-between;font-size:9.5pt;flex-shrink:0;">' +
-                    '<div><span style="display:inline-block;width:55px;"><b>Sayı</b></span><span style="display:inline-block;width:20px;text-align:center;"><b>:</b></span> ' + idStr + '</div>' +
-                    '<span>' + trh + '</span></div>' +
-                    '<div style="font-size:9.5pt;flex-shrink:0;"><span style="display:inline-block;width:55px;"><b>Konu</b></span><span style="display:inline-block;width:20px;text-align:center;"><b>:</b></span> ' + esc(v.konu) + '</div>' +
-                    '<div style="height:2em;flex-shrink:0;"></div>' +
-                    (function(gy) { return gy.split('\n').filter(function(l){return l.trim();}).map(function(l){return '<div style="text-align:center;font-size:12pt;font-weight:700;">' + trToUpper(esc(l.trim())) + '</div>';}).join(''); })(v.gonderilecekYer) +
-                    '<div style="height:2em;flex-shrink:0;"></div>' +
-                    (v.ilgi ? '<div style="font-size:9.5pt;flex-shrink:0;"><span style="display:inline-block;width:55px;"><b>İlgi</b></span><span style="display:inline-block;width:20px;text-align:center;"><b>:</b></span> ' + esc(v.ilgi) + '</div><div style="height:2em;flex-shrink:0;"></div>' : '');
-            }
-
-            function altbilgiHtml() {
-                return '<div style="border-top:1px solid #1a1a2e;padding-top:5px;text-align:center;font-size:7pt;color:#555;line-height:1.4;flex-shrink:0;">' + footerStr + '</div>';
-            }
-
-            // Paragraf listesinden HTML üret
-            function paragrafHtml(parList) {
-                return parList.map(function(p) {
-                    return '<p style="margin:0 0 6px 0;text-indent:1.5em;text-align:justify;font-size:11pt;line-height:1.6;">' + esc(p) + '</p>';
-                }).join('');
-            }
-
             function pdfOlustur(logoHtml) {
-                var bs = baslikHtml(logoHtml);
-                var af = altbilgiHtml();
-                var imzaSatir = '<div style="margin-left:102mm;width:34mm;text-align:center;white-space:nowrap;flex-shrink:0;font-weight:700;font-size:10.5pt;">' + esc(imzaAd) + '</div>';
+                var logoHtmlStr = logoHtml || '<div style="font-size:14pt;font-weight:700;letter-spacing:1.5px;text-align:center;">' + firmaAd + '</div>';
 
-                // Ölçüm elementi oluştur
+                // 10 esit bolum: A4(297mm) - padding(15+10=25mm) = 272mm / 10 = 27.2mm
+                var s = 27.2;
+
+                // Bolum 1: Logo (sabit)
+                var sec1 = '<div style="height:' + s + 'mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">' + logoHtmlStr + '</div>';
+
+                // Bolum 2: Sayi / Konu / Tarih (sabit)
+                var sec2 = '<div style="height:' + s + 'mm;display:flex;flex-direction:column;justify-content:center;font-size:9.5pt;">' +
+                    '<div style="display:flex;justify-content:space-between;"><div><b>Sayı</b> : ' + idStr + '</div><div>' + trh + '</div></div>' +
+                    '<div style="margin-top:4px;"><b>Konu</b> : ' + esc(v.konu) + '</div></div>';
+
+                // Bolum 3: Gonderilecek Yer (sabit)
+                var yerHtml = v.gonderilecekYer.split('\n').filter(function(l){return l.trim();}).map(function(l){
+                    return '<div style="text-align:center;font-size:12pt;font-weight:700;">' + trToUpper(esc(l.trim())) + '</div>';
+                }).join('');
+                var sec3 = '<div style="height:' + s + 'mm;display:flex;flex-direction:column;align-items:center;justify-content:center;">' + yerHtml + '</div>';
+
+                // Bolum 4: Ilgi (sabit, varsa)
+                var sec4 = '<div style="height:' + s + 'mm;display:flex;align-items:center;font-size:9.5pt;">' +
+                    (v.ilgi ? '<b>İlgi</b> : ' + esc(v.ilgi) : '') + '</div>';
+
+                // Bolum 10: Altlik (sabit)
+                var sec10 = '<div style="height:' + s + 'mm;border-top:1px solid #1a1a2e;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#555;line-height:1.4;text-align:center;">' + footerStr + '</div>';
+
+                // Olcum
                 var olcu = document.createElement("div");
-                olcu.style.cssText = "position:fixed;left:-9999px;top:0;width:170mm;font-family:Arial,Helvetica,sans-serif;font-size:11pt;line-height:1.5;";
+                olcu.style.cssText = "position:fixed;left:-9999px;top:0;width:170mm;font-family:Arial,Helvetica,sans-serif;font-size:11pt;line-height:1.6;";
                 document.body.appendChild(olcu);
 
-                // Sabit kısımların (başlık + 2em + imza + altbilgi) yüksekliğini ölç
-                olcu.innerHTML = bs + '<div style="height:2em;"></div>' + imzaSatir + af;
-                var sabitYukseklik = olcu.offsetHeight;
-
-                // 1 satır yüksekliğini ölç
-                olcu.innerHTML = '<div style="font-size:11pt;line-height:1.6;">X</div>';
-                var satirYukseklik = olcu.offsetHeight;
-
-                // Bir paragrafın yaklaşık yüksekliği (paragraf arası 6px margin)
                 olcu.innerHTML = '<p style="margin:0 0 6px 0;text-indent:1.5em;text-align:justify;font-size:11pt;line-height:1.6;">X</p>';
-                var paragrafBirim = olcu.offsetHeight;
+                var lineH = olcu.offsetHeight;
+
+                var parH = paragraflar.map(function(p){
+                    olcu.innerHTML = '<p style="margin:0 0 6px 0;text-indent:1.5em;text-align:justify;font-size:11pt;line-height:1.6;">' + esc(p) + '</p>';
+                    return olcu.offsetHeight;
+                });
+                var textH = parH.reduce(function(a, b){ return a + b; }, 0);
+
+                var imzaHtml = '<div style="height:2em;"></div><div style="margin-left:102mm;width:34mm;text-align:center;white-space:nowrap;font-weight:700;font-size:10.5pt;">' + esc(imzaAd) + '</div>';
+                olcu.innerHTML = imzaHtml;
+                var imzaH = olcu.offsetHeight;
 
                 document.body.removeChild(olcu);
 
-                // Sayfa içi kullanılabilir piksel
-                var sayfaPx = 297 * 3.78;     // ~1123px
-                var paddingTopPx = 10 * 3.78;  // ~38px
-                var paddingBottomPx = 8 * 3.78; // ~30px
-                var kullanilabilirPx = sayfaPx - paddingTopPx - paddingBottomPx; // ~1055px
-
-                // Metin için kalan boşluk (her sayfada aynı)
-                var metinBoslukPx = Math.max(50, kullanilabilirPx - sabitYukseklik);
-
-                // Her paragrafın kaç satır olduğunu hesapla
-                var paragrafSatirlari = [];
-                for (var pi = 0; pi < paragraflar.length; pi++) {
-                    var metinUzunluk = paragraflar[pi].length;
-                    // Harf başına yaklaşık genişlik: 11pt Arial'de ~7px
-                    var satirBasinaHarf = Math.floor(170 * 3.78 / 7);
-                    var satirSayisi = Math.max(1, Math.ceil(metinUzunluk / satirBasinaHarf));
-                    paragrafSatirlari.push(satirSayisi);
+                function paragrafHtml(parList) {
+                    return parList.map(function(p){
+                        return '<p style="margin:0 0 6px 0;text-indent:1.5em;text-align:justify;font-size:11pt;line-height:1.6;">' + esc(p) + '</p>';
+                    }).join('');
                 }
 
-                // Toplam satır sayısı
-                var toplamSatir = 0;
-                for (pi = 0; pi < paragrafSatirlari.length; pi++) {
-                    toplamSatir += paragrafSatirlari[pi];
+                // Piksel katsayisi ve sayfa CSS
+                var px = 3.78;
+                var secPx = s * px;            // 1 bolumun px karsiligi
+                var text5Px = 5 * secPx;        // bolum 5-9 = metin alani (tek sayfada)
+                var text9Px = 9 * secPx;        // bolum 1-9 = metin alani (2+ sayfada)
+                var pageCss = 'width:210mm;height:297mm;padding:15mm 20mm 10mm 20mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#000;font-size:11pt;line-height:1.5;overflow:hidden;';
+
+                // ---- TEK SAYFA KONTROLU ----
+                if (textH + imzaH <= text5Px) {
+                    var html = '<div style="' + pageCss + '">' +
+                        sec1 + sec2 + sec3 + sec4 +
+                        '<div style="height:' + (5 * s) + 'mm;">' +
+                        paragrafHtml(paragraflar) + imzaHtml + '</div>' +
+                        sec10 + '</div>';
+                    var el = document.createElement("div");
+                    el.innerHTML = html;
+                    document.body.appendChild(el);
+                    html2pdf().set({ margin: 0, filename: "DILEKCE_" + (typeof v.id === 'number' ? String(v.id).padStart(4, '0') : "TASLAK") + ".pdf", html2canvas: { scale: 2, useCORS: true }, jsPDF: { format: 'a4', orientation: 'portrait' } }).from(el).save().then(function() {
+                        if (el.parentNode) document.body.removeChild(el);
+                    });
+                    return;
                 }
 
-                // Sayfa başına sığan satır sayısı
-                var satirPerSayfa = Math.floor(metinBoslukPx / satirYukseklik);
-
-                // Kaç sayfa gerektiğini hesapla
-                var sayfaSayisi = Math.max(1, Math.ceil(toplamSatir / satirPerSayfa));
-
-                // Sayfalara paragrafları dağıt
+                // ---- COK SAYFALI ----
+                // Sayfa 1: 5 bolum metin (imza yok, son sayfada)
+                // Sayfa 2..N-1: 9 bolum metin (imza yok)
+                // Sayfa N: 9 bolum - imza (metin + imza)
                 var sayfaParagraflari = [];
-                var kalanSatir = satirPerSayfa;
-                var mevcutSayfa = [];
-                for (pi = 0; pi < paragraflar.length; pi++) {
-                    if (paragrafSatirlari[pi] <= kalanSatir) {
-                        mevcutSayfa.push(paragraflar[pi]);
-                        kalanSatir -= paragrafSatirlari[pi];
+                var mevcut = [];
+                var kalanH = text5Px;
+                for (var pi = 0; pi < paragraflar.length; pi++) {
+                    if (parH[pi] <= kalanH) {
+                        mevcut.push(paragraflar[pi]);
+                        kalanH -= parH[pi];
                     } else {
-                        // Paragraf sığmıyorsa yeni sayfaya geç
-                        if (mevcutSayfa.length > 0) {
-                            sayfaParagraflari.push(mevcutSayfa);
+                        if (mevcut.length > 0) sayfaParagraflari.push(mevcut);
+                        mevcut = [paragraflar[pi]];
+                        kalanH = text9Px - parH[pi];
+                    }
+                }
+                if (mevcut.length > 0) sayfaParagraflari.push(mevcut);
+
+                // Son sayfada imza icin yer kalmiyorsa paragraf kaydir
+                var lastIx = sayfaParagraflari.length - 1;
+                if (lastIx > 0) {
+                    var sonListe = sayfaParagraflari[lastIx];
+                    var sonH = 0;
+                    for (var si = 0; si < sonListe.length; si++) {
+                        var bul = paragraflar.indexOf(sonListe[si]);
+                        if (bul >= 0) sonH += parH[bul];
+                    }
+                    var text9ImzaPx = text9Px - imzaH;
+                    if (sonH > text9ImzaPx) {
+                        var yeniSayfa = [];
+                        var tmpH = sonH;
+                        for (var ri = sonListe.length - 1; ri >= 0; ri--) {
+                            var rIdx = paragraflar.indexOf(sonListe[ri]);
+                            var rH = rIdx >= 0 ? parH[rIdx] : 0;
+                            if (tmpH - rH > text9ImzaPx) {
+                                yeniSayfa.unshift(sonListe.pop());
+                                tmpH -= rH;
+                            } else break;
                         }
-                        mevcutSayfa = [paragraflar[pi]];
-                        kalanSatir = satirPerSayfa - paragrafSatirlari[pi];
+                        if (yeniSayfa.length > 0) sayfaParagraflari.push(yeniSayfa);
                     }
                 }
-                if (mevcutSayfa.length > 0) {
-                    sayfaParagraflari.push(mevcutSayfa);
-                }
 
-                // Sayfa sayısını güncelle
-                sayfaSayisi = sayfaParagraflari.length;
-
-                // Sayfaları oluştur
+                // ---- SAYFALARI OLUSTUR ----
                 var pagesHtml = '';
-                for (var s = 0; s < sayfaSayisi; s++) {
-                    var sonSayfa = (s === sayfaSayisi - 1);
-                    var pageCss = sonSayfa ? '' : 'page-break-after:always;';
-                    var icerikHtml;
-                    if (sonSayfa) {
-                        icerikHtml = '<div style="flex-shrink:0;">' + paragrafHtml(sayfaParagraflari[s]) + '</div>' +
-                            '<div style="height:2em;flex-shrink:0;"></div>' +
-                            imzaSatir +
-                            '<div style="flex:1;"></div>';
+                for (var sIdx = 0; sIdx < sayfaParagraflari.length; sIdx++) {
+                    var sonSayfa = (sIdx === sayfaParagraflari.length - 1);
+                    var pb = sonSayfa ? '' : 'page-break-after:always;';
+                    var icerik = '';
+                    if (sIdx === 0) {
+                        icerik = sec1 + sec2 + sec3 + sec4 +
+                            '<div>' + paragrafHtml(sayfaParagraflari[sIdx]) + '</div>' +
+                            (sonSayfa ? imzaHtml : '') + sec10;
                     } else {
-                        icerikHtml = '<div style="flex:1;overflow:hidden;">' + paragrafHtml(sayfaParagraflari[s]) + '</div>';
+                        icerik = '<div>' + paragrafHtml(sayfaParagraflari[sIdx]) + '</div>' +
+                            (sonSayfa ? imzaHtml : '') + sec10;
                     }
-                    pagesHtml += '<div style="width:210mm;height:297mm;padding:10mm 20mm 8mm 20mm;box-sizing:border-box;background:#fff;display:flex;flex-direction:column;font-family:Arial,Helvetica,sans-serif;color:#000;font-size:11pt;line-height:1.5;' + pageCss + '">' +
-                        bs +
-                        icerikHtml +
-                        af +
-                        '</div>';
+                    pagesHtml += '<div style="' + pageCss + pb + '">' + icerik + '</div>';
                 }
 
                 var el = document.createElement("div");
