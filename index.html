@@ -459,7 +459,7 @@
         .pdf-header-top { 
             display: flex; 
             justify-content: space-between; 
-            align-items: flex-start; 
+            align-items: center; 
             margin-bottom: 4px; 
         }
         .pdf-header-top-right { text-align: right; }
@@ -537,17 +537,30 @@
             background: #f8f8f8;
         }
         .pdf-bottom { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-end;
-            margin-top: 16px; 
+            display: flex;
+            flex-direction: column;
+            margin-top: 16px;
+            flex: 1;
+        }
+        .pdf-bottom-main {
+            display: flex;
+            justify-content: space-between;
             gap: 16px;
         }
         .pdf-bottom-left { 
             flex: 1; 
         }
+        .pdf-bottom-divider {
+            border-top: 2px solid #1a1a1a;
+            margin: 6px 0 4px 0;
+        }
+        .pdf-bottom-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
         .pdf-signature {
-            margin-bottom: 8px;
+            margin-top: auto;
             font-size: 10px;
             color: #444;
         }
@@ -562,11 +575,10 @@
             margin-top: 2px;
         }
         .pdf-notes { 
-            border-top: 2px solid #1a1a1a;
-            padding-top: 10px;
             font-size: 9px; 
             line-height: 1.7; 
             color: #555; 
+            padding-top: 4px;
         }
         .pdf-notes strong {
             color: #9E2A2B;
@@ -2073,7 +2085,7 @@
                     <span class="hb-right"><span class="vd-red">V.D: DEMİRKÖY</span></span>
                 </div>
                 <div class="hb-row">
-                    <span class="hb-left">GSM: 0544 235 98 32</span>
+                    <span class="hb-left">GSM: 0544 235 98 32 &nbsp;|&nbsp; E-MAİL: turakmimarlik@gmail.com</span>
                     <span class="hb-right"><span class="vergino-si">VERGİ NO: 8670608801</span></span>
                 </div>
             </div>
@@ -2103,7 +2115,28 @@
             <tbody id="pOutTableBody"></tbody>
         </table>
         <div class="pdf-bottom">
-            <div class="pdf-bottom-left">
+            <div class="pdf-bottom-main">
+                <div class="pdf-bottom-left">
+                </div>
+                <div class="pdf-bottom-right">
+                    <table class="pdf-total-table">
+                        <tr>
+                            <td>ARA TOPLAM</td>
+                            <td id="pOutAra">0,00 ₺</td>
+                        </tr>
+                        <tr>
+                            <td>TOPLAM K.D.V</td>
+                            <td id="pOutKdv">0,00 ₺</td>
+                        </tr>
+                        <tr class="grand-total">
+                            <td>GENEL TOPLAM</td>
+                            <td id="pOutGenel">0,00 ₺</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="pdf-bottom-divider"></div>
+            <div class="pdf-bottom-content">
                 <div class="pdf-notes">
                     <strong>NOT:</strong><br>
                     FİYAT TEKLİFİ TEKLİF TARİHİNDEN İTİBAREN 14 GÜN İÇİN GEÇERLİDİR.<br>
@@ -2113,22 +2146,6 @@
                     <strong>TEKLİFİ HAZIRLAYAN:</strong>
                     <div class="hazirlayan-isim" id="pOutHazirlayan">TUGAY TURAK</div>
                 </div>
-            </div>
-            <div class="pdf-bottom-right">
-                <table class="pdf-total-table">
-                    <tr>
-                        <td>ARA TOPLAM</td>
-                        <td id="pOutAra">0,00 ₺</td>
-                    </tr>
-                    <tr>
-                        <td>TOPLAM K.D.V</td>
-                        <td id="pOutKdv">0,00 ₺</td>
-                    </tr>
-                    <tr class="grand-total">
-                        <td>GENEL TOPLAM</td>
-                        <td id="pOutGenel">0,00 ₺</td>
-                    </tr>
-                </table>
             </div>
         </div>
     </div>
@@ -4267,7 +4284,7 @@
             var logoData = localStorage.getItem("tm_sirket_logo");
             var logoArea = document.getElementById("pOutLogoArea");
             if (logoData && logoData !== "null" && logoData.length > 100) {
-                logoArea.innerHTML = '<img src="' + logoData + '" style="max-height:94px;max-width:375px;display:block;">';
+                logoArea.innerHTML = '<img src="' + logoData + '" style="max-height:90px;max-width:250px;height:auto;display:block;">';
             } else {
                 logoArea.innerText = "TURAK MİMARLIK";
             }
@@ -4285,7 +4302,7 @@
             const template = document.getElementById("pdf-export-template");
             const clone = template.cloneNode(true);
             clone.id = 'pdf-clone-' + Date.now();
-            clone.style.cssText = 'display:block;position:fixed;left:-9999px;top:0;width:210mm;height:297mm;overflow:hidden;padding:15mm 16mm;box-sizing:border-box;background:white;font-family:Montserrat,sans-serif;text-transform:uppercase;line-height:1.5;color:#1a1a1a;';
+            clone.style.cssText = 'display:flex;flex-direction:column;position:fixed;left:-9999px;top:0;width:210mm;height:297mm;overflow:hidden;padding:15mm 16mm;box-sizing:border-box;background:white;font-family:Montserrat,sans-serif;text-transform:uppercase;line-height:1.5;color:#1a1a1a;';
             document.body.appendChild(clone);
             var fname = (veri.isAdi || 'TEKLIF').replace(/[\\/:*?"<>|]/g,'_') + '_#' + String(veri.id).padStart(4,'0') + '.pdf';
             setTimeout(function(){
