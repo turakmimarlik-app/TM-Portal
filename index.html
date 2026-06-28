@@ -8888,15 +8888,17 @@ function itDurumMetni(o) {
             if (ci.dilekceAltBilgi) {
                 footerStr = ci.dilekceAltBilgi;
             } else {
-                var footerInfo = [];
-                if (ci.adres) footerInfo.push(ci.adres);
+                var line1 = ci.adres || '';
+                if (!line1) line1 = "Adres: Deniz Mah. Selvi Sk. No: 14/D &nbsp;&nbsp;|&nbsp;&nbsp; İĞNEADA | DEMİRKÖY | KIRKLARELİ";
+                var line2Parts = [];
                 var telNo = ci.gsm || ci.telefon || "";
-                if (telNo) footerInfo.push("Tel: " + telNo);
-                if (ci.email) footerInfo.push("E-posta: " + ci.email);
-                if (footerInfo.length) {
-                    footerStr = footerInfo[0] + "<br>" + footerInfo.slice(1).join(" &nbsp;&nbsp;|&nbsp;&nbsp; ");
+                if (telNo) line2Parts.push("Tel: " + telNo);
+                if (ci.email) line2Parts.push("E-posta: " + ci.email);
+                var line2 = line2Parts.length ? line2Parts.join(" &nbsp;&nbsp;|&nbsp;&nbsp; ") : '';
+                if (line2) {
+                    footerStr = line1 + "<br>" + line2;
                 } else {
-                    footerStr = "Adres: Deniz Mah. Selvi Sk. No: 14/D &nbsp;&nbsp;|&nbsp;&nbsp; İĞNEADA | DEMİRKÖY | KIRKLARELİ<br>Tel: +90 544 235 98 32 &nbsp;&nbsp;|&nbsp;&nbsp; E-posta: turakmimarlik@gmail.com";
+                    footerStr = line1;
                 }
             }
 
@@ -8919,25 +8921,21 @@ function itDurumMetni(o) {
                 var sec1 = '<div style="height:20mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">' + logoHtmlStr + '</div>';
                 var h1 = 20;
 
-                // ---- Bolum 2: Sayi (sol) + Tarih (sag) - 12mm ----
-                var secSayi = '<div style="height:12mm;display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:2mm;box-sizing:border-box;font-size:10pt;">' +
-                    '<div><b>Sayı</b> : ' + idStr + '</div>' +
-                    '<div><b>Tarih</b> : ' + trh + '</div>' +
+                // ---- Bolum 2: Sayi (sol) + Tarih (sag) + Konu - 18mm ----
+                var secSayiKonu = '<div style="height:18mm;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:2mm;box-sizing:border-box;font-size:10pt;">' +
+                    '<div style="display:flex;justify-content:space-between;"><span><b>Sayı</b> : ' + idStr + '</span><span><b>Tarih</b> : ' + trh + '</span></div>' +
+                    '<div style="margin-top:3mm;"><b>Konu</b> : ' + esc(v.konu) + '</div>' +
                     '</div>';
-                var hSayi = 12;
+                var hSayiKonu = 18;
 
-                // ---- Bolum 3: Konu - 10mm ----
-                var sec2 = '<div style="height:10mm;display:flex;align-items:center;font-size:10pt;"><b>Konu</b> : ' + esc(v.konu) + '</div>';
-                var h2 = 10;
-
-                // ---- Bolum 4: Gonderilecek Yer - 20mm (ortali, gri zemin) ----
+                // ---- Bolum 3: Gonderilecek Yer - 20mm (ortali) ----
                 var yerLines = v.gonderilecekYer.split('\n').filter(function(l){return l.trim();}).map(function(l){
                     return '<div>' + trToUpper(esc(l.trim())) + '</div>';
                 }).join('');
-                var sec3 = '<div style="height:20mm;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12pt;font-weight:700;background:#f5f5f5;">' + yerLines + '</div>';
+                var sec3 = '<div style="height:20mm;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12pt;font-weight:700;">' + yerLines + '</div>';
                 var h3 = 20;
 
-                // ---- Bolum 5: Ilgi - 12mm (varsa) ----
+                // ---- Bolum 4: Ilgi - 12mm (varsa) ----
                 var sec4 = '';
                 var h4 = 0;
                 if (v.ilgi) {
@@ -8946,7 +8944,7 @@ function itDurumMetni(o) {
                 }
 
                 // ---- Sabit bolumler toplami ----
-                var fixedHmm = h1 + hSayi + h2 + h3 + h4;
+                var fixedHmm = h1 + hSayiKonu + h3 + h4;
 
                 // ---- Imza alani - 22mm ----
                 var sigHmm = 22;
@@ -8989,7 +8987,7 @@ function itDurumMetni(o) {
                 // ---- TEK SAYFA (metin + imza <= ilk sayfa metin alani) ----
                 if (totalPx <= textPx1) {
                     var html = '<div style="width:210mm;height:297mm;padding:15mm 20mm 10mm 20mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#000;font-size:11pt;line-height:1.5;overflow:hidden;">' +
-                        sec1 + secSayi + sec2 + sec3 + sec4 +
+                        sec1 + secSayiKonu + sec3 + sec4 +
                         '<div style="height:' + (textHmm1 + sigHmm + 4) + 'mm;">' + bodyHtml + imzaHtml + '</div>' +
                         secFoot + '</div>';
                     var el = document.createElement("div");
@@ -9047,7 +9045,7 @@ function itDurumMetni(o) {
 
                     if (si === 0) {
                         tumHtml += '<div style="width:210mm;height:297mm;padding:15mm 20mm 10mm 20mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#000;font-size:11pt;line-height:1.5;overflow:hidden;' + pb + '">' +
-                            sec1 + secSayi + sec2 + sec3 + sec4 +
+                            sec1 + secSayiKonu + sec3 + sec4 +
                             '<div>' + sayfaMetin + (sonSayfa ? imzaHtml : '') + '</div>' +
                             secFoot + '</div>';
                     } else {
