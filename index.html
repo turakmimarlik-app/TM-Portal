@@ -4280,12 +4280,16 @@
             document.getElementById("pOutGenel").innerText = veri.genelTutar;
 
             const template = document.getElementById("pdf-export-template");
-            template.style.display = "block";
+            template.style.cssText = 'position:fixed;left:-9999px;top:0;width:210mm;background:white;z-index:9999;font-family:Montserrat,sans-serif;text-transform:uppercase;padding:18mm 16mm;box-sizing:border-box;';
             html2pdf().set({ margin: { top: 0, bottom: 0, left: 0, right: 0 }, filename: 'TM_TEKLIF_#' + String(veri.id).padStart(4, '0') + '.pdf', html2canvas: { scale: 2, useCORS: true, letterRendering: true }, jsPDF: { format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['avoid-all'] } }).from(template).then(function(pdf) {
                 var blob = pdf.output('blob');
                 var url = URL.createObjectURL(blob);
-                window.open(url, '_blank');
-                template.style.display = "none";
+                var win = window.open(url, '_blank');
+                if (!win) {
+                    var a = document.createElement('a');
+                    a.href = url; a.download = 'TM_TEKLIF_#' + String(veri.id).padStart(4, '0') + '.pdf'; a.click();
+                }
+                template.style.cssText = 'display:none;';
             });
         }
 
