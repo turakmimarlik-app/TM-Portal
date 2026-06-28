@@ -3542,7 +3542,8 @@
 
         /* ================= ŞİRKET BİLGİLERİ & LOGO ================= */
         function sirketBilgileriYukle() {
-            const d = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {};
+            var d = {};
+            try { d = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { d = {}; }
             ["ad","telefon","gsm","vergiDaire","vergiNo","email","imzaAd","adres","dilekceAltBilgi"].forEach(function(k) {
                 var el = document.getElementById("ci" + k.charAt(0).toUpperCase() + k.slice(1));
                 if (el && d[k]) el.value = d[k];
@@ -3591,7 +3592,8 @@
         }
         function sidebardaLogoyuGoster() {
             var logoData = localStorage.getItem("tm_sirket_logo");
-            var ci = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {};
+            var ci = {};
+            try { ci = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { ci = {}; }
             var header = document.querySelector(".sidebar-header");
             if (!header) return;
             if (logoData) {
@@ -4285,7 +4287,8 @@
             document.getElementById("pOutTeklifNo").innerText = '#' + String(veri.id).padStart(4,'0');
             document.getElementById("pOutHazirlayan").innerText = veri.hazirlayan;
 
-            var sirket = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {};
+            var sirket = {};
+            try { sirket = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { sirket = {}; }
             var gsm = (sirket.gsm || "0544 235 98 32").toUpperCase();
             var email = (sirket.email || "turakmimarlik@gmail.com").toLowerCase();
             document.getElementById("pOutIletisim").innerHTML = 'GSM: ' + gsm + ' &nbsp;|&nbsp; E-MAİL: <span style="text-transform:lowercase">' + email + '</span>';
@@ -8875,7 +8878,8 @@ function itDurumMetni(o) {
             var trh = v.tarih ? new Date(v.tarih).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', year: 'numeric' }) : "";
 
             var logoData = localStorage.getItem("tm_sirket_logo");
-            var ci = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {};
+            var ci = {};
+            try { ci = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { ci = {}; }
             var firmaAd = ci.ad || "TURAK MİMARLIK";
             var imzaAd = ci.imzaAd || "OKAN TUGAY TURAK";
 
