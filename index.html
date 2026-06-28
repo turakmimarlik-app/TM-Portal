@@ -2131,6 +2131,7 @@
             fsTimer = setTimeout(function() {
                 var dirtyList = Object.keys(fsDirtyKeys);
                 if (dirtyList.length === 0) return;
+                console.log('fsSync yaziyor:', dirtyList.join(','), new Date().toLocaleTimeString());
                 var allData = {};
                 dirtyList.forEach(function(k) {
                     try { allData[k] = JSON.parse(localStorage.getItem(k)); } catch(e) { allData[k] = localStorage.getItem(k); }
