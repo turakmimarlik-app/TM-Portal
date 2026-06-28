@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TM-Portal - Ofis Yönetim Sistemi</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -4281,8 +4283,13 @@
             document.getElementById("pOutGenel").innerText = veri.genelTutar;
 
             const template = document.getElementById("pdf-export-template");
-            template.style.cssText = 'display:block;width:210mm;height:297mm;overflow:hidden;padding:15mm 16mm;box-sizing:border-box;background:white;font-family:Montserrat,sans-serif;text-transform:uppercase;line-height:1.5;color:#1a1a1a;';
-            html2pdf().set({ margin: 1, filename: 'TM_TEKLIF_#' + String(veri.id).padStart(4, '0') + '.pdf', html2canvas: { scale: 2, useCORS: true }, jsPDF: { format: 'a4', orientation: 'portrait' } }).from(template).save().then(function() { template.style.cssText = 'display:none;'; });
+            template.style.cssText = 'display:block;opacity:0;width:210mm;height:297mm;overflow:hidden;padding:15mm 16mm;box-sizing:border-box;background:white;font-family:Montserrat,sans-serif;text-transform:uppercase;line-height:1.5;color:#1a1a1a;';
+            html2canvas(template, { scale: 2, useCORS: true }).then(function(c) {
+                var u = c.toDataURL('image/jpeg',1);
+                var p = new jspdf.jsPDF('portrait','mm','a4');
+                p.addImage(u,'JPEG',1,1,208,295);
+                p.save('TM_TEKLIF_#' + String(veri.id).padStart(4,'0') + '.pdf');
+            }).catch(function(e){ console.error(e); }).then(function(){ template.style.cssText = 'display:none;'; });
         }
 
         function teklifListesiTarihSirala() {
