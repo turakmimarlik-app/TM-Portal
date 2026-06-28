@@ -556,11 +556,13 @@
         }
         .pdf-bottom-content {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
             flex: 1;
         }
         .pdf-signature {
-            margin-top: 24px;
+            margin-top: 0;
             font-size: 10px;
             color: #444;
         }
@@ -2087,7 +2089,7 @@
                     <span class="hb-right"><span class="vd-red">V.D: DEMİRKÖY</span></span>
                 </div>
                 <div class="hb-row">
-                    <span class="hb-left">GSM: 0544 235 98 32 &nbsp;|&nbsp; E-MAİL: <span style="text-transform:lowercase">turakmimarlik@gmail.com</span></span>
+                    <span class="hb-left" id="pOutIletisim">GSM: 0544 235 98 32 &nbsp;|&nbsp; E-MAİL: <span style="text-transform:lowercase">turakmimarlik@gmail.com</span></span>
                     <span class="hb-right"><span class="vergino-si">VERGİ NO: 8670608801</span></span>
                 </div>
             </div>
@@ -4283,6 +4285,11 @@
             document.getElementById("pOutDate").innerText = veri.sTarih;
             document.getElementById("pOutTeklifNo").innerText = '#' + String(veri.id).padStart(4,'0');
             document.getElementById("pOutHazirlayan").innerText = veri.hazirlayan;
+
+            var sirket = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {};
+            var gsm = (sirket.gsm || "0544 235 98 32").toUpperCase();
+            var email = (sirket.email || "turakmimarlik@gmail.com").toLowerCase();
+            document.getElementById("pOutIletisim").innerHTML = 'GSM: ' + gsm + ' &nbsp;|&nbsp; E-MAİL: <span style="text-transform:lowercase">' + email + '</span>';
 
             var logoData = localStorage.getItem("tm_sirket_logo");
             var logoArea = document.getElementById("pOutLogoArea");
