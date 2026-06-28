@@ -2139,13 +2139,13 @@
                 dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; });
             }).catch(function(e){ console.error('fsSync write error', e); });
         }
-        var origSetItem = localStorage.setItem.bind(localStorage);
-        localStorage.setItem = function(key, value) {
-            console.error('OVERRIDE setItem:', key, 'fsReady:', fsReady);
-            origSetItem(key, value);
-            if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean") {
+        var origSetItem = Storage.prototype.setItem.bind(localStorage);
+        Storage.prototype.setItem = function(key, value) {
+            var isLocal = (this === localStorage);
+            origSetItem.apply(this, arguments);
+            if (isLocal && key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean") {
                 fsDirtyKeys[key] = true;
-                if (fsReady) { console.log('CALLING fsSync from setItem'); fsSync(); } else { console.log('setItem fsReady FALSE:', key, new Date().toLocaleTimeString()); }
+                if (fsReady) { fsSync(); }
             }
         };
         fsLoad();
