@@ -2146,11 +2146,11 @@
             origSetItem(key, value);
             if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean") {
                 fsDirtyKeys[key] = true;
-                if (fsReady) { fsSync(); }
+                if (fsReady) { fsSync(); } else { console.log('setItem fsReady FALSE:', key, new Date().toLocaleTimeString()); }
             }
         };
         fsLoad();
-        setTimeout(function() { fsReady = true; fsSync(); }, 1000);
+        setTimeout(function() { console.log('1sn timeout FIRED, fsReady->true'); fsReady = true; fsSync(); }, 1000);
 
         let SABIT_DALLAR = [
             "MİMARİ UYGULAMA PROJE",
