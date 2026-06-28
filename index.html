@@ -477,14 +477,18 @@
             letter-spacing: 1.2px; 
         }
         .pdf-header-bottom { 
+            font-size: 10px; 
+        }
+        .pdf-header-bottom .hb-row { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            font-size: 10px; 
+            margin-top: 2px;
         }
-        .pdf-header-bottom-left { color: #555; font-weight: 500; letter-spacing: 0.3px; }
-        .pdf-header-bottom-right { text-align: right; font-size: 10px; color: #444; font-weight: 600; }
-        .pdf-header-bottom-right .vergino { font-size: 11px; color: #9E2A2B; }
+        .pdf-header-bottom .hb-left { color: #555; font-weight: 500; letter-spacing: 0.3px; }
+        .pdf-header-bottom .hb-right { text-align: right; }
+        .pdf-header-bottom .vd-red { font-weight: 700; color: #9E2A2B; }
+        .pdf-header-bottom .vergino-si { font-weight: 400; color: #555; font-size: 10px; }
         .pdf-info-grid { 
             display: flex; 
             gap: 15px; 
@@ -513,7 +517,7 @@
             margin-top: 5px; 
         }
         .pdf-table thead th { 
-            background: #9E2A2B;
+            background: #1a1a1a;
             color: white; 
             padding: 9px 8px; 
             font-size: 10px; 
@@ -2061,9 +2065,13 @@
             </div>
             <div class="pdf-firma-unvan">TURAK MİMARLIK VE MİMARİ DANIŞMANLIK</div>
             <div class="pdf-header-bottom">
-                <div class="pdf-header-bottom-left">KIRKLARELİ / DEMİRKÖY / İĞNEADA &nbsp;|&nbsp; GSM: 0544 235 98 32</div>
-                <div class="pdf-header-bottom-right">
-                    V.D: DEMİRKÖY &nbsp;|&nbsp; <span class="vergino">VERGİ NO: 8670608801</span>
+                <div class="hb-row">
+                    <span class="hb-left">KIRKLARELİ / DEMİRKÖY / İĞNEADA</span>
+                    <span class="hb-right"><span class="vd-red">V.D: DEMİRKÖY</span></span>
+                </div>
+                <div class="hb-row">
+                    <span class="hb-left">GSM: 0544 235 98 32</span>
+                    <span class="hb-right"><span class="vergino-si">VERGİ NO: 8670608801</span></span>
                 </div>
             </div>
         </div>
@@ -2093,14 +2101,14 @@
         </table>
         <div class="pdf-bottom">
             <div class="pdf-bottom-left">
-                <div class="pdf-signature">
-                    <strong>TEKLİFİ HAZIRLAYAN:</strong>
-                    <div class="hazirlayan-isim" id="pOutHazirlayan">TUGAY TURAK</div>
-                </div>
                 <div class="pdf-notes">
                     <strong>NOT:</strong><br>
                     FİYAT TEKLİFİ TEKLİF TARİHİNDEN İTİBAREN 14 GÜN İÇİN GEÇERLİDİR.<br>
                     TARAFIMIZ DIŞINDA GELİŞEN PROJE RESTORASYONU VEYA REVİZYON DEĞİŞİKLİKLERİ AYRICA ÜCRETLENDİRİLECEKTİR.
+                </div>
+                <div class="pdf-signature">
+                    <strong>TEKLİFİ HAZIRLAYAN:</strong>
+                    <div class="hazirlayan-isim" id="pOutHazirlayan">TUGAY TURAK</div>
                 </div>
             </div>
             <div class="pdf-bottom-right">
@@ -4256,7 +4264,7 @@
             var logoData = localStorage.getItem("tm_sirket_logo");
             var logoArea = document.getElementById("pOutLogoArea");
             if (logoData && logoData !== "null" && logoData.length > 100) {
-                logoArea.innerHTML = '<img src="' + logoData + '" style="max-height:125px;max-width:500px;display:block;">';
+                logoArea.innerHTML = '<img src="' + logoData + '" style="max-height:94px;max-width:375px;display:block;">';
             } else {
                 logoArea.innerText = "TURAK MİMARLIK";
             }
@@ -4273,7 +4281,7 @@
 
             const template = document.getElementById("pdf-export-template");
             template.style.display = "block";
-            html2pdf().set({ margin: { top: 0, bottom: 0, left: 0, right: 0 }, filename: 'TM_TEKLIF_#' + String(veri.id).padStart(4, '0') + '.pdf', html2canvas: { scale: 2, useCORS: true, letterRendering: true }, jsPDF: { format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['avoid-all'] } }).from(template).save().then(() => { template.style.display = "none"; });
+            html2pdf().set({ margin: { top: 0, bottom: 0, left: 0, right: 0 }, filename: 'TM_TEKLIF_#' + String(veri.id).padStart(4, '0') + '.pdf', html2canvas: { scale: 2, useCORS: true, letterRendering: true }, jsPDF: { format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['avoid-all'] } }).from(template).toPdf().output('bloburl').then(function(url) { window.open(url, '_blank'); template.style.display = "none"; });
         }
 
         function teklifListesiTarihSirala() {
