@@ -4283,7 +4283,7 @@
             document.getElementById("pOutGenel").innerText = veri.genelTutar;
 
             const template = document.getElementById("pdf-export-template");
-            template.style.cssText = 'display:block;opacity:0;width:210mm;height:297mm;overflow:hidden;padding:15mm 16mm;box-sizing:border-box;background:white;font-family:Montserrat,sans-serif;text-transform:uppercase;line-height:1.5;color:#1a1a1a;';
+            template.style.cssText = 'display:block;opacity:0.01;width:210mm;height:297mm;overflow:hidden;padding:15mm 16mm;box-sizing:border-box;background:white;font-family:Montserrat,sans-serif;text-transform:uppercase;line-height:1.5;color:#1a1a1a;';
             html2canvas(template, { scale: 2, useCORS: true }).then(function(c) {
                 var u = c.toDataURL('image/jpeg',1);
                 var p = new jspdf.jsPDF('portrait','mm','a4');
