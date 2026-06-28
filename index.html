@@ -4281,7 +4281,17 @@
 
             const template = document.getElementById("pdf-export-template");
             template.style.display = "block";
-            html2pdf().set({ margin: { top: 0, bottom: 0, left: 0, right: 0 }, filename: 'TM_TEKLIF_#' + String(veri.id).padStart(4, '0') + '.pdf', html2canvas: { scale: 2, useCORS: true, letterRendering: true }, jsPDF: { format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['avoid-all'] } }).from(template).toPdf().output('blob').then(function(blob) { var url = URL.createObjectURL(blob); window.open(url, '_blank'); template.style.display = "none"; });
+            setTimeout(function() {
+                html2canvas(template, { scale: 2, useCORS: true, letterRendering: true, width: template.scrollWidth, height: template.scrollHeight }).then(function(canvas) {
+                    var imgData = canvas.toDataURL('image/jpeg', 0.95);
+                    var pdf = new window.jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
+                    pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+                    var blob = pdf.output('blob');
+                    var url = URL.createObjectURL(blob);
+                    window.open(url, '_blank');
+                    template.style.display = "none";
+                });
+            }, 100);
         }
 
         function teklifListesiTarihSirala() {
