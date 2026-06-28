@@ -8945,7 +8945,13 @@ function itDurumMetni(o) {
                 document.body.appendChild(sayfaEl);
 
                 var icerikDiv = document.createElement("div");
+                icerikDiv.style.paddingBottom = "9mm";
                 sayfaEl.appendChild(icerikDiv);
+
+                // Footer her sayfada en altta sabit (absolute konumlu)
+                var footEl = document.createElement("div");
+                footEl.style.cssText = "position:absolute;bottom:10mm;left:20mm;right:20mm;font-size:7pt;color:#555;line-height:1.3;text-align:center;";
+                sayfaEl.appendChild(footEl);
 
                 var maxH = sayfaEl.clientHeight;
 
@@ -8966,18 +8972,17 @@ function itDurumMetni(o) {
                     sayfalar.push(sHtml);
                 }
 
-                // Son sayfaya imza+altbilgi ekle, tasarsa paragraf ayir
+                // Son sayfaya imza ekle, tasarsa paragraf ayir (footer ayri)
                 for (var iter = 0; iter < 5 && sayfalar.length < 12; iter++) {
                     var son = sayfalar.length - 1;
-                    var testSon = sayfalar[son] + imzaHtml + altbilgiHtml;
+                    var testSon = sayfalar[son] + imzaHtml;
                     icerikDiv.innerHTML = testSon;
                     if (icerikDiv.offsetHeight <= maxH) break;
 
-                    // Son sayfadaki son paragrafi bul ve yeni sayfaya tasi
                     var bulundu = false;
                     for (var t = parHTML.length - 1; t >= 0; t--) {
                         if (sayfalar[son].indexOf(parHTML[t]) >= 0) {
-                            if (sayfalar[son] === parHTML[t]) break; // tek paragraf - daha fazla bolunemez
+                            if (sayfalar[son] === parHTML[t]) break;
                             sayfalar[son] = sayfalar[son].replace(parHTML[t], '');
                             sayfalar.push(parHTML[t]);
                             bulundu = true;
@@ -8990,8 +8995,9 @@ function itDurumMetni(o) {
                 // ---- PDF OLUSTUR (html2canvas + jsPDF, html2pdf yok) ----
                 var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
 
-                function ekle(sayfaHtml, ilk) {
-                    icerikDiv.innerHTML = sayfaHtml;
+                function ekle(sayfaHtml, imzaEkle, ilk) {
+                    icerikDiv.innerHTML = sayfaHtml + (imzaEkle ? imzaHtml : '');
+                    footEl.innerHTML = altbilgiHtml;
                     return html2canvas(sayfaEl, { scale: 2, useCORS: true }).then(function(cv) {
                         var dt = cv.toDataURL('image/jpeg', 0.95);
                         if (!ilk) doc.addPage();
@@ -9000,11 +9006,11 @@ function itDurumMetni(o) {
                 }
 
                 var p = Promise.resolve();
-                p = p.then(function() { return ekle(sayfalar[0] + imzaHtml + altbilgiHtml, true); });
+                p = p.then(function() { return ekle(sayfalar[0], true, true); });
                 for (var si = 1; si < sayfalar.length; si++) {
                     (function(s) {
                         var son = (s === sayfalar.length - 1);
-                        p = p.then(function() { return ekle(sayfalar[s] + (son ? imzaHtml : '') + altbilgiHtml, false); });
+                        p = p.then(function() { return ekle(sayfalar[s], son, false); });
                     })(si);
                 }
 
