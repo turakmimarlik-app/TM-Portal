@@ -8909,11 +8909,12 @@ function itDurumMetni(o) {
 
                 var logoKisim = '<div style="text-align:center;padding:2mm 0 3mm 0;">' + logoHtmlStr + '</div>';
 
+                var etiketGen = 'display:inline-block;width:50px;';
                 var bilgiKisim = '<div style="overflow:hidden;font-size:10pt;padding-bottom:1mm;">' +
-                    '<span style="float:left;"><b>Sayı</b> : ' + idStr + '</span>' +
-                    '<span style="float:right;"><b>Tarih</b> : ' + trh + '</span>' +
+                    '<span style="float:left;"><span style="' + etiketGen + '"><b>Sayı</b></span> : ' + idStr + '</span>' +
+                    '<span style="float:right;"><span style="' + etiketGen + '"><b>Tarih</b></span> : ' + trh + '</span>' +
                     '</div>' +
-                    '<div style="clear:both;font-size:10pt;padding-bottom:2mm;"><b>Konu</b> : ' + esc(v.konu) + '</div>';
+                    '<div style="clear:both;font-size:10pt;padding-bottom:2mm;"><span style="' + etiketGen + '"><b>Konu</b></span> : ' + esc(v.konu) + '</div>';
 
                 var yerSatirlari = v.gonderilecekYer.split('\n').filter(function(l){return l.trim();}).map(function(l){
                     return '<div>' + trToUpper(esc(l.trim())) + '</div>';
@@ -8922,7 +8923,7 @@ function itDurumMetni(o) {
 
                 var ilgiKisim = '';
                 if (v.ilgi) {
-                    ilgiKisim = '<div style="font-size:10pt;padding-bottom:2mm;"><b>İlgi</b> : ' + esc(v.ilgi) + '</div>';
+                    ilgiKisim = '<div style="font-size:10pt;padding-bottom:2mm;"><span style="' + etiketGen + '"><b>İlgi</b></span> : ' + esc(v.ilgi) + '</div>';
                 }
 
                 var baslikHtml = logoKisim + bilgiKisim + yerKisim + ilgiKisim;
