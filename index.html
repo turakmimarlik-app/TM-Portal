@@ -214,8 +214,7 @@
         .teklif-row-header { cursor: pointer; transition: 0.15s; }
         .teklif-row-header:hover { background: rgba(0,0,0,0.02); }
         
-        .detail-expanded-row { display: none; background: #fafbfc; border-left: 4px solid var(--accent-red); }
-        .detail-expanded-row [data-theme="dark"] { background: #1a2026; }
+        .detail-expanded-row { display: none; background: var(--panel-bg); border-left: 4px solid var(--accent-red); }
         .detail-panel-inner { padding: 20px; box-sizing: border-box; }
         .detail-grid-box { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 6px; }
 
@@ -1415,9 +1414,9 @@
                         <tr>
                             <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
                             <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
-                            <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:70px; text-align:right;"></td>
+                            <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
                             <td>
-                                <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:95%">
+                                <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px">
                                     <option value="20">%20</option>
                                     <option value="10">%10</option>
                                     <option value="0" selected>%0</option>
@@ -4109,9 +4108,9 @@
             tr.innerHTML = `
                 <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)"></textarea></td>
                 <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
-                <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:70px; text-align:right;"></td>
+                <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
                 <td>
-                    <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:95%">
+                    <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px">
                         <option value="20">%20</option>
                         <option value="10">%10</option>
                         <option value="0" selected>%0</option>
@@ -4150,8 +4149,8 @@
                 <tr>
                     <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
                     <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
-                    <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:70px; text-align:right;"></td>
-                    <td><select class="row-kdv" onchange="canliTeklifHesapla()" style="width:95%"><option value="20">%20</option><option value="10">%10</option><option value="0" selected>%0</option></select></td>
+                    <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
+                    <td><select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px"><option value="20">%20</option><option value="10">%10</option><option value="0" selected>%0</option></select></td>
                     <td><button class="btn-danger" onclick="teklifFormSatirSil(this)">Sil</button></td>
                 </tr>
             `;
@@ -4257,7 +4256,12 @@
         function teklifListesiniYenile() {
             let db = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
             const tbody = document.getElementById("teklifListTableBody");
-            if(!tbody) return; tbody.innerHTML = "";
+            if(!tbody) return;
+            const acikRows = new Set();
+            tbody.querySelectorAll(".detail-expanded-row").forEach(function(r) {
+                if (r.style.display === "table-row") acikRows.add(r.id);
+            });
+            tbody.innerHTML = "";
             if(db.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Henüz kayıtlı teklif bulunmuyor.</td></tr>`; return; }
 
             db.sort((a, b) => {
@@ -4284,7 +4288,6 @@
                 });
 
                 tbody.innerHTML += `
-                    <div style='display:none'></div>
                     <tr class="teklif-row-item teklif-row-header" onclick="teklifDetayiniAcKapat(${t.id})">
                         <td class="search-target-id" style="font-weight:700; color:var(--accent-red);">${formatliId}</td>
                         <td class="search-target-date">${t.sTarih}</td>
@@ -4325,6 +4328,10 @@
                         </td>
                     </tr>
                 `;
+            });
+            acikRows.forEach(function(id) {
+                var r = document.getElementById(id);
+                if (r) r.style.display = "table-row";
             });
         }
 
