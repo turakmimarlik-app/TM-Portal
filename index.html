@@ -8899,7 +8899,7 @@ function itDurumMetni(o) {
             var paragraflar = v.metin.split(/\n+/).map(function(p){ return p.trim(); }).filter(function(p){ return p; });
 
             function pdfOlustur(logoHtml) {
-                var logoHtmlStr = logoHtml || '<div style="font-size:14pt;font-weight:700;letter-spacing:1.5px;text-align:left;">' + firmaAd + '</div>';
+                var logoHtmlStr = logoHtml || '<div style="font-size:14pt;font-weight:700;letter-spacing:1.5px;text-align:center;">' + firmaAd + '</div>';
 
                 // Kalibrasyon: gercek px/mm orani
                 var cal = document.createElement("div");
@@ -8911,25 +8911,29 @@ function itDurumMetni(o) {
                 var pageWmm = 170;
                 var pageHmm = 272;
 
-                // ---- Bolum 1: Antet (logo sol, sayi/tarih sag) - 22mm ----
-                var sec1 = '<div style="height:22mm;display:flex;align-items:center;">' +
-                    '<div style="flex:1;display:flex;align-items:center;overflow:hidden;">' + logoHtmlStr + '</div>' +
-                    '<div style="text-align:right;font-size:9pt;line-height:1.6;"><b>Sayı</b> : ' + idStr + '<br><b>Tarih</b> : ' + trh + '</div>' +
-                    '</div>';
-                var h1 = 22;
+                // ---- Bolum 1: Logo (ortali) - 20mm ----
+                var sec1 = '<div style="height:20mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">' + logoHtmlStr + '</div>';
+                var h1 = 20;
 
-                // ---- Bolum 2: Konu - 10mm ----
-                var sec2 = '<div style="height:10mm;display:flex;align-items:center;border-top:1px solid #bbb;font-size:10pt;"><b>Konu</b> : ' + esc(v.konu) + '</div>';
+                // ---- Bolum 2: Sayi (sol) + Tarih (sag) - 8mm ----
+                var secSayi = '<div style="height:8mm;display:flex;align-items:center;justify-content:space-between;font-size:9pt;">' +
+                    '<div><b>Sayı</b> : ' + idStr + '</div>' +
+                    '<div><b>Tarih</b> : ' + trh + '</div>' +
+                    '</div>';
+                var hSayi = 8;
+
+                // ---- Bolum 3: Konu - 10mm ----
+                var sec2 = '<div style="height:10mm;display:flex;align-items:center;font-size:10pt;"><b>Konu</b> : ' + esc(v.konu) + '</div>';
                 var h2 = 10;
 
-                // ---- Bolum 3: Gonderilecek Yer - 20mm (ortali, gri zemin) ----
+                // ---- Bolum 4: Gonderilecek Yer - 20mm (ortali, gri zemin) ----
                 var yerLines = v.gonderilecekYer.split('\n').filter(function(l){return l.trim();}).map(function(l){
                     return '<div>' + trToUpper(esc(l.trim())) + '</div>';
                 }).join('');
-                var sec3 = '<div style="height:20mm;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12pt;font-weight:700;border-top:1px solid #1a1a2e;border-bottom:1px solid #1a1a2e;background:#f5f5f5;">' + yerLines + '</div>';
+                var sec3 = '<div style="height:20mm;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12pt;font-weight:700;background:#f5f5f5;">' + yerLines + '</div>';
                 var h3 = 20;
 
-                // ---- Bolum 4: Ilgi - 8mm (varsa) ----
+                // ---- Bolum 5: Ilgi - 8mm (varsa) ----
                 var sec4 = '';
                 var h4 = 0;
                 if (v.ilgi) {
@@ -8938,7 +8942,7 @@ function itDurumMetni(o) {
                 }
 
                 // ---- Sabit bolumler toplami ----
-                var fixedHmm = h1 + h2 + h3 + h4;
+                var fixedHmm = h1 + hSayi + h2 + h3 + h4;
 
                 // ---- Imza alani - 22mm ----
                 var sigHmm = 22;
@@ -8981,7 +8985,7 @@ function itDurumMetni(o) {
                 // ---- TEK SAYFA (metin + imza <= ilk sayfa metin alani) ----
                 if (totalPx <= textPx1) {
                     var html = '<div style="width:210mm;height:297mm;padding:15mm 20mm 10mm 20mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#000;font-size:11pt;line-height:1.5;overflow:hidden;">' +
-                        sec1 + sec2 + sec3 + sec4 +
+                        sec1 + secSayi + sec2 + sec3 + sec4 +
                         '<div style="height:' + (textHmm1 + sigHmm) + 'mm;">' + bodyHtml + imzaHtml + '</div>' +
                         secFoot + '</div>';
                     var el = document.createElement("div");
@@ -9039,7 +9043,7 @@ function itDurumMetni(o) {
 
                     if (si === 0) {
                         tumHtml += '<div style="width:210mm;height:297mm;padding:15mm 20mm 10mm 20mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#000;font-size:11pt;line-height:1.5;overflow:hidden;' + pb + '">' +
-                            sec1 + sec2 + sec3 + sec4 +
+                            sec1 + secSayi + sec2 + sec3 + sec4 +
                             '<div>' + sayfaMetin + (sonSayfa ? imzaHtml : '') + '</div>' +
                             secFoot + '</div>';
                     } else {
