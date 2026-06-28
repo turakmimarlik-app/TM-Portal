@@ -3293,6 +3293,7 @@
                 tmNotify("Partner kartı başarıyla güncellendi.", "success");
             }
 
+            console.log('isOrtagiProfilKaydet - typeof setItem:', typeof localStorage.setItem, 'isOverride:', localStorage.setItem !== origSetItem);
             localStorage.setItem("tm_isortaklari_db", JSON.stringify(db));
             partnerFormTemizle();
             isOrtaklariKartlariniYenile();
