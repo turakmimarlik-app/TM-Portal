@@ -4280,8 +4280,8 @@
             document.getElementById("pOutGenel").innerText = veri.genelTutar;
 
             const template = document.getElementById("pdf-export-template");
-            template.style.cssText = 'position:fixed;left:-9999px;top:0;width:210mm;background:white;z-index:9999;font-family:Montserrat,sans-serif;text-transform:uppercase;padding:18mm 16mm;box-sizing:border-box;overflow:hidden;max-height:297mm;';
-            html2pdf().set({ margin: 0, filename: 'TM_TEKLIF_#' + String(veri.id).padStart(4, '0') + '.pdf', html2canvas: { scale: 2 }, jsPDF: { format: 'a4', orientation: 'portrait' } }).from(template).save();
+            template.style.display = "block";
+            html2pdf().set({ margin: 0, filename: 'TM_TEKLIF_#' + String(veri.id).padStart(4, '0') + '.pdf', html2canvas: { scale: 2 }, jsPDF: { format: 'a4', orientation: 'portrait' } }).from(template).save().then(function() { template.style.display = "none"; });
         }
 
         function teklifListesiTarihSirala() {
