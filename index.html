@@ -435,8 +435,7 @@
         /* ==================== PROFESSIONAL PRICE OFFER PDF TEMPLATE ==================== */
         #pdf-export-template { 
             width: 210mm; 
-            min-height: 297mm; 
-            max-height: 297mm;
+            height: 297mm; 
             padding: 15mm 16mm; 
             overflow: hidden;
             box-sizing: border-box; 
@@ -4281,8 +4280,8 @@
             document.getElementById("pOutGenel").innerText = veri.genelTutar;
 
             const template = document.getElementById("pdf-export-template");
-            template.style.display = "block";
-            html2pdf().set({ margin: 0, filename: 'TM_TEKLIF_#' + String(veri.id).padStart(4, '0') + '.pdf', html2canvas: { scale: 2 }, jsPDF: { format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['avoid-all'] } }).from(template).save().then(function() { template.style.display = "none"; });
+            template.style.cssText = 'display:block;width:210mm;height:297mm;overflow:hidden;padding:15mm 16mm;box-sizing:border-box;background:white;font-family:Montserrat,sans-serif;text-transform:uppercase;line-height:1.5;color:#1a1a1a;';
+            html2pdf().set({ margin: 0, filename: 'TM_TEKLIF_#' + String(veri.id).padStart(4, '0') + '.pdf', html2canvas: { scale: 2, useCORS: true, height: 1123, width: 794 }, jsPDF: { format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } }).from(template).save().then(function() { template.style.cssText = 'display:none;'; });
         }
 
         function teklifListesiTarihSirala() {
