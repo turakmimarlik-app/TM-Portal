@@ -2085,16 +2085,9 @@
                             var strVal = JSON.stringify(data[k]);
                             var curVal = localStorage.getItem(k);
                             if (curVal !== strVal && !fsDirtyKeys[k]) {
-                                var localArr, serverArr;
-                                try { localArr = JSON.parse(curVal); } catch(e) {}
-                                try { serverArr = JSON.parse(strVal); } catch(e) {}
-                                if (Array.isArray(localArr) && Array.isArray(serverArr) && localArr.length > serverArr.length) {
-                                    console.log('fsSnapshotHandler PRESERVED ' + k + ' (local ' + localArr.length + ' > server ' + serverArr.length + ' items)');
-                                } else {
-                                    try { origSetItem(k, strVal); } catch(e) {}
-                                    if (k === "tm_sirket_logo") { logoChanged = true; }
-                                    anyChanged = true;
-                                }
+                                try { origSetItem(k, strVal); } catch(e) {}
+                                if (k === "tm_sirket_logo") { logoChanged = true; }
+                                anyChanged = true;
                             }
                         }
                     });
