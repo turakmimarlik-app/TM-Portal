@@ -2282,12 +2282,6 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            (function() {
-                var eu = ["AHSENTURAK","AHMET","MEHMET","DENEME"];
-                var ku = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
-                var fu = ku.filter(function(u){ return eu.indexOf(u.usr)===-1; });
-                if (fu.length!==ku.length) { localStorage.setItem("tm_users_final_v8", JSON.stringify(fu)); }
-            })();
             if(!localStorage.getItem("tm_yillik_butce_clean")) { localStorage.removeItem("tm_yillik_butce_db"); localStorage.setItem("tm_yillik_butce_clean","1"); }
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
