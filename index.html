@@ -3666,17 +3666,29 @@
             if (!file) return;
             var reader = new FileReader();
             reader.onload = function(e) {
-                var data = e.target.result;
-                localStorage.setItem("tm_multi_logo_" + num, data);
-                document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
-                if (num === 3) sidebardaLogoyuGoster();
-                if (typeof fdb !== 'undefined') {
-                    fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
-                        tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
-                    }).catch(function(e) {
-                        tmNotify("Logo #" + num + " Firestore yedekleme hatası: " + e.message, "error");
-                    });
-                }
+                var img = new Image();
+                img.onload = function() {
+                    var canvas = document.createElement("canvas");
+                    var MAX_W = 200, MAX_H = 80;
+                    var w = img.width, h = img.height;
+                    if (w > MAX_W) { h = h * MAX_W / w; w = MAX_W; }
+                    if (h > MAX_H) { w = w * MAX_H / h; h = MAX_H; }
+                    canvas.width = w; canvas.height = h;
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, w, h);
+                    var data = canvas.toDataURL("image/png");
+                    localStorage.setItem("tm_multi_logo_" + num, data);
+                    document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
+                    if (num === 3) sidebardaLogoyuGoster();
+                    if (typeof fdb !== 'undefined') {
+                        fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
+                            tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
+                        }).catch(function(e) {
+                            tmNotify("Logo #" + num + " Firestore yedekleme hatası: " + e.message, "error");
+                        });
+                    }
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
