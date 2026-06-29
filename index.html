@@ -1955,7 +1955,6 @@
                     </div>
                     <button id="btnSave" class="btn btn-red" onclick="kullaniciKaydet()">Kullanıcıyı Kaydet</button>
                     <button id="btnCancel" class="btn btn-primary" onclick="formSifirla()" style="display:none; margin-left: 10px;">Vazgeç</button>
-                    <button class="btn btn-primary" onclick="tumKullanicilariTemizle()" style="margin-left:10px; background:#C0392B; color:white; border:none;">🗑️ TÜM KULLANICILARI TEMİZLE</button>
                 </div>
 
                 <h3>Mevcut Kullanıcı Listesi</h3>
@@ -3702,22 +3701,16 @@
         }
 
         function kullaniciSil(index) {
-            let altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
-            if (confirm("Bu kullanıcıyı listeden tamamen silmek istediğinize emin misiniz?")) {
-                altKullanicilar.splice(index, 1);
-                localStorage.setItem("tm_users_final_v8", JSON.stringify(altKullanicilar));
-                kullaniciListesiniYenile();
-                sidebarKullanicilariYenile();
-                tmNotify("Kullanıcı silindi.", "success");
-            }
-        }
-        function tumKullanicilariTemizle() {
-            if (confirm("Tüm alt kullanıcıları silmek istediğinize emin misiniz? (TUGAYTURAK etkilenmez)")) {
-                localStorage.setItem("tm_users_final_v8", JSON.stringify([]));
-                kullaniciListesiniYenile();
-                sidebarKullanicilariYenile();
-                tmNotify("Tüm kullanıcılar temizlendi.", "success");
-            }
+            try {
+                let altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                if (confirm("Bu kullanıcıyı listeden tamamen silmek istediğinize emin misiniz?")) {
+                    altKullanicilar.splice(index, 1);
+                    localStorage.setItem("tm_users_final_v8", JSON.stringify(altKullanicilar));
+                    kullaniciListesiniYenile();
+                    sidebarKullanicilariYenile();
+                    tmNotify("Kullanıcı silindi.", "success");
+                }
+            } catch(e) { console.error("kullaniciSil hatasi:", e); tmNotify("Silme hatası: " + e.message, "error"); }
         }
 
         function girisCikisLogla(kullanici, islem) {
