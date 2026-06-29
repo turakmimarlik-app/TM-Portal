@@ -2188,7 +2188,7 @@
                             var curVal = localStorage.getItem(k);
                             if (curVal !== strVal && !fsDirtyKeys[k]) {
                                 try { origSetItem(k, strVal); } catch(e) {}
-                                if (k === "tm_sirket_logo") { logoChanged = true; }
+                                if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") { logoChanged = true; }
                                 anyChanged = true;
                             }
                         }
@@ -3631,7 +3631,7 @@
             sidebardaLogoyuGoster();
         }
         function sidebardaLogoyuGoster() {
-            var logoData = localStorage.getItem("tm_sirket_logo");
+            var logoData = localStorage.getItem("tm_multi_logo_3");
             var ci = {};
             try { ci = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { ci = {}; }
             var header = document.querySelector(".sidebar-header");
@@ -3667,12 +3667,14 @@
                 var data = e.target.result;
                 localStorage.setItem("tm_multi_logo_" + num, data);
                 document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
+                if (num === 3) sidebardaLogoyuGoster();
             };
             reader.readAsDataURL(file);
         }
         function multiLogoyuTemizle(num) {
             localStorage.removeItem("tm_multi_logo_" + num);
             document.getElementById("mlPreview" + num).innerHTML = '<div class="logo-placeholder">Logo #' + num + ' yüklemek için tıklayın</div>';
+            if (num === 3) sidebardaLogoyuGoster();
         }
 
         /* ================= PORTAL YÖNETİMİ ================= */
