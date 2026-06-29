@@ -50,7 +50,7 @@
         
         /* GİRİŞ EKRANI */
         .login-wrapper { display: flex; height: 100vh; width: 100vw; justify-content: center; align-items: center; background-color: var(--sidebar-bg); position: fixed; top: 0; left: 0; z-index: 9999; }
-        .login-logo-left { position:fixed; left:40px; top:50%; transform:translateY(-50%); z-index:10000; }
+        .login-logo-left { position:fixed; top:30px; left:50%; transform:translateX(-50%); z-index:10000; }
         .login-logo-left img { max-width:600px; max-height:400px; width:auto; height:auto; border-radius:6px; }
         .login-card { background: var(--panel-bg); padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 400px; text-align: center; border-bottom: 5px solid var(--accent-red); }
         .login-card h2 { margin-top: 0; margin-bottom: 5px; color: var(--text-dark); font-weight: 700; letter-spacing: 1px; }
@@ -3053,7 +3053,9 @@
         temaDegistir(localStorage.getItem("tm_theme") || "dark");
 
         function loginLogoyuGoster() {
-            var logoData = localStorage.getItem("tm_multi_logo_4");
+            var tema = localStorage.getItem("tm_theme") || "dark";
+            var logoNum = tema === "dark" ? 3 : 1;
+            var logoData = localStorage.getItem("tm_multi_logo_" + logoNum);
             var el = document.getElementById("loginLogo");
             if (!el) return;
             if (logoData && logoData !== "null" && logoData.length > 100) {
@@ -3154,8 +3156,9 @@
                                     toplamVerecek += k.tutar || 0;
                                     toplamOdenen += (k.odenenTutar || 0);
                                 }
-                            });
-                        }
+            });
+            if (typeof loginLogoyuGoster === 'function') loginLogoyuGoster();
+        }
                         const kalan = toplamVerecek - toplamOdenen;
                         jobsBody.innerHTML += '<div class="dash-mini-job">' +
                             '<div class="job-info"><div class="name">' + esc(j.isAdi || 'İSİMSİZ') + '</div>' +
