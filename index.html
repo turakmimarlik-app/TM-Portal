@@ -8527,11 +8527,30 @@ function itDurumMetni(o) {
         }
 
         function itGoster() {
+            var acikDetayIds = itAcKalanKaydet();
+            var acikOrtakCardIds = [];
+            document.querySelectorAll(".it-ortak-card-body:not(.closed)").forEach(function(el){ acikOrtakCardIds.push(el.id); });
+            var acikOrtakEkleIds = [];
+            document.querySelectorAll("[id^='itOrtakEkleBody_']").forEach(function(el){ if (el.style.display !== 'none') acikOrtakEkleIds.push(el.id); });
             itSayaciGuncelle();
             var aktifTur = document.querySelector("#itAktifSekmeBar .it-sekme-aktif");
             itAktifKartlariGoster(aktifTur ? aktifTur.getAttribute("data-tur") : "Taslak");
             var tamamlananTur = document.querySelector("#itTamamlananSekmeBar .it-sekme-aktif");
             itTamamlananTablosuGoster(tamamlananTur ? tamamlananTur.getAttribute("data-tur") : "Taslak");
+            itAcKalanYukle(acikDetayIds);
+            acikOrtakCardIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.classList.remove('closed');
+            });
+            acikOrtakEkleIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) {
+                    el.style.display = 'block';
+                    var jobId = id.replace('itOrtakEkleBody_', '');
+                    var icon = document.getElementById("itOrtakEkleIcon_" + jobId);
+                    if (icon) icon.innerText = '▼';
+                }
+            });
         }
 
         function itOrtakListesiGetir() {
