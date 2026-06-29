@@ -2177,6 +2177,23 @@
         const FS_DOC = "all_data";
         let fsTimer = null;
         let fsUnsubscribe = null;
+        const fsSayfaAnahtarlari = {
+            'anasayfa-page': null,
+            'yonetim-page': null,
+            'teklif-liste-page': ['tm_teklifler_db'],
+            'piyasa-fiyatlari-page': ['tm_piyasa_fiyatlari_v2'],
+            'is-muhasebe-page': ['tm_is_muhasebesi_db'],
+            'tamamlanan-is-muhasebeleri-page': ['tm_tamamlanan_is_muhasebeleri_db'],
+            'nakit-dekont-page': ['tm_nakit_dekont_db'],
+            'musteriler-page': ['tm_musteriler_db'],
+            'isortaklari-page': ['tm_isortaklari_db'],
+            'hesap-takip-page': ['tm_hesap_takip_db'],
+            'fatura-takip-page': ['tm_fatura_takip_db'],
+            'yillik-butce-page': ['tm_yillik_butce_db'],
+            'dilekce-page': ['tm_dilekceler_db'],
+            'istakibi-page': ['tm_it_db'],
+            'tm-fiyatlar-page': ['tm_tm_fiyatlari_db'],
+        };
         function fsLoad() {
             function fsSnapshotHandler(snap) {
                 if (snap && snap.exists) {
@@ -2184,6 +2201,7 @@
                 var data = snap.data();
                 var logoChanged = false;
                 var anyChanged = false;
+                var changedKeys = {};
                 Object.keys(data).forEach(function(k) {
                         if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k.indexOf("tm_multi_logo_") !== 0) {
                             var raw = data[k];
@@ -2193,11 +2211,22 @@
                                 try { origSetItem(k, strVal); } catch(e) {}
                                 if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") { logoChanged = true; }
                                 anyChanged = true;
+                                changedKeys[k] = true;
                             }
                         }
                     });
                     if (logoChanged) { sidebardaLogoyuGoster(); }
-                    if (anyChanged) { yenileAktifSayfa(); }
+                    if (anyChanged) {
+                        var aPage = document.querySelector('.page.active');
+                        if (!aPage || typeof fsSayfaAnahtarlari === 'undefined' || !fsSayfaAnahtarlari[aPage.id]) {
+                            yenileAktifSayfa();
+                        } else {
+                            var gerekli = fsSayfaAnahtarlari[aPage.id];
+                            var gerekVar = false;
+                            gerekli.forEach(function(anahtar){ if (changedKeys[anahtar]) gerekVar = true; });
+                            if (gerekVar) yenileAktifSayfa();
+                        }
+                    }
                 }
             }
             function fsPollSdk() {
