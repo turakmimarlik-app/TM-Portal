@@ -8375,6 +8375,11 @@ function itDurumMetni(o) {
         }
 
         function itAktifKartlariGoster(tur) {
+            var acikIds = [];
+            document.querySelectorAll(".it-row-detail.open").forEach(function(el) {
+                var id = el.id.replace("itDetayRow_","").replace("itTamDetayRow_","");
+                if (id) acikIds.push(id);
+            });
             var liste = itDbYukle().filter(function(x){return x.tur === tur && !x.tamamlandi;});
             var arama = (document.getElementById("itAktifAra")||{}).value||"";
             liste = itFiltreVeSirala(liste, arama, itAktifSort);
@@ -8396,8 +8401,9 @@ function itDurumMetni(o) {
                 var isTam = avgPct === 100 && (is.ortaklar||[]).length > 0;
                 var barBg = is.tur === "Taslak" ? '#2e7d32' : '#f9a825,#4caf50';
                 var rowBg = itPctColor(avgPct);
+                var acik = acikIds.indexOf(String(is.id)) >= 0;
                 h += '<tr class="it-row-clickable" id="itRow_' + is.id + '" style="background:' + rowBg + ';" onclick="itRowToggle(' + is.id + ')">' +
-                    '<td style="text-align:center;"><span class="it-expand-icon" id="itExpandIcon_' + is.id + '" style="font-size:10px;color:var(--text-light);user-select:none;">▶</span></td>' +
+                    '<td style="text-align:center;"><span class="it-expand-icon" id="itExpandIcon_' + is.id + '" style="font-size:10px;color:var(--text-light);user-select:none;">' + (acik ? '▼' : '▶') + '</span></td>' +
                     '<td style="text-align:center;font-weight:700;color:var(--text-light);font-size:12px;">' + sira + '</td>' +
                     '<td style="font-weight:600;">' + esc(is.isAdi || "İSİMSİZ") + '</td>' +
                     '<td style="color:var(--text-dark);">' + esc(is.firma || "-") + '</td>' +
@@ -8405,7 +8411,7 @@ function itDurumMetni(o) {
                     '<td>' + (is.tarih ? tarihStr(is.tarih) : "-") + '</td>' +
                     '<td><div class="it-mini-bar"><div class="it-mini-bar-track"><div id="itJobMiniBar_' + is.id + '" class="it-mini-bar-fill" style="width:' + dispPct + '%;background:linear-gradient(90deg,#e53935,' + barBg + ');"></div></div><span id="itJobPct_' + is.id + '" class="it-mini-bar-pct" style="color:' + (avgPct >= 75 ? '#2e7d32' : avgPct >= 50 ? '#f9a825' : '#e53935') + ';">' + dispPct + '%</span></div></td>' +
                     '</tr>' +
-                    '<tr class="it-row-detail" id="itDetayRow_' + is.id + '">' +
+                    '<tr class="it-row-detail' + (acik ? ' open' : '') + '" id="itDetayRow_' + is.id + '">' +
                     '<td colspan="7"><div class="it-detay-panel">' +
                     itOrtakSecimHtml(is.id) +
                     '<div class="it-detay-actions">' +
@@ -8423,6 +8429,11 @@ function itDurumMetni(o) {
         }
 
         function itTamamlananTablosuGoster(tur) {
+            var acikIds = [];
+            document.querySelectorAll(".it-row-detail.open").forEach(function(el) {
+                var id = el.id.replace("itDetayRow_","").replace("itTamDetayRow_","");
+                if (id) acikIds.push(id);
+            });
             var liste = itDbYukle().filter(function(x){return x.tur === tur && x.tamamlandi;});
             var arama = (document.getElementById("itTamamlananAra")||{}).value||"";
             liste = itFiltreVeSirala(liste, arama, itTamamlananSort);
@@ -8438,8 +8449,9 @@ function itDurumMetni(o) {
                 '</tr></thead><tbody>';
             liste.forEach(function(is, idx) {
                 var sira = itTamamlananSort.dir === "asc" ? idx+1 : liste.length-idx;
+                var acik = acikIds.indexOf(String(is.id)) >= 0;
                 h += '<tr class="it-row-clickable" onclick="itRowToggle(' + is.id + ')">' +
-                    '<td style="width:28px;text-align:center;"><span class="it-expand-icon" id="itTamExpandIcon_' + is.id + '">▶</span></td>' +
+                    '<td style="width:28px;text-align:center;"><span class="it-expand-icon" id="itTamExpandIcon_' + is.id + '">' + (acik ? '▼' : '▶') + '</span></td>' +
                     '<td style="text-align:center;font-weight:700;color:var(--text-light);font-size:12px;">' + sira + '</td>' +
                     '<td style="font-weight:600;">' + esc(is.isAdi || "İSİMSİZ") + '</td>' +
                     '<td>' + esc(is.firma || "-") + '</td>' +
@@ -8451,7 +8463,7 @@ function itDurumMetni(o) {
                         '<button onclick="event.stopPropagation();it3bModellemeyeGec(' + is.id + ')" style="padding:3px 8px;background:#fb8c00;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:10px;font-weight:600;white-space:nowrap;">🔷 3B MODELLEMEYE BAŞLA</button>' +
                         '</div></td>' : '') +
                     '</tr>' +
-                    '<tr class="it-row-detail" id="itTamDetayRow_' + is.id + '">' +
+                    '<tr class="it-row-detail' + (acik ? ' open' : '') + '" id="itTamDetayRow_' + is.id + '">' +
                     '<td colspan="' + colSpan + '"><div class="it-detay-panel">' +
                     itOrtakSecimHtml(is.id, true) +
                     '<div class="it-detay-actions">' +
