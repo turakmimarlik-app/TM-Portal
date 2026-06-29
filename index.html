@@ -2181,9 +2181,8 @@
                 var data = snap.data();
                 var logoChanged = false;
                 var anyChanged = false;
-                var syncedKeys = [];
                 Object.keys(data).forEach(function(k) {
-                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean") {
+                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k.indexOf("tm_multi_logo_") !== 0) {
                             var raw = data[k];
                             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
                             var curVal = localStorage.getItem(k);
@@ -2230,7 +2229,7 @@
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
             origSetItem(key, value);
-            if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean") {
+            if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean" && key.indexOf("tm_multi_logo_") !== 0) {
                 fsDirtyKeys[key] = true;
                 if (fsReady) { fsSync(); }
             }
