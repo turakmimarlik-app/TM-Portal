@@ -4456,11 +4456,6 @@
         function teklifFormuPdfUret() {
             const veri = formVerileriniTopla();
             if(veri.musteriAd === "-" && veri.firma === "-") { tmNotify("Müşteri adı veya firma ünvanı alanını doldurunuz.", "error"); return; }
-            const db = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
-            db.push(veri);
-            localStorage.setItem("tm_teklifler_db_final", JSON.stringify(db));
-            teklifListesiniYenile();
-            musteriKartlariniYenile();
             pdfSablonunuDoldurVeIndir(veri);
         }
 
