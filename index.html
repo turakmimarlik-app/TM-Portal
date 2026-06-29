@@ -2286,7 +2286,18 @@
             var oncekiKullanici = localStorage.getItem("tm_active_user");
             var sessionVar = sessionStorage.getItem("tm_session_active");
             if (oncekiKullanici && !sessionVar) {
-                oncekiKullanici = null;
+                var isReload = false;
+                try {
+                    if (performance.navigation) {
+                        isReload = performance.navigation.type === 1;
+                    } else {
+                        var nav = performance.getEntriesByType('navigation')[0];
+                        isReload = nav && nav.type === 'reload';
+                    }
+                } catch(e) {}
+                if (!isReload) {
+                    oncekiKullanici = null;
+                }
             }
             if (oncekiKullanici) {
                 document.getElementById("loginSection").style.display = "none";
