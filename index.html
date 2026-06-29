@@ -2285,8 +2285,7 @@
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
             var sessionVar = sessionStorage.getItem("tm_session_active");
-            if (!sessionVar && oncekiKullanici) {
-                localStorage.removeItem("tm_active_user");
+            if (oncekiKullanici && !sessionVar) {
                 oncekiKullanici = null;
             }
             if (oncekiKullanici) {
