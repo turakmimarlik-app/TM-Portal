@@ -2548,12 +2548,15 @@
             localStorage.setItem("tm_admin_creds_final", JSON.stringify(defaultMaster));
         }
         
-    if (!localStorage.getItem("tm_users_final_v8")) {
+    var eskiKullanicilar = ["AHSENTURAK", "AHMET", "MEHMET", "DENEME"];
+    var mevcutKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+    var filtreli = mevcutKullanicilar.filter(function(u) {
+        return eskiKullanicilar.indexOf(u.usr) === -1;
+    });
+    if (filtreli.length !== mevcutKullanicilar.length) {
+        localStorage.setItem("tm_users_final_v8", JSON.stringify(filtreli));
+    } else if (!localStorage.getItem("tm_users_final_v8")) {
         localStorage.setItem("tm_users_final_v8", JSON.stringify([]));
-    }
-    if (!localStorage.getItem("tm_users_cleaned_v1")) {
-        localStorage.setItem("tm_users_final_v8", JSON.stringify([]));
-        localStorage.setItem("tm_users_cleaned_v1", "1");
     }
 
         function piyasaDallariSecenekleriniDoldur() {
