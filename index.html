@@ -906,6 +906,7 @@
 
     <div id="loginSection" class="login-wrapper">
         <div class="login-card">
+            <div id="loginLogo" style="text-align:center;margin-bottom:10px;"></div>
             <h2>TM-Portal</h2>
             <div class="portal-sub">Yönetim Sistemi</div>
             <div class="login-form-group">
@@ -3049,6 +3050,18 @@
         }
         temaDegistir(localStorage.getItem("tm_theme") || "dark");
 
+        function loginLogoyuGoster() {
+            var logoData = localStorage.getItem("tm_multi_logo_4");
+            var el = document.getElementById("loginLogo");
+            if (!el) return;
+            if (logoData && logoData !== "null" && logoData.length > 100) {
+                el.innerHTML = '<img src="' + logoData + '" style="max-width:180px;max-height:60px;height:auto;border-radius:4px;" alt="Logo">';
+            } else {
+                el.innerHTML = '';
+            }
+        }
+        loginLogoyuGoster();
+
         try { if(typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') Chart.register(ChartDataLabels); } catch(e) { console.warn("Chart.js yüklenemedi:", e); }
 
         /* ================= ANA SAYFA DURUM MOTORU ================= */
@@ -3678,7 +3691,9 @@
                     var data = canvas.toDataURL("image/png");
                     localStorage.setItem("tm_multi_logo_" + num, data);
                     document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
-                    if (num === 3) sidebardaLogoyuGoster();
+            if (num === 3) sidebardaLogoyuGoster();
+            if (num === 4) loginLogoyuGoster();
+                    if (num === 4) loginLogoyuGoster();
                     if (typeof fdb !== 'undefined') {
                         fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
                             tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
@@ -3708,6 +3723,7 @@
                                 var preview = document.getElementById("mlPreview" + idx);
                                 if (preview) preview.innerHTML = '<img src="' + raw + '" alt="Logo ' + idx + '">';
                                 if (idx === 3) sidebardaLogoyuGoster();
+                                if (idx === 4) loginLogoyuGoster();
                             }
                         }
                     }).catch(function(e){ console.error("multiLogolariFirebaseCek", idx, e); });
