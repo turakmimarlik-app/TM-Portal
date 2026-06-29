@@ -2330,6 +2330,7 @@
                 if (AKTIF_KULLANICI_YETKILERI.length > 0) {
                     var savedPage = localStorage.getItem('tm_active_page');
                     menuyuInsaEt(AKTIF_KULLANICI_YETKILERI);
+                    tmOnlineHeartbeatBaslat(oncekiKullanici);
                     if (savedPage && savedPage !== 'anasayfa-page' && document.getElementById(savedPage)) {
                         sayfaDegistir(savedPage, null);
                     }
@@ -2859,6 +2860,7 @@
                 localStorage.removeItem('tm_active_page');
                 menuyuInsaEt(AKTIF_KULLANICI_YETKILERI);
                 sidebarKullanicilariYenile();
+                tmOnlineHeartbeatBaslat("TUGAYTURAK");
                 return;
             }
 
@@ -2900,6 +2902,7 @@
                         localStorage.removeItem('tm_active_page');
                         menuyuInsaEt(AKTIF_KULLANICI_YETKILERI);
                         sidebarKullanicilariYenile();
+                        tmOnlineHeartbeatBaslat(bulunan.usr);
                     } else {
                         if (errorDiv) { errorDiv.innerText = "Kullanıcı adı veya şifre hatalı!"; errorDiv.style.display = "block"; }
                     }
@@ -2919,6 +2922,7 @@
                 document.getElementById("loginSection").style.display = "flex";
                 const cikan = localStorage.getItem("tm_active_user") || "BİLİNMEYEN";
                 AKTIF_KULLANICI_YETKILERI = [];
+                tmOnlineCikisYap(cikan);
                 localStorage.removeItem("tm_active_user");
                 sessionStorage.removeItem("tm_session_active");
                 localStorage.removeItem("tm_active_page");
@@ -3063,6 +3067,11 @@
             }
         }
         loginLogoyuGoster();
+        tmOnlinePullBaslat();
+        window.addEventListener("beforeunload", function() {
+            var u = localStorage.getItem("tm_active_user");
+            if (u) tmOnlineCikisYap(u);
+        });
 
         try { if(typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') Chart.register(ChartDataLabels); } catch(e) { console.warn("Chart.js yüklenemedi:", e); }
 
@@ -3866,16 +3875,54 @@
         function sidebarKullanicilariYenile() {
             const container = document.getElementById("sidebarKullanicilar");
             if (!container) return;
-            const aktifUser = localStorage.getItem("tm_active_user") || "";
             const master = JSON.parse(localStorage.getItem("tm_admin_creds_final")) || {};
             const altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+            const simdi = Date.now();
             let html = "";
-            html += '<div class="sidebar-user-item"><span class="user-status-dot ' + (aktifUser === "TUGAYTURAK" ? "online" : "offline") + '"></span><span class="user-name">TUGAYTURAK</span><span class="user-title">' + (master.title || "KURUCU") + '</span></div>';
+            var tugayOnline = tmOnlineCache["TUGAYTURAK"] && (simdi - tmOnlineCache["TUGAYTURAK"]) < 30000;
+            html += '<div class="sidebar-user-item"><span class="user-status-dot ' + (tugayOnline ? "online" : "offline") + '"></span><span class="user-name">TUGAYTURAK</span><span class="user-title">' + (master.title || "KURUCU") + '</span></div>';
             altKullanicilar.forEach(function(u) {
-                const isOnline = (aktifUser === u.usr);
+                var isOnline = tmOnlineCache[u.usr] && (simdi - tmOnlineCache[u.usr]) < 30000;
                 html += '<div class="sidebar-user-item"><span class="user-status-dot ' + (isOnline ? "online" : "offline") + '"></span><span class="user-name">' + u.usr + '</span><span class="user-title">' + (u.title || "") + '</span></div>';
             });
             container.innerHTML = html;
+        }
+        var tmOnlineCache = {};
+        var tmOnlineHeartbeatTimer = null;
+        var tmOnlinePullTimer = null;
+        function tmOnlineHeartbeatBaslat(kullanici) {
+            tmOnlineHeartbeatDurdur();
+            if (typeof fdb === 'undefined') return;
+            function heartbeat() {
+                fdb.collection("tm_online").doc(kullanici).set({ onlineAt: Date.now() }).catch(function(e){});
+            }
+            heartbeat();
+            tmOnlineHeartbeatTimer = setInterval(heartbeat, 10000);
+        }
+        function tmOnlineHeartbeatDurdur() {
+            if (tmOnlineHeartbeatTimer) { clearInterval(tmOnlineHeartbeatTimer); tmOnlineHeartbeatTimer = null; }
+        }
+        function tmOnlinePullBaslat() {
+            if (tmOnlinePullTimer) clearInterval(tmOnlinePullTimer);
+            if (typeof fdb === 'undefined') return;
+            function pull() {
+                fdb.collection("tm_online").get().then(function(snap) {
+                    var cache = {};
+                    snap.forEach(function(doc) {
+                        var data = doc.data();
+                        if (data && data.onlineAt) cache[doc.id] = data.onlineAt;
+                    });
+                    tmOnlineCache = cache;
+                    sidebarKullanicilariYenile();
+                }).catch(function(e){});
+            }
+            pull();
+            tmOnlinePullTimer = setInterval(pull, 5000);
+        }
+        function tmOnlineCikisYap(kullanici) {
+            tmOnlineHeartbeatDurdur();
+            if (typeof fdb === 'undefined') return;
+            fdb.collection("tm_online").doc(kullanici).delete().catch(function(e){});
         }
 
         /* ================= ANA SAYFA TAKVİM ================= */
