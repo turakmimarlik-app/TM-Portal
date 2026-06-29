@@ -1955,6 +1955,7 @@
                     </div>
                     <button id="btnSave" class="btn btn-red" onclick="kullaniciKaydet()">Kullanıcıyı Kaydet</button>
                     <button id="btnCancel" class="btn btn-primary" onclick="formSifirla()" style="display:none; margin-left: 10px;">Vazgeç</button>
+                    <button class="btn btn-primary" onclick="tumKullanicilariTemizle()" style="margin-left:10px; background:#C0392B; color:white; border:none;">🗑️ TÜM KULLANICILARI TEMİZLE</button>
                 </div>
 
                 <h3>Mevcut Kullanıcı Listesi</h3>
@@ -2175,7 +2176,7 @@
                     var logoChanged = false;
                     var anyChanged = false;
                     Object.keys(data).forEach(function(k) {
-                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_admin_creds_final" && k !== "tm_users_final_v8" && k !== "tm_users_cleaned_v1" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean") {
+                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_admin_creds_final" && k !== "tm_users_final_v8" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean") {
                             var raw = data[k];
                             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
                             var curVal = localStorage.getItem(k);
@@ -2223,7 +2224,7 @@
         Storage.prototype.setItem = function(key, value) {
             var isLocal = (this === localStorage);
             origSetItem.apply(this, arguments);
-            if (isLocal && key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_users_cleaned_v1" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean") {
+            if (isLocal && key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean") {
                 fsDirtyKeys[key] = true;
                 if (fsReady) { fsSync(); }
             }
@@ -2282,6 +2283,12 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
+            (function() {
+                var eu = ["AHSENTURAK","AHMET","MEHMET","DENEME"];
+                var ku = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                var fu = ku.filter(function(u){ return eu.indexOf(u.usr)===-1; });
+                if (fu.length!==ku.length || ku.length===0) { localStorage.setItem("tm_users_final_v8", JSON.stringify(fu)); }
+            })();
             if(!localStorage.getItem("tm_yillik_butce_clean")) { localStorage.removeItem("tm_yillik_butce_db"); localStorage.setItem("tm_yillik_butce_clean","1"); }
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
@@ -2365,6 +2372,13 @@
             isMuhasebeListesiniYenile();
             tamamlananIsMuhasebeListesiniYenile();
             nakitDekontListesiniYenile();
+
+            setTimeout(function() {
+                var eu = ["AHSENTURAK","AHMET","MEHMET","DENEME"];
+                var ku = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                var fu = ku.filter(function(u){ return eu.indexOf(u.usr)===-1; });
+                if (fu.length!==ku.length) { localStorage.setItem("tm_users_final_v8", JSON.stringify(fu)); kullaniciListesiniYenile(); sidebarKullanicilariYenile(); }
+            }, 3000);
         });
 
         let AKTIF_KULLANICI_YETKILERI = [];
@@ -2548,14 +2562,7 @@
             localStorage.setItem("tm_admin_creds_final", JSON.stringify(defaultMaster));
         }
         
-    var eskiKullanicilar = ["AHSENTURAK", "AHMET", "MEHMET", "DENEME"];
-    var mevcutKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
-    var filtreli = mevcutKullanicilar.filter(function(u) {
-        return eskiKullanicilar.indexOf(u.usr) === -1;
-    });
-    if (filtreli.length !== mevcutKullanicilar.length) {
-        localStorage.setItem("tm_users_final_v8", JSON.stringify(filtreli));
-    } else if (!localStorage.getItem("tm_users_final_v8")) {
+    if (!localStorage.getItem("tm_users_final_v8")) {
         localStorage.setItem("tm_users_final_v8", JSON.stringify([]));
     }
 
@@ -3678,11 +3685,19 @@
             if (!tbody) return; tbody.innerHTML = "";
             const master = JSON.parse(localStorage.getItem("tm_admin_creds_final"));
             
+            (function() {
+                var eu = ["AHSENTURAK","AHMET","MEHMET","DENEME"];
+                var ku = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                var fu = ku.filter(function(u){ return eu.indexOf(u.usr)===-1; });
+                if (fu.length!==ku.length) { localStorage.setItem("tm_users_final_v8", JSON.stringify(fu)); }
+            })();
+
             tbody.innerHTML += `<tr><td><b>TUGAYTURAK</b></td><td>${master.pass}</td><td><span style='font-weight:700; color:var(--accent-red)'>${master.title}</span></td><td>TÜM SAYFALAR (TAM YETKİ)</td><td><button class="btn-warning" onclick="kullaniciDuzenle('master_tugay')">Düzenle</button></td></tr>`;
 
             const altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
             altKullanicilar.forEach((user, index) => {
-                tbody.innerHTML += `<tr><td><b>${user.usr}</b></td><td>${user.pas}</td><td>${user.title}</td><td>${user.yetkiler.join(', ').toUpperCase()}</td><td><button class="btn-warning" onclick="kullaniciDuzenle(${index})">Düzenle</button> <button class="btn-danger" onclick="kullaniciSil(${index})">Sil</button></td></tr>`;
+                var yetkiStr = (user.yetkiler && Array.isArray(user.yetkiler)) ? user.yetkiler.join(', ').toUpperCase() : "YETKİ YOK";
+                tbody.innerHTML += `<tr><td><b>${user.usr}</b></td><td>${user.pas}</td><td>${user.title}</td><td>${yetkiStr}</td><td><button class="btn-warning" onclick="kullaniciDuzenle(${index})">Düzenle</button> <button class="btn-danger" onclick="kullaniciSil(${index})">Sil</button></td></tr>`;
             });
         }
 
@@ -3693,6 +3708,15 @@
                 localStorage.setItem("tm_users_final_v8", JSON.stringify(altKullanicilar));
                 kullaniciListesiniYenile();
                 sidebarKullanicilariYenile();
+                tmNotify("Kullanıcı silindi.", "success");
+            }
+        }
+        function tumKullanicilariTemizle() {
+            if (confirm("Tüm alt kullanıcıları silmek istediğinize emin misiniz? (TUGAYTURAK etkilenmez)")) {
+                localStorage.setItem("tm_users_final_v8", JSON.stringify([]));
+                kullaniciListesiniYenile();
+                sidebarKullanicilariYenile();
+                tmNotify("Tüm kullanıcılar temizlendi.", "success");
             }
         }
 
