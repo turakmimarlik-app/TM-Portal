@@ -2964,7 +2964,7 @@
             if (pageId === 'tamamlanan-is-muhasebeleri-page') { tamamlananIsMuhasebeListesiniYenile(); }
             if (pageId === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
             if (pageId === 'nakit-dekont-page') { nakitDekontListesiniYenile(); nakitDekontIslemTuruRenk(document.getElementById("ndIslemTuru")); }
-            if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); yetkiCheckboxlariniRenderEt(); kullaniciListesiniYenile(); }
+            if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); }
             localStorage.setItem('tm_active_page', pageId);
         }
         function yenileAktifSayfa() {
