@@ -2175,7 +2175,7 @@
                     var logoChanged = false;
                     var anyChanged = false;
                     Object.keys(data).forEach(function(k) {
-                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_admin_creds_final" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean") {
+                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_admin_creds_final" && k !== "tm_users_final_v8" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean") {
                             var raw = data[k];
                             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
                             var curVal = localStorage.getItem(k);
@@ -2282,6 +2282,12 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
+            (function() {
+                var eu = ["AHSENTURAK","AHMET","MEHMET","DENEME"];
+                var ku = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                var fu = ku.filter(function(u){ return eu.indexOf(u.usr)===-1; });
+                if (fu.length!==ku.length || ku.length===0) { localStorage.setItem("tm_users_final_v8", JSON.stringify(fu)); }
+            })();
             if(!localStorage.getItem("tm_yillik_butce_clean")) { localStorage.removeItem("tm_yillik_butce_db"); localStorage.setItem("tm_yillik_butce_clean","1"); }
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
@@ -2365,6 +2371,13 @@
             isMuhasebeListesiniYenile();
             tamamlananIsMuhasebeListesiniYenile();
             nakitDekontListesiniYenile();
+
+            setTimeout(function() {
+                var eu = ["AHSENTURAK","AHMET","MEHMET","DENEME"];
+                var ku = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                var fu = ku.filter(function(u){ return eu.indexOf(u.usr)===-1; });
+                if (fu.length!==ku.length) { localStorage.setItem("tm_users_final_v8", JSON.stringify(fu)); kullaniciListesiniYenile(); sidebarKullanicilariYenile(); }
+            }, 3000);
         });
 
         let AKTIF_KULLANICI_YETKILERI = [];
@@ -2549,25 +2562,7 @@
         }
         
     if (!localStorage.getItem("tm_users_final_v8")) {
-        const testUser = [
-            { usr: "DENEME", pas: "1234", title: "TEST PERSONELİ", yetkiler: ["anasayfa", "teklif-olustur", "teklif-liste", "musteriler", "isortaklari", "istakibi"] },
-            { usr: "AHSENTURAK", pas: "1234", title: "GENEL MÜDÜR", yetkiler: ["anasayfa", "dilekce", "teklif-olustur", "teklif-liste", "tm-fiyatlar", "piyasa-fiyatlari", "musteriler", "isortaklari", "istakibi", "yonetim", "nakit-dekont", "is-muhasebe-olustur", "is-muhasebe", "tamamlanan-is-muhasebe", "hesap-takip", "fatura-takip", "yillik-butce"] },
-            { usr: "AHMET", pas: "1234", title: "TEKNİKER", yetkiler: ["anasayfa", "teklif-liste", "musteriler", "isortaklari", "istakibi"] },
-            { usr: "MEHMET", pas: "1234", title: "TEKNİKER", yetkiler: ["anasayfa", "teklif-liste", "musteriler", "isortaklari", "istakibi"] }
-        ];
-        localStorage.setItem("tm_users_final_v8", JSON.stringify(testUser));
-    } else {
-        let mevcut = JSON.parse(localStorage.getItem("tm_users_final_v8"));
-        if (!mevcut.some(u => u.usr === "AHSENTURAK")) {
-            mevcut.push({ usr: "AHSENTURAK", pas: "1234", title: "GENEL MÜDÜR", yetkiler: ["anasayfa", "dilekce", "teklif-olustur", "teklif-liste", "tm-fiyatlar", "piyasa-fiyatlari", "musteriler", "isortaklari", "istakibi", "yonetim", "nakit-dekont", "is-muhasebe-olustur", "is-muhasebe", "tamamlanan-is-muhasebe", "hesap-takip", "fatura-takip", "yillik-butce"] });
-            localStorage.setItem("tm_users_final_v8", JSON.stringify(mevcut));
-        }
-        ["AHMET","MEHMET"].forEach(function(usr) {
-            if (!mevcut.some(u => u.usr === usr)) {
-                mevcut.push({ usr: usr, pas: "1234", title: "TEKNİKER", yetkiler: ["anasayfa", "teklif-liste", "musteriler", "isortaklari", "istakibi"] });
-            }
-        });
-        localStorage.setItem("tm_users_final_v8", JSON.stringify(mevcut));
+        localStorage.setItem("tm_users_final_v8", JSON.stringify([]));
     }
 
         function piyasaDallariSecenekleriniDoldur() {
@@ -2969,7 +2964,7 @@
             if (pageId === 'tamamlanan-is-muhasebeleri-page') { tamamlananIsMuhasebeListesiniYenile(); }
             if (pageId === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
             if (pageId === 'nakit-dekont-page') { nakitDekontListesiniYenile(); nakitDekontIslemTuruRenk(document.getElementById("ndIslemTuru")); }
-            if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); yetkiCheckboxlariniRenderEt(); }
+            if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); yetkiCheckboxlariniRenderEt(); kullaniciListesiniYenile(); }
             localStorage.setItem('tm_active_page', pageId);
         }
         function yenileAktifSayfa() {
@@ -2990,7 +2985,7 @@
             else if (id === 'dilekce-page') { dlkListele(); }
             else if (id === 'tm-fiyatlar-page') { tmfSayfayiYukle(); }
             else if (id === 'istakibi-page') { itGoster(); }
-            else if (id === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); }
+            else if (id === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); kullaniciListesiniYenile(); }
         }
 
         function temaDegistir(tema) {
@@ -3689,22 +3684,33 @@
             if (!tbody) return; tbody.innerHTML = "";
             const master = JSON.parse(localStorage.getItem("tm_admin_creds_final"));
             
+            (function() {
+                var eu = ["AHSENTURAK","AHMET","MEHMET","DENEME"];
+                var ku = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                var fu = ku.filter(function(u){ return eu.indexOf(u.usr)===-1; });
+                if (fu.length!==ku.length) { localStorage.setItem("tm_users_final_v8", JSON.stringify(fu)); }
+            })();
+
             tbody.innerHTML += `<tr><td><b>TUGAYTURAK</b></td><td>${master.pass}</td><td><span style='font-weight:700; color:var(--accent-red)'>${master.title}</span></td><td>TÜM SAYFALAR (TAM YETKİ)</td><td><button class="btn-warning" onclick="kullaniciDuzenle('master_tugay')">Düzenle</button></td></tr>`;
 
             const altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
             altKullanicilar.forEach((user, index) => {
-                tbody.innerHTML += `<tr><td><b>${user.usr}</b></td><td>${user.pas}</td><td>${user.title}</td><td>${user.yetkiler.join(', ').toUpperCase()}</td><td><button class="btn-warning" onclick="kullaniciDuzenle(${index})">Düzenle</button> <button class="btn-danger" onclick="kullaniciSil(${index})">Sil</button></td></tr>`;
+                var yetkiStr = (user.yetkiler && Array.isArray(user.yetkiler)) ? user.yetkiler.join(', ').toUpperCase() : "YETKİ YOK";
+                tbody.innerHTML += `<tr><td><b>${user.usr}</b></td><td>${user.pas}</td><td>${user.title}</td><td>${yetkiStr}</td><td><button class="btn-warning" onclick="kullaniciDuzenle(${index})">Düzenle</button> <button class="btn-danger" onclick="kullaniciSil(${index})">Sil</button></td></tr>`;
             });
         }
 
         function kullaniciSil(index) {
-            let altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
-            if (confirm("Bu kullanıcıyı listeden tamamen silmek istediğinize emin misiniz?")) {
-                altKullanicilar.splice(index, 1);
-                localStorage.setItem("tm_users_final_v8", JSON.stringify(altKullanicilar));
-                kullaniciListesiniYenile();
-                sidebarKullanicilariYenile();
-            }
+            try {
+                let altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                if (confirm("Bu kullanıcıyı listeden tamamen silmek istediğinize emin misiniz?")) {
+                    altKullanicilar.splice(index, 1);
+                    localStorage.setItem("tm_users_final_v8", JSON.stringify(altKullanicilar));
+                    kullaniciListesiniYenile();
+                    sidebarKullanicilariYenile();
+                    tmNotify("Kullanıcı silindi.", "success");
+                }
+            } catch(e) { console.error("kullaniciSil hatasi:", e); tmNotify("Silme hatası: " + e.message, "error"); }
         }
 
         function girisCikisLogla(kullanici, islem) {
