@@ -2488,7 +2488,8 @@
         }
 
         function anlikTarihGetir() {
-            return new Date().toISOString().substring(0, 10);
+            var d = new Date();
+            return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
         }
 
         function tmNotify(msg, tip) {
@@ -4216,7 +4217,7 @@
                 ops = '<option value="TUGAYTURAK">TUGAYTURAK (' + (master.title || "KURUCU") + ')</option>' + ops.replace(/<option value="TUGAYTURAK">.*?<\/option>/, "");
             }
             document.getElementById("asGorevAtanan").innerHTML = ops;
-            document.getElementById("asGorevTarih").value = new Date().toISOString().split("T")[0];
+            document.getElementById("asGorevTarih").value = anlikTarihGetir();
             form.style.display = "block";
             btn.textContent = "✕ İPTAL";
         }
@@ -8748,7 +8749,7 @@ function itDurumMetni(o) {
                     tmNotify("Önce " + prev.label + " adımını tamamlayın!", "error"); return;
                 }
             }
-            if (o[field]) { o[field] = ""; } else { o[field] = new Date().toISOString().substring(0,10); }
+            if (o[field]) { o[field] = ""; } else { o[field] = anlikTarihGetir(); }
             itDbKaydet(liste);
             var dateSpan = document.getElementById("itAsamaTarih_" + jobId + "_" + index + "_" + field);
             if (dateSpan) dateSpan.innerText = o[field] ? tarihStr(o[field]) : '-';
@@ -8948,7 +8949,7 @@ function itDurumMetni(o) {
             document.getElementById("itFormPafta").value = data ? (data.pafta||"") : "";
             document.getElementById("itFormAda").value = data ? (data.ada||"") : "";
             document.getElementById("itFormParsel").value = data ? (data.parsel||"") : "";
-            document.getElementById("itFormTarih").value = data ? data.tarih : new Date().toISOString().substring(0,10);
+            document.getElementById("itFormTarih").value = data ? data.tarih : anlikTarihGetir();
             document.getElementById("itFormNot").value = data ? data.not : "";
             document.getElementById("itFormAd").value = data ? data.isAdi : "";
             if (data) {
@@ -9055,7 +9056,7 @@ function itDurumMetni(o) {
             if (liste[idx].tur === "Uygulama Proje" && !liste[idx].ruhsatOnayi) { tmNotify("Önce ruhsat onayı alınmalıdır!", "error"); return; }
             if (!confirm("Bu işi tamamlandı olarak işaretlemek istediğinize emin misiniz?")) return;
             liste[idx].tamamlandi = true;
-            liste[idx].bitisTarihi = new Date().toISOString().substring(0,10);
+            liste[idx].bitisTarihi = anlikTarihGetir();
             itDbKaydet(liste);
             itGoster();
             tmNotify("İş tamamlandı olarak işaretlendi.", "success");
