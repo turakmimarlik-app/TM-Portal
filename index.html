@@ -2549,25 +2549,11 @@
         }
         
     if (!localStorage.getItem("tm_users_final_v8")) {
-        const testUser = [
-            { usr: "DENEME", pas: "1234", title: "TEST PERSONELİ", yetkiler: ["anasayfa", "teklif-olustur", "teklif-liste", "musteriler", "isortaklari", "istakibi"] },
-            { usr: "AHSENTURAK", pas: "1234", title: "GENEL MÜDÜR", yetkiler: ["anasayfa", "dilekce", "teklif-olustur", "teklif-liste", "tm-fiyatlar", "piyasa-fiyatlari", "musteriler", "isortaklari", "istakibi", "yonetim", "nakit-dekont", "is-muhasebe-olustur", "is-muhasebe", "tamamlanan-is-muhasebe", "hesap-takip", "fatura-takip", "yillik-butce"] },
-            { usr: "AHMET", pas: "1234", title: "TEKNİKER", yetkiler: ["anasayfa", "teklif-liste", "musteriler", "isortaklari", "istakibi"] },
-            { usr: "MEHMET", pas: "1234", title: "TEKNİKER", yetkiler: ["anasayfa", "teklif-liste", "musteriler", "isortaklari", "istakibi"] }
-        ];
-        localStorage.setItem("tm_users_final_v8", JSON.stringify(testUser));
-    } else {
-        let mevcut = JSON.parse(localStorage.getItem("tm_users_final_v8"));
-        if (!mevcut.some(u => u.usr === "AHSENTURAK")) {
-            mevcut.push({ usr: "AHSENTURAK", pas: "1234", title: "GENEL MÜDÜR", yetkiler: ["anasayfa", "dilekce", "teklif-olustur", "teklif-liste", "tm-fiyatlar", "piyasa-fiyatlari", "musteriler", "isortaklari", "istakibi", "yonetim", "nakit-dekont", "is-muhasebe-olustur", "is-muhasebe", "tamamlanan-is-muhasebe", "hesap-takip", "fatura-takip", "yillik-butce"] });
-            localStorage.setItem("tm_users_final_v8", JSON.stringify(mevcut));
-        }
-        ["AHMET","MEHMET"].forEach(function(usr) {
-            if (!mevcut.some(u => u.usr === usr)) {
-                mevcut.push({ usr: usr, pas: "1234", title: "TEKNİKER", yetkiler: ["anasayfa", "teklif-liste", "musteriler", "isortaklari", "istakibi"] });
-            }
-        });
-        localStorage.setItem("tm_users_final_v8", JSON.stringify(mevcut));
+        localStorage.setItem("tm_users_final_v8", JSON.stringify([]));
+    }
+    if (!localStorage.getItem("tm_users_cleaned_v1")) {
+        localStorage.setItem("tm_users_final_v8", JSON.stringify([]));
+        localStorage.setItem("tm_users_cleaned_v1", "1");
     }
 
         function piyasaDallariSecenekleriniDoldur() {
