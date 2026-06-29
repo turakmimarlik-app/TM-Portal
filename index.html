@@ -2178,10 +2178,11 @@
             function fsSnapshotHandler(snap) {
                 if (snap && snap.exists) {
                     fsReady = true;
-                    var data = snap.data();
-                    var logoChanged = false;
-                    var anyChanged = false;
-                    Object.keys(data).forEach(function(k) {
+                var data = snap.data();
+                var logoChanged = false;
+                var anyChanged = false;
+                var syncedKeys = [];
+                Object.keys(data).forEach(function(k) {
                         if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean") {
                             var raw = data[k];
                             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
@@ -3658,6 +3659,7 @@
                 html += '</div></div>';
             }
             grid.innerHTML = html;
+            multiLogolariFirebaseCek();
         }
         function multiLogoYukle(num, ev) {
             var file = ev.target.files[0];
@@ -3668,6 +3670,13 @@
                 localStorage.setItem("tm_multi_logo_" + num, data);
                 document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
                 if (num === 3) sidebardaLogoyuGoster();
+                if (typeof fdb !== 'undefined') {
+                    fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
+                        tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
+                    }).catch(function(e) {
+                        tmNotify("Logo #" + num + " Firestore yedekleme hatası: " + e.message, "error");
+                    });
+                }
             };
             reader.readAsDataURL(file);
         }
@@ -3675,6 +3684,24 @@
             localStorage.removeItem("tm_multi_logo_" + num);
             document.getElementById("mlPreview" + num).innerHTML = '<div class="logo-placeholder">Logo #' + num + ' yüklemek için tıklayın</div>';
             if (num === 3) sidebardaLogoyuGoster();
+        }
+        function multiLogolariFirebaseCek() {
+            if (typeof fdb === 'undefined') return;
+            for (var i = 1; i <= 10; i++) {
+                (function(idx) {
+                    fdb.collection("tm_sync").doc("multi_logo_" + idx).get({ source: 'server' }).then(function(snap) {
+                        if (snap && snap.exists) {
+                            var raw = snap.data().data;
+                            if (raw && raw !== "null" && raw.length > 100) {
+                                localStorage.setItem("tm_multi_logo_" + idx, raw);
+                                var preview = document.getElementById("mlPreview" + idx);
+                                if (preview) preview.innerHTML = '<img src="' + raw + '" alt="Logo ' + idx + '">';
+                                if (idx === 3) sidebardaLogoyuGoster();
+                            }
+                        }
+                    }).catch(function(e){ console.error("multiLogolariFirebaseCek", idx, e); });
+                })(i);
+            }
         }
 
         /* ================= PORTAL YÖNETİMİ ================= */
