@@ -3053,9 +3053,7 @@
         temaDegistir(localStorage.getItem("tm_theme") || "dark");
 
         function loginLogoyuGoster() {
-            var tema = localStorage.getItem("tm_theme") || "dark";
-            var logoNum = tema === "dark" ? 3 : 1;
-            var logoData = localStorage.getItem("tm_multi_logo_" + logoNum);
+            var logoData = localStorage.getItem("tm_multi_logo_3");
             var el = document.getElementById("loginLogo");
             if (!el) return;
             if (logoData && logoData !== "null" && logoData.length > 100) {
