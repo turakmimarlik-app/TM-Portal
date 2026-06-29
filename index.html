@@ -50,6 +50,9 @@
         
         /* GİRİŞ EKRANI */
         .login-wrapper { display: flex; height: 100vh; width: 100vw; justify-content: center; align-items: center; background-color: var(--sidebar-bg); position: fixed; top: 0; left: 0; z-index: 9999; }
+        .login-container { display:flex; align-items:center; gap:40px; }
+        .login-logo-side { display:flex; align-items:center; justify-content:center; }
+        .login-logo-side img { max-width:220px; max-height:160px; height:auto; border-radius:6px; }
         .login-card { background: var(--panel-bg); padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 400px; text-align: center; border-bottom: 5px solid var(--accent-red); }
         .login-card h2 { margin-top: 0; margin-bottom: 5px; color: var(--text-dark); font-weight: 700; letter-spacing: 1px; }
         .login-card .portal-sub { font-size: 13px; color: var(--accent-red); font-weight: bold; letter-spacing: 2px; margin-bottom: 30px; text-transform: uppercase; }
@@ -905,9 +908,10 @@
 <body>
 
     <div id="loginSection" class="login-wrapper">
-        <div class="login-card">
-            <div id="loginLogo" style="text-align:center;margin-bottom:10px;"></div>
-            <h2>TM-Portal</h2>
+        <div class="login-container">
+            <div class="login-logo-side" id="loginLogo"></div>
+            <div class="login-card">
+                <h2>TM-Portal</h2>
             <div class="portal-sub">Yönetim Sistemi</div>
             <div class="login-form-group">
                 <label>Kullanıcı Adı</label>
@@ -3055,7 +3059,7 @@
             var el = document.getElementById("loginLogo");
             if (!el) return;
             if (logoData && logoData !== "null" && logoData.length > 100) {
-                el.innerHTML = '<img src="' + logoData + '" style="max-width:180px;max-height:60px;height:auto;border-radius:4px;" alt="Logo">';
+                el.innerHTML = '<img src="' + logoData + '" alt="Logo">';
             } else {
                 el.innerHTML = '';
             }
