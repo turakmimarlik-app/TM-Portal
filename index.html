@@ -975,7 +975,6 @@
                 </div>
 
                 <li id="menu-yonetim" class="menu-item" onclick="menudenSayfaAc('yonetim', 'yonetim-page', this)"><span>⚙️ <span class="menu-text">Portal Yönetimi</span></span></li>
-                <li id="menu-x" class="menu-item" onclick="menudenSayfaAc('x', 'x-page', this)"><span>❌ <span class="menu-text">X Sayfası</span></span></li>
             </ul>
 
             <div class="sidebar-users-section">
@@ -2030,12 +2029,6 @@
                 </div>
             </div>
 
-            <div id="x-page" class="page">
-                <div id="lock-x" class="page-lock-overlay"></div>
-                <h2>❌ X Sayfası</h2>
-                <p style="padding:20px; color:var(--text-light);">Bu sayfa henüz yapılandırılmadı.</p>
-            </div>
-
         </div>
     </div>
 
@@ -3035,13 +3028,10 @@
             if (['nakit-dekont-page', 'is-muhasebe-olustur-page', 'is-muhasebe-page', 'tamamlanan-is-muhasebeleri-page', 'hesap-takip-page', 'fatura-takip-page', 'yillik-butce-page'].includes(pageId)) {
                 document.getElementById("menu-muhasebe-root").classList.add("active");
             }
-            yenileAktifSayfa();
+            sayfayiYenile(pageId);
             localStorage.setItem('tm_active_page', pageId);
         }
-        function yenileAktifSayfa() {
-            var activePage = document.querySelector('.page.active');
-            if (!activePage) return;
-            var id = activePage.id;
+        function sayfayiYenile(id) {
             if (id === 'anasayfa-page') { asTakvimRender(); asGorevListele(); dashboardVerileriniGuncelle(); }
             else if (id === 'teklif-liste-page') { teklifListesiniYenile(); }
             else if (id === 'piyasa-fiyatlari-page') { piyasaListesiniYenile(); }
@@ -3058,7 +3048,10 @@
             else if (id === 'istakibi-page') { itGoster(); }
             else if (id === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); multiLogoGridRender(); }
             else if (id === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
-            else if (id === 'teklif-olustur-page') {} // refresh gerekmiyor
+        }
+        function yenileAktifSayfa() {
+            var activePage = document.querySelector('.page.active');
+            if (activePage) sayfayiYenile(activePage.id);
         }
 
         function temaDegistir(tema) {
