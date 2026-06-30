@@ -3067,7 +3067,7 @@
                 else if (id === 'dilekce-page') { dlkListele(); dlkIdGuncelle(); }
                 else if (id === 'tm-fiyatlar-page') { tmfSayfayiYukle(); }
                 else if (id === 'istakibi-page') { itGoster(); }
-                else if (id === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); multiLogoGridRender(); }
+                else if (id === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); kullaniciListesiniYenile(); multiLogoGridRender(); }
                 else if (id === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
             } catch(e) { console.warn('yenileAktifSayfa hatasi', e); }
         }
@@ -3638,7 +3638,7 @@
         /* ================= ŞİRKET BİLGİLERİ & LOGO ================= */
         function sirketBilgileriYukle() {
             var aktifAlan = document.activeElement;
-            var ciIds = ["ciAd","ciTelefon","ciGsm","ciVergiDaire","ciVergiNo","ciEmail","ciImzaAd","ciAdres","ciDilekceAltBilgi"];
+            var ciIds = ["ciAd","ciTelefon","ciGsm","ciVergiDaire","ciVergiNo","ciEmail","ciImzaAd","ciAdres","ciDilekceAltBilgi","newUsername","newPassword","newTitle"];
             for (var i = 0; i < ciIds.length; i++) { if (aktifAlan && aktifAlan.id === ciIds[i]) return; }
             var d = {};
             try { d = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { d = {}; }
@@ -3760,6 +3760,8 @@
             if (typeof fdb === 'undefined') return;
             for (var i = 1; i <= 10; i++) {
                 (function(idx) {
+                    var mevcut = localStorage.getItem("tm_multi_logo_" + idx);
+                    if (mevcut) return;
                     fdb.collection("tm_sync").doc("multi_logo_" + idx).get({ source: 'server' }).then(function(snap) {
                         if (snap && snap.exists) {
                             var raw = snap.data().data;
