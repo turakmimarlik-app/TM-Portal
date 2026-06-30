@@ -7235,7 +7235,7 @@
 
         let tmfAktifId = null;
         let tmfSResize = null;
-        var tmfEditing = false;
+        let tmfEditing = false;
 
         function tmfHucreObj(val) {
             if (typeof val === 'object' && val !== null) return val;
@@ -7376,7 +7376,7 @@
             var h = '<div class="tmf-excel-wrap">';
 
             h += '<div class="tmf-fmt-bar" id="tmfFmtBar" style="display:' + (tmfEditing ? "flex" : "none") + ';">';
-            h += '<button class="tmf-fmt-btn" id="tmfFmtBold" onclick="tmfFmtBold()" title="Kalın"><b>B</b></button>';
+            h += '<button class="tmf-fmt-btn" onclick="tmfFmtBold()" title="Kalın"><b>B</b></button>';
             h += '<select class="tmf-fmt-select" id="tmfFmtSize" onchange="tmfFmtSizeDegistir(this.value)" title="Punto">';
             h += '<option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13" selected>13</option><option value="14">14</option><option value="16">16</option><option value="18">18</option><option value="20">20</option><option value="24">24</option>';
             h += '</select>';
