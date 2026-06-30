@@ -2998,14 +2998,16 @@
 
         function menudenSayfaAc(yetkiKodu, pageId, element) {
             sidebarAc();
-            sayfaDegistir(pageId, element);
             document.querySelectorAll(".page-lock-overlay").forEach(lock => lock.classList.remove("active"));
             document.getElementById("lockPopupOverlay").classList.remove("active");
             if (!yetkiSayfaAc(yetkiKodu)) {
                 const targetLock = document.getElementById(`lock-${yetkiKodu}`);
                 if (targetLock) targetLock.classList.add("active");
                 document.getElementById("lockPopupOverlay").classList.add("active");
+                return;
             }
+            localStorage.setItem('tm_active_page', pageId);
+            location.reload();
         }
         function kapatLockPopup() { document.getElementById("lockPopupOverlay").classList.remove("active"); }
 
