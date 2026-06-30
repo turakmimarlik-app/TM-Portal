@@ -2392,9 +2392,10 @@
             }
             
             if (localStorage.getItem("tm_piyasa_birimleri_v1")) {
-                SABIT_BIRIM_TIPLERI = ["₺/m²"];
+                SABIT_BIRIM_TIPLERI = JSON.parse(localStorage.getItem("tm_piyasa_birimleri_v1"));
+            } else {
+                localStorage.setItem("tm_piyasa_birimleri_v1", JSON.stringify(SABIT_BIRIM_TIPLERI));
             }
-            localStorage.setItem("tm_piyasa_birimleri_v1", JSON.stringify(SABIT_BIRIM_TIPLERI));
 
             if (localStorage.getItem("tm_vergi_turleri_v1")) {
                 SABIT_VERGI_TURLERI = JSON.parse(localStorage.getItem("tm_vergi_turleri_v1"));
