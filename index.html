@@ -3028,17 +3028,7 @@
             if (['nakit-dekont-page', 'is-muhasebe-olustur-page', 'is-muhasebe-page', 'tamamlanan-is-muhasebeleri-page', 'hesap-takip-page', 'fatura-takip-page', 'yillik-butce-page'].includes(pageId)) {
                 document.getElementById("menu-muhasebe-root").classList.add("active");
             }
-            if (pageId === 'anasayfa-page') { asTakvimRender(); asGorevListele(); dashboardVerileriniGuncelle(); }
-            if (pageId === 'dilekce-page') { dlkListele(); dlkIdGuncelle(); }
-            if (pageId === 'tm-fiyatlar-page') { tmfSayfayiYukle(); }
-            if (pageId === 'yillik-butce-page') { ybSayfayiYukle(); }
-            if (pageId === 'hesap-takip-page') { htSayfayiYukle(); }
-            if (pageId === 'fatura-takip-page') { faturaSayfayiYukle(); }
-            if (pageId === 'istakibi-page') { itGoster(); }
-            if (pageId === 'tamamlanan-is-muhasebeleri-page') { tamamlananIsMuhasebeListesiniYenile(); }
-            if (pageId === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
-            if (pageId === 'nakit-dekont-page') { nakitDekontListesiniYenile(); nakitDekontIslemTuruRenk(document.getElementById("ndIslemTuru")); }
-            if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); multiLogoGridRender(); }
+            yenileAktifSayfa();
             localStorage.setItem('tm_active_page', pageId);
         }
         function yenileAktifSayfa() {
@@ -3050,16 +3040,18 @@
             else if (id === 'piyasa-fiyatlari-page') { piyasaListesiniYenile(); }
             else if (id === 'is-muhasebe-page') { isMuhasebeListesiniYenile(); }
             else if (id === 'tamamlanan-is-muhasebeleri-page') { tamamlananIsMuhasebeListesiniYenile(); }
-            else if (id === 'nakit-dekont-page') { nakitDekontListesiniYenile(); }
+            else if (id === 'nakit-dekont-page') { nakitDekontListesiniYenile(); nakitDekontIslemTuruRenk(document.getElementById("ndIslemTuru")); }
             else if (id === 'musteriler-page') { musteriKartlariniYenile(); }
             else if (id === 'isortaklari-page') { isOrtaklariKartlariniYenile(); }
             else if (id === 'hesap-takip-page') { htSayfayiYukle(); }
             else if (id === 'fatura-takip-page') { faturaSayfayiYukle(); }
             else if (id === 'yillik-butce-page') { ybSayfayiYukle(); }
-            else if (id === 'dilekce-page') { dlkListele(); }
+            else if (id === 'dilekce-page') { dlkListele(); dlkIdGuncelle(); }
             else if (id === 'tm-fiyatlar-page') { tmfSayfayiYukle(); }
             else if (id === 'istakibi-page') { itGoster(); }
-            else if (id === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); kullaniciListesiniYenile(); multiLogoGridRender(); }
+            else if (id === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); multiLogoGridRender(); }
+            else if (id === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
+            else if (id === 'teklif-olustur-page') {} // refresh gerekmiyor
         }
 
         function temaDegistir(tema) {
