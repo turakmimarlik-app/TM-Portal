@@ -4535,7 +4535,7 @@
             document.body.appendChild(clone);
             var fname = (veri.isAdi || 'TEKLIF').replace(/[\\/:*?"<>|]/g,'_') + '_#' + String(veri.id).padStart(4,'0') + '.pdf';
             setTimeout(function(){
-                html2canvas(clone,{scale:4,useCORS:true}).then(function(c){
+                html2canvas(clone,{scale:6,useCORS:true}).then(function(c){
                     var u=c.toDataURL('image/jpeg',1);
                     var p=new jspdf.jsPDF('portrait','mm','a4');
                     p.addImage(u,'JPEG',1,1,208,295);
@@ -5855,7 +5855,7 @@
             sayfaEl.innerHTML = sayfaHtml;
             document.body.appendChild(sayfaEl);
 
-            html2canvas(sayfaEl, {scale:4,useCORS:true,logging:false,width:793,height:1122}).then(function(cv){
+            html2canvas(sayfaEl, {scale:6,useCORS:true,logging:false,width:793,height:1122}).then(function(cv){
                 var dt = cv.toDataURL('image/jpeg',0.95);
                 var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
                 doc.addImage(dt,'JPEG',0,0,210,297);
@@ -6559,7 +6559,7 @@
             }
             h += `<div style="text-align:center;margin-top:30px;padding-top:15px;border-top:1px solid #dee2e6;font-size:10px;color:#999;">Turak Mimarlık - ${yil} Yılı Bütçe Raporu - Otomatik Oluşturulmuştur</div></div>`;
             const el = document.createElement("div"); el.innerHTML = h; document.body.appendChild(el);
-            html2pdf().set({margin:[10,10,10,10],filename:`Butce_Raporu_${yil}.pdf`,html2canvas:{scale:4},jsPDF:{format:'a4',orientation:'portrait'}}).from(el).save().then(()=>{document.body.removeChild(el);});
+            html2pdf().set({margin:[10,10,10,10],filename:`Butce_Raporu_${yil}.pdf`,html2canvas:{scale:6},jsPDF:{format:'a4',orientation:'portrait'}}).from(el).save().then(()=>{document.body.removeChild(el);});
         }
 
         /* ================= HESAP TAKİP SİSTEMİ ================= */
@@ -8164,7 +8164,7 @@
             h += '<div style="margin-top:35px;padding-top:15px;border-top:1px solid #ddd;font-size:10px;color:#999;text-align:center;">Turak Mimarlık Portal — Rapor: '+new Date().toLocaleDateString("tr-TR")+'</div></div>';
 
             var el = document.createElement("div"); el.innerHTML = h; document.body.appendChild(el);
-            html2pdf().set({margin:0, filename:'Fatura_Takip_Raporu_'+yil+'.pdf', html2canvas:{scale:4}, jsPDF:{format:'a4', orientation:'portrait'}}).from(el).save().then(function(){document.body.removeChild(el);});
+            html2pdf().set({margin:0, filename:'Fatura_Takip_Raporu_'+yil+'.pdf', html2canvas:{scale:6}, jsPDF:{format:'a4', orientation:'portrait'}}).from(el).save().then(function(){document.body.removeChild(el);});
         }
 
         /* ---------- İş Takibi ---------- */
