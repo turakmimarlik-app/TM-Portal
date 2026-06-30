@@ -2217,15 +2217,7 @@
                     });
                     if (logoChanged) { sidebardaLogoyuGoster(); }
                     if (anyChanged) {
-                        var aPage = document.querySelector('.page.active');
-                        if (!aPage || typeof fsSayfaAnahtarlari === 'undefined' || !fsSayfaAnahtarlari[aPage.id]) {
-                            yenileAktifSayfa();
-                        } else {
-                            var gerekli = fsSayfaAnahtarlari[aPage.id];
-                            var gerekVar = false;
-                            gerekli.forEach(function(anahtar){ if (changedKeys[anahtar]) gerekVar = true; });
-                            if (gerekVar) yenileAktifSayfa();
-                        }
+                        yenileAktifSayfa();
                     }
                 }
             }
