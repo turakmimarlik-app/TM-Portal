@@ -902,24 +902,7 @@
         .tmf-ex-toolbar { display:flex; gap:8px; padding:10px 14px; background:var(--bg-main); border-top:1px solid var(--border-color); }
         .tmf-ex-btn { background:var(--panel-bg); border:1px solid var(--border-color); padding:7px 16px; border-radius:6px; cursor:pointer; font-weight:600; font-size:12px; color:var(--text-dark); transition:0.15s; }
         .tmf-ex-btn:hover { border-color:var(--accent-red); color:var(--accent-red); background:var(--panel-bg); }
-        .tmf-ex-btn-edit { background:var(--accent-red); color:#fff; border-color:var(--accent-red); }
-        .tmf-ex-btn-edit:hover { opacity:0.85; }
-
-        .tmf-fmt-bar { display:flex; align-items:center; gap:8px; padding:8px 14px; background:var(--bg-main); border-bottom:1px solid var(--border-color); flex-wrap:wrap; }
-        .tmf-fmt-btn { background:var(--panel-bg); border:1px solid var(--border-color); padding:4px 12px; border-radius:4px; cursor:pointer; font-weight:600; font-size:13px; color:var(--text-dark); transition:0.15s; min-width:32px; text-align:center; }
-        .tmf-fmt-btn:hover { border-color:var(--accent-red); }
-        .tmf-fmt-btn.active { background:var(--accent-red); color:#fff; border-color:var(--accent-red); }
-        .tmf-fmt-save { background:var(--btn-green); color:#fff; border-color:var(--btn-green); }
-        .tmf-fmt-save:hover { opacity:0.85; }
-        .tmf-fmt-cancel { background:var(--btn-gray); color:#fff; border-color:var(--btn-gray); }
-        .tmf-fmt-cancel:hover { opacity:0.85; }
-        .tmf-fmt-select { padding:4px 6px; border:1px solid var(--border-color); border-radius:4px; background:var(--panel-bg); color:var(--text-dark); font-size:12px; cursor:pointer; }
-        .tmf-fmt-group { display:flex; align-items:center; gap:4px; }
-        .tmf-fmt-label { font-size:11px; color:var(--text-light); font-weight:600; white-space:nowrap; }
-
-        .tmf-ex-ta { width:100%; border:none; background:transparent; padding:6px 8px; outline:none; box-sizing:border-box; font-family:inherit; resize:none; overflow:hidden; min-height:30px; line-height:1.4; white-space:pre-wrap; word-wrap:break-word; }
-        .tmf-ex-ta:focus { background:var(--input-bg); box-shadow:inset 0 0 0 2px rgba(158,42,43,0.15); }
-        .tmf-ex-view { padding:6px 8px; overflow-y:auto; white-space:pre-wrap; word-wrap:break-word; line-height:1.4; }
+    </style>
 </head>
 <body>
 
@@ -3084,7 +3067,7 @@
                 else if (id === 'fatura-takip-page') { faturaSayfayiYukle(); }
                 else if (id === 'yillik-butce-page') { ybSayfayiYukle(); }
                 else if (id === 'dilekce-page') { dlkListele(); dlkIdGuncelle(); }
-                else if (id === 'tm-fiyatlar-page') { if (!tmfEditing) tmfSayfayiYukle(); }
+                else if (id === 'tm-fiyatlar-page') { /* kullanici duzenleme yaparken sifirlanmayi onle */ }
                 else if (id === 'istakibi-page') { itGoster(); }
                 else if (id === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); kullaniciListesiniYenile(); multiLogoGridRender(); }
                 else if (id === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
@@ -7219,7 +7202,7 @@
             document.getElementById("tmFiyatHesapSonuc").style.display = "block";
         }
 
-        /* ================= TM FİYAT LİSTESİ EXCEL TAB SİSTEMİ (v2) ================= */
+        /* ================= TM FİYAT LİSTESİ EXCEL TAB SİSTEMİ ================= */
         const TMF_DB_KEY = "tm_fiyat_sayfalar_v2";
         const TMF_DATA_PREFIX = "tm_fiyat_excel_";
 
@@ -7235,20 +7218,6 @@
 
         let tmfAktifId = null;
         let tmfSResize = null;
-        let tmfEditing = false;
-
-        function tmfHucreObj(val) {
-            if (typeof val === 'object' && val !== null) return val;
-            return { t: val || "", b: false, c: "#000000", s: 13, bg: "" };
-        }
-
-        function tmfHucreHtml(val) {
-            var o = tmfHucreObj(val);
-            var st = "font-size:" + o.s + "px;color:" + o.c + ";";
-            if (o.b) st += "font-weight:700;";
-            if (o.bg) st += "background-color:" + o.bg + ";";
-            return '<span style="' + st + '">' + esc(o.t || "") + '</span>';
-        }
 
         function tmfSayfalarYukle() {
             let db = JSON.parse(localStorage.getItem(TMF_DB_KEY));
@@ -7304,13 +7273,11 @@
         }
 
         function tmfTabDegistir(id) {
-            if (tmfEditing) { tmNotify("Önce değişiklikleri kaydedin veya iptal edin.", "error"); return; }
             tmfAktifId = id;
             tmfSayfayiYukle();
         }
 
         function tmfSayfaEkle() {
-            if (tmfEditing) { tmNotify("Önce değişiklikleri kaydedin veya iptal edin.", "error"); return; }
             const pages = tmfSayfalarYukle();
             const maxId = pages.reduce((m, p) => Math.max(m, p.id), 0);
             const yeniId = maxId + 1;
@@ -7326,7 +7293,6 @@
         }
 
         function tmfSayfaSil(id) {
-            if (tmfEditing) { tmNotify("Önce değişiklikleri kaydedin veya iptal edin.", "error"); return; }
             const pages = tmfSayfalarYukle();
             const p = pages.find(x => x.id === id);
             if (!p) return;
@@ -7340,7 +7306,6 @@
         }
 
         function tmfSayfaYenidenAdlandir(id) {
-            if (tmfEditing) { tmNotify("Önce değişiklikleri kaydedin veya iptal edin.", "error"); return; }
             const pages = tmfSayfalarYukle();
             const p = pages.find(x => x.id === id);
             if (!p) return;
@@ -7371,56 +7336,30 @@
             var container = document.getElementById("tmfTabContent");
             if (!container) return;
 
+            // ensure rowHeights array matches row count
             while (rowHeights.length < rows) rowHeights.push(32);
 
-            var h = '<div class="tmf-excel-wrap">';
-
-            h += '<div class="tmf-fmt-bar" id="tmfFmtBar" style="display:' + (tmfEditing ? "flex" : "none") + ';">';
-            h += '<button class="tmf-fmt-btn" onclick="tmfFmtBold()" title="Kalın"><b>B</b></button>';
-            h += '<select class="tmf-fmt-select" id="tmfFmtSize" onchange="tmfFmtSizeDegistir(this.value)" title="Punto">';
-            h += '<option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13" selected>13</option><option value="14">14</option><option value="16">16</option><option value="18">18</option><option value="20">20</option><option value="24">24</option>';
-            h += '</select>';
-            h += '<div class="tmf-fmt-group">';
-            h += '<span class="tmf-fmt-label">Yazı:</span>';
-            h += '<input type="color" id="tmfFmtColor" value="#000000" onchange="tmfFmtColorDegistir(this.value)" title="Yazı rengi" style="width:28px;height:28px;padding:0;border:1px solid var(--border-color);border-radius:4px;cursor:pointer;">';
-            h += '</div>';
-            h += '<div class="tmf-fmt-group">';
-            h += '<span class="tmf-fmt-label">Hücre:</span>';
-            h += '<input type="color" id="tmfFmtBg" value="#ffffff" onchange="tmfFmtBgDegistir(this.value)" title="Hücre arka plan rengi" style="width:28px;height:28px;padding:0;border:1px solid var(--border-color);border-radius:4px;cursor:pointer;">';
-            h += '</div>';
-            h += '<span style="flex:1;"></span>';
-            h += '<button class="tmf-fmt-btn tmf-fmt-save" onclick="tmfDuzenleKaydet(' + id + ')">💾 Kaydet</button>';
-            h += '<button class="tmf-fmt-btn tmf-fmt-cancel" onclick="tmfDuzenleIptal(' + id + ')">✕ İptal</button>';
-            h += '</div>';
-
-            h += '<div class="tmf-excel-scroll"><table class="tmf-excel" id="tmfExcel_' + id + '">';
+            var h = '<div class="tmf-excel-wrap"><div class="tmf-excel-scroll"><table class="tmf-excel" id="tmfExcel_' + id + '">';
 
             h += '<thead><tr>';
             h += '<th class="tmf-ex-corner"></th>';
             for (var c = 0; c < cols; c++) {
                 h += '<th class="tmf-ex-col-h" style="width:' + colWidths[c] + 'px;" data-col="' + c + '">';
                 h += '<span class="tmf-ex-col-label">' + tmfSutunHarfi(c) + '</span>';
-                h += '<span class="tmf-ex-col-del" onclick="if(tmfEditing)tmfSutunSil(' + id + ',' + c + ')" title="Sütunu sil">✕</span>';
+                h += '<span class="tmf-ex-col-del" onclick="tmfSutunSil(' + id + ',' + c + ')" title="Sütunu sil">✕</span>';
                 h += '<div class="tmf-ex-col-resize" onmousedown="tmfColResizeB(event,' + id + ',' + c + ')"></div>';
                 h += '</th>';
             }
-            h += '<th class="tmf-ex-add-col" onclick="if(tmfEditing)tmfSutunEkle(' + id + ')" title="Sütun ekle">+</th>';
+            h += '<th class="tmf-ex-add-col" onclick="tmfSutunEkle(' + id + ')" title="Sütun ekle">+</th>';
             h += '</tr></thead><tbody>';
 
             for (var r = 0; r < rows; r++) {
-                var rh = Math.max(32, rowHeights[r] || 32);
+                var rh = rowHeights[r] || 32;
                 h += '<tr data-row="' + r + '" style="height:' + rh + 'px;">';
-                h += '<td class="tmf-ex-row-h" style="height:' + rh + 'px;"><span class="tmf-ex-row-label">' + (r + 1) + '</span><span class="tmf-ex-row-del" onclick="if(tmfEditing)tmfSatirSil(' + id + ',' + r + ')" title="Satırı sil">✕</span><div class="tmf-ex-row-resize" onmousedown="tmfRowResizeB(event,' + id + ',' + r + ')"></div></td>';
+                h += '<td class="tmf-ex-row-h" style="height:' + rh + 'px;"><span class="tmf-ex-row-label">' + (r + 1) + '</span><span class="tmf-ex-row-del" onclick="tmfSatirSil(' + id + ',' + r + ')" title="Satırı sil">✕</span><div class="tmf-ex-row-resize" onmousedown="tmfRowResizeB(event,' + id + ',' + r + ')"></div></td>';
                 for (var c = 0; c < cols; c++) {
-                    var val = grid[r] !== undefined ? grid[r][c] : "";
-                    if (tmfEditing) {
-                        var o = tmfHucreObj(val);
-                        h += '<td style="width:' + colWidths[c] + 'px;min-width:' + colWidths[c] + 'px;height:' + rh + 'px;' + (o.bg ? 'background-color:' + o.bg + ';' : '') + '">';
-                        h += '<textarea class="tmf-ex-input tmf-ex-ta" data-r="' + r + '" data-c="' + c + '" data-id="' + id + '" style="font-size:' + o.s + 'px;color:' + o.c + ';' + (o.b ? 'font-weight:700;' : '') + (o.bg ? 'background-color:' + o.bg + ';' : '') + '" oninput="tmfTaGrow(this)" onfocus="tmfTaFocus(this)">' + esc(o.t) + '</textarea>';
-                        h += '</td>';
-                    } else {
-                        h += '<td style="width:' + colWidths[c] + 'px;min-width:' + colWidths[c] + 'px;height:' + rh + 'px;overflow:hidden;' + (tmfHucreObj(val).bg ? 'background-color:' + tmfHucreObj(val).bg + ';' : '') + '"><div class="tmf-ex-view" style="max-height:' + (rh - 8) + 'px;">' + tmfHucreHtml(val) + '</div></td>';
-                    }
+                    var val = grid[r][c] || "";
+                    h += '<td style="width:' + colWidths[c] + 'px;height:' + rh + 'px;"><input class="tmf-ex-input" value="' + esc(val) + '" onchange="tmfExcelHucreDegisti(' + id + ',' + r + ',' + c + ',this.value)"></td>';
                 }
                 h += '<td class="tmf-ex-empty"></td>';
                 h += '</tr>';
@@ -7429,101 +7368,25 @@
             h += '</tbody></table></div>';
 
             h += '<div class="tmf-ex-toolbar">';
-            if (!tmfEditing) {
-                h += '<button class="tmf-ex-btn tmf-ex-btn-edit" onclick="tmfDuzenleBaslat(' + id + ')">✏️ Düzenle</button>';
-            }
-            h += '<button class="tmf-ex-btn" onclick="if(tmfEditing)tmfSatirEkle(' + id + ')">+ Satır Ekle</button>';
-            h += '<button class="tmf-ex-btn" onclick="if(tmfEditing)tmfSutunEkle(' + id + ')">+ Sütun Ekle</button>';
+            h += '<button class="tmf-ex-btn" onclick="tmfSatirEkle(' + id + ')">+ Satır Ekle</button>';
+            h += '<button class="tmf-ex-btn" onclick="tmfSutunEkle(' + id + ')">+ Sütun Ekle</button>';
             h += '</div></div>';
 
             container.innerHTML = h;
-
-            if (tmfEditing) {
-                container.querySelectorAll(".tmf-ex-ta").forEach(function(ta) { tmfTaGrow(ta); });
-            }
         }
 
-        function tmfDuzenleBaslat(id) {
-            tmfEditing = true;
-            tmfExcelGoster(id);
-        }
-
-        function tmfDuzenleKaydet(id) {
+        function tmfExcelHucreDegisti(id, r, c, val) {
             var data = tmfVeriYukle(id);
-            var fmtColor = document.getElementById("tmfFmtColor");
-            var fmtBg = document.getElementById("tmfFmtBg");
-            var varsayilanRenk = fmtColor ? fmtColor.value : "#000000";
-            var varsayilanBg = fmtBg ? fmtBg.value : "";
-            var textareas = document.querySelectorAll("#tmfExcel_" + id + " .tmf-ex-ta");
-            textareas.forEach(function(ta) {
-                var r = parseInt(ta.dataset.r);
-                var c = parseInt(ta.dataset.c);
-                var o = tmfHucreObj(data.grid[r] ? data.grid[r][c] : "");
-                o.t = ta.value;
-                o.s = parseInt(ta.style.fontSize) || 13;
-                o.b = ta.style.fontWeight === "700" || ta.style.fontWeight === "bold";
-                o.c = ta.style.color || varsayilanRenk;
-                o.bg = ta.style.backgroundColor || varsayilanBg;
-                if (!data.grid[r]) data.grid[r] = [];
-                data.grid[r][c] = o;
-            });
+            if (!data.grid[r]) data.grid[r] = [];
+            data.grid[r][c] = val;
             tmfVeriKaydet(id, data);
-            tmfEditing = false;
-            tmfExcelGoster(id);
-            tmNotify("Değişiklikler kaydedildi.", "success");
-        }
-
-        function tmfDuzenleIptal(id) {
-            tmfEditing = false;
-            tmfExcelGoster(id);
-        }
-
-        function tmfTaGrow(ta) {
-            ta.style.height = "auto";
-            ta.style.height = ta.scrollHeight + "px";
-        }
-
-        var tmfFocusedCell = null;
-
-        function tmfTaFocus(ta) {
-            tmfFocusedCell = ta;
-            var o = tmfHucreObj({ t: ta.value, b: ta.style.fontWeight === "700", c: ta.style.color || "#000000", s: parseInt(ta.style.fontSize) || 13, bg: ta.style.backgroundColor || "" });
-            document.getElementById("tmfFmtBold").classList.toggle("active", o.b);
-            document.getElementById("tmfFmtSize").value = String(o.s);
-            document.getElementById("tmfFmtColor").value = o.c;
-            document.getElementById("tmfFmtBg").value = o.bg || "#ffffff";
-        }
-
-        function tmfFmtBold() {
-            if (!tmfFocusedCell) return;
-            var ta = tmfFocusedCell;
-            var isBold = ta.style.fontWeight === "700" || ta.style.fontWeight === "bold";
-            ta.style.fontWeight = isBold ? "normal" : "700";
-            document.getElementById("tmfFmtBold").classList.toggle("active", !isBold);
-        }
-
-        function tmfFmtSizeDegistir(val) {
-            if (!tmfFocusedCell) return;
-            tmfFocusedCell.style.fontSize = val + "px";
-        }
-
-        function tmfFmtColorDegistir(val) {
-            if (!tmfFocusedCell) return;
-            tmfFocusedCell.style.color = val;
-        }
-
-        function tmfFmtBgDegistir(val) {
-            if (!tmfFocusedCell) return;
-            tmfFocusedCell.style.backgroundColor = val;
-            tmfFocusedCell.closest("td").style.backgroundColor = val;
         }
 
         function tmfSatirEkle(id) {
-            if (!tmfEditing) return;
             var data = tmfVeriYukle(id);
             var cols = data.colWidths.length;
             var yeniSatir = [];
-            for (var i = 0; i < cols; i++) yeniSatir.push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
+            for (var i = 0; i < cols; i++) yeniSatir.push("");
             data.grid.push(yeniSatir);
             if (data.rowHeights) data.rowHeights.push(32);
             tmfVeriKaydet(id, data);
@@ -7531,38 +7394,31 @@
         }
 
         function tmfSatirSil(id, r) {
-            if (!tmfEditing) return;
             if (!confirm((r + 1) + ". satırı silmek istediğinize emin misiniz?")) return;
             var data = tmfVeriYukle(id);
             data.grid.splice(r, 1);
             if (data.rowHeights) data.rowHeights.splice(r, 1);
-            if (data.grid.length === 0) {
-                var bosSatir = [];
-                for (var i = 0; i < data.colWidths.length; i++) bosSatir.push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
-                data.grid.push(bosSatir);
-            }
+            if (data.grid.length === 0) data.grid.push(new Array(data.colWidths.length).fill(""));
             tmfVeriKaydet(id, data);
             tmfExcelGoster(id);
         }
 
         function tmfSutunEkle(id) {
-            if (!tmfEditing) return;
             var data = tmfVeriYukle(id);
             data.colWidths.push(120);
-            for (var r = 0; r < data.grid.length; r++) data.grid[r].push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
+            for (var r = 0; r < data.grid.length; r++) data.grid[r].push("");
             tmfVeriKaydet(id, data);
             tmfExcelGoster(id);
         }
 
         function tmfSutunSil(id, c) {
-            if (!tmfEditing) return;
             if (!confirm(tmfSutunHarfi(c) + " sütununu silmek istediğinize emin misiniz?")) return;
             var data = tmfVeriYukle(id);
             data.colWidths.splice(c, 1);
             for (var r = 0; r < data.grid.length; r++) data.grid[r].splice(c, 1);
             if (data.colWidths.length === 0) {
                 data.colWidths.push(120);
-                for (var r = 0; r < data.grid.length; r++) data.grid[r].push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
+                for (var r = 0; r < data.grid.length; r++) data.grid[r].push("");
             }
             tmfVeriKaydet(id, data);
             tmfExcelGoster(id);
@@ -7583,7 +7439,7 @@
             var tbl = document.getElementById("tmfExcel_" + tmfSResize.id);
             if (tbl) {
                 var idx = tmfSResize.colIdx + 2;
-                tbl.querySelectorAll("td:nth-child(" + idx + ")").forEach(function(td) { td.style.width = yw + "px"; td.style.minWidth = yw + "px"; });
+                tbl.querySelectorAll("td:nth-child(" + idx + ")").forEach(function(td) { td.style.width = yw + "px"; });
             }
         }
         function tmfColResizeE(e) {
@@ -7599,6 +7455,7 @@
             tmfSResize = null;
         }
 
+        /* Row resize */
         function tmfRowResizeB(e, id, rowIdx) {
             e.preventDefault();
             var tr = e.target.closest("tr");
