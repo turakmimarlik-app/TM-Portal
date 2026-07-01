@@ -9199,6 +9199,7 @@ function itDurumMetni(o) {
                 firmaSelect.value = "";
             }
             itFormAdiGuncelle();
+            var csw = firmaSelect.parentNode.querySelector('.cs-wrapper'); if(csw){var cst=csw.querySelector('.cs-trigger');if(cst)cst.textContent=firmaSelect.options[firmaSelect.selectedIndex]?firmaSelect.options[firmaSelect.selectedIndex].text:'';}
         }
 
         function itFormKapat() {
