@@ -842,7 +842,7 @@
         .it-stats-alt { display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:14px; color:var(--text-light); padding-top:12px; border-top:1px solid var(--border-color); }
         .it-stats-alt span { background:var(--bg-main); padding:6px 14px; border-radius:6px; white-space:nowrap; display:flex; align-items:center; gap:8px; font-weight:500; }
         .it-stats-alt strong { color:var(--text-dark); font-weight:800; font-size:16px; min-width:24px; text-align:right; }
-        .it-tablo { border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
+        .it-tablo { border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
         .it-tablo th { padding:10px 12px; font-size:11px; letter-spacing:0.3px; }
         .it-tablo td { padding:10px 12px; font-size:13px; vertical-align:middle; }
         .it-tablo tbody tr { transition:background 0.15s; }
@@ -924,9 +924,9 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .cs-trigger { width:100%; padding:10px 14px; border:1px solid var(--border-color); border-radius:6px; background:var(--panel-bg); color:inherit; font-size:13px; font-weight:600; font-family:inherit; text-align:left; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px; box-sizing:border-box; }
         .cs-trigger:after { content:'▼'; font-size:10px; color:var(--text-light); flex-shrink:0; }
         .cs-trigger.open:after { content:'▲'; }
-        .cs-dropdown { display:none; position:absolute; top:100%; left:0; right:0; z-index:999; background:var(--panel-bg); border:1px solid var(--border-color); border-radius:0 0 6px 6px; box-shadow:0 4px 16px rgba(0,0,0,0.12); max-height:190px; overflow-y:auto; margin-top:-1px; border-top:0; }
+        .cs-dropdown { display:none; position:absolute; top:100%; left:0; right:0; z-index:999; background:var(--panel-bg); border:1px solid var(--border-color); border-radius:0 0 6px 6px; box-shadow:0 4px 16px rgba(0,0,0,0.12); max-height:220px; overflow-y:auto; margin-top:-1px; border-top:0; }
         .cs-dropdown.open { display:block; }
-        .cs-dropdown::-webkit-scrollbar { width:5px; }
+        .cs-dropdown::-webkit-scrollbar { width:6px; }
         .cs-dropdown::-webkit-scrollbar-thumb { background:var(--accent-red); border-radius:3px; }
         .cs-dropdown::-webkit-scrollbar-track { background:transparent; }
         .cs-search { width:100%; padding:8px 10px; border:none; border-bottom:1px solid var(--border-color); background:var(--panel-bg); color:inherit; font-size:13px; font-family:inherit; outline:none; box-sizing:border-box; position:sticky; top:0; z-index:1; border-radius:0; }
@@ -3108,6 +3108,10 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         function yenileAktifSayfa() {
             try {
                 if (document.querySelector('.cs-dropdown.open')) return;
+                var csValues = {};
+                document.querySelectorAll('select.cs-done').forEach(function(s){
+                    csValues[s.id] = s.selectedIndex;
+                });
                 var activePage = document.querySelector('.page.active');
                 if (!activePage) return;
                 var id = activePage.id;
@@ -3127,6 +3131,17 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                 else if (id === 'istakibi-page') { itGoster(); }
                 else if (id === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); kullaniciListesiniYenile(); multiLogoGridRender(); }
                 else if (id === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
+                Object.keys(csValues).forEach(function(sid){
+                    var s = document.getElementById(sid);
+                    if (s && s.selectedIndex !== csValues[sid]) {
+                        s.selectedIndex = csValues[sid];
+                        var w = s.previousElementSibling;
+                        if (w && w.classList.contains('cs-wrapper')) {
+                            var t = w.querySelector('.cs-trigger');
+                            if (t) t.textContent = s.options[s.selectedIndex] ? s.options[s.selectedIndex].text : '';
+                        }
+                    }
+                });
             } catch(e) { console.warn('yenileAktifSayfa hatasi', e); }
         }
 
