@@ -1488,19 +1488,19 @@
                 <table class="app-table">
                     <thead>
                         <tr>
-                            <th style="width: 49%;">Hizmet / İş Açıklaması</th>
-                            <th style="width: 12%;">Miktar / Metraj (m²)</th>
-                            <th style="width: 10%;">Birim Türü</th>
-                            <th style="width: 12%;">Birim Fiyat (₺)</th>
-                            <th style="width: 11%;">KDV Oranı</th>
-                            <th style="width: 6%;">İşlem</th>
+                            <th style="width: 49%; text-align:center;">Hizmet / İş Açıklaması</th>
+                            <th style="width: 12%; text-align:center;">Miktar / Metraj (m²)</th>
+                            <th style="width: 10%; text-align:center;">Birim Türü<br><span style="font-weight:400;font-size:10px;display:flex;gap:4px;justify-content:center;margin-top:2px;"><button class="btn-primary" onclick="event.stopPropagation();birimEklePrompt()" style="padding:2px 6px;font-size:10px;cursor:pointer;">+</button><button class="btn-danger" onclick="event.stopPropagation();birimSilPrompt()" style="padding:2px 6px;font-size:10px;cursor:pointer;">-</button></span></th>
+                            <th style="width: 12%; text-align:center;">Birim Fiyat (₺)</th>
+                            <th style="width: 11%; text-align:center;">KDV Oranı</th>
+                            <th style="width: 6%; text-align:center;">İşlem</th>
                         </tr>
                     </thead>
                     <tbody id="teklifFormRows">
                         <tr>
                             <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
                             <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
-                            <td><input type="text" class="row-birim" value="" placeholder="M², ADET..." style="width:90%; text-align:center; text-transform:uppercase;"></td>
+                            <td><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
                             <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
                             <td>
                                 <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px">
@@ -2333,6 +2333,7 @@
         let SABIT_BIRIM_TIPLERI = [
             "₺/m²"
         ];
+        let SABIT_BIRIM_LISTESI = ["M²","ADET","KM","AY","GÜN"];
 
         let SABIT_VERGI_TURLERI = [
             "KDV",
@@ -2435,6 +2436,12 @@
                 origSetItem("tm_vergi_turleri_v1", JSON.stringify(SABIT_VERGI_TURLERI));
             }
 
+            if (localStorage.getItem("tm_birim_listesi_v1")) {
+                SABIT_BIRIM_LISTESI = JSON.parse(localStorage.getItem("tm_birim_listesi_v1"));
+            } else {
+                origSetItem("tm_birim_listesi_v1", JSON.stringify(SABIT_BIRIM_LISTESI));
+            }
+
             document.addEventListener("click", function(e) {
                 if (!e.target.classList.contains("tm-autocomplete-item") && e.target.tagName !== "INPUT") {
                     document.querySelectorAll(".tm-autocomplete-box").forEach(box => box.style.display = "none");
@@ -2446,6 +2453,7 @@
             piyasaBirimTipiSecenekleriniDoldur();
             musteriEtiketleriniDoldur();
             csInit();var cso=new MutationObserver(function(){csInit();});cso.observe(document.body,{childList:true,subtree:true});
+            birimListesiniYenile();
             dashOfficeNotesYukle();
             dashboardVerileriniGuncelle();
             musteriKartlariniYenile();
@@ -4436,6 +4444,44 @@
             }).join("");
         }
 
+        /* ================= BİRİM LİSTESİ MOTORLARI ================= */
+        function birimListesiGetir() { try { return JSON.parse(localStorage.getItem("tm_birim_listesi_v1")) || SABIT_BIRIM_LISTESI; } catch(e) { return SABIT_BIRIM_LISTESI; } }
+        function birimListesiniYenile() {
+            var list = birimListesiGetir();
+            document.querySelectorAll(".row-birim").forEach(function(s) {
+                var val = s.value;
+                s.innerHTML = '<option value="">--</option>';
+                list.forEach(function(b) {
+                    var o = document.createElement("option");
+                    o.value = b; o.textContent = b; if (b === val) o.selected = true;
+                    s.appendChild(o);
+                });
+            });
+        }
+        function birimEklePrompt() {
+            var yeni = prompt("Yeni birim türü giriniz (örn: M², ADET, KG):");
+            if (!yeni || yeni.trim() === "") return;
+            yeni = yeni.trim().toUpperCase();
+            var list = birimListesiGetir();
+            if (list.indexOf(yeni) !== -1) { tmNotify("Bu birim zaten mevcut!", "error"); return; }
+            list.push(yeni);
+            localStorage.setItem("tm_birim_listesi_v1", JSON.stringify(list));
+            birimListesiniYenile();
+            tmNotify("Birim eklendi: " + yeni, "success");
+        }
+        function birimSilPrompt() {
+            var list = birimListesiGetir();
+            if (list.length === 0) { tmNotify("Silinecek birim kalmadı.", "error"); return; }
+            var sec = prompt("Silmek istediğiniz birim adını yazın:\nMevcut: " + list.join(", "));
+            if (!sec || sec.trim() === "") return;
+            sec = sec.trim().toUpperCase();
+            var idx = list.indexOf(sec);
+            if (idx === -1) { tmNotify("Bu birim listede bulunamadı.", "error"); return; }
+            list.splice(idx, 1);
+            localStorage.setItem("tm_birim_listesi_v1", JSON.stringify(list));
+            birimListesiniYenile();
+            tmNotify("Birim silindi: " + sec, "success");
+        }
         /* ================= TEKLİF FORMU MOTORLARI ================= */
         function teklifFormSatirEkle() {
             const tbody = document.getElementById("teklifFormRows");
@@ -4443,7 +4489,7 @@
             tr.innerHTML = `
                 <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)"></textarea></td>
                 <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
-                <td><input type="text" class="row-birim" value="" placeholder="M², ADET..." style="width:90%; text-align:center; text-transform:uppercase;"></td>
+                <td><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
                 <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
                 <td>
                     <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px">
@@ -4455,6 +4501,7 @@
                 <td><button class="btn-danger" onclick="teklifFormSatirSil(this)">Sil</button></td>
             `;
             tbody.appendChild(tr);
+            birimListesiniYenile();
             canliTeklifHesapla();
         }
         function teklifFormSatirSil(btn) { btn.closest("tr").remove(); canliTeklifHesapla(); }
@@ -4485,12 +4532,13 @@
                 <tr>
                     <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
                     <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
-                    <td><input type="text" class="row-birim" value="" placeholder="M², ADET..." style="width:90%; text-align:center; text-transform:uppercase;"></td>
+                    <td><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
                     <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
                     <td><select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px"><option value="20">%20</option><option value="10">%10</option><option value="0" selected>%0</option></select></td>
                     <td><button class="btn-danger" onclick="teklifFormSatirSil(this)">Sil</button></td>
                 </tr>
             `;
+            birimListesiniYenile();
             canliTeklifHesapla();
         }
 
