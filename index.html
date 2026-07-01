@@ -1457,7 +1457,7 @@
                 <div class="row">
                     <div class="col">
                         <label>Telefon Numarası:</label>
-                        <input type="text" id="tTelefon" style="text-transform: none;">
+                        <input type="text" id="tTelefon" style="text-transform: none;" oninput="formatPhone(this)">
                     </div>
                     <div class="col">
                         <label>Teklif Tarihi:</label>
@@ -1624,7 +1624,7 @@
                     <div class="row">
                         <div class="col">
                             <label>Telefon:</label>
-                            <input type="text" id="mTel" style="text-transform:none;">
+                            <input type="text" id="mTel" style="text-transform:none;" oninput="formatPhone(this)">
                         </div>
                         <div class="col">
                             <label>E-Mail:</label>
@@ -1712,7 +1712,7 @@
                         </div>
                         <div class="col">
                             <label>Telefon:</label>
-                            <input type="text" id="ioTel" style="text-transform:none;">
+                            <input type="text" id="ioTel" style="text-transform:none;" oninput="formatPhone(this)">
                         </div>
                         <div class="col">
                             <label>E-Mail:</label>
@@ -2015,8 +2015,8 @@
                     </div>
                     <div class="ci-form">
                         <div><label>Firma Adı</label><input type="text" id="ciAd" value="TURAK MİMARLIK"></div>
-                        <div><label>Telefon</label><input type="text" id="ciTelefon" value="0288 692 25 62"></div>
-                        <div><label>GSM</label><input type="text" id="ciGsm" value="0544 235 98 32"></div>
+                        <div><label>Telefon</label><input type="text" id="ciTelefon" value="0288 692 25 62" oninput="formatPhone(this)"></div>
+                        <div><label>GSM</label><input type="text" id="ciGsm" value="0544 235 98 32" oninput="formatPhone(this)"></div>
                         <div><label>Vergi Dairesi</label><input type="text" id="ciVergiDaire" value="DEMİRKÖY"></div>
                         <div><label>Vergi No</label><input type="text" id="ciVergiNo" value="8670608801"></div>
                         <div><label>E-posta</label><input type="text" id="ciEmail" value="turakmimarlik@gmail.com"></div>
@@ -3406,8 +3406,8 @@
             if(!konteyner) return; konteyner.innerHTML = "";
             const db = JSON.parse(localStorage.getItem("tm_musteriler_db")) || [];
             const musteriSummary = document.getElementById("musteriSummaryStrip");
+            const tamamlananDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
             if(musteriSummary) {
-                const tamamlananDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
                 let toplamIs = 0;
                 db.forEach(m => {
                     toplamIs += tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(m.ad) || trToUpper(t.firma || "") === trToUpper(m.sirket)).length;
@@ -3420,7 +3420,11 @@
             if(db.length === 0) { konteyner.innerHTML = "<p style='color:var(--text-light);'>Kayıtlı müşteri portföyü bulunmamaktadır.</p>"; return; }
             
             const tekliflerDb = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
-
+            db.sort(function(a, b) {
+                var aIs = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(a.ad) || trToUpper(t.firma || "") === trToUpper(a.sirket)).length;
+                var bIs = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(b.ad) || trToUpper(t.firma || "") === trToUpper(b.sirket)).length;
+                return bIs - aIs;
+            });
             db.forEach(m => {
                 let bankaHTML = "";
                 if(m.bankalar && m.bankalar.length > 0) {
@@ -3431,7 +3435,6 @@
                     });
                 } else { bankaHTML = " GİRİLMEMİŞ"; }
 
-                const tamamlananDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
                 const isSayisi = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(m.ad) || trToUpper(t.firma || "") === trToUpper(m.sirket)).length;
 
                 konteyner.innerHTML += `
@@ -3569,8 +3572,8 @@
             if(!konteyner) return; konteyner.innerHTML = "";
             const db = JSON.parse(localStorage.getItem("tm_isortaklari_db")) || [];
             const partnerSummary = document.getElementById("partnerSummaryStrip");
+            const tamamlananDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
             if(partnerSummary) {
-                const tamamlananDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
                 let toplamIs = 0;
                 db.forEach(io => {
                     toplamIs += tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(io.ad) || trToUpper(t.firma || "") === trToUpper(io.sirket) || (t.kalemler && t.kalemler.some(k => trToUpper(k.kisi || "") === trToUpper(io.ad) || trToUpper(k.kisi || "") === trToUpper(io.sirket)))).length;
@@ -3583,7 +3586,11 @@
             if(db.length === 0) { konteyner.innerHTML = "<p style='color:var(--text-light);'>Kayıtlı iş ortağı/partner bulunmamaktadır.</p>"; return; }
 
             const piyasaDb = JSON.parse(localStorage.getItem("tm_piyasa_db_v2")) || [];
-
+            db.sort(function(a, b) {
+                var aIs = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(a.ad) || trToUpper(t.firma || "") === trToUpper(a.sirket) || (t.kalemler && t.kalemler.some(k => trToUpper(k.kisi || "") === trToUpper(a.ad) || trToUpper(k.kisi || "") === trToUpper(a.sirket)))).length;
+                var bIs = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(b.ad) || trToUpper(t.firma || "") === trToUpper(b.sirket) || (t.kalemler && t.kalemler.some(k => trToUpper(k.kisi || "") === trToUpper(b.ad) || trToUpper(k.kisi || "") === trToUpper(b.sirket)))).length;
+                return bIs - aIs;
+            });
             db.forEach(io => {
                 let bankaHTML = "";
                 if(io.bankalar && io.bankalar.length > 0) {
@@ -3594,7 +3601,6 @@
                     });
                 } else { bankaHTML = " GİRİLMEMİŞ"; }
 
-                const tamamlananDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
                 const isSayisi = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(io.ad) || trToUpper(t.firma || "") === trToUpper(io.sirket) || (t.kalemler && t.kalemler.some(k => trToUpper(k.kisi || "") === trToUpper(io.ad) || trToUpper(k.kisi || "") === trToUpper(io.sirket)))).length;
 
                 konteyner.innerHTML += `
@@ -9105,9 +9111,15 @@ function itDurumMetni(o) {
             var db = JSON.parse(localStorage.getItem("tm_musteriler_db")) || [];
             var sirketler = [];
             db.forEach(function(m) {
-                if (m.sirket && m.sirket.trim()) {
-                    var s = m.sirket.toUpperCase().trim();
+                var s = (m.sirket || "").toUpperCase().trim();
+                if (s && s !== "-" && s !== "BİREYSEL") {
                     if (sirketler.indexOf(s) === -1) sirketler.push(s);
+                } else {
+                    var ad = (m.ad || "").toUpperCase().trim();
+                    if (ad) {
+                        var label = "MÜŞTERİ ADI SOYADI: " + ad;
+                        if (sirketler.indexOf(label) === -1) sirketler.push(label);
+                    }
                 }
             });
             return sirketler.sort();
@@ -9643,6 +9655,7 @@ function itDurumMetni(o) {
         /* ---------- Ortak Yardımcılar ---------- */
         function esc(s) { return (s||"").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
         function tarihStr(d) { try { return new Date(d).toLocaleDateString("tr-TR"); } catch(e) { return d||"-"; } }
+        function formatPhone(el) { var v=el.value.replace(/\D/g,'').substring(0,11); if(v.length>0){var p=[];p.push(v.substring(0,4));if(v.length>4)p.push(v.substring(4,7));if(v.length>7)p.push(v.substring(7,9));if(v.length>9)p.push(v.substring(9,11));el.value=p.join(' ');} }
     </script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
