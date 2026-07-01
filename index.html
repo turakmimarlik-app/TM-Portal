@@ -776,6 +776,12 @@
         .it-asama-row:last-child { border-bottom:none; }
         .it-asama-row .it-asama-label { font-size:11px; font-weight:600; color:var(--text-light); min-width:48px; }
         .it-asama-steps { display:flex; gap:3px; margin-top:6px; }
+        .it-not-list { margin:2px 0; }
+        .it-not-item { display:flex; align-items:center; gap:4px; font-size:11px; color:var(--text-color); padding:1px 0; }
+        .it-not-text { flex:1; cursor:pointer; padding:2px 4px; border-radius:3px; word-break:break-word; }
+        .it-not-text:hover { background:rgba(21,101,192,0.08); }
+        .it-not-sil { cursor:pointer; color:#e53935; font-weight:700; font-size:13px; padding:0 3px; opacity:0.5; line-height:1; }
+        .it-not-sil:hover { opacity:1; }
         .it-asama-step { flex:1; display:flex; flex-direction:column; align-items:center; }
         .it-asama-segment { width:100%; padding:6px 2px; border:none; border-radius:5px; cursor:pointer; font-size:9px; font-weight:700; line-height:1.15; text-align:center; transition:0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-height:46px; color:#fff; font-family:inherit; }
         .it-asama-segment:hover { filter:brightness(1.1); }
@@ -3108,6 +3114,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         function yenileAktifSayfa() {
             try {
                 if (document.querySelector('.cs-dropdown.open')) return;
+                if (document.activeElement && ['INPUT','TEXTAREA'].indexOf(document.activeElement.tagName) !== -1) return;
                 var csValues = {};
                 document.querySelectorAll('select.cs-done').forEach(function(s){
                     csValues[s.id] = s.selectedIndex;
@@ -8526,6 +8533,10 @@ function itDurumMetni(o) {
                     if (o.gonderildiTarihi && !o.isVerildiTarihi) o.isVerildiTarihi = o.gonderildiTarihi;
                     if (o.teslimTarihi && !o.projeTeslimTarihi) o.projeTeslimTarihi = o.teslimTarihi;
                     IT_ASAMALAR.forEach(function(a){ if (o[a.field] === undefined) o[a.field] = ""; });
+                    if (!Array.isArray(o.not)) {
+                        var oldText = String(o.not||'').trim();
+                        o.not = oldText ? [{id: Date.now(), text: oldText.toUpperCase()}] : [];
+                    }
                 });
             });
             return data;
@@ -8959,7 +8970,18 @@ function itDurumMetni(o) {
                     h += '<div class="it-asama-step"><button class="it-asama-segment ' + segClass + '" style="' + (bgColor ? 'background:' + bgColor + ';' : '') + '" id="itAsamaBtn_' + jobId + '_' + i + '_' + a.field + '" onclick="event.stopPropagation();itAsamaToggle(' + jobId + ',' + i + ',\'' + a.field + '\')"><span class="it-asama-seg-label">' + (completed ? '✓ ' : '') + a.label + '</span><span class="it-asama-seg-date" id="itAsamaTarih_' + jobId + '_' + i + '_' + a.field + '">' + displayDate + '</span></button></div>';
                 });
                 h += '</div>';
-                h += '<div class="it-asama-row" style="margin-top:4px;border-bottom:none;"><textarea rows="1" id="itOrtakNot_' + jobId + '_' + i + '" oninput="event.stopPropagation();this.style.height=\'1px\';this.style.height=this.scrollHeight+\'px\'" onchange="event.stopPropagation();itOrtakNotGuncelle(' + jobId + ',' + i + ')" placeholder="NOT EKLE" style="flex:1;padding:4px 8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-main);font-size:12px;text-transform:uppercase;resize:none;overflow:hidden;line-height:1.4;">' + esc(o.not||'') + '</textarea></div>';
+                h += '<div class="it-asama-row" style="margin-top:4px;border-bottom:none;flex-direction:column;align-items:stretch;">';
+                var notlar = Array.isArray(o.not) ? o.not : [];
+                h += '<div class="it-not-list" id="itNotList_' + jobId + '_' + i + '">';
+                notlar.forEach(function(n, ni){
+                    h += '<div class="it-not-item" id="itNotItem_' + jobId + '_' + i + '_' + ni + '">';
+                    h += '<span class="it-not-text" id="itNotText_' + jobId + '_' + i + '_' + ni + '" onclick="itOrtakNotDuzenleBaslat(' + jobId + ',' + i + ',' + ni + ')">' + esc(n.text||'') + '</span>';
+                    h += '<span class="it-not-sil" onclick="event.stopPropagation();itOrtakNotSil(' + jobId + ',' + i + ',' + ni + ')">✕</span>';
+                    h += '</div>';
+                });
+                h += '</div>';
+                h += '<div style="display:flex;gap:4px;"><input id="itOrtakNotInput_' + jobId + '_' + i + '" placeholder="NOT EKLE" style="flex:1;padding:4px 8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-main);font-size:12px;text-transform:uppercase;" onkeydown="if(event.key===\'Enter\'){event.stopPropagation();itOrtakNotEkle(' + jobId + ',' + i + ')}"><button onclick="event.stopPropagation();itOrtakNotEkle(' + jobId + ',' + i + ')" style="padding:4px 10px;background:#1565C0;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap;">+</button></div>';
+                h += '</div>';
                 h += '</div></div>';
             });
             if (!readonly) {
@@ -9024,7 +9046,7 @@ function itDurumMetni(o) {
             if (idx === -1) return;
             var openIds = itAcKalanKaydet();
             if (!liste[idx].ortaklar) liste[idx].ortaklar = [];
-            var yeni = { ortakAdi: ortakAd, brans: brans, not: "" };
+            var yeni = { ortakAdi: ortakAd, brans: brans, not: [] };
             var ekleTur = liste[idx].tur;
             itAsamaList(ekleTur).forEach(function(a){ yeni[a.field] = ""; });
             liste[idx].ortaklar.push(yeni);
@@ -9200,12 +9222,115 @@ function itDurumMetni(o) {
             }
         }
 
-        function itOrtakNotGuncelle(jobId, index) {
+        function itOrtakNotEkle(jobId, oIdx) {
+            var input = document.getElementById("itOrtakNotInput_" + jobId + "_" + oIdx);
+            if (!input) return;
+            var val = input.value.trim().toUpperCase();
+            if (!val) return;
             var liste = itDbYukle();
             var idx = liste.findIndex(function(x){return x.id===jobId;});
             if (idx === -1) return;
-            liste[idx].ortaklar[index].not = document.getElementById("itOrtakNot_" + jobId + "_" + index).value.trim().toUpperCase();
+            var o = liste[idx].ortaklar[oIdx];
+            if (!o) return;
+            if (!Array.isArray(o.not)) o.not = [];
+            o.not.push({ id: Date.now(), text: val });
             itDbKaydet(liste);
+            input.value = '';
+            itOrtakNotRender(jobId, oIdx);
+        }
+        function itOrtakNotSil(jobId, oIdx, nIdx) {
+            var liste = itDbYukle();
+            var idx = liste.findIndex(function(x){return x.id===jobId;});
+            if (idx === -1) return;
+            var o = liste[idx].ortaklar[oIdx];
+            if (!o || !Array.isArray(o.not)) return;
+            o.not.splice(nIdx, 1);
+            itDbKaydet(liste);
+            itOrtakNotRender(jobId, oIdx);
+        }
+        function itOrtakNotDuzenleBaslat(jobId, oIdx, nIdx) {
+            var liste = itDbYukle();
+            var idx = liste.findIndex(function(x){return x.id===jobId;});
+            if (idx === -1) return;
+            var o = liste[idx].ortaklar[oIdx];
+            if (!o || !Array.isArray(o.not) || !o.not[nIdx]) return;
+            var item = document.getElementById("itNotItem_" + jobId + "_" + oIdx + "_" + nIdx);
+            if (!item) return;
+            var textSpan = document.getElementById("itNotText_" + jobId + "_" + oIdx + "_" + nIdx);
+            if (!textSpan) return;
+            var curText = o.not[nIdx].text;
+            textSpan.style.display = 'none';
+            var inp = document.createElement('input');
+            inp.type = 'text';
+            inp.value = curText;
+            inp.style.cssText = 'flex:1;padding:2px 6px;border:1px solid #1565C0;border-radius:3px;background:var(--bg-main);font-size:12px;text-transform:uppercase;';
+            inp.setAttribute('data-jobid', jobId);
+            inp.setAttribute('data-oix', oIdx);
+            inp.setAttribute('data-nix', nIdx);
+            inp.onkeydown = function(e) {
+                if (e.key === 'Enter') { e.stopPropagation(); itOrtakNotDuzenleKaydet(inp); }
+                if (e.key === 'Escape') { e.stopPropagation(); itOrtakNotDuzenleIptal(inp); }
+            };
+            inp.onblur = function() { itOrtakNotDuzenleKaydet(inp); };
+            item.insertBefore(inp, textSpan.nextSibling);
+            inp.focus();
+            inp.select();
+        }
+        function itOrtakNotDuzenleKaydet(inp) {
+            var jobId = inp.getAttribute('data-jobid');
+            var oIdx = parseInt(inp.getAttribute('data-oix'));
+            var nIdx = parseInt(inp.getAttribute('data-nix'));
+            var val = inp.value.trim().toUpperCase();
+            var liste = itDbYukle();
+            var idx = liste.findIndex(function(x){return x.id===jobId;});
+            if (idx !== -1) {
+                var o = liste[idx].ortaklar[oIdx];
+                if (o && Array.isArray(o.not) && o.not[nIdx]) {
+                    if (val) {
+                        o.not[nIdx].text = val;
+                    } else {
+                        o.not.splice(nIdx, 1);
+                    }
+                    itDbKaydet(liste);
+                }
+            }
+            itOrtakNotRender(jobId, oIdx);
+        }
+        function itOrtakNotDuzenleIptal(inp) {
+            var jobId = inp.getAttribute('data-jobid');
+            var oIdx = parseInt(inp.getAttribute('data-oix'));
+            var nIdx = parseInt(inp.getAttribute('data-nix'));
+            var textSpan = document.getElementById("itNotText_" + jobId + "_" + oIdx + "_" + nIdx);
+            if (textSpan) textSpan.style.display = '';
+            inp.remove();
+        }
+        function itOrtakNotRender(jobId, oIdx) {
+            var liste = itDbYukle();
+            var idx = liste.findIndex(function(x){return x.id===jobId;});
+            if (idx === -1) return;
+            var o = liste[idx].ortaklar[oIdx];
+            if (!o) return;
+            var notlar = Array.isArray(o.not) ? o.not : [];
+            var container = document.getElementById("itNotList_" + jobId + "_" + oIdx);
+            if (!container) return;
+            container.innerHTML = '';
+            notlar.forEach(function(n, ni){
+                var item = document.createElement('div');
+                item.className = 'it-not-item';
+                item.id = 'itNotItem_' + jobId + '_' + oIdx + '_' + ni;
+                var span = document.createElement('span');
+                span.className = 'it-not-text';
+                span.id = 'itNotText_' + jobId + '_' + oIdx + '_' + ni;
+                span.textContent = n.text || '';
+                span.onclick = function(){ itOrtakNotDuzenleBaslat(jobId, oIdx, ni); };
+                var sil = document.createElement('span');
+                sil.className = 'it-not-sil';
+                sil.textContent = '✕';
+                sil.onclick = function(e){ e.stopPropagation(); itOrtakNotSil(jobId, oIdx, ni); };
+                item.appendChild(span);
+                item.appendChild(sil);
+                container.appendChild(item);
+            });
         }
 
         function itFirmaListesiGetir() {
