@@ -7399,26 +7399,26 @@
             for (var c = 0; c < cols; c++) {
                 h += '<th class="tmf-ex-col-h" style="width:' + colWidths[c] + 'px;" data-col="' + c + '">';
                 h += '<span class="tmf-ex-col-label">' + tmfSutunHarfi(c) + '</span>';
-                h += '<span class="tmf-ex-col-del" onclick="if(tmfEditing)tmfSutunSil(' + id + ',' + c + ')" title="Sütunu sil">✕</span>';
+                h += '<span class="tmf-ex-col-del" onclick="tmfSutunSil(' + id + ',' + c + ')" title="Sütunu sil">✕</span>';
                 h += '<div class="tmf-ex-col-resize" onmousedown="tmfColResizeB(event,' + id + ',' + c + ')"></div>';
                 h += '</th>';
             }
-            h += '<th class="tmf-ex-add-col" onclick="if(tmfEditing)tmfSutunEkle(' + id + ')" title="Sütun ekle">+</th>';
+            h += '<th class="tmf-ex-add-col" onclick="tmfSutunEkle(' + id + ')" title="Sütun ekle">+</th>';
             h += '</tr></thead><tbody>';
 
             for (var r = 0; r < rows; r++) {
                 var rh = Math.max(32, rowHeights[r] || 32);
-                h += '<tr data-row="' + r + '" style="height:' + rh + 'px;">';
-                h += '<td class="tmf-ex-row-h" style="height:' + rh + 'px;"><span class="tmf-ex-row-label">' + (r + 1) + '</span><span class="tmf-ex-row-del" onclick="if(tmfEditing)tmfSatirSil(' + id + ',' + r + ')" title="Satırı sil">✕</span><div class="tmf-ex-row-resize" onmousedown="tmfRowResizeB(event,' + id + ',' + r + ')"></div></td>';
+                h += '<tr data-row="' + r + '" style="' + (tmfEditing ? 'min-height:' : 'height:') + rh + 'px;">';
+                h += '<td class="tmf-ex-row-h" style="' + (tmfEditing ? '' : 'height:' + rh + 'px;') + '"><span class="tmf-ex-row-label">' + (r + 1) + '</span><span class="tmf-ex-row-del" onclick="tmfSatirSil(' + id + ',' + r + ')" title="Satırı sil">✕</span><div class="tmf-ex-row-resize" onmousedown="tmfRowResizeB(event,' + id + ',' + r + ')"></div></td>';
                 for (var c = 0; c < cols; c++) {
                     var val = grid[r] !== undefined ? grid[r][c] : "";
                     if (tmfEditing) {
                         var o = tmfHucreObj(val);
-                        h += '<td style="width:' + colWidths[c] + 'px;min-width:' + colWidths[c] + 'px;height:' + rh + 'px;' + (o.bg ? 'background-color:' + o.bg + ';' : '') + '">';
+                        h += '<td style="width:' + colWidths[c] + 'px;min-width:' + colWidths[c] + 'px;' + (o.bg ? 'background-color:' + o.bg + ';' : '') + '">';
                         h += '<textarea class="tmf-ex-input tmf-ex-ta" data-r="' + r + '" data-c="' + c + '" style="font-size:' + o.s + 'px;color:' + o.c + ';' + (o.b ? 'font-weight:700;' : '') + (o.bg ? 'background-color:' + o.bg + ';' : '') + '" oninput="tmfTaGrow(this)" onfocus="tmfTaFocus(this)">' + esc(o.t) + '</textarea>';
                         h += '</td>';
                     } else {
-                        h += '<td style="width:' + colWidths[c] + 'px;min-width:' + colWidths[c] + 'px;height:' + rh + 'px;overflow:hidden;' + (tmfHucreObj(val).bg ? 'background-color:' + tmfHucreObj(val).bg + ';' : '') + '"><div class="tmf-ex-view" style="max-height:' + (rh - 8) + 'px;">' + tmfHucreHtml(val) + '</div></td>';
+                        h += '<td style="width:' + colWidths[c] + 'px;min-width:' + colWidths[c] + 'px;overflow:hidden;' + (tmfHucreObj(val).bg ? 'background-color:' + tmfHucreObj(val).bg + ';' : '') + '"><div class="tmf-ex-view" style="max-height:' + (rh - 8) + 'px;">' + tmfHucreHtml(val) + '</div></td>';
                     }
                 }
                 h += '<td class="tmf-ex-empty"></td>';
@@ -7431,8 +7431,8 @@
             if (!tmfEditing) {
                 h += '<button class="tmf-ex-btn tmf-ex-btn-edit" onclick="tmfDuzenleBaslat(' + id + ')">Düzenle</button>';
             }
-            h += '<button class="tmf-ex-btn" onclick="if(tmfEditing)tmfSatirEkle(' + id + ')">+ Satır Ekle</button>';
-            h += '<button class="tmf-ex-btn" onclick="if(tmfEditing)tmfSutunEkle(' + id + ')">+ Sütun Ekle</button>';
+            h += '<button class="tmf-ex-btn" onclick="tmfSatirEkle(' + id + ')">+ Satır Ekle</button>';
+            h += '<button class="tmf-ex-btn" onclick="tmfSutunEkle(' + id + ')">+ Sütun Ekle</button>';
             h += '</div></div>';
 
             container.innerHTML = h;
@@ -7509,6 +7509,7 @@
         function tmfFmtSizeDegistir(val) {
             if (!tmfFocusedCell) return;
             tmfFocusedCell.style.fontSize = val + "px";
+            tmfTaGrow(tmfFocusedCell);
         }
 
         function tmfFmtColorDegistir(val) {
