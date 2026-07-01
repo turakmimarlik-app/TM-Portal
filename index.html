@@ -1488,10 +1488,11 @@
                 <table class="app-table">
                     <thead>
                         <tr>
-                            <th style="width: 50%;">Hizmet / İş Açıklaması</th>
-                            <th style="width: 13%;">Miktar / Metraj (m²)</th>
-                            <th style="width: 12%;">Birim Fiyat (₺)</th>
-                            <th style="width: 13%;">KDV Oranı</th>
+                            <th style="width: 45%;">Hizmet / İş Açıklaması</th>
+                            <th style="width: 11%;">Miktar / Metraj (m²)</th>
+                            <th style="width: 10%;">Birim Türü</th>
+                            <th style="width: 11%;">Birim Fiyat (₺)</th>
+                            <th style="width: 11%;">KDV Oranı</th>
                             <th style="width: 12%;">İşlem</th>
                         </tr>
                     </thead>
@@ -1499,6 +1500,7 @@
                         <tr>
                             <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
                             <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
+                            <td><input type="text" class="row-birim" value="" placeholder="M², ADET..." style="width:90%; text-align:center; text-transform:uppercase;"></td>
                             <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
                             <td>
                                 <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px">
@@ -2152,10 +2154,11 @@
             <thead>
                 <tr>
                     <th style="text-align: left; width: 44%;">HİZMET</th>
-                    <th style="text-align: center; width: 12%;">MİKTAR</th>
-                    <th style="text-align: right; width: 16%;">BR. FİYAT</th>
+                    <th style="text-align: center; width: 10%;">MİKTAR / METRAJ (M²)</th>
+                    <th style="text-align: center; width: 8%;">BR. TÜRÜ</th>
+                    <th style="text-align: right; width: 14%;">BR. FİYAT</th>
                     <th style="text-align: center; width: 10%;">KDV</th>
-                    <th style="text-align: right; width: 18%;">TOPLAM</th>
+                    <th style="text-align: right; width: 14%;">TOPLAM</th>
                 </tr>
             </thead>
             <tbody id="pOutTableBody"></tbody>
@@ -4440,6 +4443,7 @@
             tr.innerHTML = `
                 <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)"></textarea></td>
                 <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
+                <td><input type="text" class="row-birim" value="" placeholder="M², ADET..." style="width:90%; text-align:center; text-transform:uppercase;"></td>
                 <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
                 <td>
                     <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px">
@@ -4481,6 +4485,7 @@
                 <tr>
                     <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
                     <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
+                    <td><input type="text" class="row-birim" value="" placeholder="M², ADET..." style="width:90%; text-align:center; text-transform:uppercase;"></td>
                     <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
                     <td><select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px"><option value="20">%20</option><option value="10">%10</option><option value="0" selected>%0</option></select></td>
                     <td><button class="btn-danger" onclick="teklifFormSatirSil(this)">Sil</button></td>
@@ -4504,11 +4509,13 @@
             rows.forEach(row => {
                 const servis = trToUpper(row.querySelector(".row-servis").value);
                 const miktar = tmTutarCoz(row.querySelector(".row-miktar").value);
+                var birimEl = row.querySelector(".row-birim");
+                var birim = birimEl ? trToUpper(birimEl.value) : "";
                 const f = tmTutarCoz(row.querySelector(".row-fiyat").value);
                 const kdv = parseFloat(row.querySelector(".row-kdv").value) || 0;
                 const t = miktar * f;
                 araToplam += t; kdvToplam += (t * (kdv / 100));
-                kalemler.push({ servis, miktar, fiyat: f, kdv });
+                kalemler.push({ servis, miktar, birim, fiyat: f, kdv });
             });
             
             const db = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
@@ -4569,7 +4576,7 @@
             const pBody = document.getElementById("pOutTableBody"); pBody.innerHTML = "";
             veri.kalemler.forEach(k => {
                 const t = k.miktar * k.fiyat;
-                pBody.innerHTML += `<tr><td>${k.servis}</td><td style="text-align:center;">${k.miktar} M²</td><td style="text-align:right;">${k.fiyat.toLocaleString('tr-TR')} ₺</td><td style="text-align:center;">%${k.kdv}</td><td style="text-align:right;">${t.toLocaleString('tr-TR')} ₺</td></tr>`;
+                pBody.innerHTML += `<tr><td>${k.servis}</td><td style="text-align:center;">${k.miktar}</td><td style="text-align:center;">${k.birim||''}</td><td style="text-align:right;">${k.fiyat.toLocaleString('tr-TR')} ₺</td><td style="text-align:center;">%${k.kdv}</td><td style="text-align:right;">${t.toLocaleString('tr-TR')} ₺</td></tr>`;
             });
 
             document.getElementById("pOutAra").innerText = (veri.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " ₺";
@@ -4636,7 +4643,7 @@
                 let kalemHTML = "";
                 t.kalemler.forEach(k => {
                     const toplamKalem = k.miktar * k.fiyat;
-                    kalemHTML += `<tr><td>${k.servis}</td><td style='text-align:center;'>${k.miktar} M²</td><td style='text-align:right;'>${k.fiyat.toLocaleString('tr-TR')} ₺</td><td style='text-align:center;'>%${k.kdv}</td><td style='text-align:right;'>${toplamKalem.toLocaleString('tr-TR')} ₺</td></tr>`;
+                    kalemHTML += `<tr><td>${k.servis}</td><td style='text-align:center;'>${k.miktar}</td><td style='text-align:center;'>${k.birim||''}</td><td style='text-align:right;'>${k.fiyat.toLocaleString('tr-TR')} ₺</td><td style='text-align:center;'>%${k.kdv}</td><td style='text-align:right;'>${toplamKalem.toLocaleString('tr-TR')} ₺</td></tr>`;
                 });
 
                 tbody.innerHTML += `
@@ -4662,7 +4669,8 @@
                                         <thead>
                                             <tr style="background:var(--bg-main); font-weight:700;">
                                                 <th style="padding:8px; text-align:left;">Hizmet Kalemi</th>
-                                                <th style="padding:8px; text-align:center;">Metraj</th>
+                                                <th style="padding:8px; text-align:center;">Miktar / Metraj (m²)</th>
+                                                <th style="padding:8px; text-align:center;">Br. Türü</th>
                                                 <th style="padding:8px; text-align:right;">Br. Fiyat</th>
                                                 <th style="padding:8px; text-align:center;">KDV</th>
                                                 <th style="padding:8px; text-align:right;">Toplam</th>
@@ -4670,9 +4678,9 @@
                                         </thead>
                                         <tbody>
                                             ${kalemHTML}
-                                            <tr style="border-top:2px solid var(--border-color); font-weight:600;"><td colspan="4" style="text-align:right; padding:8px;">ARA TOPLAM:</td><td style="text-align:right; padding:8px;">${(t.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</td></tr>
-                                            <tr style="font-weight:600;"><td colspan="4" style="text-align:right; padding:8px;">TOPLAM K.D.V:</td><td style="text-align:right; padding:8px;">${(t.kdvTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</td></tr>
-                                            <tr style="font-weight:700; color:var(--accent-red); background:var(--bg-main);"><td colspan="4" style="text-align:right; padding:8px;">GENEL TOPLAM:</td><td style="text-align:right; padding:8px;">${t.genelTutar}</td></tr>
+                                            <tr style="border-top:2px solid var(--border-color); font-weight:600;"><td colspan="5" style="text-align:right; padding:8px;">ARA TOPLAM:</td><td style="text-align:right; padding:8px;">${(t.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</td></tr>
+                                            <tr style="font-weight:600;"><td colspan="5" style="text-align:right; padding:8px;">TOPLAM K.D.V:</td><td style="text-align:right; padding:8px;">${(t.kdvTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</td></tr>
+                                            <tr style="font-weight:700; color:var(--accent-red); background:var(--bg-main);"><td colspan="5" style="text-align:right; padding:8px;">GENEL TOPLAM:</td><td style="text-align:right; padding:8px;">${t.genelTutar}</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
