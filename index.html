@@ -9276,11 +9276,12 @@ function itDurumMetni(o) {
                 if (e.key === 'Escape') { e.stopPropagation(); itOrtakNotDuzenleIptal(inp); }
             };
             var kaydetBtn = document.createElement('button');
-            kaydetBtn.textContent = '💾';
-            kaydetBtn.style.cssText = 'padding:2px 8px;background:#1565C0;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:12px;font-weight:600;line-height:1.4;';
-            kaydetBtn.onclick = function(){ itOrtakNotDuzenleKaydet(inp); };
-            item.insertBefore(inp, textSpan.nextSibling);
-            item.insertBefore(kaydetBtn, textSpan.nextSibling);
+            kaydetBtn.textContent = 'KAYDET';
+            kaydetBtn.style.cssText = 'padding:2px 8px;background:#1565C0;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:11px;font-weight:600;line-height:1.6;white-space:nowrap;';
+            kaydetBtn.onclick = function(e){ e.stopPropagation(); itOrtakNotDuzenleKaydet(inp); };
+            var refNode = textSpan.nextSibling;
+            item.insertBefore(inp, refNode);
+            item.insertBefore(kaydetBtn, refNode);
             inp.focus();
             inp.select();
         }
