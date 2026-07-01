@@ -540,6 +540,7 @@
         .pdf-table tbody tr:nth-child(even) td {
             background: #f8f8f8;
         }
+        .pdf-table tbody td.pdf-cell-hizmet { max-height:2.6em; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
         .pdf-bottom { 
             display: flex;
             flex-direction: column;
@@ -2154,10 +2155,10 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         <table class="pdf-table">
             <thead>
                 <tr>
-                    <th style="text-align: left; width: 44%;">HİZMET</th>
-                    <th style="text-align: center; width: 10%;">MİKTAR / METRAJ (M²)</th>
+                    <th style="text-align: left; width: 42%;">HİZMET</th>
+                    <th style="text-align: center; width: 14%;">MİKTAR / METRAJ (M²)</th>
                     <th style="text-align: center; width: 8%;">BR. TÜRÜ</th>
-                    <th style="text-align: right; width: 14%;">BR. FİYAT</th>
+                    <th style="text-align: right; width: 12%;">BR. FİYAT</th>
                     <th style="text-align: center; width: 10%;">KDV</th>
                     <th style="text-align: right; width: 14%;">TOPLAM</th>
                 </tr>
@@ -4626,7 +4627,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
             const pBody = document.getElementById("pOutTableBody"); pBody.innerHTML = "";
             veri.kalemler.forEach(k => {
                 const t = k.miktar * k.fiyat;
-                pBody.innerHTML += `<tr><td>${k.servis}</td><td style="text-align:center;">${k.miktar}</td><td style="text-align:center;">${k.birim||''}</td><td style="text-align:right;">${k.fiyat.toLocaleString('tr-TR')} ₺</td><td style="text-align:center;">%${k.kdv}</td><td style="text-align:right;">${t.toLocaleString('tr-TR')} ₺</td></tr>`;
+                pBody.innerHTML += `<tr><td class="pdf-cell-hizmet">${k.servis}</td><td style="text-align:center;">${k.miktar}</td><td style="text-align:center;">${k.birim||''}</td><td style="text-align:right;">${k.fiyat.toLocaleString('tr-TR')} ₺</td><td style="text-align:center;">%${k.kdv}</td><td style="text-align:right;">${t.toLocaleString('tr-TR')} ₺</td></tr>`;
             });
 
             document.getElementById("pOutAra").innerText = (veri.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " ₺";
