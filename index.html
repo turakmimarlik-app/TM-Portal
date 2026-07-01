@@ -2389,7 +2389,7 @@
                     if (savedPage && savedPage !== 'anasayfa-page' && document.getElementById(savedPage)) {
                         sayfaDegistir(savedPage, null);
                     }
-                    var subMap={"teklif-submenu":"arrow-icon","portfoy-submenu":"arrow-portfoy-icon","muhasebe-submenu":"arrow-muhasebe-icon"};var openSub=localStorage.getItem("tm_submenu_open");if(openSub&&subMap[openSub]){var sm=document.getElementById(openSub);if(sm){sm.classList.add("open");var ar=document.getElementById(subMap[openSub]);if(ar)ar.innerText="▲";}}
+                    var subMap={"teklif-submenu":"arrow-icon","portfoy-submenu":"arrow-portfoy-icon","muhasebe-submenu":"arrow-muhasebe-icon"};var openSub=localStorage.getItem("tm_submenu_open");if(openSub&&subMap[openSub]){var sm=document.getElementById(openSub);if(sm){sm.classList.add("open");var ar=document.getElementById(subMap[openSub]);if(ar)ar.innerText="▲";}}if(savedPage&&savedPage!=='anasayfa-page'){var si=document.getElementById('sub-'+savedPage.replace('-page',''));if(si)si.classList.add('active');}
                 } else {
                     localStorage.removeItem("tm_active_user");
                     sessionStorage.removeItem("tm_session_active");
