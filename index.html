@@ -2218,7 +2218,7 @@
                 var anyChanged = false;
                 var changedKeys = {};
                 Object.keys(data).forEach(function(k) {
-                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k.indexOf("tm_multi_logo_") !== 0) {
+                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k !== "tm_yillik_butce_clean" && k.indexOf("tm_multi_logo_") !== 0) {
                             var raw = data[k];
                             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
                             var curVal = localStorage.getItem(k);
@@ -2268,7 +2268,7 @@
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
             origSetItem(key, value);
-            if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean" && key.indexOf("tm_multi_logo_") !== 0) {
+            if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean" && key !== "tm_yillik_butce_clean" && key.indexOf("tm_multi_logo_") !== 0) {
                 fsDirtyKeys[key] = true;
                 if (fsReady) { fsSync(); }
             }
@@ -2327,7 +2327,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            if(!localStorage.getItem("tm_yillik_butce_clean")) { localStorage.removeItem("tm_yillik_butce_db"); localStorage.setItem("tm_yillik_butce_clean","1"); }
+            if(!localStorage.getItem("tm_yillik_butce_clean")) { localStorage.removeItem("tm_yillik_butce_db"); origSetItem("tm_yillik_butce_clean","1"); }
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
             var sessionVar = sessionStorage.getItem("tm_session_active");
@@ -2389,25 +2389,25 @@
                 YENI_DALLAR.forEach(function(d){ if (SABIT_DALLAR.indexOf(d) === -1) SABIT_DALLAR.push(d); });
                 localStorage.setItem("tm_piyasa_dallari_v2", JSON.stringify(SABIT_DALLAR));
             } else {
-                localStorage.setItem("tm_piyasa_dallari_v2", JSON.stringify(SABIT_DALLAR));
+                origSetItem("tm_piyasa_dallari_v2", JSON.stringify(SABIT_DALLAR));
             }
 
             if (localStorage.getItem("tm_musteri_etiketleri_v1")) {
                 SABIT_ETIKETLER = JSON.parse(localStorage.getItem("tm_musteri_etiketleri_v1"));
             } else {
-                localStorage.setItem("tm_musteri_etiketleri_v1", JSON.stringify(SABIT_ETIKETLER));
+                origSetItem("tm_musteri_etiketleri_v1", JSON.stringify(SABIT_ETIKETLER));
             }
             
             if (localStorage.getItem("tm_piyasa_birimleri_v1")) {
                 SABIT_BIRIM_TIPLERI = JSON.parse(localStorage.getItem("tm_piyasa_birimleri_v1"));
             } else {
-                localStorage.setItem("tm_piyasa_birimleri_v1", JSON.stringify(SABIT_BIRIM_TIPLERI));
+                origSetItem("tm_piyasa_birimleri_v1", JSON.stringify(SABIT_BIRIM_TIPLERI));
             }
 
             if (localStorage.getItem("tm_vergi_turleri_v1")) {
                 SABIT_VERGI_TURLERI = JSON.parse(localStorage.getItem("tm_vergi_turleri_v1"));
             } else {
-                localStorage.setItem("tm_vergi_turleri_v1", JSON.stringify(SABIT_VERGI_TURLERI));
+                origSetItem("tm_vergi_turleri_v1", JSON.stringify(SABIT_VERGI_TURLERI));
             }
 
             document.addEventListener("click", function(e) {
@@ -2923,7 +2923,7 @@
                     if (snap && snap.exists) {
                         var data = snap.data();
                         if (data.tm_users_final_v8) {
-                            try { localStorage.setItem("tm_users_final_v8", JSON.stringify(data.tm_users_final_v8)); } catch(e2) {}
+                            try { origSetItem("tm_users_final_v8", JSON.stringify(data.tm_users_final_v8)); } catch(e2) {}
                         }
                     }
                     altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
@@ -7115,7 +7115,7 @@
             let db = JSON.parse(localStorage.getItem("tm_fiyat_listesi_db"));
             if(db && db.length > 0) return db;
             db = TM_FIYAT_VARSAYILAN.map((item, idx) => ({ id: idx + 1, ...item }));
-            localStorage.setItem("tm_fiyat_listesi_db", JSON.stringify(db));
+            origSetItem("tm_fiyat_listesi_db", JSON.stringify(db));
             return db;
         }
 
@@ -7270,7 +7270,7 @@
                 }
             } catch(e) {}
             var obj = { grid: [["","",""],["","",""],["","",""],["","",""],["","",""]], colWidths: [120,180,180], rowHeights: [] };
-            localStorage.setItem(TMF_DATA_PREFIX + id, JSON.stringify(obj));
+            origSetItem(TMF_DATA_PREFIX + id, JSON.stringify(obj));
             return obj;
         }
 
