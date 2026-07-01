@@ -1488,8 +1488,8 @@
                 <table class="app-table">
                     <thead>
                         <tr>
-                            <th style="width: 50%; text-align:center;">Hizmet / İş Açıklaması</th>
-                            <th style="width: 12%; text-align:center;">Miktar / Metraj (m²)</th>
+                            <th style="width: 50%; text-align:left;">Hizmet / İş Açıklaması</th>
+                            <th style="width: 12%; text-align:center; white-space:nowrap;">Miktar / Metraj (m²)</th>
                             <th style="width: 10%; text-align:center;">Birim Türü</th>
                             <th style="width: 12%; text-align:center;">Birim Fiyat (₺)</th>
                             <th style="width: 12%; text-align:center;">KDV Oranı</th>
@@ -1499,10 +1499,10 @@
                     <tbody id="teklifFormRows">
                         <tr>
                             <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
-                            <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
-                            <td><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
-                            <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
-                            <td>
+                            <td style="text-align:center;"><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:80%; text-align:center;"></td>
+                            <td style="text-align:center;"><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
+                            <td style="text-align:center;"><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:80%; text-align:center; box-sizing:border-box;"></td>
+                            <td style="text-align:center;">
                                 <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px">
                                     <option value="20">%20</option>
                                     <option value="10">%10</option>
@@ -4489,17 +4489,17 @@
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)"></textarea></td>
-                <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
-                <td><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
-                <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
-                <td>
+                <td style="text-align:center;"><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:80%; text-align:center;"></td>
+                <td style="text-align:center;"><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
+                <td style="text-align:center;"><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:80%; text-align:center; box-sizing:border-box;"></td>
+                <td style="text-align:center;">
                     <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px">
                         <option value="20">%20</option>
                         <option value="10">%10</option>
                         <option value="0" selected>%0</option>
                     </select>
                 </td>
-                <td><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
+                <td style="text-align:center;"><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
             `;
             tbody.appendChild(tr);
             birimListesiniYenile();
@@ -4532,11 +4532,11 @@
             document.getElementById("teklifFormRows").innerHTML = `
                 <tr>
                     <td><textarea class="row-servis" rows="1" style="width:98%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
-                    <td><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:90%; text-align:right;"></td>
-                    <td><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
-                    <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
-                    <td><select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px"><option value="20">%20</option><option value="10">%10</option><option value="0" selected>%0</option></select></td>
-                    <td><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
+                    <td style="text-align:center;"><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:80%; text-align:center;"></td>
+                    <td style="text-align:center;"><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
+                    <td style="text-align:center;"><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:80%; text-align:center; box-sizing:border-box;"></td>
+                    <td style="text-align:center;"><select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px"><option value="20">%20</option><option value="10">%10</option><option value="0" selected>%0</option></select></td>
+                    <td style="text-align:center;"><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
                 </tr>
             `;
             birimListesiniYenile();
