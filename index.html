@@ -2237,7 +2237,7 @@
                 var anyChanged = false;
                 var changedKeys = {};
                 Object.keys(data).forEach(function(k) {
-                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k !== "tm_yillik_butce_clean" && k !== "tm_sidebar_collapsed" && k.indexOf("tm_multi_logo_") !== 0) {
+                        if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k !== "tm_yillik_butce_clean" && k !== "tm_sidebar_collapsed" && k !== "tm_submenu_open" && k.indexOf("tm_multi_logo_") !== 0) {
                             var raw = data[k];
                             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
                             var curVal = localStorage.getItem(k);
@@ -2287,7 +2287,7 @@
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
             origSetItem(key, value);
-            if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean" && key !== "tm_yillik_butce_clean" && key !== "tm_sidebar_collapsed" && key.indexOf("tm_multi_logo_") !== 0) {
+            if (key.startsWith("tm_") && key !== "tm_active_user" && key !== "tm_theme" && key !== "tm_admin_creds_final" && key !== "tm_active_page" && key !== "tm_ht_clean" && key !== "tm_ft_clean" && key !== "tm_yillik_butce_clean" && key !== "tm_sidebar_collapsed" && key !== "tm_submenu_open" && key.indexOf("tm_multi_logo_") !== 0) {
                 fsDirtyKeys[key] = true;
                 if (fsReady) { fsSync(); }
             }
@@ -2389,6 +2389,7 @@
                     if (savedPage && savedPage !== 'anasayfa-page' && document.getElementById(savedPage)) {
                         sayfaDegistir(savedPage, null);
                     }
+                    var subMap={"teklif-submenu":"arrow-icon","portfoy-submenu":"arrow-portfoy-icon","muhasebe-submenu":"arrow-muhasebe-icon"};var openSub=localStorage.getItem("tm_submenu_open");if(openSub&&subMap[openSub]){var sm=document.getElementById(openSub);if(sm){sm.classList.add("open");var ar=document.getElementById(subMap[openSub]);if(ar)ar.innerText="▲";}}
                 } else {
                     localStorage.removeItem("tm_active_user");
                     sessionStorage.removeItem("tm_session_active");
@@ -3030,8 +3031,8 @@
             const opening = !sub.classList.contains("open");
             document.querySelectorAll(".submenu").forEach(s => { if (s.id !== id) s.classList.remove("open"); });
             document.querySelectorAll(".menu-item .arrow").forEach(a => { if (a.id !== arrowId) a.innerText = "▼"; });
-            if (opening) { sub.classList.add("open"); arrow.innerText = "▲"; }
-            else { sub.classList.remove("open"); arrow.innerText = "▼"; }
+            if (opening) { sub.classList.add("open"); arrow.innerText = "▲"; try { origSetItem("tm_submenu_open", id); } catch(e) {} }
+            else { sub.classList.remove("open"); arrow.innerText = "▼"; try { origSetItem("tm_submenu_open", ""); } catch(e) {} }
         }
 
         function menudenSayfaAc(yetkiKodu, pageId, element) {
@@ -3044,6 +3045,8 @@
                 document.getElementById("lockPopupOverlay").classList.add("active");
                 return;
             }
+            var subPageMap={"teklif-olustur-page":"teklif-submenu","teklif-liste-page":"teklif-submenu","piyasa-fiyatlari-page":"teklif-submenu","tm-fiyatlar-page":"teklif-submenu","musteriler-page":"portfoy-submenu","isortaklari-page":"portfoy-submenu","nakit-dekont-page":"muhasebe-submenu","is-muhasebe-olustur-page":"muhasebe-submenu","is-muhasebe-page":"muhasebe-submenu","tamamlanan-is-muhasebeleri-page":"muhasebe-submenu","hesap-takip-page":"muhasebe-submenu","fatura-takip-page":"muhasebe-submenu","yillik-butce-page":"muhasebe-submenu"};
+            if (subPageMap[pageId]) { try { origSetItem("tm_submenu_open", subPageMap[pageId]); } catch(e) {} }
             sessionStorage.setItem('tm_page_loading', '1');
             localStorage.setItem('tm_active_page', pageId);
             location.reload();
