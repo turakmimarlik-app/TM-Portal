@@ -1488,12 +1488,12 @@
                 <table class="app-table">
                     <thead>
                         <tr>
-                            <th style="width: 49%; text-align:center;">Hizmet / İş Açıklaması</th>
+                            <th style="width: 50%; text-align:center;">Hizmet / İş Açıklaması</th>
                             <th style="width: 12%; text-align:center;">Miktar / Metraj (m²)</th>
-                            <th style="width: 10%; text-align:center;">Birim Türü<br><span style="font-weight:400;font-size:10px;display:flex;gap:4px;justify-content:center;margin-top:2px;"><button class="btn-primary" onclick="event.stopPropagation();birimEklePrompt()" style="padding:2px 6px;font-size:10px;cursor:pointer;">+</button><button class="btn-danger" onclick="event.stopPropagation();birimSilPrompt()" style="padding:2px 6px;font-size:10px;cursor:pointer;">-</button></span></th>
+                            <th style="width: 10%; text-align:center;">Birim Türü</th>
                             <th style="width: 12%; text-align:center;">Birim Fiyat (₺)</th>
-                            <th style="width: 11%; text-align:center;">KDV Oranı</th>
-                            <th style="width: 6%; text-align:center;">İşlem</th>
+                            <th style="width: 12%; text-align:center;">KDV Oranı</th>
+                            <th style="width: 4%; text-align:center;">İşlem</th>
                         </tr>
                     </thead>
                     <tbody id="teklifFormRows">
@@ -1509,7 +1509,7 @@
                                     <option value="0" selected>%0</option>
                                 </select>
                             </td>
-                            <td><button class="btn-danger" onclick="teklifFormSatirSil(this)">Sil</button></td>
+                            <td><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -2400,7 +2400,7 @@
                 }
             }
             var lo = document.getElementById('tmLoadingOverlay'); if(lo) lo.style.display = 'none';
-            function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(){s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eşleşme bulunamadı)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});
+            function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(){s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eşleşme bulunamadı)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;var cf=d.querySelector('.cs-birim-footer');if(cf)cf.remove();if(s.classList.contains('row-birim')){var cft=document.createElement('div');cft.className='cs-birim-footer';cft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';cft.innerHTML='<button onclick="event.stopPropagation();birimEklePrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;">+ YENİ</button><button onclick="event.stopPropagation();birimSilPrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;">- SİL</button>';d.appendChild(cft);}};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});
 
             const loginSection = document.getElementById("loginSection");
             if (loginSection) {
@@ -4482,6 +4482,7 @@
             birimListesiniYenile();
             tmNotify("Birim silindi: " + sec, "success");
         }
+        function birimDropdownKapat(el){var dd=el.closest('.cs-dropdown');if(dd){dd.classList.remove('open');dd.previousElementSibling.classList.remove('open');}}
         /* ================= TEKLİF FORMU MOTORLARI ================= */
         function teklifFormSatirEkle() {
             const tbody = document.getElementById("teklifFormRows");
@@ -4498,7 +4499,7 @@
                         <option value="0" selected>%0</option>
                     </select>
                 </td>
-                <td><button class="btn-danger" onclick="teklifFormSatirSil(this)">Sil</button></td>
+                <td><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
             `;
             tbody.appendChild(tr);
             birimListesiniYenile();
@@ -4535,7 +4536,7 @@
                     <td><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
                     <td><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:100%; text-align:right; box-sizing:border-box;"></td>
                     <td><select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px"><option value="20">%20</option><option value="10">%10</option><option value="0" selected>%0</option></select></td>
-                    <td><button class="btn-danger" onclick="teklifFormSatirSil(this)">Sil</button></td>
+                    <td><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
                 </tr>
             `;
             birimListesiniYenile();
