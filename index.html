@@ -9286,7 +9286,7 @@ function itDurumMetni(o) {
             inp.select();
         }
         function itOrtakNotDuzenleKaydet(inp) {
-            var jobId = inp.getAttribute('data-jobid');
+            var jobId = parseInt(inp.getAttribute('data-jobid'));
             var oIdx = parseInt(inp.getAttribute('data-oix'));
             var nIdx = parseInt(inp.getAttribute('data-nix'));
             var val = inp.value.trim().toUpperCase();
@@ -9306,7 +9306,7 @@ function itDurumMetni(o) {
             itOrtakNotRender(jobId, oIdx);
         }
         function itOrtakNotDuzenleIptal(inp) {
-            var jobId = inp.getAttribute('data-jobid');
+            var jobId = parseInt(inp.getAttribute('data-jobid'));
             var oIdx = parseInt(inp.getAttribute('data-oix'));
             var nIdx = parseInt(inp.getAttribute('data-nix'));
             var textSpan = document.getElementById("itNotText_" + jobId + "_" + oIdx + "_" + nIdx);
