@@ -9483,7 +9483,7 @@ function itDurumMetni(o) {
             var tarih = document.getElementById("itFormTarih").value;
             var not = document.getElementById("itFormNot").value.trim().toUpperCase();
             itFormAdiGuncelle();
-            var isAdi = document.getElementById("itFormAd").value.trim().toUpperCase();
+            var isAdi = trToUpper(document.getElementById("itFormAd").value.trim());
             if (!isAdi) { tmNotify("İş adı zorunludur!", "error"); return; }
             if (id) {
                 var idx = liste.findIndex(function(x){return x.id == id;});
