@@ -2441,7 +2441,7 @@
             piyasaDallariSecenekleriniDoldur();
             piyasaBirimTipiSecenekleriniDoldur();
             musteriEtiketleriniDoldur();
-            csInit();
+            csInit();var cso=new MutationObserver(function(){csInit();});cso.observe(document.body,{childList:true,subtree:true});
             dashOfficeNotesYukle();
             dashboardVerileriniGuncelle();
             musteriKartlariniYenile();
