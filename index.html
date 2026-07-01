@@ -921,6 +921,8 @@
     </style>
 </head>
 <body>
+<div id="tmLoadingOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#212832;z-index:99999;align-items:center;justify-content:center;flex-direction:column;color:white;font-family:Montserrat,sans-serif;"><div style="border:4px solid rgba(255,255,255,0.1);border-top:4px solid #E53935;border-radius:50%;width:44px;height:44px;animation:tmSpin 1s linear infinite;margin-bottom:22px;"></div><div style="font-size:20px;font-weight:800;letter-spacing:2px;">TM-PORTAL</div><div style="font-size:13px;color:#a0aec0;margin-top:10px;font-weight:400;">Sayfa yükleniyor...</div><style>@keyframes tmSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style></div>
+<script>(function(){if(sessionStorage.getItem('tm_page_loading')){sessionStorage.removeItem('tm_page_loading');var e=document.getElementById('tmLoadingOverlay');if(e)e.style.display='flex';}})();</script>
 
     <div id="loginSection" class="login-wrapper">
         <div class="login-logo-left" id="loginLogo"></div>
@@ -2375,6 +2377,8 @@
                     sessionStorage.removeItem("tm_session_active");
                 }
             }
+            var lo = document.getElementById('tmLoadingOverlay'); if(lo) lo.style.display = 'none';
+            document.querySelectorAll('select:not([size])').forEach(function(s){ if(s.options.length>3)s.setAttribute('size','5'); });
 
             const loginSection = document.getElementById("loginSection");
             if (loginSection) {
@@ -3022,6 +3026,7 @@
                 document.getElementById("lockPopupOverlay").classList.add("active");
                 return;
             }
+            sessionStorage.setItem('tm_page_loading', '1');
             localStorage.setItem('tm_active_page', pageId);
             location.reload();
         }
