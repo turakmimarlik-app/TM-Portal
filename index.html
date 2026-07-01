@@ -990,7 +990,6 @@
                 </div>
 
                 <li id="menu-yonetim" class="menu-item" onclick="menudenSayfaAc('yonetim', 'yonetim-page', this)"><span>⚙️ <span class="menu-text">Portal Yönetimi</span></span></li>
-                <li id="menu-x" class="menu-item" onclick="menudenSayfaAc('x', 'x-page', this)"><span>❌ <span class="menu-text">X</span></span></li>
             </ul>
 
             <div class="sidebar-users-section">
@@ -2045,12 +2044,6 @@
                 </div>
             </div>
 
-            <div id="x-page" class="page">
-                <div id="lock-x" class="page-lock-overlay"></div>
-                <h2>❌ X</h2>
-                <p>X sayfası içeriği buraya gelecek.</p>
-            </div>
-
         </div>
     </div>
 
@@ -2201,7 +2194,6 @@
         let fsUnsubscribe = null;
         const fsSayfaAnahtarlari = {
             'anasayfa-page': null,
-            'x-page': null,
             'yonetim-page': null,
             'teklif-liste-page': ['tm_teklifler_db_final'],
             'piyasa-fiyatlari-page': ['tm_piyasa_db_v2'],
@@ -2460,8 +2452,7 @@
             { key:"hesap-takip", label:"🏦 Muhasebe: Hesap Takip Sistemi" },
             { key:"fatura-takip", label:"🧾 Muhasebe: Fatura Takip Sistemi" },
             { key:"yillik-butce", label:"📊 Muhasebe: Yıllık Bütçeler" },
-            { key:"yonetim", label:"⚙️ Portal Yönetimi" },
-            { key:"x", label:"❌ X" }
+            { key:"yonetim", label:"⚙️ Portal Yönetimi" }
         ];
 
         function yetkiCheckboxlariniRenderEt() {
@@ -2623,7 +2614,7 @@
         }
         
     if (!localStorage.getItem("tm_users_final_v8")) {
-        localStorage.setItem("tm_users_final_v8", JSON.stringify([]));
+        try { origSetItem("tm_users_final_v8", JSON.stringify([])); } catch(e) { localStorage.setItem("tm_users_final_v8", JSON.stringify([])); }
     }
 
         function piyasaDallariSecenekleriniDoldur() {
