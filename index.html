@@ -3107,6 +3107,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         }
         function yenileAktifSayfa() {
             try {
+                if (document.querySelector('.cs-dropdown.open')) return;
                 var activePage = document.querySelector('.page.active');
                 if (!activePage) return;
                 var id = activePage.id;
