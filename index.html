@@ -2378,12 +2378,13 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                     oncekiKullanici = null;
                 }
             }
-            if (oncekiKullanici) {
+            function oturumuRestoreEt(u) {
                 document.getElementById("loginSection").style.display = "none";
                 document.getElementById("portalSection").style.display = "block";
                 sidebardaLogoyuGoster();
-                if (oncekiKullanici === "TUGAYTURAK") {
-                    AKTIF_KULLANICI_YETKILERI = (function(){
+                var yetkiler;
+                if (u === "TUGAYTURAK") {
+                    yetkiler = (function(){
                         var all = [];
                         TM_YETKI_TANIMLARI.forEach(function(g){
                             all.push(g.key);
@@ -2393,13 +2394,14 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                     })();
                 } else {
                     var altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
-                    var bulunan = altKullanicilar.find(function(u){ return u.usr === oncekiKullanici; });
-                    AKTIF_KULLANICI_YETKILERI = bulunan ? bulunan.yetkiler : [];
+                    var bulunan = altKullanicilar.find(function(x){ return x.usr === u; });
+                    yetkiler = bulunan ? bulunan.yetkiler : [];
                 }
-                if (AKTIF_KULLANICI_YETKILERI.length > 0) {
+                if (yetkiler.length > 0) {
+                    AKTIF_KULLANICI_YETKILERI = yetkiler;
                     var savedPage = localStorage.getItem('tm_active_page');
-                    menuyuInsaEt(AKTIF_KULLANICI_YETKILERI);
-                    tmOnlineHeartbeatBaslat(oncekiKullanici);
+                    menuyuInsaEt(yetkiler);
+                    tmOnlineHeartbeatBaslat(u);
                     if (savedPage && savedPage !== 'anasayfa-page' && document.getElementById(savedPage)) {
                         sayfaDegistir(savedPage, null);
                     }
@@ -2407,6 +2409,34 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                 } else {
                     localStorage.removeItem("tm_active_user");
                     sessionStorage.removeItem("tm_session_active");
+                }
+            }
+            if (oncekiKullanici) {
+                if (typeof fdb !== 'undefined') {
+                    fdb.collection("tm_online").get().then(function(snap) {
+                        var baskaAktif = null;
+                        snap.forEach(function(doc) {
+                            var d = doc.data();
+                            if (d && d.onlineAt && d.onlineAt > Date.now() - 25000 && doc.id !== oncekiKullanici) {
+                                baskaAktif = doc.id;
+                            }
+                        });
+                        if (baskaAktif) {
+                            localStorage.removeItem("tm_active_user");
+                            sessionStorage.removeItem("tm_session_active");
+                            var errorDiv = document.getElementById("loginError");
+                            if (errorDiv) {
+                                errorDiv.innerText = "⚠️ " + baskaAktif + " kullanıcısı aktif olduğu için oturumunuz sonlandırıldı.";
+                                errorDiv.style.display = "block";
+                            }
+                        } else {
+                            oturumuRestoreEt(oncekiKullanici);
+                        }
+                    }).catch(function() {
+                        oturumuRestoreEt(oncekiKullanici);
+                    });
+                } else {
+                    oturumuRestoreEt(oncekiKullanici);
                 }
             }
             var lo = document.getElementById('tmLoadingOverlay'); if(lo) lo.style.display = 'none';
@@ -2916,6 +2946,44 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
             document.getElementById("pYonetimTarih").value = anlikTarihGetir();
         }
 
+        function girisBasarili(kullanici, yetkiler) {
+            document.getElementById("loginSection").style.display = "none";
+            document.getElementById("portalSection").style.display = "block";
+            sidebardaLogoyuGoster();
+            AKTIF_KULLANICI_YETKILERI = yetkiler;
+            localStorage.setItem("tm_active_user", kullanici);
+            sessionStorage.setItem("tm_session_active", "1");
+            girisCikisLogla(kullanici, "GİRİŞ");
+            localStorage.removeItem('tm_active_page');
+            menuyuInsaEt(yetkiler);
+            sidebarKullanicilariYenile();
+            tmOnlineHeartbeatBaslat(kullanici);
+        }
+        function tmOnlineKullaniciKontrol(kullanici, callback) {
+            if (typeof fdb === 'undefined') { callback(true); return; }
+            var esik = Date.now() - 25000;
+            fdb.collection("tm_online").get().then(function(snap) {
+                var aktif = null;
+                snap.forEach(function(doc) {
+                    var data = doc.data();
+                    if (data && data.onlineAt && data.onlineAt > esik) {
+                        aktif = doc.id;
+                    }
+                });
+                if (aktif && aktif !== kullanici) {
+                    var errorDiv = document.getElementById("loginError");
+                    if (errorDiv) {
+                        errorDiv.innerText = "⚠️ " + aktif + " kullanıcısı halen aktif. Çıkış yapmasını bekleyin.";
+                        errorDiv.style.display = "block";
+                    }
+                    callback(false);
+                } else {
+                    callback(true);
+                }
+            }).catch(function() {
+                callback(true);
+            });
+        }
         function sistemeGirisYap() {
             const inputUser = document.getElementById("loginUser").value.trim().toUpperCase();
             const inputPass = document.getElementById("loginPass").value.trim();
@@ -2923,12 +2991,13 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
             if (errorDiv) errorDiv.style.display = "none";
             var master = JSON.parse(localStorage.getItem("tm_admin_creds_final"));
             if (!master) { master = {usr:"TUGAYTURAK",pass:"Tgy.8998"}; localStorage.setItem("tm_admin_creds_final",JSON.stringify(master)); }
-            
+
+            var hedefKullanici = null;
+            var hedefYetkiler = null;
+
             if (inputUser === "TUGAYTURAK" && inputPass === master.pass) {
-                document.getElementById("loginSection").style.display = "none";
-                document.getElementById("portalSection").style.display = "block";
-                sidebardaLogoyuGoster();
-                AKTIF_KULLANICI_YETKILERI = (function(){
+                hedefKullanici = "TUGAYTURAK";
+                hedefYetkiler = (function(){
                     var all = [];
                     TM_YETKI_TANIMLARI.forEach(function(g){
                         all.push(g.key);
@@ -2936,33 +3005,21 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                     });
                     return all;
                 })();
-                localStorage.setItem("tm_active_user", "TUGAYTURAK");
-                sessionStorage.setItem("tm_session_active", "1");
-                girisCikisLogla("TUGAYTURAK", "GİRİŞ");
-                localStorage.removeItem('tm_active_page');
-                menuyuInsaEt(AKTIF_KULLANICI_YETKILERI);
-                sidebarKullanicilariYenile();
-                tmOnlineHeartbeatBaslat("TUGAYTURAK");
-                return;
+            } else {
+                var altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                var bulunan = altKullanicilar.find(function(u){ return u.usr.toUpperCase() === inputUser && u.pas === inputPass; });
+                if (bulunan) {
+                    hedefKullanici = bulunan.usr;
+                    hedefYetkiler = bulunan.yetkiler;
+                }
             }
 
-            var altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
-            var bulunan = altKullanicilar.find(function(u){ return u.usr.toUpperCase() === inputUser && u.pas === inputPass; });
-
-            if (bulunan) {
-                document.getElementById("loginSection").style.display = "none";
-                document.getElementById("portalSection").style.display = "block";
-                sidebardaLogoyuGoster();
-                AKTIF_KULLANICI_YETKILERI = bulunan.yetkiler;
-                localStorage.setItem("tm_active_user", bulunan.usr);
-                sessionStorage.setItem("tm_session_active", "1");
-                girisCikisLogla(bulunan.usr, "GİRİŞ");
-                localStorage.removeItem('tm_active_page');
-                menuyuInsaEt(AKTIF_KULLANICI_YETKILERI);
-                sidebarKullanicilariYenile();
+            if (hedefKullanici) {
+                tmOnlineKullaniciKontrol(hedefKullanici, function(izin) {
+                    if (izin) girisBasarili(hedefKullanici, hedefYetkiler);
+                });
             } else if (typeof fdb !== 'undefined') {
-                errorDiv.innerText = "Kullanıcı bulunamadı. Firebase'den senkronize ediliyor...";
-                errorDiv.style.display = "block";
+                if (errorDiv) { errorDiv.innerText = "Kullanıcı bulunamadı. Firebase'den senkronize ediliyor..."; errorDiv.style.display = "block"; }
                 fdb.collection(FS_COLLECTION).doc(FS_DOC).get({ source: 'server' }).then(function(snap) {
                     if (snap && snap.exists) {
                         var data = snap.data();
@@ -2970,21 +3027,12 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                             try { origSetItem("tm_users_final_v8", JSON.stringify(data.tm_users_final_v8)); } catch(e2) {}
                         }
                     }
-                    altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
-                    bulunan = altKullanicilar.find(function(u){ return u.usr.toUpperCase() === inputUser && u.pas === inputPass; });
+                    var bulunan = (JSON.parse(localStorage.getItem("tm_users_final_v8")) || []).find(function(u){ return u.usr.toUpperCase() === inputUser && u.pas === inputPass; });
                     if (bulunan) {
                         if (errorDiv) errorDiv.style.display = "none";
-                        document.getElementById("loginSection").style.display = "none";
-                        document.getElementById("portalSection").style.display = "block";
-                        sidebardaLogoyuGoster();
-                        AKTIF_KULLANICI_YETKILERI = bulunan.yetkiler;
-                        localStorage.setItem("tm_active_user", bulunan.usr);
-                        sessionStorage.setItem("tm_session_active", "1");
-                        girisCikisLogla(bulunan.usr, "GİRİŞ");
-                        localStorage.removeItem('tm_active_page');
-                        menuyuInsaEt(AKTIF_KULLANICI_YETKILERI);
-                        sidebarKullanicilariYenile();
-                        tmOnlineHeartbeatBaslat(bulunan.usr);
+                        tmOnlineKullaniciKontrol(bulunan.usr, function(izin) {
+                            if (izin) girisBasarili(bulunan.usr, bulunan.yetkiler);
+                        });
                     } else {
                         if (errorDiv) { errorDiv.innerText = "Kullanıcı adı veya şifre hatalı!"; errorDiv.style.display = "block"; }
                     }
