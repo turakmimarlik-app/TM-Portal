@@ -1189,6 +1189,30 @@
                     </div>
                 </div>
             </div>
+            <!-- ÖZEL GIRDI MODAL -->
+            <div id="tmPromptOverlay" class="modal-overlay" style="display:none;">
+                <div class="modal-box">
+                    <div class="modal-header"><h3 id="tmPromptTitle">GİRİŞ</h3></div>
+                    <div class="modal-body">
+                        <p id="tmPromptMsg" style="margin-bottom:14px;"></p>
+                        <input type="text" id="tmPromptInput" style="width:100%;padding:10px 12px;border:1px solid var(--border-color);border-radius:6px;background:var(--input-bg);color:var(--text-dark);font-size:14px;box-sizing:border-box;">
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" id="tmPromptCancel">İptal</button>
+                        <button class="btn btn-red" id="tmPromptOk">Tamam</button>
+                    </div>
+                </div>
+            </div>
+            <!-- ÖZEL BILGI MODAL -->
+            <div id="tmAlertOverlay" class="modal-overlay" style="display:none;">
+                <div class="modal-box">
+                    <div class="modal-header"><h3 id="tmAlertTitle">BİLGİ</h3></div>
+                    <div class="modal-body"><p id="tmAlertMsg"></p></div>
+                    <div class="modal-actions">
+                        <button class="btn btn-red" id="tmAlertOk">Tamam</button>
+                    </div>
+                </div>
+            </div>
             <!-- ANA SAYFA GÜN BİLGİ MODAL -->
             <div id="asGunInfoModal" class="as-modal-overlay" style="display:none;">
                 <div class="as-modal-box" style="max-width:380px;">

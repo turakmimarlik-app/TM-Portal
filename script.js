@@ -514,26 +514,27 @@
         }
 
         function yeniMusteriEtiketiEklePrompt() {
-            let yeniEtiket = prompt("Lütfen eklemek istediğiniz yeni Müşteri Tipi / Etiket adını giriniz:");
-            if(yeniEtiket) {
-                yeniEtiket = yeniEtiket.trim();
-                if(SABIT_ETIKETLER.some(e => e.toLowerCase() === yeniEtiket.toLowerCase())) { tmNotify("Bu etiket zaten sistemde mevcut!", "error"); return; }
-                SABIT_ETIKETLER.push(yeniEtiket);
-                localStorage.setItem("tm_musteri_etiketleri_v1", JSON.stringify(SABIT_ETIKETLER));
-                musteriEtiketleriniDoldur();
-                document.getElementById("mTipi").value = yeniEtiket;
-            }
+            tmPrompt("Lütfen eklemek istediğiniz yeni Müşteri Tipi / Etiket adını giriniz:", function(yeniEtiket) {
+                if(yeniEtiket) {
+                    yeniEtiket = yeniEtiket.trim();
+                    if(SABIT_ETIKETLER.some(e => e.toLowerCase() === yeniEtiket.toLowerCase())) { tmNotify("Bu etiket zaten sistemde mevcut!", "error"); return; }
+                    SABIT_ETIKETLER.push(yeniEtiket);
+                    localStorage.setItem("tm_musteri_etiketleri_v1", JSON.stringify(SABIT_ETIKETLER));
+                    musteriEtiketleriniDoldur();
+                    document.getElementById("mTipi").value = yeniEtiket;
+                }
+            });
         }
 
         function musteriEtiketiSilPrompt() {
             const val = document.getElementById("mTipi").value;
             if(!val) return;
-            if(confirm(`"${val}" etiketini silmek istediğinize emin misiniz?`)) {
+            tmConfirm(`"${val}" etiketini silmek istediğinize emin misiniz?`, function() {
                 SABIT_ETIKETLER = SABIT_ETIKETLER.filter(e => e !== val);
                 localStorage.setItem("tm_musteri_etiketleri_v1", JSON.stringify(SABIT_ETIKETLER));
                 musteriEtiketleriniDoldur();
                 musteriKartlariniYenile();
-            }
+            });
         }
 
         function getBankaRenkKodu(bankaAdi) {
@@ -639,16 +640,17 @@
         }
 
         function yeniPiyasaDaliEklePrompt() {
-            let yeniDal = prompt("Lütfen eklemek istediğiniz yeni Proje / Hizmet Dalı adını giriniz:");
-            if(yeniDal) {
-                yeniDal = trToUpper(yeniDal.trim());
-                if(SABIT_DALLAR.includes(yeniDal)) { tmNotify("Bu hizmet dalı zaten sistemde mevcut!", "error"); return; }
-                SABIT_DALLAR.push(yeniDal);
-                localStorage.setItem("tm_piyasa_dallari_v2", JSON.stringify(SABIT_DALLAR));
-                piyasaDallariSecenekleriniDoldur();
-                if(document.getElementById("pYonetimDal")) document.getElementById("pYonetimDal").value = yeniDal;
-                if(document.getElementById("ioBrans")) document.getElementById("ioBrans").value = yeniDal;
-            }
+            tmPrompt("Lütfen eklemek istediğiniz yeni Proje / Hizmet Dalı adını giriniz:", function(yeniDal) {
+                if(yeniDal) {
+                    yeniDal = trToUpper(yeniDal.trim());
+                    if(SABIT_DALLAR.includes(yeniDal)) { tmNotify("Bu hizmet dalı zaten sistemde mevcut!", "error"); return; }
+                    SABIT_DALLAR.push(yeniDal);
+                    localStorage.setItem("tm_piyasa_dallari_v2", JSON.stringify(SABIT_DALLAR));
+                    piyasaDallariSecenekleriniDoldur();
+                    if(document.getElementById("pYonetimDal")) document.getElementById("pYonetimDal").value = yeniDal;
+                    if(document.getElementById("ioBrans")) document.getElementById("ioBrans").value = yeniDal;
+                }
+            });
         }
 
         function piyasaDaliSilPrompt() {
@@ -659,35 +661,36 @@
                 val = document.getElementById("ioBrans").value;
             }
             if(!val) return;
-            if(confirm(`"${val}" dalını ve tüm sistem eşleşmelerini silmek istediğinize emin misiniz?`)) {
+            tmConfirm(`"${val}" dalını ve tüm sistem eşleşmelerini silmek istediğinize emin misiniz?`, function() {
                 SABIT_DALLAR = SABIT_DALLAR.filter(d => d !== val);
                 localStorage.setItem("tm_piyasa_dallari_v2", JSON.stringify(SABIT_DALLAR));
                 piyasaDallariSecenekleriniDoldur();
                 piyasaListesiniYenile();
                 isOrtaklariKartlariniYenile();
-            }
+            });
         }
         
         function yeniPiyasaBirimEklePrompt() {
-            let yeniBirim = prompt("Lütfen eklemek istediğiniz yeni Hesap Yöntemi / Birim Tipini giriniz:");
-            if(yeniBirim) {
-                yeniBirim = yeniBirim.trim();
-                if(SABIT_BIRIM_TIPLERI.includes(yeniBirim)) { tmNotify("Bu birim tipi zaten sistemde mevcut!", "error"); return; }
-                SABIT_BIRIM_TIPLERI.push(yeniBirim);
-                localStorage.setItem("tm_piyasa_birimleri_v1", JSON.stringify(SABIT_BIRIM_TIPLERI));
-                piyasaBirimTipiSecenekleriniDoldur();
-                document.getElementById("pYonetimBirimTipi").value = yeniBirim;
-            }
+            tmPrompt("Lütfen eklemek istediğiniz yeni Hesap Yöntemi / Birim Tipini giriniz:", function(yeniBirim) {
+                if(yeniBirim) {
+                    yeniBirim = yeniBirim.trim();
+                    if(SABIT_BIRIM_TIPLERI.includes(yeniBirim)) { tmNotify("Bu birim tipi zaten sistemde mevcut!", "error"); return; }
+                    SABIT_BIRIM_TIPLERI.push(yeniBirim);
+                    localStorage.setItem("tm_piyasa_birimleri_v1", JSON.stringify(SABIT_BIRIM_TIPLERI));
+                    piyasaBirimTipiSecenekleriniDoldur();
+                    document.getElementById("pYonetimBirimTipi").value = yeniBirim;
+                }
+            });
         }
         
         function piyasaBirimSilPrompt() {
             let val = document.getElementById("pYonetimBirimTipi").value;
             if(!val) return;
-            if(confirm(`"${val}" birim tipini silmek istediğinize emin misiniz?`)) {
+            tmConfirm(`"${val}" birim tipini silmek istediğinize emin misiniz?`, function() {
                 SABIT_BIRIM_TIPLERI = SABIT_BIRIM_TIPLERI.filter(b => b !== val);
                 localStorage.setItem("tm_piyasa_birimleri_v1", JSON.stringify(SABIT_BIRIM_TIPLERI));
                 piyasaBirimTipiSecenekleriniDoldur();
-            }
+            });
         }
 
         function ibanFormatla(el) {
@@ -850,7 +853,7 @@
         }
 
         function sistemdenCikisYap() {
-            if(confirm("Sistemden çıkış yapmak istediğinize emin misiniz?")) {
+            tmConfirm("Sistemden çıkış yapmak istediğinize emin misiniz?", function() {
                 document.getElementById("loginUser").value = "";
                 document.getElementById("loginPass").value = "";
                 document.getElementById("portalSection").style.display = "none";
@@ -863,7 +866,7 @@
                 localStorage.removeItem("tm_active_page");
                 girisCikisLogla(cikan, "ÇIKIŞ");
                 sidebarKullanicilariYenile();
-            }
+            });
         }
 
         function sidebarToggle() {
@@ -920,6 +923,30 @@
             document.getElementById("tmConfirmOverlay").style.display = "flex";
             document.getElementById("tmConfirmOk").onclick = function() { document.getElementById("tmConfirmOverlay").style.display = "none"; if (onEvet) onEvet(); };
             document.getElementById("tmConfirmCancel").onclick = function() { document.getElementById("tmConfirmOverlay").style.display = "none"; };
+        }
+        function tmPrompt(msg, onTamam) {
+            document.getElementById("tmPromptMsg").textContent = msg;
+            document.getElementById("tmPromptInput").value = "";
+            document.getElementById("tmPromptOverlay").style.display = "flex";
+            setTimeout(function() { document.getElementById("tmPromptInput").focus(); }, 100);
+            document.getElementById("tmPromptOk").onclick = function() {
+                var val = document.getElementById("tmPromptInput").value;
+                document.getElementById("tmPromptOverlay").style.display = "none";
+                if (onTamam) onTamam(val);
+            };
+            document.getElementById("tmPromptCancel").onclick = function() {
+                document.getElementById("tmPromptOverlay").style.display = "none";
+                if (onTamam) onTamam(null);
+            };
+            document.getElementById("tmPromptInput").onkeydown = function(e) {
+                if (e.key === "Enter") { document.getElementById("tmPromptOk").click(); }
+                if (e.key === "Escape") { document.getElementById("tmPromptCancel").click(); }
+            };
+        }
+        function tmAlert(msg) {
+            document.getElementById("tmAlertMsg").textContent = msg;
+            document.getElementById("tmAlertOverlay").style.display = "flex";
+            document.getElementById("tmAlertOk").onclick = function() { document.getElementById("tmAlertOverlay").style.display = "none"; };
         }
         function menudenSayfaAc(yetkiKodu, pageId, element) {
             if (tmFormDirty) { tmConfirm("Bu sayfadan ayrılırken kaydedilmemiş değişiklikler kaybolacak. Yine de çıkmak istiyor musunuz?", function() { tmFormDirty = false; menudenSayfaAc(yetkiKodu, pageId, element); }); return; }
@@ -1581,13 +1608,13 @@
         }
 
         function portfolioKartSil(dbName, id, tip) {
-            if(confirm("Bu profil kartını sistemden kalıcı olarak silmek istediğinize emin misiniz?")) {
+            tmConfirm("Bu profil kartını sistemden kalıcı olarak silmek istediğinize emin misiniz?", function() {
                 let db = JSON.parse(localStorage.getItem(dbName)) || [];
                 db = db.filter(item => item.id !== id);
                 localStorage.setItem(dbName, JSON.stringify(db));
                 if(tip === 'musteri') musteriKartlariniYenile();
                 if(tip === 'partner') isOrtaklariKartlariniYenile();
-            }
+            });
         }
 
         /* ================= ŞİRKET BİLGİLERİ & LOGO ================= */
@@ -1628,7 +1655,7 @@
         function logoDosyaSecildi(ev) {
             var file = ev.target.files[0];
             if (!file) return;
-            if (file.size > 500 * 1024) { alert("Dosya çok büyük! Maksimum 500KB."); return; }
+            if (file.size > 500 * 1024) { tmAlert("Dosya çok büyük! Maksimum 500KB."); return; }
             var reader = new FileReader();
             reader.onload = function(e) {
                 var data = e.target.result;
@@ -1878,13 +1905,13 @@
         function kullaniciSil(index) {
             try {
                 let altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
-                if (confirm("Bu kullanıcıyı listeden tamamen silmek istediğinize emin misiniz?")) {
+                tmConfirm("Bu kullanıcıyı listeden tamamen silmek istediğinize emin misiniz?", function() {
                     altKullanicilar.splice(index, 1);
                     localStorage.setItem("tm_users_final_v8", JSON.stringify(altKullanicilar));
                     kullaniciListesiniYenile();
                     sidebarKullanicilariYenile();
                     tmNotify("Kullanıcı silindi.", "success");
-                }
+                });
             } catch(e) { console.error("kullaniciSil hatasi:", e); tmNotify("Silme hatası: " + e.message, "error"); }
         }
 
@@ -2159,14 +2186,16 @@
         }
         function asEventSil() {
             const id = document.getElementById("asEventEditId").value;
-            if (!id || !confirm("Bu etkinliği silmek istediğinize emin misiniz?")) return;
-            const aktifUser = localStorage.getItem("tm_active_user") || "";
-            let etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
-            etkinlikler = etkinlikler.filter(function(e) { return e.id !== id; });
-            localStorage.setItem("tm_as_etkinlikler_" + aktifUser, JSON.stringify(etkinlikler));
-            asEventModalKapat();
-            asTakvimRender();
-            tmNotify("Etkinlik silindi.", "success");
+            if (!id) return;
+            tmConfirm("Bu etkinliği silmek istediğinize emin misiniz?", function() {
+                const aktifUser = localStorage.getItem("tm_active_user") || "";
+                let etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+                etkinlikler = etkinlikler.filter(function(e) { return e.id !== id; });
+                localStorage.setItem("tm_as_etkinlikler_" + aktifUser, JSON.stringify(etkinlikler));
+                asEventModalKapat();
+                asTakvimRender();
+                tmNotify("Etkinlik silindi.", "success");
+            });
         }
         function asEventModalKapat() {
             document.getElementById("asEventModal").style.display = "none";
@@ -2195,14 +2224,16 @@
             document.getElementById("asGunInfoModal").style.display = "flex";
         }
         function asEventSilById(id) {
-            if (!id || !confirm("Bu etkinliği silmek istediğinize emin misiniz?")) return;
-            const aktifUser = localStorage.getItem("tm_active_user") || "";
-            let etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
-            etkinlikler = etkinlikler.filter(function(e) { return e.id !== id; });
-            localStorage.setItem("tm_as_etkinlikler_" + aktifUser, JSON.stringify(etkinlikler));
-            asGunInfoKapat();
-            asTakvimRender();
-            tmNotify("Etkinlik silindi.", "success");
+            if (!id) return;
+            tmConfirm("Bu etkinliği silmek istediğinize emin misiniz?", function() {
+                const aktifUser = localStorage.getItem("tm_active_user") || "";
+                let etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+                etkinlikler = etkinlikler.filter(function(e) { return e.id !== id; });
+                localStorage.setItem("tm_as_etkinlikler_" + aktifUser, JSON.stringify(etkinlikler));
+                asGunInfoKapat();
+                asTakvimRender();
+                tmNotify("Etkinlik silindi.", "success");
+            });
         }
         function asTumEtkinlikleriGoster() {
             const etkinlikler = asGetMergedEvents();
@@ -2335,11 +2366,12 @@
             tmNotify("Görev tamamlandı olarak işaretlendi.", "success");
         }
         function asGorevSil(id) {
-            if (!confirm("Bu görevi silmek istediğinize emin misiniz?")) return;
-            let gorevler = JSON.parse(localStorage.getItem("tm_gorevler")) || [];
-            gorevler = gorevler.filter(function(g) { return g.id !== id; });
-            localStorage.setItem("tm_gorevler", JSON.stringify(gorevler));
-            asGorevListele();
+            tmConfirm("Bu görevi silmek istediğinize emin misiniz?", function() {
+                let gorevler = JSON.parse(localStorage.getItem("tm_gorevler")) || [];
+                gorevler = gorevler.filter(function(g) { return g.id !== id; });
+                localStorage.setItem("tm_gorevler", JSON.stringify(gorevler));
+                asGorevListele();
+            });
         }
 
         function gorevYetkiSelectleriDoldur() {
@@ -2398,28 +2430,30 @@
             });
         }
         function birimEklePrompt() {
-            var yeni = prompt("Yeni birim türü giriniz (örn: M², ADET, KG):");
-            if (!yeni || yeni.trim() === "") return;
-            yeni = yeni.trim().toUpperCase();
-            var list = birimListesiGetir();
-            if (list.indexOf(yeni) !== -1) { tmNotify("Bu birim zaten mevcut!", "error"); return; }
-            list.push(yeni);
-            localStorage.setItem("tm_birim_listesi_v1", JSON.stringify(list));
-            birimListesiniYenile();
-            tmNotify("Birim eklendi: " + yeni, "success");
+            tmPrompt("Yeni birim türü giriniz (örn: M², ADET, KG):", function(yeni) {
+                if (!yeni || yeni.trim() === "") return;
+                yeni = yeni.trim().toUpperCase();
+                var list = birimListesiGetir();
+                if (list.indexOf(yeni) !== -1) { tmNotify("Bu birim zaten mevcut!", "error"); return; }
+                list.push(yeni);
+                localStorage.setItem("tm_birim_listesi_v1", JSON.stringify(list));
+                birimListesiniYenile();
+                tmNotify("Birim eklendi: " + yeni, "success");
+            });
         }
         function birimSilPrompt() {
             var list = birimListesiGetir();
             if (list.length === 0) { tmNotify("Silinecek birim kalmadı.", "error"); return; }
-            var sec = prompt("Silmek istediğiniz birim adını yazın:\nMevcut: " + list.join(", "));
-            if (!sec || sec.trim() === "") return;
-            sec = sec.trim().toUpperCase();
-            var idx = list.indexOf(sec);
-            if (idx === -1) { tmNotify("Bu birim listede bulunamadı.", "error"); return; }
-            list.splice(idx, 1);
-            localStorage.setItem("tm_birim_listesi_v1", JSON.stringify(list));
-            birimListesiniYenile();
-            tmNotify("Birim silindi: " + sec, "success");
+            tmPrompt("Silmek istediğiniz birim adını yazın:\nMevcut: " + list.join(", "), function(sec) {
+                if (!sec || sec.trim() === "") return;
+                sec = sec.trim().toUpperCase();
+                var idx = list.indexOf(sec);
+                if (idx === -1) { tmNotify("Bu birim listede bulunamadı.", "error"); return; }
+                list.splice(idx, 1);
+                localStorage.setItem("tm_birim_listesi_v1", JSON.stringify(list));
+                birimListesiniYenile();
+                tmNotify("Birim silindi: " + sec, "success");
+            });
         }
         function birimDropdownKapat(el){var dd=el.closest('.cs-dropdown');if(dd){dd.classList.remove('open');dd.previousElementSibling.classList.remove('open');}}
         /* ================= TEKLİF FORMU MOTORLARI ================= */
@@ -2584,7 +2618,7 @@
                     p.addImage(u,'JPEG',1,1,208,295);
                     p.save(fname);
                     document.body.removeChild(clone);
-                }).catch(function(e){ alert('PDF HATA: '+(e.message||e)); try{document.body.removeChild(clone)}catch(e){} });
+                }).catch(function(e){ tmAlert('PDF HATA: '+(e.message||e)); try{document.body.removeChild(clone)}catch(e){} });
             },100);
         }
 
@@ -2696,7 +2730,7 @@
         }
         
         function teklifSilDbId(dbId) { 
-            if (confirm("Bu teklifi listeden tamamen silmek istediğinize emin misiniz?")) { 
+            tmConfirm("Bu teklifi listeden tamamen silmek istediğinize emin misiniz?", function() { 
                 let db = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
                 db = db.filter(item => item.id != dbId);
                 localStorage.setItem("tm_teklifler_db_final", JSON.stringify(db)); 
@@ -2836,7 +2870,7 @@
         }
 
         function piyasaVerisiSilDirekt(globalIndex) {
-            if(confirm("Bu piyasa fiyat kaydını tamamen silmek istediğinize emin misiniz?")) {
+            tmConfirm("Bu piyasa fiyat kaydını tamamen silmek istediğinize emin misiniz?", function() {
                 let db = JSON.parse(localStorage.getItem("tm_piyasa_db_v2")) || [];
                 db.splice(globalIndex, 1);
                 localStorage.setItem("tm_piyasa_db_v2", JSON.stringify(db));
@@ -2950,12 +2984,12 @@
         }
 
         function isMuhasebeSil(id) {
-            if(confirm("Bu iş muhasebesi kaydını tamamen silmek istediğinize emin misiniz?")) {
+            tmConfirm("Bu iş muhasebesi kaydını tamamen silmek istediğinize emin misiniz?", function() {
                 let db = isMuhasebeVerileriniYukle();
                 db = db.filter(k => k.id !== id);
                 localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
                 isMuhasebeListesiniYenile();
-            }
+            });
         }
 
         function isMuhKartToggle(id, event) {
@@ -3408,55 +3442,55 @@
         }
 
         function isMuhasebeOdemeGecmisiSil(dbId, kalemId, idx) {
-            if(!confirm("Bu ödeme kaydını silmek istediğinize emin misiniz?")) return;
+            tmConfirm("Bu ödeme kaydını silmek istediğinize emin misiniz?", function() {
+                let db = isMuhasebeVerileriniYukle();
+                const kayit = db.find(k => k.id === dbId);
+                if(!kayit) return;
 
-            let db = isMuhasebeVerileriniYukle();
-            const kayit = db.find(k => k.id === dbId);
-            if(!kayit) return;
+                const kalem = kayit.kalemler.find(k => k.kalemId === kalemId);
+                if(!kalem || kalem.tip !== "verecek" || !kalem.odemeKayitlari) return;
+                if(idx < 0 || idx >= kalem.odemeKayitlari.length) return;
 
-            const kalem = kayit.kalemler.find(k => k.kalemId === kalemId);
-            if(!kalem || kalem.tip !== "verecek" || !kalem.odemeKayitlari) return;
-            if(idx < 0 || idx >= kalem.odemeKayitlari.length) return;
+                kalem.odemeKayitlari.splice(idx, 1);
+                kalem.odenenTutar = kalem.odemeKayitlari.reduce((sum, o) => sum + o.tutar, 0);
+                kalem.odemeTarihi = kalem.odemeKayitlari.reduce((latest, o) => (!latest || o.tarih > latest) ? o.tarih : latest, "");
 
-            kalem.odemeKayitlari.splice(idx, 1);
-            kalem.odenenTutar = kalem.odemeKayitlari.reduce((sum, o) => sum + o.tutar, 0);
-            kalem.odemeTarihi = kalem.odemeKayitlari.reduce((latest, o) => (!latest || o.tarih > latest) ? o.tarih : latest, "");
-
-            localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
-            isMuhasebeListesiniYenile();
+                localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
+                isMuhasebeListesiniYenile();
+            });
         }
 
         function isMuhasebeKalemSil(dbId, kalemId) {
-            if(confirm("Bu kalemi silmek istediğinize emin misiniz?")) {
+            tmConfirm("Bu kalemi silmek istediğinize emin misiniz?", function() {
                 let db = isMuhasebeVerileriniYukle();
                 const kayit = db.find(k => k.id === dbId);
                 if(!kayit) return;
                 kayit.kalemler = kayit.kalemler.filter(k => k.kalemId !== kalemId);
                 localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
                 isMuhasebeListesiniYenile();
-            }
+            });
         }
 
         function isMuhasebeBitirVeTasi(id) {
-            if(!confirm("Bu iş muhasebesini 'Tamamlanan İşler' kategorisine taşımak istediğinize emin misiniz?\n\nİş bitirme onayı verildiğinde bu kart 'İş Muhasebesi Takibi' sayfasından kaldırılıp 'Tamamlanan İş Muhasebeleri' sayfasına taşınacaktır.")) return;
+            tmConfirm("Bu iş muhasebesini 'Tamamlanan İşler' kategorisine taşımak istediğinize emin misiniz?", function() {
+                let db = isMuhasebeVerileriniYukle();
+                const kayit = db.find(k => k.id === id);
+                if(!kayit) return;
 
-            let db = isMuhasebeVerileriniYukle();
-            const kayit = db.find(k => k.id === id);
-            if(!kayit) return;
+                let tamamlananDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
+                kayit.bitisTarihi = anlikTarihGetir();
+                tamamlananDb.push(kayit);
+                localStorage.setItem("tm_is_muhasebe_tamamlanan_db", JSON.stringify(tamamlananDb));
 
-            let tamamlananDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
-            kayit.bitisTarihi = anlikTarihGetir();
-            tamamlananDb.push(kayit);
-            localStorage.setItem("tm_is_muhasebe_tamamlanan_db", JSON.stringify(tamamlananDb));
+                db = db.filter(k => k.id !== id);
+                localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
 
-            db = db.filter(k => k.id !== id);
-            localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
-
-            isMuhasebeListesiniYenile();
-            tamamlananIsMuhasebeListesiniYenile();
-            musteriKartlariniYenile();
-            isOrtaklariKartlariniYenile();
-            tmNotify("İş başarıyla tamamlandı ve 'Tamamlanan İş Muhasebeleri' sayfasına taşındı.", "success");
+                isMuhasebeListesiniYenile();
+                tamamlananIsMuhasebeListesiniYenile();
+                musteriKartlariniYenile();
+                isOrtaklariKartlariniYenile();
+                tmNotify("İş başarıyla tamamlandı ve 'Tamamlanan İş Muhasebeleri' sayfasına taşındı.", "success");
+            });
         }
 
         function tamamlananIsMuhasebeVerileriniYukle() {
@@ -3464,36 +3498,36 @@
         }
 
         function tamamlananIsMuhasebeGeriAl(id) {
-            if(!confirm("Bu işi 'Tamamlanan İş Muhasebeleri'nden çıkarıp tekrar 'İş Muhasebesi Takibi' sayfasına taşımak istediğinize emin misiniz?")) return;
+            tmConfirm("Bu işi 'Tamamlanan İş Muhasebeleri'nden çıkarıp tekrar 'İş Muhasebesi Takibi' sayfasına taşımak istediğinize emin misiniz?", function() {
+                let tamamlananDb = tamamlananIsMuhasebeVerileriniYukle();
+                const kayit = tamamlananDb.find(k => k.id === id);
+                if(!kayit) return;
 
-            let tamamlananDb = tamamlananIsMuhasebeVerileriniYukle();
-            const kayit = tamamlananDb.find(k => k.id === id);
-            if(!kayit) return;
+                delete kayit.bitisTarihi;
+                let db = isMuhasebeVerileriniYukle();
+                db.push(kayit);
+                localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
 
-            delete kayit.bitisTarihi;
-            let db = isMuhasebeVerileriniYukle();
-            db.push(kayit);
-            localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
+                tamamlananDb = tamamlananDb.filter(k => k.id !== id);
+                localStorage.setItem("tm_is_muhasebe_tamamlanan_db", JSON.stringify(tamamlananDb));
 
-            tamamlananDb = tamamlananDb.filter(k => k.id !== id);
-            localStorage.setItem("tm_is_muhasebe_tamamlanan_db", JSON.stringify(tamamlananDb));
-
-            isMuhasebeListesiniYenile();
-            tamamlananIsMuhasebeListesiniYenile();
-            musteriKartlariniYenile();
-            isOrtaklariKartlariniYenile();
-            tmNotify("İş geri alındı ve tekrar 'İş Muhasebesi Takibi' sayfasına taşındı.", "success");
+                isMuhasebeListesiniYenile();
+                tamamlananIsMuhasebeListesiniYenile();
+                musteriKartlariniYenile();
+                isOrtaklariKartlariniYenile();
+                tmNotify("İş geri alındı ve tekrar 'İş Muhasebesi Takibi' sayfasına taşındı.", "success");
+            });
         }
 
         function tamamlananIsMuhasebeSil(id) {
-            if(confirm("Bu tamamlanan iş kaydını kalıcı olarak silmek istediğinize emin misiniz?")) {
+            tmConfirm("Bu tamamlanan iş kaydını kalıcı olarak silmek istediğinize emin misiniz?", function() {
                 let db = tamamlananIsMuhasebeVerileriniYukle();
                 db = db.filter(k => k.id !== id);
                 localStorage.setItem("tm_is_muhasebe_tamamlanan_db", JSON.stringify(db));
                 tamamlananIsMuhasebeListesiniYenile();
                 musteriKartlariniYenile();
                 isOrtaklariKartlariniYenile();
-            }
+            });
         }
 
         function tamamlananIsMuhasebeListesiniYenile() {
@@ -3958,13 +3992,13 @@
         }
 
         function nakitDekontSil(id) {
-            if(confirm("Bu dekontu kalıcı olarak silmek istediğinize emin misiniz?")) {
+            tmConfirm("Bu dekontu kalıcı olarak silmek istediğinize emin misiniz?", function() {
                 let db = nakitDekontVerileriniYukle();
                 db = db.filter(d => d.id !== id);
                 localStorage.setItem("tm_nakit_dekont_db", JSON.stringify(db));
-            nakitDekontListesiniYenile();
-            isMuhFormIdGuncelle();
-            }
+                nakitDekontListesiniYenile();
+                isMuhFormIdGuncelle();
+            });
         }
 
         function nakitDekontListesiniYenile() {
@@ -4515,15 +4549,16 @@
         }
 
         function ybKalemSil(id, ayIdx) {
-            if(!confirm("Bu kalemi silmek istediğinize emin misiniz?")) return;
-            const kayit = ybYilVerisi();
-            const ay = ybAyVerisi(ayIdx, kayit);
-            for(const d of [ay.gelirler, ay.giderler]) {
-                for(const ktg of Object.keys(d)) {
-                    const idx = d[ktg].findIndex(k => k.id===id);
-                    if(idx>-1) { d[ktg].splice(idx,1); const db=ybVeriYukle(); db.yillar[db.aktifYil]=kayit; ybVeriKaydet(db); ybSekmeGoster(String(ayIdx)); return; }
+            tmConfirm("Bu kalemi silmek istediğinize emin misiniz?", function() {
+                const kayit = ybYilVerisi();
+                const ay = ybAyVerisi(ayIdx, kayit);
+                for(const d of [ay.gelirler, ay.giderler]) {
+                    for(const ktg of Object.keys(d)) {
+                        const idx = d[ktg].findIndex(k => k.id===id);
+                        if(idx>-1) { d[ktg].splice(idx,1); const db=ybVeriYukle(); db.yillar[db.aktifYil]=kayit; ybVeriKaydet(db); ybSekmeGoster(String(ayIdx)); return; }
+                    }
                 }
-            }
+            });
         }
 
         function ybKalemGuncelle(id, alan, deger) {
@@ -4546,17 +4581,19 @@
         }
 
         function ybKategoriEkle(tip) {
-            const ad = prompt(`Yeni ${tip==='gelir'?'gelir':'gider'} kategorisi adı:`);
-            if(!ad||!ad.trim()) return;
-            const kayit = ybYilVerisi();
-            const ktg = trToUpper(ad.trim());
-            const list = tip==="gelir"?kayit.gelirKategorileri:kayit.giderKategorileri;
-            if(list.includes(ktg)) { tmNotify("Bu kategori zaten mevcut!","error"); return; }
-            list.push(ktg);
-            Object.values(kayit.aylar).forEach(ay => { if(tip==="gelir") ay.gelirler[ktg]=[]; else ay.giderler[ktg]=[]; });
-            const db = ybVeriYukle(); db.yillar[db.aktifYil] = kayit; ybVeriKaydet(db);
-            tmNotify("Kategori eklendi.","success");
-            ybSekmeGoster(document.querySelector("#ybSekmeBar .yb-sekme-aktif")?.dataset?.sekme||"rapor");
+            const etiket = tip==='gelir'?'gelir':'gider';
+            tmPrompt(`Yeni ${etiket} kategorisi adı:`, function(ad) {
+                if(!ad||!ad.trim()) return;
+                const kayit = ybYilVerisi();
+                const ktg = trToUpper(ad.trim());
+                const list = tip==="gelir"?kayit.gelirKategorileri:kayit.giderKategorileri;
+                if(list.includes(ktg)) { tmNotify("Bu kategori zaten mevcut!","error"); return; }
+                list.push(ktg);
+                Object.values(kayit.aylar).forEach(ay => { if(tip==="gelir") ay.gelirler[ktg]=[]; else ay.giderler[ktg]=[]; });
+                const db = ybVeriYukle(); db.yillar[db.aktifYil] = kayit; ybVeriKaydet(db);
+                tmNotify("Kategori eklendi.","success");
+                ybSekmeGoster(document.querySelector("#ybSekmeBar .yb-sekme-aktif")?.dataset?.sekme||"rapor");
+            });
         }
 
         function ybPdfIndir(yil) {
@@ -4762,18 +4799,19 @@
         }
 
         function htHesapSil(id) {
-            if(!confirm("Bu hesabı silmek istediğinize emin misiniz?")) return;
-            var db = htVeriYukle();
-            db.hesaplar = db.hesaplar.filter(function(h){return h.id!==id;});
-            db.islemler = db.islemler.filter(function(i){return i.hesapId!==id;});
-            htVeriKaydet(db);
-            htHesapKartlariGoster();
-            htNakitKartGoster();
-            htYeniIslemFormuDoldur();
-            htIslemleriGoster();
-            htDurumGuncelle();
-            if(HT_AKTIF_DETAY_HESAP === id) htHesapDetayKapat();
-            tmNotify("Hesap silindi.", "success");
+            tmConfirm("Bu hesabı silmek istediğinize emin misiniz?", function() {
+                var db = htVeriYukle();
+                db.hesaplar = db.hesaplar.filter(function(h){return h.id!==id;});
+                db.islemler = db.islemler.filter(function(i){return i.hesapId!==id;});
+                htVeriKaydet(db);
+                htHesapKartlariGoster();
+                htNakitKartGoster();
+                htYeniIslemFormuDoldur();
+                htIslemleriGoster();
+                htDurumGuncelle();
+                if(HT_AKTIF_DETAY_HESAP === id) htHesapDetayKapat();
+                tmNotify("Hesap silindi.", "success");
+            });
         }
 
         function htNakitKartGoster() {
@@ -5025,18 +5063,19 @@
         }
 
         function htIslemSil(id) {
-            if(!confirm("Bu hareketi silmek istediğinize emin misiniz?")) return;
-            var db = htVeriYukle();
-            var sil = db.islemler.find(function(i){return i.id===id;});
-            if(sil) htIslemTersineCevir(db, sil);
-            db.islemler = db.islemler.filter(function(i){return i.id!==id;});
-            htVeriKaydet(db);
-            htHesapKartlariGoster();
-            htNakitKartGoster();
-            htIslemleriGoster();
-            if(HT_AKTIF_DETAY_HESAP !== null) htDetayIslemleriGoster();
-            htDurumGuncelle();
-            tmNotify("Hareket silindi.", "success");
+            tmConfirm("Bu hareketi silmek istediğinize emin misiniz?", function() {
+                var db = htVeriYukle();
+                var sil = db.islemler.find(function(i){return i.id===id;});
+                if(sil) htIslemTersineCevir(db, sil);
+                db.islemler = db.islemler.filter(function(i){return i.id!==id;});
+                htVeriKaydet(db);
+                htHesapKartlariGoster();
+                htNakitKartGoster();
+                htIslemleriGoster();
+                if(HT_AKTIF_DETAY_HESAP !== null) htDetayIslemleriGoster();
+                htDurumGuncelle();
+                tmNotify("Hareket silindi.", "success");
+            });
         }
 
         var HT_SIRALAMA = { anahtar: "id", yon: -1 };
@@ -5197,12 +5236,13 @@
         }
 
         function tmFiyatSatirSil(id) {
-            if(!confirm("Bu fiyat satırını silmek istediğinize emin misiniz?")) return;
-            let db = tmFiyatVerileriniYukle();
-            db = db.filter(k => k.id !== id);
-            localStorage.setItem("tm_fiyat_listesi_db", JSON.stringify(db));
-            tmFiyatListesiniYenile();
-            tmNotify("Fiyat satırı silindi.", "success");
+            tmConfirm("Bu fiyat satırını silmek istediğinize emin misiniz?", function() {
+                let db = tmFiyatVerileriniYukle();
+                db = db.filter(k => k.id !== id);
+                localStorage.setItem("tm_fiyat_listesi_db", JSON.stringify(db));
+                tmFiyatListesiniYenile();
+                tmNotify("Fiyat satırı silindi.", "success");
+            });
         }
 
         function tmFiyatYeniSatir() {
@@ -5215,11 +5255,12 @@
         }
 
         function tmFiyatlariSifirla() {
-            if(!confirm("Tüm fiyat listesini varsayılan değerlere sıfırlamak istediğinize emin misiniz?")) return;
-            const db = TM_FIYAT_VARSAYILAN.map((item, idx) => ({ id: idx + 1, ...item }));
-            localStorage.setItem("tm_fiyat_listesi_db", JSON.stringify(db));
-            tmFiyatListesiniYenile();
-            tmNotify("Fiyat listesi varsayılan değerlere sıfırlandı.", "success");
+            tmConfirm("Tüm fiyat listesini varsayılan değerlere sıfırlamak istediğinize emin misiniz?", function() {
+                const db = TM_FIYAT_VARSAYILAN.map((item, idx) => ({ id: idx + 1, ...item }));
+                localStorage.setItem("tm_fiyat_listesi_db", JSON.stringify(db));
+                tmFiyatListesiniYenile();
+                tmNotify("Fiyat listesi varsayılan değerlere sıfırlandı.", "success");
+            });
         }
 
         function tmFiyatHesapla() {
@@ -5338,18 +5379,20 @@
 
         function tmfSayfaEkle() {
             if (tmfEditing) { tmNotify("Önce değişiklikleri kaydedin veya iptal edin.", "error"); return; }
-            const pages = tmfSayfalarYukle();
-            const maxId = pages.reduce((m, p) => Math.max(m, p.id), 0);
-            const yeniId = maxId + 1;
-            const name = prompt("Yeni sayfa adı:");
-            if (!name || name.trim() === "") return;
-            pages.push({ id: yeniId, name: name.trim() });
-            tmfSayfalarKaydet(pages);
-            var obj = { grid: [["","",""],["","",""],["","",""],["","",""],["","",""]], colWidths: [120,180,180], rowHeights: [] };
-            localStorage.setItem(TMF_DATA_PREFIX + yeniId, JSON.stringify(obj));
-            tmfAktifId = yeniId;
-            tmfSayfayiYukle();
-            tmNotify("Yeni sayfa eklendi: " + name.trim(), "success");
+            tmPrompt("Yeni sayfa adı:", function(name) {
+                if (!name || name.trim() === "") return;
+                name = name.trim();
+                const pages = tmfSayfalarYukle();
+                const maxId = pages.reduce((m, p) => Math.max(m, p.id), 0);
+                const yeniId = maxId + 1;
+                pages.push({ id: yeniId, name: name });
+                tmfSayfalarKaydet(pages);
+                var obj = { grid: [["","",""],["","",""],["","",""],["","",""],["","",""]], colWidths: [120,180,180], rowHeights: [] };
+                localStorage.setItem(TMF_DATA_PREFIX + yeniId, JSON.stringify(obj));
+                tmfAktifId = yeniId;
+                tmfSayfayiYukle();
+                tmNotify("Yeni sayfa eklendi: " + name, "success");
+            });
         }
 
         function tmfSayfaSil(id) {
@@ -5357,13 +5400,14 @@
             const pages = tmfSayfalarYukle();
             const p = pages.find(x => x.id === id);
             if (!p) return;
-            if (!confirm('"' + p.name + '" sayfasını silmek istediğinize emin misiniz?')) return;
-            const yeniPages = pages.filter(x => x.id !== id);
-            tmfSayfalarKaydet(yeniPages);
-            localStorage.removeItem(TMF_DATA_PREFIX + id);
-            if (tmfAktifId === id) tmfAktifId = yeniPages.length > 0 ? yeniPages[0].id : null;
-            tmfSayfayiYukle();
-            tmNotify("Sayfa silindi.", "success");
+            tmConfirm('"' + p.name + '" sayfasını silmek istediğinize emin misiniz?', function() {
+                const yeniPages = pages.filter(x => x.id !== id);
+                tmfSayfalarKaydet(yeniPages);
+                localStorage.removeItem(TMF_DATA_PREFIX + id);
+                if (tmfAktifId === id) tmfAktifId = yeniPages.length > 0 ? yeniPages[0].id : null;
+                tmfSayfayiYukle();
+                tmNotify("Sayfa silindi.", "success");
+            });
         }
 
         function tmfSayfaYenidenAdlandir(id) {
@@ -5371,12 +5415,13 @@
             const pages = tmfSayfalarYukle();
             const p = pages.find(x => x.id === id);
             if (!p) return;
-            const yeniAd = prompt("Yeni sayfa adı:", p.name);
-            if (!yeniAd || yeniAd.trim() === "" || yeniAd.trim() === p.name) return;
-            p.name = yeniAd.trim();
-            tmfSayfalarKaydet(pages);
-            tmfSayfayiYukle();
-            tmNotify("Sayfa adı değiştirildi.", "success");
+            tmPrompt("Yeni sayfa adı:", function(yeniAd) {
+                if (!yeniAd || yeniAd.trim() === "" || yeniAd.trim() === p.name) return;
+                p.name = yeniAd.trim();
+                tmfSayfalarKaydet(pages);
+                tmfSayfayiYukle();
+                tmNotify("Sayfa adı değiştirildi.", "success");
+            });
         }
 
         function tmfSutunHarfi(n) {
@@ -5566,17 +5611,18 @@
 
         function tmfSatirSil(id, r) {
             if (!tmfEditing) return;
-            if (!confirm((r + 1) + ". satırı silmek istediğinize emin misiniz?")) return;
-            var data = tmfVeriYukle(id);
-            data.grid.splice(r, 1);
-            if (data.rowHeights) data.rowHeights.splice(r, 1);
-            if (data.grid.length === 0) {
-                var bosSatir = [];
-                for (var i = 0; i < data.colWidths.length; i++) bosSatir.push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
-                data.grid.push(bosSatir);
-            }
-            tmfVeriKaydet(id, data);
-            tmfExcelGoster(id);
+            tmConfirm((r + 1) + ". satırı silmek istediğinize emin misiniz?", function() {
+                var data = tmfVeriYukle(id);
+                data.grid.splice(r, 1);
+                if (data.rowHeights) data.rowHeights.splice(r, 1);
+                if (data.grid.length === 0) {
+                    var bosSatir = [];
+                    for (var i = 0; i < data.colWidths.length; i++) bosSatir.push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
+                    data.grid.push(bosSatir);
+                }
+                tmfVeriKaydet(id, data);
+                tmfExcelGoster(id);
+            });
         }
 
         function tmfSutunEkle(id) {
@@ -5590,16 +5636,17 @@
 
         function tmfSutunSil(id, c) {
             if (!tmfEditing) return;
-            if (!confirm(tmfSutunHarfi(c) + " sütununu silmek istediğinize emin misiniz?")) return;
-            var data = tmfVeriYukle(id);
-            data.colWidths.splice(c, 1);
-            for (var r = 0; r < data.grid.length; r++) data.grid[r].splice(c, 1);
-            if (data.colWidths.length === 0) {
-                data.colWidths.push(120);
-                for (var r = 0; r < data.grid.length; r++) data.grid[r].push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
-            }
-            tmfVeriKaydet(id, data);
-            tmfExcelGoster(id);
+            tmConfirm(tmfSutunHarfi(c) + " sütununu silmek istediğinize emin misiniz?", function() {
+                var data = tmfVeriYukle(id);
+                data.colWidths.splice(c, 1);
+                for (var r = 0; r < data.grid.length; r++) data.grid[r].splice(c, 1);
+                if (data.colWidths.length === 0) {
+                    data.colWidths.push(120);
+                    for (var r = 0; r < data.grid.length; r++) data.grid[r].push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
+                }
+                tmfVeriKaydet(id, data);
+                tmfExcelGoster(id);
+            });
         }
 
         function tmfColResizeB(e, id, colIdx) {
@@ -5743,30 +5790,33 @@
         }
 
         function faturaYilDegistir(yil) {
-            if (yil === "ozel") {
-                var girilen = prompt("Gitmek istediğiniz yılı giriniz (ör: 2025):");
-                if (!girilen || isNaN(parseInt(girilen))) { faturaSayfayiYukle(); return; }
-                yil = parseInt(girilen);
+            function _faturaYilAyarla(vyil) {
                 var sec = document.getElementById("ftYilSec");
                 if (sec) {
                     var mevcut = false;
-                    for (var i = 0; i < sec.options.length; i++) { if (sec.options[i].value == yil) { mevcut = true; break; } }
+                    for (var i = 0; i < sec.options.length; i++) { if (sec.options[i].value == vyil) { mevcut = true; break; } }
                     if (!mevcut) {
                         var o = document.createElement("option");
-                        o.value = yil; o.textContent = yil;
+                        o.value = vyil; o.textContent = vyil;
                         sec.insertBefore(o, sec.lastElementChild);
                     }
-                    sec.value = yil;
+                    sec.value = vyil;
                 }
-            } else {
-                yil = parseInt(yil);
+                var db = ftDbYukle();
+                db.aktifYil = vyil;
+                var y = String(vyil);
+                if (!db.yillar[y]) db.yillar[y] = { gelenFaturalar: [], gidenFaturalar: [], vergiEtkinlikleri: [], odenmisVergiler: [] };
+                ftDbKaydet(db);
+                faturaSayfayiYukle();
             }
-            var db = ftDbYukle();
-            db.aktifYil = yil;
-            var y = String(yil);
-            if (!db.yillar[y]) db.yillar[y] = { gelenFaturalar: [], gidenFaturalar: [], vergiEtkinlikleri: [], odenmisVergiler: [] };
-            ftDbKaydet(db);
-            faturaSayfayiYukle();
+            if (yil === "ozel") {
+                tmPrompt("Gitmek istediğiniz yılı giriniz (ör: 2025):", function(girilen) {
+                    if (!girilen || isNaN(parseInt(girilen))) { faturaSayfayiYukle(); return; }
+                    _faturaYilAyarla(parseInt(girilen));
+                });
+            } else {
+                _faturaYilAyarla(parseInt(yil));
+            }
         }
 
         function faturaOzetGuncelle() {
@@ -5877,12 +5927,13 @@
         }
 
         function ftGelenSil(id) {
-            if (!confirm("Bu faturayı silmek istediğinize emin misiniz?")) return;
-            var yv = ftYilVerisi();
-            yv.data.gelenFaturalar = yv.data.gelenFaturalar.filter(function(x){return x.id !== id;});
-            ftDbKaydet(yv.db);
-            ftGelenGoster(); ftKdvGoster(); faturaOzetGuncelle();
-            tmNotify("Gelen fatura silindi.", "success");
+            tmConfirm("Bu faturayı silmek istediğinize emin misiniz?", function() {
+                var yv = ftYilVerisi();
+                yv.data.gelenFaturalar = yv.data.gelenFaturalar.filter(function(x){return x.id !== id;});
+                ftDbKaydet(yv.db);
+                ftGelenGoster(); ftKdvGoster(); faturaOzetGuncelle();
+                tmNotify("Gelen fatura silindi.", "success");
+            });
         }
 
         function ftGelenGoster() {
@@ -5980,12 +6031,13 @@
         }
 
         function ftGidenSil(id) {
-            if (!confirm("Bu faturayı silmek istediğinize emin misiniz?")) return;
-            var yv = ftYilVerisi();
-            yv.data.gidenFaturalar = yv.data.gidenFaturalar.filter(function(x){return x.id !== id;});
-            ftDbKaydet(yv.db);
-            ftGidenGoster(); ftKdvGoster(); faturaOzetGuncelle();
-            tmNotify("Giden fatura silindi.", "success");
+            tmConfirm("Bu faturayı silmek istediğinize emin misiniz?", function() {
+                var yv = ftYilVerisi();
+                yv.data.gidenFaturalar = yv.data.gidenFaturalar.filter(function(x){return x.id !== id;});
+                ftDbKaydet(yv.db);
+                ftGidenGoster(); ftKdvGoster(); faturaOzetGuncelle();
+                tmNotify("Giden fatura silindi.", "success");
+            });
         }
 
         function ftGidenGoster() {
@@ -6089,11 +6141,12 @@
         }
 
         function ftOdenenVergiSil(id) {
-            if (!confirm("Bu vergi kaydını silmek istediğinize emin misiniz?")) return;
-            var yv = ftYilVerisi();
-            yv.data.odenmisVergiler = yv.data.odenmisVergiler.filter(function(x){return x.id !== id;});
-            ftDbKaydet(yv.db); ftOdenenVergiGoster(); faturaOzetGuncelle();
-            tmNotify("Vergi kaydı silindi.", "success");
+            tmConfirm("Bu vergi kaydını silmek istediğinize emin misiniz?", function() {
+                var yv = ftYilVerisi();
+                yv.data.odenmisVergiler = yv.data.odenmisVergiler.filter(function(x){return x.id !== id;});
+                ftDbKaydet(yv.db); ftOdenenVergiGoster(); faturaOzetGuncelle();
+                tmNotify("Vergi kaydı silindi.", "success");
+            });
         }
 
         function ftOdenenVergiGoster() {
@@ -6216,11 +6269,12 @@
         }
 
         function ftTakvimSil(id) {
-            if (!confirm("Bu etkinliği silmek istediğinize emin misiniz?")) return;
-            var yv = ftYilVerisi();
-            yv.data.vergiEtkinlikleri = yv.data.vergiEtkinlikleri.filter(function(x){return x.id !== id;});
-            ftDbKaydet(yv.db); ftTakvimGoster();
-            tmNotify("Etkinlik silindi.", "success");
+            tmConfirm("Bu etkinliği silmek istediğinize emin misiniz?", function() {
+                var yv = ftYilVerisi();
+                yv.data.vergiEtkinlikleri = yv.data.vergiEtkinlikleri.filter(function(x){return x.id !== id;});
+                ftDbKaydet(yv.db); ftTakvimGoster();
+                tmNotify("Etkinlik silindi.", "success");
+            });
         }
 
         function ftTakvimTamamla(id) {
@@ -6230,7 +6284,7 @@
         }
 
         function yeniVergiTuruEklePrompt() {
-            var yeni = prompt("Yeni vergi türü adını giriniz:");
+            tmPrompt("Yeni vergi türü adını giriniz:", function(yeni) {
             if (!yeni || !yeni.trim()) return;
             yeni = yeni.trim().toUpperCase();
             if (SABIT_VERGI_TURLERI.some(function(t){return t.toUpperCase() === yeni;})) {
@@ -6240,6 +6294,7 @@
             localStorage.setItem("tm_vergi_turleri_v1", JSON.stringify(SABIT_VERGI_TURLERI));
             ftTakvimFormAc();
             tmNotify("Vergi türü eklendi: " + yeni, "success");
+            });
         }
 
         function vergiTuruSilPrompt() {
@@ -6249,11 +6304,12 @@
             if (["KDV","Gelir Vergisi","Kurumlar Vergisi","Stopaj","Damga Vergisi","Diğer"].indexOf(val) !== -1) {
                 tmNotify("Varsayılan türler silinemez!", "error"); return;
             }
-            if (!confirm('"' + val + '" türünü silmek istediğinize emin misiniz?')) return;
-            SABIT_VERGI_TURLERI = SABIT_VERGI_TURLERI.filter(function(t){return t !== val;});
-            localStorage.setItem("tm_vergi_turleri_v1", JSON.stringify(SABIT_VERGI_TURLERI));
-            ftTakvimFormAc();
-            tmNotify("Vergi türü silindi: " + val, "success");
+            tmConfirm('"' + val + '" türünü silmek istediğinize emin misiniz?', function() {
+                SABIT_VERGI_TURLERI = SABIT_VERGI_TURLERI.filter(function(t){return t !== val;});
+                localStorage.setItem("tm_vergi_turleri_v1", JSON.stringify(SABIT_VERGI_TURLERI));
+                ftTakvimFormAc();
+                tmNotify("Vergi türü silindi: " + val, "success");
+            });
         }
 
         function ftTakvimGoster() {
@@ -7440,12 +7496,13 @@ function itDurumMetni(o) {
             if (idx === -1) return;
             if (liste[idx].tur !== "Taslak" && !liste[idx].tahsilatOnayi) { tmNotify("Önce tahsilat onayı verilmelidir!", "error"); return; }
             if (liste[idx].tur === "Uygulama Proje" && !liste[idx].ruhsatOnayi) { tmNotify("Önce ruhsat onayı alınmalıdır!", "error"); return; }
-            if (!confirm("Bu işi tamamlandı olarak işaretlemek istediğinize emin misiniz?")) return;
-            liste[idx].tamamlandi = true;
-            liste[idx].bitisTarihi = anlikTarihGetir();
-            itDbKaydet(liste);
-            itGoster();
-            tmNotify("İş tamamlandı olarak işaretlendi.", "success");
+            tmConfirm("Bu işi tamamlandı olarak işaretlemek istediğinize emin misiniz?", function() {
+                liste[idx].tamamlandi = true;
+                liste[idx].bitisTarihi = anlikTarihGetir();
+                itDbKaydet(liste);
+                itGoster();
+                tmNotify("İş tamamlandı olarak işaretlendi.", "success");
+            });
         }
 
         function itDuzenle(id) {
@@ -7455,12 +7512,13 @@ function itDurumMetni(o) {
         }
 
         function itSil(id) {
-            if (!confirm("Bu kaydı silmek istediğinize emin misiniz?")) return;
-            var liste = itDbYukle();
-            liste = liste.filter(function(x){return x.id !== id;});
-            itDbKaydet(liste);
-            itGoster();
-            tmNotify("Kayıt silindi.", "success");
+            tmConfirm("Bu kaydı silmek istediğinize emin misiniz?", function() {
+                var liste = itDbYukle();
+                liste = liste.filter(function(x){return x.id !== id;});
+                itDbKaydet(liste);
+                itGoster();
+                tmNotify("Kayıt silindi.", "success");
+            });
         }
 
 
@@ -7687,7 +7745,7 @@ function itDurumMetni(o) {
                     doc.save("DILEKCE_" + (typeof v.id === 'number' ? String(v.id).padStart(4, '0') : "TASLAK") + ".pdf");
                     document.body.removeChild(sayfaEl);
                 }).catch(function(e) {
-                    alert('PDF HATA: ' + (e.message || e));
+                    tmAlert('PDF HATA: ' + (e.message || e));
                     try { document.body.removeChild(sayfaEl); } catch(e) {}
                 });
             }
@@ -7805,12 +7863,13 @@ function itDurumMetni(o) {
         }
 
         function dlkSil(id) {
-            if (!confirm("Bu dilekçeyi silmek istediğinize emin misiniz?")) return;
-            var db = dlkDbYukle();
-            db = db.filter(function(d) { return d.id !== id; });
-            dlkDbKaydet(db);
-            dlkListele();
-            tmNotify("Dilekçe silindi.", "success");
+            tmConfirm("Bu dilekçeyi silmek istediğinize emin misiniz?", function() {
+                var db = dlkDbYukle();
+                db = db.filter(function(d) { return d.id !== id; });
+                dlkDbKaydet(db);
+                dlkListele();
+                tmNotify("Dilekçe silindi.", "success");
+            });
         }
 
         /* ---------- Ortak Yardımcılar ---------- */

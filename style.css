@@ -224,10 +224,12 @@
         
         .btn-save-green { background: var(--btn-green); color: white; }
         .btn-save-green:hover { background: #1B5E20; }
-        .btn-pdf-red { background: var(--accent-red); color: white; }
-        .btn-pdf-red:hover { background: #822223; }
-        .btn-clear-gray { background: var(--btn-gray); color: white; }
-        .btn-clear-gray:hover { background: #494F54; }
+.btn-pdf-red { background: var(--accent-red); color: white; }
+.btn-pdf-red:hover { background: #822223; }
+.btn-red { background: var(--accent-red); color: white; }
+.btn-red:hover { background: #822223; }
+.btn-clear-gray { background: var(--btn-gray); color: white; }
+.btn-clear-gray:hover { background: #494F54; }
 
         .yb-sekme-bar { display:flex; gap:4px; margin-bottom:15px; flex-wrap:wrap; }
         .yb-sekme { padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600; font-size:12px; background:var(--btn-gray); color:white; transition:0.2s; user-select:none; }
