@@ -379,6 +379,13 @@
         .as-btn-cancel:hover { background:var(--panel-bg); border-color:var(--accent-red); }
         .as-btn-delete { background:linear-gradient(135deg, #9e2a2b, #c0392b); color:#fff; border:none; padding:9px 22px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; }
         .as-btn-delete:hover { filter:brightness(1.1); }
+        .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10001; display:flex; justify-content:center; align-items:center; backdrop-filter:blur(4px); }
+        .modal-box { background:var(--panel-bg); border-radius:14px; max-width:420px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.4); overflow:hidden; animation:asModalIn 0.25s ease; }
+        .modal-header { background:var(--accent-red); padding:16px 20px; }
+        .modal-header h3 { margin:0; font-size:14px; font-weight:800; letter-spacing:1px; color:#fff; }
+        .modal-body { padding:24px 20px; }
+        .modal-body p { margin:0; font-size:14px; color:var(--text-dark); line-height:1.6; }
+        .modal-actions { padding:0 20px 20px; display:flex; gap:10px; justify-content:flex-end; }
         .as-tbl { width:100%; table-layout:fixed; border-collapse:collapse; font-size:12px; }
         .as-tbl th { padding:5px 2px; text-align:center; font-size:9px; color:var(--text-light); border-bottom:2px solid var(--border-color); font-weight:700; letter-spacing:0.3px; }
         .as-tbl td { padding:2px 1px; text-align:center; vertical-align:top; border:1px solid var(--border-color); position:relative; overflow:hidden; height:46px; max-height:46px; }
@@ -2110,6 +2117,17 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         </div>
     </div>
 
+            <!-- ÖZEL ONAY MODAL -->
+            <div id="tmConfirmOverlay" class="modal-overlay" style="display:none;">
+                <div class="modal-box">
+                    <div class="modal-header"><h3 id="tmConfirmTitle">ONAY</h3></div>
+                    <div class="modal-body"><p id="tmConfirmMsg"></p></div>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" id="tmConfirmCancel">Hayır</button>
+                        <button class="btn btn-red" id="tmConfirmOk">Evet</button>
+                    </div>
+                </div>
+            </div>
             <!-- ANA SAYFA GÜN BİLGİ MODAL -->
             <div id="asGunInfoModal" class="as-modal-overlay" style="display:none;">
                 <div class="as-modal-box" style="max-width:380px;">
@@ -3153,12 +3171,19 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         }
 
         var tmFormDirty = false;
+        var tmPendingNav = null;
         function tmFormTemizle() { tmFormDirty = false; }
         document.addEventListener('input', function(e) {
             if (!tmFormDirty && e.target && e.target.closest && e.target.closest('.page.active')) tmFormDirty = true;
         });
+        function tmConfirm(msg, onEvet) {
+            document.getElementById("tmConfirmMsg").textContent = msg;
+            document.getElementById("tmConfirmOverlay").style.display = "flex";
+            document.getElementById("tmConfirmOk").onclick = function() { document.getElementById("tmConfirmOverlay").style.display = "none"; if (onEvet) onEvet(); };
+            document.getElementById("tmConfirmCancel").onclick = function() { document.getElementById("tmConfirmOverlay").style.display = "none"; };
+        }
         function menudenSayfaAc(yetkiKodu, pageId, element) {
-            if (tmFormDirty && !confirm("Bu sayfadan ayrılırken kaydedilmemiş değişiklikler varsa kaybolacak. Yine de çıkmak istiyor musunuz?")) return;
+            if (tmFormDirty) { tmConfirm("Bu sayfadan ayrılırken kaydedilmemiş değişiklikler kaybolacak. Yine de çıkmak istiyor musunuz?", function() { tmFormDirty = false; menudenSayfaAc(yetkiKodu, pageId, element); }); return; }
             sidebarAc();
             document.querySelectorAll(".page-lock-overlay").forEach(lock => lock.classList.remove("active"));
             document.getElementById("lockPopupOverlay").classList.remove("active");
