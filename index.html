@@ -3181,6 +3181,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                 el.innerHTML = '';
             }
         }
+        multiLogolariFirebaseCek();
         loginLogoyuGoster();
         tmOnlinePullBaslat();
         window.addEventListener("beforeunload", function() {
@@ -3824,9 +3825,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                     var data = canvas.toDataURL("image/png");
                     localStorage.setItem("tm_multi_logo_" + num, data);
                     document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
-            if (num === 3) sidebardaLogoyuGoster();
-            if (num === 4) loginLogoyuGoster();
-                    if (num === 4) loginLogoyuGoster();
+            if (num === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
                     if (typeof fdb !== 'undefined') {
                         fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
                             tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
@@ -3857,8 +3856,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                                 localStorage.setItem("tm_multi_logo_" + idx, raw);
                                 var preview = document.getElementById("mlPreview" + idx);
                                 if (preview) preview.innerHTML = '<img src="' + raw + '" alt="Logo ' + idx + '">';
-                                if (idx === 3) sidebardaLogoyuGoster();
-                                if (idx === 4) loginLogoyuGoster();
+                                if (idx === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
                             }
                         }
                     }).catch(function(e){ console.error("multiLogolariFirebaseCek", idx, e); });
