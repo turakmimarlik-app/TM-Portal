@@ -952,7 +952,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
 <body>
     <div id="loginSection" class="login-wrapper">
         <div class="login-logo-left" id="loginLogo"></div>
-        <div class="login-card">
+        <div class="login-card" id="loginCardGiris">
             <h2>TM-Portal</h2>
             <div class="portal-sub">Yönetim Sistemi</div>
             <div class="login-form-group">
@@ -965,6 +965,25 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
             </div>
             <button class="btn-login" onclick="sistemeGirisYap()">Giriş Yap</button>
             <div id="loginError" class="login-error">Kullanıcı adı veya şifre hatalı!</div>
+        </div>
+        <div class="login-card" id="loginCardKurulum" style="display:none;">
+            <h2>TM-Portal</h2>
+            <div class="portal-sub">İlk Kurulum</div>
+            <p style="font-size:13px; color:#a0aec0; margin-bottom:15px; text-align:center;">Henüz bir yönetici hesabı oluşturulmamış. Lütfen kurucu admin bilgilerini girin.</p>
+            <div class="login-form-group">
+                <label>Kurucu Kullanıcı Adı</label>
+                <input type="text" id="setupUser" autocomplete="off" class="force-uppercase">
+            </div>
+            <div class="login-form-group">
+                <label>Şifre</label>
+                <input type="text" id="setupPass" style="text-transform:none;">
+            </div>
+            <div class="login-form-group">
+                <label>Ünvan / Görev</label>
+                <input type="text" id="setupTitle" value="KURUCU">
+            </div>
+            <button class="btn-login" onclick="kurulumuTamamla()">Kurulumu Tamamla</button>
+            <div id="setupError" class="login-error"></div>
         </div>
     </div>
 
@@ -2701,10 +2720,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         document.getElementById('ndTarih').value = anlikTarihGetir();
         document.getElementById('isMuhAnlasmaTarihi').value = anlikTarihGetir();
 
-        if (!localStorage.getItem("tm_admin_creds_final")) {
-            const defaultMaster = { pass: "Tgy.8998", title: "KURUCU" };
-            localStorage.setItem("tm_admin_creds_final", JSON.stringify(defaultMaster));
-        }
+        if (!localStorage.getItem("tm_admin_creds_final")) {}
         
     if (!localStorage.getItem("tm_users_final_v8")) {
         try { origSetItem("tm_users_final_v8", JSON.stringify([])); } catch(e) { localStorage.setItem("tm_users_final_v8", JSON.stringify([])); }
@@ -3003,19 +3019,32 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                 callback(true);
             });
         }
+        function kurulumuTamamla() {
+            const usr = document.getElementById("setupUser").value.trim().toUpperCase();
+            const pas = document.getElementById("setupPass").value.trim();
+            const ttl = document.getElementById("setupTitle").value.trim() || "KURUCU";
+            const err = document.getElementById("setupError");
+            if (!usr || !pas) { if (err) { err.textContent = "Kullanıcı adı ve şifre boş bırakılamaz!"; err.style.display = "block"; } return; }
+            localStorage.setItem("tm_admin_creds_final", JSON.stringify({ usr: usr, pass: pas, title: ttl }));
+            document.getElementById("loginCardKurulum").style.display = "none";
+            document.getElementById("loginCardGiris").style.display = "block";
+            document.getElementById("loginUser").value = usr;
+            document.getElementById("loginPass").value = pas;
+            sistemeGirisYap();
+        }
         function sistemeGirisYap() {
             const inputUser = document.getElementById("loginUser").value.trim().toUpperCase();
             const inputPass = document.getElementById("loginPass").value.trim();
             const errorDiv = document.getElementById("loginError");
             if (errorDiv) errorDiv.style.display = "none";
             var master = JSON.parse(localStorage.getItem("tm_admin_creds_final"));
-            if (!master) { master = {usr:"TUGAYTURAK",pass:"Tgy.8998"}; localStorage.setItem("tm_admin_creds_final",JSON.stringify(master)); }
+            if (!master) { document.getElementById("loginCardGiris").style.display = "none"; document.getElementById("loginCardKurulum").style.display = "block"; return; }
 
             var hedefKullanici = null;
             var hedefYetkiler = null;
 
-            if (inputUser === "TUGAYTURAK" && inputPass === master.pass) {
-                hedefKullanici = "TUGAYTURAK";
+            if (inputUser === (master.usr || "TUGAYTURAK") && inputPass === master.pass) {
+                hedefKullanici = master.usr || "TUGAYTURAK";
                 hedefYetkiler = (function(){
                     var all = [];
                     TM_YETKI_TANIMLARI.forEach(function(g){
@@ -3990,7 +4019,8 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                 const secilenYetkiler = yetkiSecilenleriTopla();
 
                 if (editIndex === "master_tugay") {
-                    const master = { pass: pas, title: trToUpper(ttl) };
+                    const mevcut = JSON.parse(localStorage.getItem("tm_admin_creds_final")) || {};
+                    const master = { usr: mevcut.usr || "TUGAYTURAK", pass: pas, title: trToUpper(ttl) };
                     localStorage.setItem("tm_admin_creds_final", JSON.stringify(master));
                     tmNotify("KURUCU ADMİN PROFİLİ BAŞARIYLA GÜNCELLENDİ.", "success");
                     formSifirla(); kullaniciListesiniYenile(); sidebarKullanicilariYenile(); return;
@@ -3998,7 +4028,8 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
 
                 let altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
                 if (editIndex === "-1") {
-                    if (usr === "TUGAYTURAK" || altKullanicilar.some(function(u){ return u.usr === usr; })) {
+                    var masterAd = (JSON.parse(localStorage.getItem("tm_admin_creds_final")) || {}).usr || "TUGAYTURAK";
+                    if (usr === masterAd || altKullanicilar.some(function(u){ return u.usr === usr; })) {
                         tmNotify("Bu kullanıcı adı sistemde zaten mevcut!", "error"); return;
                     }
                     altKullanicilar.push({ usr: usr, pas: pas, title: trToUpper(ttl), yetkiler: secilenYetkiler });
