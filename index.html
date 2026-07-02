@@ -948,8 +948,8 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
     </style>
 </head>
 <body>
-<div id="tmLoadingOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#212832;z-index:99999;align-items:center;justify-content:center;flex-direction:column;color:white;font-family:Montserrat,sans-serif;"><div style="border:4px solid rgba(255,255,255,0.1);border-top:4px solid #E53935;border-radius:50%;width:44px;height:44px;animation:tmSpin 1s linear infinite;margin-bottom:22px;"></div><div style="font-size:20px;font-weight:800;letter-spacing:2px;">TM-PORTAL</div><div style="font-size:13px;color:#a0aec0;margin-top:10px;font-weight:400;">Sayfa yükleniyor...</div><style>@keyframes tmSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style></div>
-<script>(function(){if(sessionStorage.getItem('tm_page_loading')){sessionStorage.removeItem('tm_page_loading');var e=document.getElementById('tmLoadingOverlay');if(e)e.style.display='flex';}})();</script>
+<div id="tmLoadingOverlay" style="display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:#212832;z-index:99999;align-items:center;justify-content:center;flex-direction:column;color:white;font-family:Montserrat,sans-serif;"><div style="border:4px solid rgba(255,255,255,0.1);border-top:4px solid #E53935;border-radius:50%;width:44px;height:44px;animation:tmSpin 1s linear infinite;margin-bottom:22px;"></div><div style="font-size:20px;font-weight:800;letter-spacing:2px;">TM-PORTAL</div><div style="font-size:13px;color:#a0aec0;margin-top:10px;font-weight:400;">Sayfa yükleniyor...</div><style>@keyframes tmSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style></div>
+<script>(function(){sessionStorage.removeItem('tm_page_loading');})();</script>
 
     <div id="loginSection" class="login-wrapper">
         <div class="login-logo-left" id="loginLogo"></div>
@@ -2378,6 +2378,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                     oncekiKullanici = null;
                 }
             }
+            function overlayGizle() { var lo = document.getElementById('tmLoadingOverlay'); if(lo) lo.style.display = 'none'; }
             function oturumuRestoreEt(u) {
                 document.getElementById("loginSection").style.display = "none";
                 document.getElementById("portalSection").style.display = "block";
@@ -2410,6 +2411,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                     localStorage.removeItem("tm_active_user");
                     sessionStorage.removeItem("tm_session_active");
                 }
+                overlayGizle();
             }
             if (oncekiKullanici) {
                 if (typeof fdb !== 'undefined') {
@@ -2429,6 +2431,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                                 errorDiv.innerText = "⚠️ " + baskaAktif + " kullanıcısı aktif olduğu için oturumunuz sonlandırıldı.";
                                 errorDiv.style.display = "block";
                             }
+                            overlayGizle();
                         } else {
                             oturumuRestoreEt(oncekiKullanici);
                         }
@@ -2438,8 +2441,9 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                 } else {
                     oturumuRestoreEt(oncekiKullanici);
                 }
+            } else {
+                overlayGizle();
             }
-            var lo = document.getElementById('tmLoadingOverlay'); if(lo) lo.style.display = 'none';
             function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(e){e.stopPropagation();s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eşleşme bulunamadı)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');var wr=w.getBoundingClientRect();d.style.position='fixed';d.style.top=wr.bottom+'px';d.style.left=wr.left+'px';d.style.width=wr.width+'px';d.style.marginTop='-1px';d.style.borderTop='none';var sk=function(){var nr=w.getBoundingClientRect();d.style.top=nr.bottom+'px';d.style.left=nr.left+'px';};window.addEventListener('scroll',sk);d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;var cf=d.querySelector('.cs-birim-footer');if(cf)cf.remove();if(s.classList.contains('row-birim')){var cft=document.createElement('div');cft.className='cs-birim-footer';cft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';cft.innerHTML='<button onclick="event.stopPropagation();birimEklePrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;">+ YENİ</button><button onclick="event.stopPropagation();birimSilPrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;">- SİL</button>';d.appendChild(cft);}};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});
 
             const loginSection = document.getElementById("loginSection");
