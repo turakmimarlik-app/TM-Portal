@@ -2273,7 +2273,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                 }).catch(function(e) { console.warn('fsPollSdk', e.message); });
             }
             fsPollSdk();
-            setInterval(function() { fsPollSdk(); }, 2000);
+            setInterval(function() { fsPollSdk(); }, 30000);
             document.addEventListener('visibilitychange', function() {
                 if (!document.hidden) fsPollSdk();
             });
