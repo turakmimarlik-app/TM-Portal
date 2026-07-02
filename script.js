@@ -2737,7 +2737,7 @@
                 teklifListesiniYenile(); 
                 dashboardVerileriniGuncelle();
                 musteriKartlariniYenile();
-            } 
+            });
         }
         
         function teklifleriFiltrele() {
@@ -2877,7 +2877,7 @@
                 piyasaListesiniYenile();
                 dashboardVerileriniGuncelle();
                 isOrtaklariKartlariniYenile();
-            }
+            });
         }
 
         /* ================= İŞ MUHASEBESİ MOTORU ================= */
