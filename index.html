@@ -2081,7 +2081,10 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                         <input type="file" id="yedekYukleInput" accept=".json" style="display:none" onchange="tmYedekYukle(event)">
                         <button class="btn btn-primary" onclick="document.getElementById('yedekYukleInput').click()">📂 Yedek Yükle (Geri Yükle)</button>
                     </div>
-                    <div id="yedekMsg" style="margin-top:10px; font-size:12px; color:var(--text-light);"></div>
+                    <div style="margin-top:12px; font-size:12px; color:var(--text-light);">
+                        <span>📅 Son yedek: <strong id="sonYedekTarihi">-</strong></span>
+                    </div>
+                    <div id="yedekMsg" style="margin-top:6px; font-size:12px; color:var(--text-light);"></div>
                 </div>
             </div>
 
@@ -3172,7 +3175,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                 else if (pageId === 'dilekce-page') { dlkListele(); dlkIdGuncelle(); }
                 else if (pageId === 'tm-fiyatlar-page') { tmfSayfayiYukle(); }
                 else if (pageId === 'istakibi-page') { itGoster(); }
-                else if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); multiLogoGridRender(); }
+                else if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); multiLogoGridRender(); sonYedekTarihiGoster(); }
                 else if (pageId === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
             } catch(e) { console.warn('sayfa yenileme hatasi', e); }
             localStorage.setItem('tm_active_page', pageId);
@@ -3928,19 +3931,29 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
             }
         }
 
+        function sonYedekTarihiGoster() {
+            var span = document.getElementById("sonYedekTarihi");
+            if (!span) return;
+            var kayitli = localStorage.getItem("tm_son_yedek_zamani");
+            span.textContent = kayitli ? new Date(kayitli).toLocaleString('tr-TR') : "-";
+        }
         function tmYedekAl() {
             var data = {};
             for (var i = 0; i < localStorage.length; i++) {
                 var k = localStorage.key(i);
                 if (k && k.startsWith("tm_")) data[k] = localStorage.getItem(k);
             }
+            var simdi = new Date();
+            localStorage.setItem("tm_son_yedek_zamani", simdi.toISOString());
             var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             var a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'TM-Portal_Yedek_' + new Date().toISOString().slice(0,10) + '.json';
+            a.download = 'TM-Portal_Yedek_' + simdi.toISOString().slice(0,10) + '.json';
             a.click();
             URL.revokeObjectURL(a.href);
             document.getElementById("yedekMsg").textContent = "✅ Yedek başarıyla indirildi.";
+            var span = document.getElementById("sonYedekTarihi");
+            if (span) span.textContent = simdi.toLocaleString('tr-TR');
         }
         function tmYedekYukle(event) {
             var file = event.target.files[0];
