@@ -2072,6 +2072,17 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                         </table>
                     </div>
                 </div>
+
+                <div style="background:var(--bg-main); padding:20px; border-radius:8px; border:1px solid var(--border-color); margin-top:20px;">
+                    <h3>💾 Yedek & Geri Yükle</h3>
+                    <p style="font-size:13px; color:var(--text-light); margin-bottom:15px;">Tüm verileri JSON dosyası olarak dışa aktarır veya önceden aldığınız yedeği geri yükler.</p>
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <button class="btn btn-red" onclick="tmYedekAl()">📥 Yedek Al (Dışa Aktar)</button>
+                        <input type="file" id="yedekYukleInput" accept=".json" style="display:none" onchange="tmYedekYukle(event)">
+                        <button class="btn btn-primary" onclick="document.getElementById('yedekYukleInput').click()">📂 Yedek Yükle (Geri Yükle)</button>
+                    </div>
+                    <div id="yedekMsg" style="margin-top:10px; font-size:12px; color:var(--text-light);"></div>
+                </div>
             </div>
 
         </div>
@@ -3917,6 +3928,42 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
             }
         }
 
+        function tmYedekAl() {
+            var data = {};
+            for (var i = 0; i < localStorage.length; i++) {
+                var k = localStorage.key(i);
+                if (k && k.startsWith("tm_")) data[k] = localStorage.getItem(k);
+            }
+            var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'TM-Portal_Yedek_' + new Date().toISOString().slice(0,10) + '.json';
+            a.click();
+            URL.revokeObjectURL(a.href);
+            document.getElementById("yedekMsg").textContent = "✅ Yedek başarıyla indirildi.";
+        }
+        function tmYedekYukle(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    var data = JSON.parse(e.target.result);
+                    var sayac = 0;
+                    Object.keys(data).forEach(function(k) {
+                        if (k.startsWith("tm_")) {
+                            localStorage.setItem(k, data[k]);
+                            sayac++;
+                        }
+                    });
+                    document.getElementById("yedekMsg").textContent = "✅ " + sayac + " veri geri yüklendi. Sayfa yenileniyor...";
+                    setTimeout(function() { location.reload(); }, 1500);
+                } catch(err) {
+                    document.getElementById("yedekMsg").textContent = "❌ Hata: Geçersiz dosya.";
+                }
+            };
+            reader.readAsText(file);
+        }
         /* ================= PORTAL YÖNETİMİ ================= */
         function kullaniciKaydet() {
             try {
