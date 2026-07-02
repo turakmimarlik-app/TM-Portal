@@ -2417,7 +2417,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                         var baskaAktif = null;
                         snap.forEach(function(doc) {
                             var d = doc.data();
-                            if (d && d.onlineAt && d.onlineAt > Date.now() - 25000 && doc.id !== oncekiKullanici) {
+                            if (d && d.onlineAt && d.onlineAt > Date.now() - 6000 && doc.id !== oncekiKullanici) {
                                 baskaAktif = doc.id;
                             }
                         });
@@ -2961,7 +2961,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         }
         function tmOnlineKullaniciKontrol(kullanici, callback) {
             if (typeof fdb === 'undefined') { callback(true); return; }
-            var esik = Date.now() - 25000;
+            var esik = Date.now() - 6000;
             fdb.collection("tm_online").get().then(function(snap) {
                 var aktif = null;
                 snap.forEach(function(doc) {
@@ -4048,10 +4048,10 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
             const altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
             const simdi = Date.now();
             let html = "";
-            var tugayOnline = tmOnlineCache["TUGAYTURAK"] && (simdi - tmOnlineCache["TUGAYTURAK"]) < 30000;
+            var tugayOnline = tmOnlineCache["TUGAYTURAK"] && (simdi - tmOnlineCache["TUGAYTURAK"]) < 10000;
             html += '<div class="sidebar-user-item"><span class="user-status-dot ' + (tugayOnline ? "online" : "offline") + '"></span><span class="user-name">TUGAYTURAK</span><span class="user-title">' + (master.title || "KURUCU") + '</span></div>';
             altKullanicilar.forEach(function(u) {
-                var isOnline = tmOnlineCache[u.usr] && (simdi - tmOnlineCache[u.usr]) < 30000;
+                var isOnline = tmOnlineCache[u.usr] && (simdi - tmOnlineCache[u.usr]) < 10000;
                 html += '<div class="sidebar-user-item"><span class="user-status-dot ' + (isOnline ? "online" : "offline") + '"></span><span class="user-name">' + u.usr + '</span><span class="user-title">' + (u.title || "") + '</span></div>';
             });
             container.innerHTML = html;
@@ -4066,7 +4066,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                 fdb.collection("tm_online").doc(kullanici).set({ onlineAt: Date.now() }).catch(function(e){});
             }
             heartbeat();
-            tmOnlineHeartbeatTimer = setInterval(heartbeat, 10000);
+            tmOnlineHeartbeatTimer = setInterval(heartbeat, 3000);
         }
         function tmOnlineHeartbeatDurdur() {
             if (tmOnlineHeartbeatTimer) { clearInterval(tmOnlineHeartbeatTimer); tmOnlineHeartbeatTimer = null; }
@@ -4086,7 +4086,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
                 }).catch(function(e){});
             }
             pull();
-            tmOnlinePullTimer = setInterval(pull, 5000);
+            tmOnlinePullTimer = setInterval(pull, 3000);
         }
         function tmOnlineCikisYap(kullanici) {
             tmOnlineHeartbeatDurdur();
