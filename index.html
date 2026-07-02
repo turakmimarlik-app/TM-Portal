@@ -3152,7 +3152,13 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
             else { sub.classList.remove("open"); arrow.innerText = "▼"; try { origSetItem("tm_submenu_open", ""); } catch(e) {} }
         }
 
+        var tmFormDirty = false;
+        function tmFormTemizle() { tmFormDirty = false; }
+        document.addEventListener('input', function(e) {
+            if (!tmFormDirty && e.target && e.target.closest && e.target.closest('.page.active')) tmFormDirty = true;
+        });
         function menudenSayfaAc(yetkiKodu, pageId, element) {
+            if (tmFormDirty && !confirm("Bu sayfadan ayrılırken kaydedilmemiş değişiklikler varsa kaybolacak. Yine de çıkmak istiyor musunuz?")) return;
             sidebarAc();
             document.querySelectorAll(".page-lock-overlay").forEach(lock => lock.classList.remove("active"));
             document.getElementById("lockPopupOverlay").classList.remove("active");
