@@ -1344,7 +1344,20 @@
         </div>
     </div>
 
-    <script>document.querySelector('link[rel*="icon"]').href='tm-favicon.svg?'+Date.now();</script>
+    <script>
+    var lnk=document.querySelector('link[rel*="icon"]');
+    if(lnk){lnk.href='tm-favicon.svg?'+Date.now();}
+    try{
+        var c=document.createElement('canvas');c.width=32;c.height=32;
+        var x=c.getContext('2d');
+        x.fillStyle='#000';x.beginPath();x.arc(16,16,16,0,Math.PI*2);x.fill();
+        x.fillStyle='#E53935';x.font='bold 18px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText('TM',16,14);
+        x.strokeStyle='#FFF';x.lineWidth=1.5;x.beginPath();x.moveTo(7,22);x.lineTo(25,22);x.stroke();
+        var png=c.toDataURL('image/png');
+        var fl=document.createElement('link');fl.rel='icon';fl.type='image/png';fl.href=png;
+        document.head.appendChild(fl);
+    }catch(e){}
+    </script>
     <script src="script.js"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
