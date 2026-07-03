@@ -961,9 +961,7 @@
             }
             var subPageMap={"teklif-olustur-page":"teklif-submenu","teklif-liste-page":"teklif-submenu","piyasa-fiyatlari-page":"teklif-submenu","tm-fiyatlar-page":"teklif-submenu","musteriler-page":"portfoy-submenu","isortaklari-page":"portfoy-submenu","nakit-dekont-page":"muhasebe-submenu","is-muhasebe-olustur-page":"muhasebe-submenu","is-muhasebe-page":"muhasebe-submenu","tamamlanan-is-muhasebeleri-page":"muhasebe-submenu","hesap-takip-page":"muhasebe-submenu","fatura-takip-page":"muhasebe-submenu","yillik-butce-page":"muhasebe-submenu"};
             if (subPageMap[pageId]) { try { origSetItem("tm_submenu_open", subPageMap[pageId]); } catch(e) {} }
-            sessionStorage.setItem('tm_page_loading', '1');
-            localStorage.setItem('tm_active_page', pageId);
-            location.reload();
+            sayfaDegistir(pageId, element);
         }
         function kapatLockPopup() { document.getElementById("lockPopupOverlay").classList.remove("active"); }
 
