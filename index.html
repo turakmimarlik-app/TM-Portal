@@ -14,6 +14,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="pdf.css">
@@ -128,7 +129,7 @@
                 </div>
             </div>
             <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.85.0</div>
+                <div class="version-tag">V1.86.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1171,6 +1172,10 @@
                             <label>Ünvan / Görev:</label>
                             <input type="text" id="newTitle">
                         </div>
+                        <div class="col">
+                            <label>E-Posta (görev bildirimi için):</label>
+                            <input type="email" id="newEmail" placeholder="ornek@firma.com" style="text-transform:lowercase;">
+                        </div>
                     </div>
                     <div class="col" style="margin-bottom: 15px;">
                         <label>Erişebileceği Sayfalar (Yetkiler):</label>
@@ -1187,6 +1192,7 @@
                             <th>Kullanıcı Adı</th>
                             <th>Şifre</th>
                             <th>Ünvan / Görev</th>
+                            <th>E-Posta</th>
                             <th>Yetki Kodları</th>
                             <th>İşlem</th>
                         </tr>

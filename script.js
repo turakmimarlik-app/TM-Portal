@@ -1,7 +1,37 @@
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
 
-        /* --- Firebase Sync Katmani (verileri buluta yedekler) --- */
+        /* --- EmailJS - Gorev Bildirim Maili --- */
+var EMAILJS_CONFIG = {
+    publicKey: "YOUR_PUBLIC_KEY",  // https://dashboard.emailjs.com  -> Account -> API Keys
+    serviceId: "YOUR_SERVICE_ID",  // Email Services -> Add Service (Gmail/Outlook vb.)
+    templateId: "YOUR_TEMPLATE_ID" // Email Templates -> Create Template (variables: to_name, to_email, from_name, task_title, task_msg, task_date)
+};
+function gorevMailGonder(gorev) {
+    if (typeof emailjs === 'undefined') { console.warn("EmailJS SDK yuklu degil, mail gonderilemedi."); return; }
+    if (EMAILJS_CONFIG.publicKey.indexOf("YOUR_") === 0) { console.warn("EmailJS yapilandirilmamis, mail gonderilemedi."); return; }
+    var kullanicilar;
+    try { kullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || []; } catch(e) { kullanicilar = []; }
+    var atanan = gorev.atanan;
+    var atananArr = Array.isArray(atanan) ? atanan : [atanan];
+    atananArr.forEach(function(usr){
+        var u = kullanicilar.find(function(x){ return x.usr === usr; });
+        if (!u || !u.email || u.email === "-" || !u.email.includes("@")) return;
+        var templateParams = {
+            to_name: usr,
+            to_email: u.email,
+            from_name: gorev.veren || "Sistem",
+            task_title: gorev.baslik || "",
+            task_msg: gorev.mesaj || "",
+            task_date: gorev.tarih || ""
+        };
+        emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams, { publicKey: EMAILJS_CONFIG.publicKey })
+            .then(function(){ console.log("Mail gonderildi ->", u.email); })
+            .catch(function(e){ console.error("Mail hatasi:", e); });
+    });
+}
+
+/* --- Firebase Sync Katmani (verileri buluta yedekler) --- */
         const firebaseConfig = {
             apiKey: "AIzaSyAgKERI5UOh5urGPTS2ODRoI-Qb8H7Ro1k",
             authDomain: "tm-portal-d672a.firebaseapp.com",
@@ -2232,7 +2262,8 @@
 
                 if (editIndex === "master_tugay") {
                     const mevcut = JSON.parse(localStorage.getItem("tm_admin_creds_final")) || {};
-                    const master = { usr: mevcut.usr || "TUGAYTURAK", pass: pas, title: trToUpper(ttl) };
+                    var email = document.getElementById("newEmail").value.trim().toLowerCase() || "";
+                    const master = { usr: mevcut.usr || "TUGAYTURAK", pass: pas, title: trToUpper(ttl), email: email };
                     localStorage.setItem("tm_admin_creds_final", JSON.stringify(master));
                     tmNotify("KURUCU ADMİN PROFİLİ BAŞARIYLA GÜNCELLENDİ.", "success");
                     aktiviteEkle("Admin profili güncellendi", "Yönetim");
@@ -2245,11 +2276,13 @@
                     if (usr === masterAd || altKullanicilar.some(function(u){ return u.usr === usr; })) {
                         tmNotify("Bu kullanıcı adı sistemde zaten mevcut!", "error"); return;
                     }
-                    altKullanicilar.push({ usr: usr, pas: pas, title: trToUpper(ttl), yetkiler: secilenYetkiler });
+                    var email = document.getElementById("newEmail").value.trim().toLowerCase() || "-";
+                    altKullanicilar.push({ usr: usr, pas: pas, title: trToUpper(ttl), email: email, yetkiler: secilenYetkiler });
                 } else {
                     var idx = parseInt(editIndex, 10);
                     altKullanicilar[idx].pas = pas;
                     altKullanicilar[idx].title = trToUpper(ttl);
+                    altKullanicilar[idx].email = document.getElementById("newEmail").value.trim().toLowerCase() || "-";
                     altKullanicilar[idx].yetkiler = secilenYetkiler;
                 }
 
@@ -2272,6 +2305,7 @@
                 document.getElementById("newUsername").disabled = true;
                 document.getElementById("newPassword").value = master.pass;
                 document.getElementById("newTitle").value = master.title;
+                document.getElementById("newEmail").value = master.email || "";
                 document.getElementById("editIndex").value = "master_tugay";
                 document.querySelectorAll("#yetkiCheckboxContainer input[type=checkbox]").forEach(function(cb){ cb.checked = true; });
             } else {
@@ -2282,6 +2316,7 @@
                 document.getElementById("newUsername").disabled = true;
                 document.getElementById("newPassword").value = seculenUser.pas;
                 document.getElementById("newTitle").value = seculenUser.title;
+                document.getElementById("newEmail").value = seculenUser.email || "-";
                 document.getElementById("editIndex").value = index;
                 yetkiSecilenleriAyarla(seculenUser.yetkiler || []);
             }
@@ -2295,6 +2330,7 @@
             document.getElementById("newUsername").disabled = false;
             document.getElementById("newPassword").value = "";
             document.getElementById("newTitle").value = "";
+            document.getElementById("newEmail").value = "";
             document.getElementById("editIndex").value = "-1";
             document.getElementById("btnSave").innerText = "Kullanıcıyı Kaydet";
             document.getElementById("btnCancel").style.display = "none";
@@ -2310,15 +2346,15 @@
             if (!tbody) return; tbody.innerHTML = "";
             var master;
             try { master = JSON.parse(localStorage.getItem("tm_admin_creds_final")); } catch(e) { master = null; console.error("Admin bilgisi parse hatasi:", e); }
-            if (!master) { tbody.innerHTML = '<tr><td colspan="5">Admin bilgisi bulunamadı</td></tr>'; return; }
+            if (!master) { tbody.innerHTML = '<tr><td colspan="6">Admin bilgisi bulunamadı</td></tr>'; return; }
 
-            tbody.innerHTML += '<tr><td><b>TUGAYTURAK</b></td><td>' + master.pass + '</td><td><span style="font-weight:700;color:var(--accent-red)">' + master.title + '</span></td><td>TÜM SAYFALAR (TAM YETKİ)</td><td><button class="btn-warning" onclick="kullaniciDuzenle(\'master_tugay\')">Düzenle</button></td></tr>';
+            tbody.innerHTML += '<tr><td><b>TUGAYTURAK</b></td><td>' + master.pass + '</td><td><span style="font-weight:700;color:var(--accent-red)">' + master.title + '</span></td><td>' + (master.email || "-") + '</td><td>TÜM SAYFALAR (TAM YETKİ)</td><td><button class="btn-warning" onclick="kullaniciDuzenle(\'master_tugay\')">Düzenle</button></td></tr>';
 
             var altKullanicilar;
             try { altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || []; } catch(e) { altKullanicilar = []; console.error("Kullanicilar parse hatasi:", e); }
             altKullanicilar.forEach((user, index) => {
                 var yetkiStr = (user.yetkiler && Array.isArray(user.yetkiler)) ? user.yetkiler.join(', ').toUpperCase() : "YETKİ YOK";
-                tbody.innerHTML += `<tr><td><b>${user.usr}</b></td><td>${user.pas}</td><td>${user.title}</td><td>${yetkiStr}</td><td><button class="btn-warning" onclick="kullaniciDuzenle(${index})">Düzenle</button> <button class="btn-danger" onclick="kullaniciSil(${index})">Sil</button></td></tr>`;
+                tbody.innerHTML += `<tr><td><b>${user.usr}</b></td><td>${user.pas}</td><td>${user.title}</td><td>${user.email || "-"}</td><td>${yetkiStr}</td><td><button class="btn-warning" onclick="kullaniciDuzenle(${index})">Düzenle</button> <button class="btn-danger" onclick="kullaniciSil(${index})">Sil</button></td></tr>`;
             });
         }
 
@@ -2729,6 +2765,7 @@
             tmNotify("Görev atandı.", "success");
             aktiviteEkle("Görev atandı: " + baslik + " → " + atanan, "Dashboard");
             bildirimSesi();
+            gorevMailGonder({ atanan: atanan, veren: veren, baslik: baslik, mesaj: mesaj, tarih: tarih });
         }
         function asGorevListele() {
             const container = document.getElementById("asGorevListesi");
