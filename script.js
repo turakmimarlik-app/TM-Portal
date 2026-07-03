@@ -1033,7 +1033,7 @@
             var log = JSON.parse(localStorage.getItem("tm_aktivite_log") || "[]");
             if (log.length === 0) { el.innerHTML = "<tr><td colspan='4' style='padding:20px;text-align:center;color:var(--text-light);'>Henüz aktivite kaydı yok.</td></tr>"; return; }
             var h = "";
-            log.slice(0, 100).forEach(function(k) {
+            log.slice(0, 10).forEach(function(k) {
                 h += "<tr><td style='padding:8px 12px;font-size:12px;'>" + k.zaman + "</td><td style='padding:8px 12px;font-size:12px;font-weight:600;'>" + k.kullanici + "</td><td style='padding:8px 12px;font-size:12px;'>" + k.islem + "</td><td style='padding:8px 12px;font-size:12px;color:var(--text-light);'>" + k.sayfa + "</td></tr>";
             });
             el.innerHTML = h;
