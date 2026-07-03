@@ -1758,12 +1758,14 @@
 
         function portfolioKartSil(dbName, id, tip) {
             tmConfirm("Bu profil kartını sistemden kalıcı olarak silmek istediğinize emin misiniz?", function() {
-                var db;
+                var db, silinenAd = "";
                 try { db = JSON.parse(localStorage.getItem(dbName)) || []; } catch(e) { db = []; console.error("Portfolio kart yukleme hatasi:", e); }
+                var silinen = db.find(function(item) { return item.id === id; });
+                if (silinen) silinenAd = silinen.ad || "";
                 db = db.filter(item => item.id !== id);
                 try { localStorage.setItem(dbName, JSON.stringify(db)); } catch(e) { console.error("Portfolio kart silme hatasi:", e); return; }
-                if(tip === 'musteri') musteriKartlariniYenile();
-                if(tip === 'partner') isOrtaklariKartlariniYenile();
+                if(tip === 'musteri') { musteriKartlariniYenile(); aktiviteEkle("Müşteri silindi: " + silinenAd, "Portföy"); }
+                if(tip === 'partner') { isOrtaklariKartlariniYenile(); aktiviteEkle("İş ortağı silindi: " + silinenAd, "Portföy"); }
             });
         }
 
@@ -4969,6 +4971,7 @@
             htYeniIslemFormuDoldur();
             htDurumGuncelle();
             tmNotify(id ? "Hesap güncellendi." : "Hesap eklendi.", "success");
+            aktiviteEkle((id ? "Hesap güncellendi: " : "Hesap eklendi: ") + banka, "Muhasebe");
         }
 
         function htHesapSil(id) {
@@ -4984,6 +4987,7 @@
                 htDurumGuncelle();
                 if(HT_AKTIF_DETAY_HESAP === id) htHesapDetayKapat();
                 tmNotify("Hesap silindi.", "success");
+                aktiviteEkle("Hesap silindi", "Muhasebe");
             });
         }
 
@@ -5222,6 +5226,7 @@
             if(HT_AKTIF_DETAY_HESAP !== null) htDetayIslemleriGoster();
             htDurumGuncelle();
             tmNotify(id ? "Hareket güncellendi." : "Hareket eklendi.", "success");
+            aktiviteEkle((id ? "Hareket güncellendi: " : "Hareket eklendi: ") + aciklama, "Muhasebe");
         }
 
         function htBakiyeGuncelle(db, hesapId, tutar, islem, geriAl) {
@@ -5248,6 +5253,7 @@
                 if(HT_AKTIF_DETAY_HESAP !== null) htDetayIslemleriGoster();
                 htDurumGuncelle();
                 tmNotify("Hareket silindi.", "success");
+                aktiviteEkle("Hareket silindi", "Muhasebe");
             });
         }
 
@@ -6098,6 +6104,7 @@
             document.getElementById("ftGelenForm").style.display = "none";
             ftGelenGoster(); ftKdvGoster(); faturaOzetGuncelle();
             tmNotify(id ? "Gelen fatura güncellendi." : "Gelen fatura eklendi.", "success");
+            aktiviteEkle((id ? "Gelen fatura güncellendi: " : "Gelen fatura eklendi: ") + firma, "Muhasebe");
         }
 
         function ftGelenSil(id) {
@@ -6107,6 +6114,7 @@
                 ftDbKaydet(yv.db);
                 ftGelenGoster(); ftKdvGoster(); faturaOzetGuncelle();
                 tmNotify("Gelen fatura silindi.", "success");
+                aktiviteEkle("Gelen fatura silindi", "Muhasebe");
             });
         }
 
@@ -6202,6 +6210,7 @@
             document.getElementById("ftGidenForm").style.display = "none";
             ftGidenGoster(); ftKdvGoster(); faturaOzetGuncelle();
             tmNotify(id ? "Giden fatura güncellendi." : "Giden fatura eklendi.", "success");
+            aktiviteEkle((id ? "Giden fatura güncellendi: " : "Giden fatura eklendi: ") + firma, "Muhasebe");
         }
 
         function ftGidenSil(id) {
@@ -6211,6 +6220,7 @@
                 ftDbKaydet(yv.db);
                 ftGidenGoster(); ftKdvGoster(); faturaOzetGuncelle();
                 tmNotify("Giden fatura silindi.", "success");
+                aktiviteEkle("Giden fatura silindi", "Muhasebe");
             });
         }
 
@@ -7638,6 +7648,7 @@ function itDurumMetni(o) {
             itFormKapat();
             itGoster();
             tmNotify(id ? "İş güncellendi." : "İş eklendi.", "success");
+            aktiviteEkle((id ? "İş güncellendi: " : "İş eklendi: ") + isAdi, "İş Takibi");
         }
 
         function itRuhsatOnayiVer(id) {
@@ -7650,6 +7661,7 @@ function itDurumMetni(o) {
             itGoster();
             itAcKalanYukle(openIds);
             tmNotify("📜 Ruhsat onayı alındı.", "success");
+            aktiviteEkle("Ruhsat onayı verildi", "İş Takibi");
         }
 
         function itTahsilatOnayiVer(id) {
@@ -7662,6 +7674,7 @@ function itDurumMetni(o) {
             itGoster();
             itAcKalanYukle(openIds);
             tmNotify("✅ Tahsilat onayı verildi.", "success");
+            aktiviteEkle("Tahsilat onayı verildi", "İş Takibi");
         }
 
         function itTamamla(id) {
@@ -7676,6 +7689,7 @@ function itDurumMetni(o) {
                 itDbKaydet(liste);
                 itGoster();
                 tmNotify("İş tamamlandı olarak işaretlendi.", "success");
+                aktiviteEkle("İş tamamlandı", "İş Takibi");
             });
         }
 
@@ -7692,9 +7706,9 @@ function itDurumMetni(o) {
                 itDbKaydet(liste);
                 itGoster();
                 tmNotify("Kayıt silindi.", "success");
+                aktiviteEkle("İş takibi kaydı silindi", "İş Takibi");
             });
         }
-
 
 
         /* ================= DİLEKÇE MODÜLÜ ================= */
