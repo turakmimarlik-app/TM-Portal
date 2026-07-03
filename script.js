@@ -1,5 +1,5 @@
         /* Production - console loglari kapat */
-        console.log=0; console.warn=0; console.error=0;
+        console.log=function(){}; console.warn=function(){}; console.error=function(){};
 
         /* --- Firebase Sync Katmani (verileri buluta yedekler) --- */
         const firebaseConfig = {
@@ -1021,16 +1021,16 @@
         function aktiviteEkle(islem, sayfa) {
             try {
                 var k = localStorage.getItem("tm_active_user") || "SISTEM";
-                var log = JSON.parse(localStorage.getItem("tm_aktivite_log")) || [];
+                var log = JSON.parse(localStorage.getItem("tm_aktivite_log") || "[]");
                 log.unshift({ kullanici: k, islem: islem, sayfa: sayfa, zaman: new Date().toLocaleString("tr-TR") });
                 if (log.length > 500) log.length = 500;
                 localStorage.setItem("tm_aktivite_log", JSON.stringify(log));
-            } catch(e) { console.error("Aktivite log hatasi:", e); }
+            } catch(e) { try { console.error("Aktivite log hatasi:", e); } catch(_) {} }
         }
         function aktiviteListele() {
             var el = document.getElementById("tmAktiviteLogBody");
             if (!el) return;
-            var log = JSON.parse(localStorage.getItem("tm_aktivite_log")) || [];
+            var log = JSON.parse(localStorage.getItem("tm_aktivite_log") || "[]");
             if (log.length === 0) { el.innerHTML = "<tr><td colspan='4' style='padding:20px;text-align:center;color:var(--text-light);'>Henüz aktivite kaydı yok.</td></tr>"; return; }
             var h = "";
             log.slice(0, 100).forEach(function(k) {
