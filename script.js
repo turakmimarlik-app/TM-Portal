@@ -321,7 +321,6 @@
             { key:"hesap-takip", label:"🏦 Muhasebe: Hesap Takip Sistemi" },
             { key:"fatura-takip", label:"🧾 Muhasebe: Fatura Takip Sistemi" },
             { key:"yillik-butce", label:"📊 Muhasebe: Yıllık Bütçeler" },
-            { key:"x", label:"❌ X Sayfası" },
             { key:"yonetim", label:"⚙️ Portal Yönetimi" }
         ];
 
