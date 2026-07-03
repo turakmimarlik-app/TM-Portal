@@ -44,7 +44,7 @@
                             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
                             var curVal = localStorage.getItem(k);
                             if (curVal !== strVal && !fsDirtyKeys[k]) {
-                                try { origSetItem(k, strVal); } catch(e) {}
+                                try { origSetItem(k, strVal); } catch(e) { console.error("Firebase sync local set hatasi:", e); }
                                 if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") { logoChanged = true; }
                                 anyChanged = true;
                                 changedKeys[k] = true;
@@ -162,7 +162,7 @@
                         var nav = performance.getEntriesByType('navigation')[0];
                         isReload = nav && nav.type === 'reload';
                     }
-                } catch(e) {}
+                } catch(e) { console.error("Performans kontrol hatasi:", e); }
                 if (!isReload) {
                     oncekiKullanici = null;
                 }
@@ -746,10 +746,10 @@
             document.getElementById("portalSection").style.display = "block";
             sidebardaLogoyuGoster();
             AKTIF_KULLANICI_YETKILERI = yetkiler;
-            localStorage.setItem("tm_active_user", kullanici);
-            sessionStorage.setItem("tm_session_active", "1");
+            try { localStorage.setItem("tm_active_user", kullanici); } catch(e) { console.error("Oturum kaydetme hatasi:", e); }
+            try { sessionStorage.setItem("tm_session_active", "1"); } catch(e) { console.error("Session kaydetme hatasi:", e); }
             girisCikisLogla(kullanici, "GİRİŞ");
-            localStorage.removeItem('tm_active_page');
+            try { localStorage.removeItem('tm_active_page'); } catch(e) { console.error("Sayfa temizleme hatasi:", e); }
             menuyuInsaEt(yetkiler);
             sidebarKullanicilariYenile();
             tmOnlineHeartbeatBaslat(kullanici);
@@ -785,7 +785,7 @@
             const ttl = document.getElementById("setupTitle").value.trim() || "KURUCU";
             const err = document.getElementById("setupError");
             if (!usr || !pas) { if (err) { err.textContent = "Kullanıcı adı ve şifre boş bırakılamaz!"; err.style.display = "block"; } return; }
-            localStorage.setItem("tm_admin_creds_final", JSON.stringify({ usr: usr, pass: pas, title: ttl }));
+            try { localStorage.setItem("tm_admin_creds_final", JSON.stringify({ usr: usr, pass: pas, title: ttl })); } catch(e) { console.error("Kurulum kaydetme hatasi:", e); }
             document.getElementById("loginCardKurulum").style.display = "none";
             document.getElementById("loginCardGiris").style.display = "block";
             document.getElementById("loginUser").value = usr;
@@ -797,7 +797,8 @@
             const inputPass = document.getElementById("loginPass").value.trim();
             const errorDiv = document.getElementById("loginError");
             if (errorDiv) errorDiv.style.display = "none";
-            var master = JSON.parse(localStorage.getItem("tm_admin_creds_final"));
+            var master;
+            try { master = JSON.parse(localStorage.getItem("tm_admin_creds_final")); } catch(e) { master = null; console.error("Admin creds parse hatasi:", e); }
             if (!master) { document.getElementById("loginCardGiris").style.display = "none"; document.getElementById("loginCardKurulum").style.display = "block"; return; }
 
             var hedefKullanici = null;
@@ -814,7 +815,8 @@
                     return all;
                 })();
             } else {
-                var altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                var altKullanicilar;
+                try { altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || []; } catch(e) { altKullanicilar = []; console.error("Kullanicilar parse hatasi:", e); }
                 var bulunan = altKullanicilar.find(function(u){ return u.usr.toUpperCase() === inputUser && u.pas === inputPass; });
                 if (bulunan) {
                     hedefKullanici = bulunan.usr;
@@ -832,7 +834,7 @@
                     if (snap && snap.exists) {
                         var data = snap.data();
                         if (data.tm_users_final_v8) {
-                            try { origSetItem("tm_users_final_v8", JSON.stringify(data.tm_users_final_v8)); } catch(e2) {}
+                            try { origSetItem("tm_users_final_v8", JSON.stringify(data.tm_users_final_v8)); } catch(e2) { console.error("Firebase kullanici sync hatasi:", e2); }
                         }
                     }
                     var bulunan = (JSON.parse(localStorage.getItem("tm_users_final_v8")) || []).find(function(u){ return u.usr.toUpperCase() === inputUser && u.pas === inputPass; });
@@ -858,12 +860,13 @@
                 document.getElementById("loginPass").value = "";
                 document.getElementById("portalSection").style.display = "none";
                 document.getElementById("loginSection").style.display = "flex";
-                const cikan = localStorage.getItem("tm_active_user") || "BİLİNMEYEN";
+                var cikan;
+                try { cikan = localStorage.getItem("tm_active_user") || "BİLİNMEYEN"; } catch(e) { cikan = "BİLİNMEYEN"; console.error("Aktif kullanici okuma hatasi:", e); }
                 AKTIF_KULLANICI_YETKILERI = [];
                 tmOnlineCikisYap(cikan);
-                localStorage.removeItem("tm_active_user");
-                sessionStorage.removeItem("tm_session_active");
-                localStorage.removeItem("tm_active_page");
+                try { localStorage.removeItem("tm_active_user"); } catch(e) { console.error("Cikis temizlik hatasi:", e); }
+                try { sessionStorage.removeItem("tm_session_active"); } catch(e) { console.error("Session temizlik hatasi:", e); }
+                try { localStorage.removeItem("tm_active_page"); } catch(e) { console.error("Sayfa temizlik hatasi:", e); }
                 girisCikisLogla(cikan, "ÇIKIŞ");
                 sidebarKullanicilariYenile();
             });
@@ -916,8 +919,8 @@
             const opening = !sub.classList.contains("open");
             document.querySelectorAll(".submenu").forEach(s => { if (s.id !== id) s.classList.remove("open"); });
             document.querySelectorAll(".menu-item .arrow").forEach(a => { if (a.id !== arrowId) a.innerText = "▼"; });
-            if (opening) { sub.classList.add("open"); arrow.innerText = "▲"; try { origSetItem("tm_submenu_open", id); } catch(e) {} }
-            else { sub.classList.remove("open"); arrow.innerText = "▼"; try { origSetItem("tm_submenu_open", ""); } catch(e) {} }
+            if (opening) { sub.classList.add("open"); arrow.innerText = "▲"; try { origSetItem("tm_submenu_open", id); } catch(e) { console.error("Submenu acma hatasi:", e); } }
+            else { sub.classList.remove("open"); arrow.innerText = "▼"; try { origSetItem("tm_submenu_open", ""); } catch(e) { console.error("Submenu kapama hatasi:", e); } }
         }
 
         var tmFormDirty = false;
@@ -968,7 +971,7 @@
                 return;
             }
             var subPageMap={"teklif-olustur-page":"teklif-submenu","teklif-liste-page":"teklif-submenu","piyasa-fiyatlari-page":"teklif-submenu","tm-fiyatlar-page":"teklif-submenu","musteriler-page":"portfoy-submenu","isortaklari-page":"portfoy-submenu","nakit-dekont-page":"muhasebe-submenu","is-muhasebe-olustur-page":"muhasebe-submenu","is-muhasebe-page":"muhasebe-submenu","tamamlanan-is-muhasebeleri-page":"muhasebe-submenu","hesap-takip-page":"muhasebe-submenu","fatura-takip-page":"muhasebe-submenu","yillik-butce-page":"muhasebe-submenu"};
-            if (subPageMap[pageId]) { try { origSetItem("tm_submenu_open", subPageMap[pageId]); } catch(e) {} }
+            if (subPageMap[pageId]) { try { origSetItem("tm_submenu_open", subPageMap[pageId]); } catch(e) { console.error("Submenu kaydetme hatasi:", e); } }
             sidebarMobileKapat();
             sayfaDegistir(pageId, element);
         }
@@ -1252,7 +1255,7 @@
                                 if(fark > 0) { kalanGun = fark + " gün"; renk = fark <= 7 ? "color:var(--accent-red);font-weight:700;" : fark <= 30 ? "color:orange;" : "color:var(--text-light);"; }
                                 else if(fark === 0) { kalanGun = "BUGÜN!"; renk = "color:red;font-weight:700;"; }
                                 else { kalanGun = Math.abs(fark) + " gün geçti"; renk = "color:var(--text-light);"; }
-                            } catch(ex) {}
+                            } catch(ex) { console.error("Vergi tarih hesaplama hatasi:", ex); }
                             vTkv.innerHTML += '<div class="mini-list-item" style="cursor:pointer;" onclick="menudenSayfaAc(\'fatura-takip\',\'fatura-takip-page\',document.getElementById(\'sub-fatura-takip\'))">' +
                                 '<div><span style="font-weight:600;color:var(--text-dark);font-size:12px;">' + esc(e.baslik) + '</span><br>' +
                                 '<small style="color:var(--text-light)">' + turAd + ' • ' + tarihStr(e.tarih) + '</small></div>' +
@@ -1300,8 +1303,9 @@
 
             if(!ad) { tmNotify("Müşteri adı boş bırakılamaz!", "error"); return; }
 
-            let db = JSON.parse(localStorage.getItem("tm_musteriler_db")) || [];
-            const editId = document.getElementById("musteriEditId").value;
+            var db, editId;
+            try { db = JSON.parse(localStorage.getItem("tm_musteriler_db")) || []; } catch(e) { db = []; console.error("Musteri db yukleme hatasi:", e); }
+            editId = document.getElementById("musteriEditId").value;
 
             if(editId === "-1") {
                 db.push({ id: Date.now(), ad, sirket, unvan, tel, eposta, tipi, kimlik, vergiDairesi, vergiNo, adres, bankalar });
@@ -1312,7 +1316,7 @@
                 tmNotify("Müşteri profil kartı güncellendi.", "success");
             }
             
-            localStorage.setItem("tm_musteriler_db", JSON.stringify(db));
+            try { localStorage.setItem("tm_musteriler_db", JSON.stringify(db)); } catch(e) { console.error("Musteri db kaydetme hatasi:", e); tmNotify("Müşteri kaydedilirken hata oluştu!", "error"); }
             musteriFormTemizle();
             musteriKartlariniYenile();
         }
@@ -1465,8 +1469,9 @@
 
             if(!ad || !brans) { tmNotify("Partner adı ve Branş alanı zorunludur!", "error"); return; }
 
-            let db = JSON.parse(localStorage.getItem("tm_isortaklari_db")) || [];
-            const editId = document.getElementById("partnerEditId").value;
+            var db, editId;
+            try { db = JSON.parse(localStorage.getItem("tm_isortaklari_db")) || []; } catch(e) { db = []; console.error("Isortagi db yukleme hatasi:", e); }
+            editId = document.getElementById("partnerEditId").value;
 
             if(editId === "-1") {
                 db.push({ id: Date.now(), ad, sirket, unvan, brans, tel, eposta, kimlik, vergiDairesi, vergiNo, status, adres, bankalar });
@@ -1477,7 +1482,7 @@
                 tmNotify("Partner kartı başarıyla güncellendi.", "success");
             }
 
-            localStorage.setItem("tm_isortaklari_db", JSON.stringify(db));
+            try { localStorage.setItem("tm_isortaklari_db", JSON.stringify(db)); } catch(e) { console.error("Isortagi db kaydetme hatasi:", e); tmNotify("İş ortağı kaydedilirken hata oluştu!", "error"); }
             partnerFormTemizle();
             isOrtaklariKartlariniYenile();
         }
@@ -1616,9 +1621,10 @@
 
         function portfolioKartSil(dbName, id, tip) {
             tmConfirm("Bu profil kartını sistemden kalıcı olarak silmek istediğinize emin misiniz?", function() {
-                let db = JSON.parse(localStorage.getItem(dbName)) || [];
+                var db;
+                try { db = JSON.parse(localStorage.getItem(dbName)) || []; } catch(e) { db = []; console.error("Portfolio kart yukleme hatasi:", e); }
                 db = db.filter(item => item.id !== id);
-                localStorage.setItem(dbName, JSON.stringify(db));
+                try { localStorage.setItem(dbName, JSON.stringify(db)); } catch(e) { console.error("Portfolio kart silme hatasi:", e); return; }
                 if(tip === 'musteri') musteriKartlariniYenile();
                 if(tip === 'partner') isOrtaklariKartlariniYenile();
             });
@@ -1771,22 +1777,24 @@
             span.textContent = kayitli ? new Date(kayitli).toLocaleString('tr-TR') : "-";
         }
         function tmYedekAl() {
-            var data = {};
-            for (var i = 0; i < localStorage.length; i++) {
-                var k = localStorage.key(i);
-                if (k && k.startsWith("tm_")) data[k] = localStorage.getItem(k);
-            }
-            var simdi = new Date();
-            localStorage.setItem("tm_son_yedek_zamani", simdi.toISOString());
-            var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            var a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'TM-Portal_Yedek_' + simdi.toISOString().slice(0,10) + '.json';
-            a.click();
-            URL.revokeObjectURL(a.href);
-            document.getElementById("yedekMsg").textContent = "✅ Yedek başarıyla indirildi.";
-            var span = document.getElementById("sonYedekTarihi");
-            if (span) span.textContent = simdi.toLocaleString('tr-TR');
+            try {
+                var data = {};
+                for (var i = 0; i < localStorage.length; i++) {
+                    var k = localStorage.key(i);
+                    if (k && k.startsWith("tm_")) data[k] = localStorage.getItem(k);
+                }
+                var simdi = new Date();
+                localStorage.setItem("tm_son_yedek_zamani", simdi.toISOString());
+                var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'TM-Portal_Yedek_' + simdi.toISOString().slice(0,10) + '.json';
+                a.click();
+                URL.revokeObjectURL(a.href);
+                document.getElementById("yedekMsg").textContent = "✅ Yedek başarıyla indirildi.";
+                var span = document.getElementById("sonYedekTarihi");
+                if (span) span.textContent = simdi.toLocaleString('tr-TR');
+            } catch(e) { console.error("Yedek alma hatasi:", e); tmNotify("Yedek alınırken hata oluştu: " + e.message, "error"); }
         }
         function tmYedekYukle(event) {
             var file = event.target.files[0];
@@ -1897,12 +1905,14 @@
         function kullaniciListesiniYenile() {
             const tbody = document.getElementById("userTableBody");
             if (!tbody) return; tbody.innerHTML = "";
-            const master = JSON.parse(localStorage.getItem("tm_admin_creds_final"));
+            var master;
+            try { master = JSON.parse(localStorage.getItem("tm_admin_creds_final")); } catch(e) { master = null; console.error("Admin bilgisi parse hatasi:", e); }
             if (!master) { tbody.innerHTML = '<tr><td colspan="5">Admin bilgisi bulunamadı</td></tr>'; return; }
 
             tbody.innerHTML += '<tr><td><b>TUGAYTURAK</b></td><td>' + master.pass + '</td><td><span style="font-weight:700;color:var(--accent-red)">' + master.title + '</span></td><td>TÜM SAYFALAR (TAM YETKİ)</td><td><button class="btn-warning" onclick="kullaniciDuzenle(\'master_tugay\')">Düzenle</button></td></tr>';
 
-            const altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+            var altKullanicilar;
+            try { altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || []; } catch(e) { altKullanicilar = []; console.error("Kullanicilar parse hatasi:", e); }
             altKullanicilar.forEach((user, index) => {
                 var yetkiStr = (user.yetkiler && Array.isArray(user.yetkiler)) ? user.yetkiler.join(', ').toUpperCase() : "YETKİ YOK";
                 tbody.innerHTML += `<tr><td><b>${user.usr}</b></td><td>${user.pas}</td><td>${user.title}</td><td>${yetkiStr}</td><td><button class="btn-warning" onclick="kullaniciDuzenle(${index})">Düzenle</button> <button class="btn-danger" onclick="kullaniciSil(${index})">Sil</button></td></tr>`;
@@ -1923,12 +1933,13 @@
         }
 
         function girisCikisLogla(kullanici, islem) {
-            let log = JSON.parse(localStorage.getItem("tm_giris_cikis_log")) || [];
+            var log;
+            try { log = JSON.parse(localStorage.getItem("tm_giris_cikis_log")) || []; } catch(e) { log = []; console.error("Log yukleme hatasi:", e); }
             const simdi = new Date();
             const tarihSaat = simdi.toLocaleDateString("tr-TR") + " " + simdi.toLocaleTimeString("tr-TR", {hour: "2-digit", minute: "2-digit", second: "2-digit"});
             log.unshift({ kullanici: kullanici.toUpperCase(), islem: islem, zaman: tarihSaat });
             if (log.length > 50) log = log.slice(0, 50);
-            localStorage.setItem("tm_giris_cikis_log", JSON.stringify(log));
+            try { localStorage.setItem("tm_giris_cikis_log", JSON.stringify(log)); } catch(e) { console.error("Log kaydetme hatasi:", e); }
         }
 
         function girisCikisLogListele() {
@@ -1944,8 +1955,9 @@
         function sidebarKullanicilariYenile() {
             const container = document.getElementById("sidebarKullanicilar");
             if (!container) return;
-            const master = JSON.parse(localStorage.getItem("tm_admin_creds_final")) || {};
-            const altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+            var master, altKullanicilar;
+            try { master = JSON.parse(localStorage.getItem("tm_admin_creds_final")) || {}; } catch(e) { master = {}; console.error("Sidebar master parse:", e); }
+            try { altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || []; } catch(e) { altKullanicilar = []; console.error("Sidebar kullanici parse:", e); }
             const simdi = Date.now();
             let html = "";
             var tugayOnline = tmOnlineCache["TUGAYTURAK"] && (simdi - tmOnlineCache["TUGAYTURAK"]) < 10000;
@@ -1963,7 +1975,7 @@
             tmOnlineHeartbeatDurdur();
             if (typeof fdb === 'undefined') return;
             function heartbeat() {
-                fdb.collection("tm_online").doc(kullanici).set({ onlineAt: Date.now() }).catch(function(e){});
+                fdb.collection("tm_online").doc(kullanici).set({ onlineAt: Date.now() }).catch(function(e){ console.error("Online heartbeat hatasi:", e); });
             }
             heartbeat();
             tmOnlineHeartbeatTimer = setInterval(heartbeat, 3000);
@@ -1983,7 +1995,7 @@
                     });
                     tmOnlineCache = cache;
                     sidebarKullanicilariYenile();
-                }).catch(function(e){});
+                }).catch(function(e){ console.error("Online kullanici pull hatasi:", e); });
             }
             pull();
             tmOnlinePullTimer = setInterval(pull, 3000);
@@ -1991,7 +2003,7 @@
         function tmOnlineCikisYap(kullanici) {
             tmOnlineHeartbeatDurdur();
             if (typeof fdb === 'undefined') return;
-            fdb.collection("tm_online").doc(kullanici).delete().catch(function(e){});
+            fdb.collection("tm_online").doc(kullanici).delete().catch(function(e){ console.error("Online cikis hatasi:", e); });
         }
 
         /* ================= ANA SAYFA TAKVİM ================= */
@@ -2625,7 +2637,7 @@
                     p.addImage(u,'JPEG',1,1,208,295);
                     p.save(fname);
                     document.body.removeChild(clone);
-                }).catch(function(e){ tmAlert('PDF HATA: '+(e.message||e)); try{document.body.removeChild(clone)}catch(e){} });
+                }).catch(function(e){ tmAlert('PDF HATA: '+(e.message||e)); try{document.body.removeChild(clone)}catch(e){console.error("PDF clone DOM temizlik hatasi:", e);} });
             },100);
         }
 
@@ -2642,7 +2654,8 @@
         }
 
         function teklifListesiniYenile() {
-            let db = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
+            var db;
+            try { db = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || []; } catch(e) { db = []; console.error("Teklif listesi yukleme hatasi:", e); }
             const tbody = document.getElementById("teklifListTableBody");
             if(!tbody) return;
             const acikRows = new Set();
@@ -2809,7 +2822,8 @@
             const konteyner = document.getElementById("piyasaGruplanmisTablolarKonteyner");
             if(!konteyner) return; konteyner.innerHTML = "";
 
-            let db = JSON.parse(localStorage.getItem("tm_piyasa_db_v2")) || [];
+            var db;
+            try { db = JSON.parse(localStorage.getItem("tm_piyasa_db_v2")) || []; } catch(e) { db = []; console.error("Piyasa listesi yukleme hatasi:", e); }
             db = db.filter(item => SABIT_DALLAR.includes(item.dal));
 
             if(db.length === 0) {
@@ -2889,7 +2903,7 @@
 
         /* ================= İŞ MUHASEBESİ MOTORU ================= */
         function isMuhasebeVerileriniYukle() {
-            return JSON.parse(localStorage.getItem("tm_is_muhasebe_db")) || [];
+            try { return JSON.parse(localStorage.getItem("tm_is_muhasebe_db")) || []; } catch(e) { console.error("isMuhasebe veri yukleme hatasi:", e); return []; }
         }
 
         function isMuhSonrakiId() {
@@ -3501,7 +3515,7 @@
         }
 
         function tamamlananIsMuhasebeVerileriniYukle() {
-            return JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
+            try { return JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || []; } catch(e) { console.error("Tamamlanan is muhasebe yukleme hatasi:", e); return []; }
         }
 
         function tamamlananIsMuhasebeGeriAl(id) {
@@ -3768,15 +3782,18 @@
                 </div>
             `;
 
-            const pdfWindow = window.open('', '_blank');
-            pdfWindow.document.write(pdfContent);
-            pdfWindow.document.close();
-            setTimeout(() => pdfWindow.print(), 500);
+            try {
+                const pdfWindow = window.open('', '_blank');
+                if (!pdfWindow) { tmNotify("Pop-up engelleyici PDF açılmasını engelledi!", "error"); return; }
+                pdfWindow.document.write(pdfContent);
+                pdfWindow.document.close();
+                setTimeout(function() { try { pdfWindow.print(); } catch(e) { console.error("PDF yazdirma hatasi:", e); } }, 500);
+            } catch(e) { console.error("Is muhasebe PDF hatasi:", e); tmNotify("PDF oluşturulurken hata: " + e.message, "error"); }
         }
 
         /* ================= NAKİT ÖDEMEK DEKONTU MOTORU ================= */
         function nakitDekontVerileriniYukle() {
-            return JSON.parse(localStorage.getItem("tm_nakit_dekont_db")) || [];
+            try { return JSON.parse(localStorage.getItem("tm_nakit_dekont_db")) || []; } catch(e) { console.error("Nakit dekont veri yukleme hatasi:", e); return []; }
         }
 
         function tutarYaziyla(tutar) {
@@ -3948,7 +3965,7 @@
                 document.body.removeChild(sayfaEl);
             }).catch(function(e){
                 tmNotify("PDF oluşturulurken hata: " + (e.message||e), "error");
-                try { document.body.removeChild(sayfaEl); } catch(ex) {}
+                try { document.body.removeChild(sayfaEl); } catch(ex) { console.error("Nakit dekont PDF DOM temizlik hatasi:", ex); }
             });
         }
 
@@ -4146,7 +4163,8 @@
         let ybChartAylik = null, ybChartGelir = null, ybChartGider = null, ybChartNet = null;
 
         function ybVeriYukle() {
-            let db = JSON.parse(localStorage.getItem("tm_yillik_butce_db"));
+            var db;
+            try { db = JSON.parse(localStorage.getItem("tm_yillik_butce_db")); } catch(e) { db = null; console.error("Yillik butce yukleme hatasi:", e); }
             const simdi = new Date().getFullYear();
             if(!db || !db.aktifYil) {
                 db = { aktifYil: simdi, yillar: {}, tamamlananYillar: [] };
@@ -4166,7 +4184,7 @@
             }
             return db;
         }
-        function ybVeriKaydet(db) { localStorage.setItem("tm_yillik_butce_db", JSON.stringify(db)); }
+        function ybVeriKaydet(db) { try { localStorage.setItem("tm_yillik_butce_db", JSON.stringify(db)); } catch(e) { console.error("Yillik butce kaydetme hatasi:", e); } }
 
         function ybAktifYil() { return ybVeriYukle().aktifYil; }
 
@@ -4647,7 +4665,7 @@
             }
             h += `<div style="text-align:center;margin-top:30px;padding-top:15px;border-top:1px solid #dee2e6;font-size:10px;color:#999;">Turak Mimarlık - ${yil} Yılı Bütçe Raporu - Otomatik Oluşturulmuştur</div></div>`;
             const el = document.createElement("div"); el.innerHTML = h; document.body.appendChild(el);
-            html2pdf().set({margin:[10,10,10,10],filename:`Butce_Raporu_${yil}.pdf`,html2canvas:{scale:6},jsPDF:{format:'a4',orientation:'portrait'}}).from(el).save().then(()=>{document.body.removeChild(el);});
+            html2pdf().set({margin:[10,10,10,10],filename:`Butce_Raporu_${yil}.pdf`,html2canvas:{scale:6},jsPDF:{format:'a4',orientation:'portrait'}}).from(el).save().then(function(){try{document.body.removeChild(el)}catch(ex){console.error("Butce PDF DOM temizlik:",ex);}}).catch(function(e){console.error("Butce PDF hatasi:",e);tmNotify("Bütçe PDF oluşturulurken hata: "+e.message,"error");try{document.body.removeChild(el)}catch(ex){}});
         }
 
         /* ================= HESAP TAKİP SİSTEMİ ================= */
@@ -4701,18 +4719,19 @@
             return "var(--text-dark)";
         }
         function htVeriYukle() {
-            if(localStorage.getItem("tm_ht_clean") !== "v1.20.0") {
+            try { if(localStorage.getItem("tm_ht_clean") !== "v1.20.0") {
                 localStorage.removeItem("tm_hesap_takip_db");
                 origSetItem("tm_ht_clean", "v1.20.0");
-            }
-            var db = JSON.parse(localStorage.getItem("tm_hesap_takip_db"));
+            } } catch(e) { console.error("Hesap takip temizlik hatasi:", e); }
+            var db;
+            try { db = JSON.parse(localStorage.getItem("tm_hesap_takip_db")); } catch(e) { db = null; console.error("Hesap takip yukleme hatasi:", e); }
             if(db && db.hesaplar && db.islemler !== undefined) return db;
             db = { hesaplar:JSON.parse(JSON.stringify(HT_ORNEK_HESAPLAR)), nakit:0, islemler:JSON.parse(JSON.stringify(HT_ORNEK_ISLEMLER)) };
             origSetItem("tm_hesap_takip_db", JSON.stringify(db));
             return db;
         }
 
-        function htVeriKaydet(db) { localStorage.setItem("tm_hesap_takip_db", JSON.stringify(db)); }
+        function htVeriKaydet(db) { try { localStorage.setItem("tm_hesap_takip_db", JSON.stringify(db)); } catch(e) { console.error("Hesap takip kaydetme hatasi:", e); } }
 
         function htSayfayiYukle() {
             htVeriYukle();
@@ -5344,7 +5363,7 @@
                     if (!d.rowHeights) d.rowHeights = [];
                     return d;
                 }
-            } catch(e) {}
+            } catch(e) { console.error("tmfVeriYukle JSON parse hatasi:", e); }
             var obj = { grid: [["","",""],["","",""],["","",""],["","",""],["","",""]], colWidths: [120,180,180], rowHeights: [] };
             origSetItem(TMF_DATA_PREFIX + id, JSON.stringify(obj));
             return obj;
@@ -5720,17 +5739,18 @@
         const FT_DB_KEY = "tm_fatura_takip_db";
 
         function ftDbYukle() {
-            if(localStorage.getItem("tm_ft_clean") !== "v1.0.0") {
+            try { if(localStorage.getItem("tm_ft_clean") !== "v1.0.0") {
                 localStorage.removeItem(FT_DB_KEY);
                 origSetItem("tm_ft_clean", "v1.0.0");
-            }
-            var db = JSON.parse(localStorage.getItem(FT_DB_KEY));
+            } } catch(e) { console.error("Fatura db temizlik hatasi:", e); }
+            var db;
+            try { db = JSON.parse(localStorage.getItem(FT_DB_KEY)); } catch(e) { db = null; console.error("Fatura db yukleme hatasi:", e); }
             if (!db || !db.yillar) db = { aktifYil: new Date().getFullYear(), yillar: {} };
             var y = String(db.aktifYil);
             if (!db.yillar[y]) db.yillar[y] = { gelenFaturalar: [], gidenFaturalar: [], vergiEtkinlikleri: [] };
             return db;
         }
-        function ftDbKaydet(db) { localStorage.setItem(FT_DB_KEY, JSON.stringify(db)); }
+        function ftDbKaydet(db) { try { localStorage.setItem(FT_DB_KEY, JSON.stringify(db)); } catch(e) { console.error("Fatura db kaydetme hatasi:", e); } }
         function ftYilVerisi() {
             var db = ftDbYukle();
             var y = String(db.aktifYil);
@@ -6348,7 +6368,7 @@
                         if (fark > 0) { kalanGun = fark + " gün kaldı"; renk = fark <= 7 ? "color:var(--accent-red);font-weight:700;" : fark <= 30 ? "color:orange;" : "color:var(--text-light);"; }
                         else if (fark === 0) { kalanGun = "BUGÜN!"; renk = "color:red;font-weight:700;"; }
                         else { kalanGun = Math.abs(fark) + " gün geçti"; renk = "color:var(--text-light);"; }
-                    } catch(e) {}
+                    } catch(e) { console.error("Fatura takvim tarih hatasi:", e); }
                 }
                 h += '<div class="ft-takvim-item'+(e.tamamlandi?" tamamlandi":"")+'">';
                 h += '<input type="checkbox" '+(e.tamamlandi?"checked":"")+' onchange="ftTakvimTamamla('+e.id+')" style="width:16px;height:16px;cursor:pointer;">';
@@ -6405,7 +6425,7 @@
             h += '<div style="margin-top:35px;padding-top:15px;border-top:1px solid #ddd;font-size:10px;color:#999;text-align:center;">Turak Mimarlık Portal — Rapor: '+new Date().toLocaleDateString("tr-TR")+'</div></div>';
 
             var el = document.createElement("div"); el.innerHTML = h; document.body.appendChild(el);
-            html2pdf().set({margin:0, filename:'Fatura_Takip_Raporu_'+yil+'.pdf', html2canvas:{scale:6}, jsPDF:{format:'a4', orientation:'portrait'}}).from(el).save().then(function(){document.body.removeChild(el);});
+            html2pdf().set({margin:0, filename:'Fatura_Takip_Raporu_'+yil+'.pdf', html2canvas:{scale:6}, jsPDF:{format:'a4', orientation:'portrait'}}).from(el).save().then(function(){try{document.body.removeChild(el)}catch(ex){console.error("Fatura PDF DOM temizlik:",ex);}}).catch(function(e){console.error("Fatura PDF hatasi:",e);tmNotify("Fatura PDF oluşturulurken hata: "+e.message,"error");try{document.body.removeChild(el)}catch(ex){}});
         }
 
         /* ---------- İş Takibi ---------- */
@@ -6518,7 +6538,7 @@ function itDurumMetni(o) {
             });
             return data;
         }
-        function itDbKaydet(d) { localStorage.setItem(IT_DB_KEY, JSON.stringify(d)); }
+        function itDbKaydet(d) { try { localStorage.setItem(IT_DB_KEY, JSON.stringify(d)); } catch(e) { console.error("Is takibi db kaydetme hatasi:", e); } }
 
         function itAktifSekmeDegistir(tur) {
             document.querySelectorAll("#itAktifSekmeBar .it-sekme").forEach(function(b){b.classList.remove("it-sekme-aktif");});
@@ -7534,11 +7554,12 @@ function itDurumMetni(o) {
         const DLK_DB_KEY = "tm_dilekceler_db";
 
         function dlkDbYukle() {
-            var db = JSON.parse(localStorage.getItem(DLK_DB_KEY));
+            var db;
+            try { db = JSON.parse(localStorage.getItem(DLK_DB_KEY)); } catch(e) { db = null; console.error("Dilekce db yukleme hatasi:", e); }
             if (!db || !Array.isArray(db)) db = [];
             return db;
         }
-        function dlkDbKaydet(db) { localStorage.setItem(DLK_DB_KEY, JSON.stringify(db)); }
+        function dlkDbKaydet(db) { try { localStorage.setItem(DLK_DB_KEY, JSON.stringify(db)); } catch(e) { console.error("Dilekce db kaydetme hatasi:", e); tmNotify("Dilekçe kaydedilirken hata oluştu!", "error"); } }
 
         function dlkYeniId() {
             var db = dlkDbYukle();
@@ -7753,7 +7774,7 @@ function itDurumMetni(o) {
                     document.body.removeChild(sayfaEl);
                 }).catch(function(e) {
                     tmAlert('PDF HATA: ' + (e.message || e));
-                    try { document.body.removeChild(sayfaEl); } catch(e) {}
+                    try { document.body.removeChild(sayfaEl); } catch(e) { console.error("Dilekce PDF DOM temizlik hatasi:", e); }
                 });
             }
 
