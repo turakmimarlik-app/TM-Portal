@@ -2063,13 +2063,14 @@
         function kullaniciSil(index) {
             try {
                 let altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
+                var silinenAd = altKullanicilar[index] ? altKullanicilar[index].usr : "";
                 tmConfirm("Bu kullanıcıyı listeden tamamen silmek istediğinize emin misiniz?", function() {
                     altKullanicilar.splice(index, 1);
                     localStorage.setItem("tm_users_final_v8", JSON.stringify(altKullanicilar));
                     kullaniciListesiniYenile();
                     sidebarKullanicilariYenile();
                     tmNotify("Kullanıcı silindi.", "success");
-                    aktiviteEkle("Kullanıcı silindi", "Yönetim");
+                    aktiviteEkle("Kullanıcı silindi: " + silinenAd, "Yönetim");
                 });
             } catch(e) { console.error("kullaniciSil hatasi:", e); tmNotify("Silme hatası: " + e.message, "error"); }
         }
@@ -4977,6 +4978,7 @@
         function htHesapSil(id) {
             tmConfirm("Bu hesabı silmek istediğinize emin misiniz?", function() {
                 var db = htVeriYukle();
+                var silinen = db.hesaplar.find(function(h){return h.id===id;});
                 db.hesaplar = db.hesaplar.filter(function(h){return h.id!==id;});
                 db.islemler = db.islemler.filter(function(i){return i.hesapId!==id;});
                 htVeriKaydet(db);
@@ -4987,7 +4989,7 @@
                 htDurumGuncelle();
                 if(HT_AKTIF_DETAY_HESAP === id) htHesapDetayKapat();
                 tmNotify("Hesap silindi.", "success");
-                aktiviteEkle("Hesap silindi", "Muhasebe");
+                aktiviteEkle("Hesap silindi: " + (silinen ? silinen.bankaAdi : ""), "Muhasebe");
             });
         }
 
@@ -5252,8 +5254,9 @@
                 htIslemleriGoster();
                 if(HT_AKTIF_DETAY_HESAP !== null) htDetayIslemleriGoster();
                 htDurumGuncelle();
+                var silAciklama = sil ? sil.aciklama : "";
                 tmNotify("Hareket silindi.", "success");
-                aktiviteEkle("Hareket silindi", "Muhasebe");
+                aktiviteEkle("Hareket silindi: " + silAciklama, "Muhasebe");
             });
         }
 
@@ -6110,11 +6113,12 @@
         function ftGelenSil(id) {
             tmConfirm("Bu faturayı silmek istediğinize emin misiniz?", function() {
                 var yv = ftYilVerisi();
+                var silinen = yv.data.gelenFaturalar.find(function(x){return x.id === id;});
                 yv.data.gelenFaturalar = yv.data.gelenFaturalar.filter(function(x){return x.id !== id;});
                 ftDbKaydet(yv.db);
                 ftGelenGoster(); ftKdvGoster(); faturaOzetGuncelle();
                 tmNotify("Gelen fatura silindi.", "success");
-                aktiviteEkle("Gelen fatura silindi", "Muhasebe");
+                aktiviteEkle("Gelen fatura silindi: " + (silinen ? silinen.firmaAdi : ""), "Muhasebe");
             });
         }
 
@@ -6216,11 +6220,12 @@
         function ftGidenSil(id) {
             tmConfirm("Bu faturayı silmek istediğinize emin misiniz?", function() {
                 var yv = ftYilVerisi();
+                var silinen = yv.data.gidenFaturalar.find(function(x){return x.id === id;});
                 yv.data.gidenFaturalar = yv.data.gidenFaturalar.filter(function(x){return x.id !== id;});
                 ftDbKaydet(yv.db);
                 ftGidenGoster(); ftKdvGoster(); faturaOzetGuncelle();
                 tmNotify("Giden fatura silindi.", "success");
-                aktiviteEkle("Giden fatura silindi", "Muhasebe");
+                aktiviteEkle("Giden fatura silindi: " + (silinen ? silinen.firmaAdi : ""), "Muhasebe");
             });
         }
 
@@ -7702,11 +7707,12 @@ function itDurumMetni(o) {
         function itSil(id) {
             tmConfirm("Bu kaydı silmek istediğinize emin misiniz?", function() {
                 var liste = itDbYukle();
+                var silinen = liste.find(function(x){return x.id === id;});
                 liste = liste.filter(function(x){return x.id !== id;});
                 itDbKaydet(liste);
                 itGoster();
                 tmNotify("Kayıt silindi.", "success");
-                aktiviteEkle("İş takibi kaydı silindi", "İş Takibi");
+                aktiviteEkle("İş takibi kaydı silindi: " + (silinen ? silinen.isAdi : ""), "İş Takibi");
             });
         }
 
@@ -8055,11 +8061,12 @@ function itDurumMetni(o) {
         function dlkSil(id) {
             tmConfirm("Bu dilekçeyi silmek istediğinize emin misiniz?", function() {
                 var db = dlkDbYukle();
+                var silinen = db.find(function(d) { return d.id === id; });
                 db = db.filter(function(d) { return d.id !== id; });
                 dlkDbKaydet(db);
                 dlkListele();
                 tmNotify("Dilekçe silindi.", "success");
-                aktiviteEkle("Dilekçe silindi", "Dilekçe");
+                aktiviteEkle("Dilekçe silindi: " + (silinen ? silinen.konu : ""), "Dilekçe");
             });
         }
 
