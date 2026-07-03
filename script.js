@@ -886,10 +886,14 @@
         function sidebarMobileAc() {
             document.querySelector('.sidebar').classList.add('mobile-open');
             document.getElementById('sidebarOverlay').classList.add('active');
+            document.body.classList.add('sidebar-open-mobile');
+            document.getElementById('hamburgerBtn').classList.add('hidden');
         }
         function sidebarMobileKapat() {
             document.querySelector('.sidebar').classList.remove('mobile-open');
             document.getElementById('sidebarOverlay').classList.remove('active');
+            document.body.classList.remove('sidebar-open-mobile');
+            document.getElementById('hamburgerBtn').classList.remove('hidden');
         }
         function sidebarAc() {
             const sidebar = document.querySelector('.sidebar');
@@ -980,7 +984,22 @@
         }
         function kapatLockPopup() { document.getElementById("lockPopupOverlay").classList.remove("active"); }
 
+        function sayfaLoadingGoster() {
+            var bar = document.getElementById('pageLoadingBar');
+            if (!bar) return;
+            bar.classList.remove('done');
+            bar.classList.add('active');
+            bar.style.width = '';
+        }
+        function sayfaLoadingBitir() {
+            var bar = document.getElementById('pageLoadingBar');
+            if (!bar) return;
+            bar.classList.remove('active');
+            bar.classList.add('done');
+            setTimeout(function(){ bar.classList.remove('done'); bar.style.width = '0'; }, 600);
+        }
         function sayfaDegistir(pageId, element) {
+            sayfaLoadingGoster();
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
             document.querySelectorAll('.submenu-item').forEach(s => s.classList.remove('active'));
@@ -1018,6 +1037,7 @@
                 else if (pageId === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
             } catch(e) { console.warn('sayfa yenileme hatasi', e); }
             localStorage.setItem('tm_active_page', pageId);
+            sayfaLoadingBitir();
         }
         function yenileAktifSayfa() {
             try {
