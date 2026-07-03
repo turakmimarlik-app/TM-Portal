@@ -2085,7 +2085,7 @@
         function girisCikisLogListele() {
             const tbody = document.getElementById("girisCikisLogBody");
             if (!tbody) return;
-            const log = JSON.parse(localStorage.getItem("tm_giris_cikis_log")) || [];
+            const log = JSON.parse(localStorage.getItem("tm_giris_cikis_log") || "[]");
             tbody.innerHTML = log.map(function(k) {
                 const renk = k.islem === "GİRİŞ" ? "var(--btn-green)" : "var(--accent-red)";
                 return '<tr><td>' + k.kullanici + '</td><td style="color:' + renk + ';font-weight:700;">' + k.islem + '</td><td>' + k.zaman + '</td></tr>';
