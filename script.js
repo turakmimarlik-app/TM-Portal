@@ -877,6 +877,14 @@
             btn.textContent = collapsed ? '▶' : '◀';
             localStorage.setItem('tm_sidebar_collapsed', collapsed ? '1' : '0');
         }
+        function sidebarMobileAc() {
+            document.querySelector('.sidebar').classList.add('mobile-open');
+            document.getElementById('sidebarOverlay').classList.add('active');
+        }
+        function sidebarMobileKapat() {
+            document.querySelector('.sidebar').classList.remove('mobile-open');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+        }
         function sidebarAc() {
             const sidebar = document.querySelector('.sidebar');
             if (sidebar.classList.contains('collapsed')) {
@@ -961,6 +969,7 @@
             }
             var subPageMap={"teklif-olustur-page":"teklif-submenu","teklif-liste-page":"teklif-submenu","piyasa-fiyatlari-page":"teklif-submenu","tm-fiyatlar-page":"teklif-submenu","musteriler-page":"portfoy-submenu","isortaklari-page":"portfoy-submenu","nakit-dekont-page":"muhasebe-submenu","is-muhasebe-olustur-page":"muhasebe-submenu","is-muhasebe-page":"muhasebe-submenu","tamamlanan-is-muhasebeleri-page":"muhasebe-submenu","hesap-takip-page":"muhasebe-submenu","fatura-takip-page":"muhasebe-submenu","yillik-butce-page":"muhasebe-submenu"};
             if (subPageMap[pageId]) { try { origSetItem("tm_submenu_open", subPageMap[pageId]); } catch(e) {} }
+            sidebarMobileKapat();
             sayfaDegistir(pageId, element);
         }
         function kapatLockPopup() { document.getElementById("lockPopupOverlay").classList.remove("active"); }
