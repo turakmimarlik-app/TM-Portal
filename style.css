@@ -207,7 +207,7 @@
         [data-theme="dark"] .lock-popup-btn:hover { background: #a33224; }
 
         h2 { margin-top: 0; color: var(--text-dark); border-bottom: 2px solid var(--bg-main); padding-bottom: 15px; font-weight: 700; }
-        #anasayfa-page { background:transparent !important; padding:0 !important; border:none !important; box-shadow:none !important; border-radius:0 !important; }
+        /* Dashboard artık modern card widget'ları kullandığı için normal page stilleri geçerli */
         h3 { color: var(--text-dark); margin-top: 25px; margin-bottom: 15px; font-weight: 600; }
 
 
@@ -317,12 +317,6 @@
         .dash-stat-box .icon { font-size: 20px; margin-bottom: 2px; }
         
         .dash-fin-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
-        .dash-fin-card { background: linear-gradient(135deg, var(--sidebar-bg), var(--sidebar-active)); padding: 18px 16px; border-radius: 10px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .dash-fin-card .lbl { font-size: 10px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; display: block; margin-bottom: 4px; }
-        .dash-fin-card .val { font-size: 24px; font-weight: 900; color: white; }
-        .dash-fin-card .val.green { color: #4CAF50; }
-        .dash-fin-card .val.red { color: #ef5350; }
-        .dash-fin-card .val.orange { color: #FFA726; }
         
         .dash-widget { background: var(--panel-bg); border-radius: 14px; border: 1px solid var(--border-color); overflow: hidden; transition: 0.25s; }
         .dash-widget:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
@@ -349,6 +343,64 @@
         .as-header { display:flex; align-items:center; gap:16px; margin-bottom:24px; padding-bottom:16px; border-bottom:2px solid var(--bg-main); }
         .as-header h2 { border:none; padding:0; margin:0; font-size:22px; }
 
+        /* === YENİ DASHBOARD TASARIMI === */
+        .dash-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; padding-bottom:16px; border-bottom:2px solid var(--bg-main); }
+        .dash-header-left h2 { margin:0; padding:0; border:none; font-size:22px; font-weight:800; color:var(--text-dark); }
+        .dash-header-date { font-size:12px; color:var(--text-light); font-weight:600; margin-top:2px; display:block; }
+        .dash-header-right { display:flex; gap:8px; align-items:center; }
+        .dash-settings-btn { background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; width:36px; height:36px; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:0.2s; }
+        .dash-settings-btn:hover { border-color:var(--accent-red); background:var(--panel-bg); }
+
+        /* Dinamik Widget Grid */
+        .dash-dynamic-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px; }
+        .dash-modern-card { background:var(--panel-bg); border:1px solid var(--border-color); border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.03); transition:box-shadow 0.2s,transform 0.15s,opacity 0.2s; }
+        .dash-modern-card:hover { box-shadow:0 4px 20px rgba(0,0,0,0.06); }
+        .dash-modern-card.dash-dragging { opacity:0.4; transform:scale(0.97); }
+        .dash-modern-card.dash-drag-over { border-color:var(--accent-red); box-shadow:0 0 0 2px rgba(158,42,43,0.2); }
+        .dash-modern-card.dash-hidden { display:none; }
+        .dash-widget-head { display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--border-color); background:var(--bg-main); user-select:none; }
+        .dash-drag-handle { cursor:grab; font-size:16px; color:var(--text-light); padding:0 4px; user-select:none; line-height:1; transition:color 0.15s; flex-shrink:0; }
+        .dash-drag-handle:hover { color:var(--text-dark); }
+        .dash-drag-handle:active { cursor:grabbing; }
+        .dash-widget-title { flex:1; font-size:13px; font-weight:700; color:var(--text-dark); letter-spacing:0.3px; }
+        .dash-widget-actions { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+        .dash-widget-link { font-size:11px; color:var(--accent-red); font-weight:600; cursor:pointer; white-space:nowrap; padding:2px 6px; border-radius:4px; transition:0.15s; }
+        .dash-widget-link:hover { background:rgba(158,42,43,0.08); }
+        .dash-widget-hide { font-size:14px; color:var(--text-light); cursor:pointer; padding:2px 6px; border-radius:4px; transition:0.15s; line-height:1; }
+        .dash-widget-hide:hover { color:var(--accent-red); background:rgba(158,42,43,0.08); }
+        .dash-widget-body { padding:10px 14px; }
+        .dash-widget-body table { margin:0; }
+        .dash-widget-body .dash-office-notes { min-height:70px; }
+
+        /* Hızlı Kısayollar */
+        .dash-shortcuts { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; }
+        .dash-shortcut-item { display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 6px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-main); cursor:pointer; transition:0.2s; text-decoration:none; color:var(--text-dark); font-weight:600; font-size:11px; }
+        .dash-shortcut-item:hover { border-color:var(--accent-red); background:rgba(158,42,43,0.04); transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+        .dash-shortcut-item .dash-short-icon { font-size:22px; }
+
+        /* Finans Kartları (güncellendi) */
+        .dash-fin-card { background:var(--panel-bg); border:1px solid var(--border-color); border-radius:12px; padding:18px 20px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.03); border-left:4px solid; transition:0.2s; }
+        .dash-fin-card:hover { box-shadow:0 4px 16px rgba(0,0,0,0.06); transform:translateY(-2px); }
+        .dash-fin-card.dfc-bakiye { border-left-color:#2E7D32; }
+        .dash-fin-card.dfc-gelir { border-left-color:#FFA726; }
+        .dash-fin-card.dfc-gider { border-left-color:#C62828; }
+        .dash-fin-label { font-size:11px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:6px; }
+        .dash-fin-val { font-size:26px; font-weight:900; }
+        .dash-fin-val.green { color:#2E7D32; }
+        .dash-fin-val.orange { color:#FFA726; }
+        .dash-fin-val.red { color:#C62828; }
+
+        /* Widget Ayarları Modal */
+        .dash-ayar-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border-color); }
+        .dash-ayar-item:last-child { border-bottom:none; }
+        .dash-ayar-item .dash-ayar-icon { font-size:18px; width:28px; text-align:center; }
+        .dash-ayar-item .dash-ayar-label { flex:1; font-size:13px; font-weight:600; color:var(--text-dark); }
+        .dash-ayar-item .dash-ayar-toggle { padding:6px 14px; border-radius:6px; border:none; font-size:11px; font-weight:700; cursor:pointer; transition:0.2s; }
+        .dash-ayar-item .dash-ayar-toggle.dash-ayar-hidden { background:var(--btn-green); color:#fff; }
+        .dash-ayar-item .dash-ayar-toggle.dash-ayar-visible { background:var(--bg-main); color:var(--text-light); border:1px solid var(--border-color); }
+        .dash-ayar-item .dash-ayar-toggle:hover { filter:brightness(1.1); }
+
+        /* Eski dashboard sınıfları (geriye uyumluluk için tutuldu) */
         .as-grid { display:flex; gap:24px; flex-wrap:wrap; }
         .as-col-main { flex:1.6; min-width:420px; }
         .as-col-side { flex:1; min-width:320px; }
@@ -362,20 +414,20 @@
         .as-card-footer { padding:0 20px 16px 20px; }
         .as-footer-label { font-size:11px; font-weight:700; color:var(--text-light); margin-bottom:6px; letter-spacing:1px; }
         .as-takvim-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
-        .as-btn-toggle { background:var(--accent-red); color:#fff; border:none; padding:7px 16px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer; transition:0.2s; letter-spacing:0.5px; }
+        .as-btn-toggle { background:var(--accent-red); color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; letter-spacing:0.5px; white-space:nowrap; }
         .as-btn-toggle:hover { filter:brightness(1.15); transform:translateY(-1px); }
-        .as-takvim-nav { display:flex; align-items:center; gap:8px; }
-        .as-btn-nav { background:var(--bg-main); border:1px solid var(--border-color); color:var(--text-dark); padding:5px 10px; border-radius:6px; cursor:pointer; font-size:12px; transition:0.15s; }
+        .as-takvim-nav { display:flex; align-items:center; gap:6px; }
+        .as-btn-nav { background:var(--bg-main); border:1px solid var(--border-color); color:var(--text-dark); padding:4px 8px; border-radius:5px; cursor:pointer; font-size:11px; transition:0.15s; }
         .as-btn-nav:hover { background:var(--panel-bg); border-color:var(--accent-red); }
-        .as-takvim-baslik { font-size:15px; font-weight:700; min-width:140px; text-align:center; }
-        .as-gorev-form { margin-bottom:14px; padding:16px; background:var(--bg-main); border-radius:10px; border:1px solid var(--border-color); }
-        .as-form-group { margin-bottom:10px; }
+        .as-takvim-baslik { font-size:14px; font-weight:700; min-width:125px; text-align:center; }
+        .as-gorev-form { margin-bottom:12px; padding:14px; background:var(--bg-main); border-radius:8px; border:1px solid var(--border-color); }
+        .as-form-group { margin-bottom:8px; }
         .as-form-group label { display:block; font-size:10px; font-weight:700; color:var(--text-light); margin-bottom:4px; letter-spacing:0.5px; }
-        .as-form-group input, .as-form-group textarea, .as-form-group select { padding:8px 10px; border:1px solid var(--border-color); border-radius:6px; background:var(--panel-bg); color:var(--text-dark); font-size:12px; box-sizing:border-box; transition:0.15s; }
+        .as-form-group input, .as-form-group textarea, .as-form-group select { padding:7px 10px; border:1px solid var(--border-color); border-radius:5px; background:var(--panel-bg); color:var(--text-dark); font-size:12px; box-sizing:border-box; transition:0.15s; width:100%; }
         .as-form-group input:focus, .as-form-group textarea:focus, .as-form-group select:focus { outline:none; border-color:var(--accent-red); box-shadow:0 0 0 2px rgba(158,42,43,0.15); }
-        .as-btn-submit { background:linear-gradient(135deg, var(--accent-red), #c0392b); color:#fff; border:none; padding:8px 18px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; letter-spacing:0.5px; width:100%; }
+        .as-btn-submit { background:linear-gradient(135deg, var(--accent-red), #c0392b); color:#fff; border:none; padding:8px 18px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; letter-spacing:0.5px; width:100%; }
         .as-btn-submit:hover { filter:brightness(1.1); transform:translateY(-1px); }
-        .as-btn-assign { background:linear-gradient(135deg, #2e7d32, #388e3c); color:#fff; border:none; padding:8px 18px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; margin-bottom:12px; letter-spacing:0.5px; }
+        .as-btn-assign { background:linear-gradient(135deg, #2e7d32, #388e3c); color:#fff; border:none; padding:7px 16px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:0.2s; margin-bottom:10px; letter-spacing:0.5px; }
         .as-btn-assign:hover { filter:brightness(1.1); transform:translateY(-1px); }
         .as-modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(4px); }
         .as-modal-box { background:var(--panel-bg); border-radius:14px; max-width:460px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); overflow:hidden; animation:asModalIn 0.25s ease; }
@@ -698,6 +750,11 @@
         .it-tablo tbody tr { transition:background 0.15s; }
         .it-tablo tbody tr:hover td { background:rgba(0,0,0,0.03) !important; }
         [data-theme="dark"] .it-tablo tbody tr:hover td { background:rgba(255,255,255,0.03) !important; }
+        [data-theme="dark"] .dash-modern-card { background:var(--panel-bg); }
+        [data-theme="dark"] .dash-shortcut-item { background:var(--bg-main); }
+        [data-theme="dark"] .dash-shortcut-item:hover { background:var(--panel-bg); }
+        [data-theme="dark"] .dash-settings-btn { background:var(--bg-main); }
+        [data-theme="dark"] .dash-widget-head { background:var(--bg-main); }
         .it-tablo .it-row-open td { border-bottom-color:transparent; }
         .it-mini-bar { display:inline-flex; align-items:center; gap:6px; min-width:90px; }
         .it-mini-bar-track { width:54px; height:5px; background:var(--border-color); border-radius:3px; overflow:hidden; flex-shrink:0; }

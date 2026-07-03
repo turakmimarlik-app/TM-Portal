@@ -329,6 +329,11 @@
             piyasaBirimTipiSecenekleriniDoldur();
             musteriEtiketleriniDoldur();
             csInit();var cso=new MutationObserver(function(m){for(var i=0;i<m.length;i++){if(m[i].addedNodes.length){csInit();break;}}});cso.observe(document.body,{childList:true,subtree:true});
+            document.addEventListener('dragstart', dashDragBasla);
+            document.addEventListener('dragover', dashDragOver);
+            document.addEventListener('dragleave', dashDragLeave);
+            document.addEventListener('drop', dashDrop);
+            document.addEventListener('dragend', dashDragEnd);
             birimListesiniYenile();
             dashOfficeNotesYukle();
             dashboardVerileriniGuncelle();
@@ -1259,14 +1264,22 @@
         function dashboardVerileriniGuncelle() {
             document.querySelectorAll("#anasayfa-page [data-perm]").forEach(function(el){
                 var val = el.getAttribute("data-perm");
-                var goster = false;
+                var goster = true;
                 if (val && val.startsWith("[")) {
                     try { var permList = JSON.parse(val); goster = permList.some(function(p){ return yetkiSayfaAc(p); }); } catch(e) { goster = true; }
-                } else {
-                    goster = val ? yetkiSayfaAc(val) : true;
+                } else if (val && val !== "anasayfa") {
+                    goster = yetkiSayfaAc(val);
+                }
+                if (goster) {
+                    var wid = el.getAttribute("data-widget");
+                    if (wid) { goster = dashWidgetGorunuyorMu(wid); }
                 }
                 el.style.display = goster ? "" : "none";
             });
+            dashShortcutsOlustur();
+            dashWidgetSiralamayiUygula();
+            var dateEl = document.getElementById("dashHeaderDate");
+            if (dateEl) dateEl.textContent = new Date().toLocaleDateString("tr-TR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
 
             const teklifDb = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
             const piyasaDb = JSON.parse(localStorage.getItem("tm_piyasa_db_v2")) || [];
@@ -1485,6 +1498,183 @@
             _dashNotTimer = setTimeout(function(){
                 localStorage.setItem("tm_dashboard_notes", deger);
             }, 300);
+        }
+
+        /* ================= YENİ DASHBOARD FONKSİYONLARI ================= */
+        var DASH_WIDGET_KEY = "tm_dashboard_widget_order";
+        var DASH_WIDGET_HIDDEN_KEY = "tm_dashboard_widget_hidden";
+
+        function dashWidgetSiralamasiGetir() {
+            try { return JSON.parse(localStorage.getItem(DASH_WIDGET_KEY)) || []; } catch(e) { return []; }
+        }
+        function dashWidgetSiralamasiKaydet(sira) {
+            try { localStorage.setItem(DASH_WIDGET_KEY, JSON.stringify(sira)); } catch(e) {}
+        }
+        function dashWidgetGizliListesi() {
+            try { return JSON.parse(localStorage.getItem(DASH_WIDGET_HIDDEN_KEY)) || []; } catch(e) { return []; }
+        }
+        function dashWidgetGizliKaydet(list) {
+            try { localStorage.setItem(DASH_WIDGET_HIDDEN_KEY, JSON.stringify(list)); } catch(e) {}
+        }
+        function dashWidgetGorunuyorMu(widgetId) {
+            return dashWidgetGizliListesi().indexOf(widgetId) === -1;
+        }
+        function dashWidgetGizle(widgetId) {
+            var gizli = dashWidgetGizliListesi();
+            if (gizli.indexOf(widgetId) === -1) gizli.push(widgetId);
+            dashWidgetGizliKaydet(gizli);
+            dashboardVerileriniGuncelle();
+        }
+        function dashWidgetGoster(widgetId) {
+            var gizli = dashWidgetGizliListesi().filter(function(id){ return id !== widgetId; });
+            dashWidgetGizliKaydet(gizli);
+            dashboardVerileriniGuncelle();
+        }
+        function dashWidgetSiralamayiUygula() {
+            var sira = dashWidgetSiralamasiGetir();
+            if (!sira || sira.length === 0) return;
+            var grid = document.getElementById("dashWidgetGrid");
+            if (!grid) return;
+            var widgets = grid.querySelectorAll(".dash-modern-card");
+            var map = {};
+            widgets.forEach(function(w){ var wid = w.getAttribute("data-widget"); if (wid) map[wid] = w; });
+            sira.forEach(function(wid){
+                if (map[wid]) { grid.appendChild(map[wid]); delete map[wid]; }
+            });
+            Object.keys(map).forEach(function(wid){ grid.appendChild(map[wid]); });
+        }
+
+        /* Drag & Drop */
+        function dashDragBasla(e) {
+            var card = e.target.closest(".dash-modern-card");
+            if (!card) return;
+            e.dataTransfer.setData("text/plain", card.getAttribute("data-widget") || "");
+            e.dataTransfer.effectAllowed = "move";
+            setTimeout(function(){ card.classList.add("dash-dragging"); }, 0);
+        }
+        function dashDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "move";
+            var target = e.target.closest(".dash-modern-card");
+            if (target) target.classList.add("dash-drag-over");
+        }
+        function dashDragLeave(e) {
+            var target = e.target.closest(".dash-modern-card");
+            if (target) target.classList.remove("dash-drag-over");
+        }
+        function dashDrop(e) {
+            e.preventDefault();
+            document.querySelectorAll(".dash-drag-over").forEach(function(el){ el.classList.remove("dash-drag-over"); });
+            document.querySelectorAll(".dash-dragging").forEach(function(el){ el.classList.remove("dash-dragging"); });
+            var fromId = e.dataTransfer.getData("text/plain");
+            if (!fromId) return;
+            var grid = document.getElementById("dashWidgetGrid");
+            var target = e.target.closest(".dash-modern-card");
+            if (!target || !grid) return;
+            var toId = target.getAttribute("data-widget");
+            if (!toId || fromId === toId) return;
+            var fromEl = grid.querySelector('[data-widget="' + fromId + '"]');
+            var toEl = grid.querySelector('[data-widget="' + toId + '"]');
+            if (!fromEl || !toEl) return;
+            var parent = grid;
+            var children = Array.from(parent.children);
+            var fromIdx = children.indexOf(fromEl);
+            var toIdx = children.indexOf(toEl);
+            if (fromIdx < toIdx) {
+                parent.insertBefore(fromEl, toEl.nextSibling);
+            } else {
+                parent.insertBefore(fromEl, toEl);
+            }
+            var yeniSira = [];
+            parent.querySelectorAll(".dash-modern-card").forEach(function(c){
+                var wid = c.getAttribute("data-widget");
+                if (wid) yeniSira.push(wid);
+            });
+            dashWidgetSiralamasiKaydet(yeniSira);
+        }
+        function dashDragEnd(e) {
+            document.querySelectorAll(".dash-dragging,.dash-drag-over").forEach(function(el){
+                el.classList.remove("dash-dragging","dash-drag-over");
+            });
+        }
+
+        /* Widget Ayarları */
+        function dashAyarGoster() {
+            var modal = document.getElementById("dashAyarModal");
+            var liste = document.getElementById("dashAyarListesi");
+            if (!modal || !liste) return;
+            var gizli = dashWidgetGizliListesi();
+            var widgetAdlari = {
+                chart:"Gelir/Gider Grafiği", shortcuts:"Hızlı Kısayollar", takvim:"Takvim",
+                teklifler:"Son Teklifler", isler:"Aktif İşler", gorevler:"Görevler",
+                fatura:"Fatura Özeti", piyasa:"Piyasa Endeksi", vergi:"Vergi Takvimi", notlar:"Ofis Notları"
+            };
+            var widgetIkonlari = {
+                chart:"📊", shortcuts:"🚀", takvim:"📅", teklifler:"📄",
+                isler:"🏗️", gorevler:"📋", fatura:"💰", piyasa:"📊", vergi:"📅", notlar:"📝"
+            };
+            var h = "";
+            Object.keys(widgetAdlari).forEach(function(wid){
+                var gizliMi = gizli.indexOf(wid) !== -1;
+                var kart = document.querySelector('[data-widget="'+wid+'"]');
+                if (!kart || kart.closest('[data-perm]') && kart.closest('[data-perm]').style.display === "none") {
+                    if (!gizliMi) return;
+                }
+                h += '<div class="dash-ayar-item">';
+                h += '<span class="dash-ayar-icon">' + (widgetIkonlari[wid]||'📦') + '</span>';
+                h += '<span class="dash-ayar-label">' + (widgetAdlari[wid]||wid) + '</span>';
+                if (gizliMi) {
+                    h += '<button class="dash-ayar-toggle dash-ayar-hidden" onclick="dashWidgetGoster(\''+wid+'\')">+ GÖSTER</button>';
+                } else {
+                    h += '<button class="dash-ayar-toggle dash-ayar-visible" onclick="dashWidgetGizle(\''+wid+'\')">GİZLE</button>';
+                }
+                h += '</div>';
+            });
+            if (!h) h = '<div style="text-align:center;padding:20px;color:var(--text-light);font-size:13px;">Tüm widget\'lar zaten görünür durumda.</div>';
+            liste.innerHTML = h;
+            modal.style.display = "flex";
+        }
+        function dashAyarKapat() {
+            document.getElementById("dashAyarModal").style.display = "none";
+        }
+
+        /* Hızlı Kısayollar */
+        var DASH_KISAYOL_KEY = "tm_dashboard_shortcuts";
+        function dashKisayolVarsayilan() {
+            return [
+                { icon:"📄", label:"Yeni Teklif", page:"teklif-olustur", perm:"teklif-olustur" },
+                { icon:"👤", label:"Müşteri Ekle", page:"musteriler", perm:"musteriler-page" },
+                { icon:"🤝", label:"Partner Ekle", page:"isortaklari", perm:"isortaklari-page" },
+                { icon:"💵", label:"Nakit Dekont", page:"nakit-dekont", perm:"nakit-dekont" },
+                { icon:"📅", label:"İş Takibi", page:"istakibi", perm:"istakibi-page" },
+                { icon:"💰", label:"Fatura Takip", page:"fatura-takip", perm:"fatura-takip" }
+            ];
+        }
+        function dashShortcutsOlustur() {
+            var konteyner = document.getElementById("dashShortcuts");
+            if (!konteyner) return;
+            var kisayollar;
+            try { kisayollar = JSON.parse(localStorage.getItem(DASH_KISAYOL_KEY)); } catch(e) { kisayollar = null; }
+            if (!kisayollar || !Array.isArray(kisayollar) || kisayollar.length === 0) {
+                kisayollar = dashKisayolVarsayilan();
+            }
+            var h = "";
+            kisayollar.forEach(function(s){
+                if (s.perm && !yetkiSayfaAc(s.perm)) return;
+                var pageId = (s.page || "").replace(/^(teklif-liste|teklif-olustur|tm-fiyatlar|piyasa-fiyatlari|musteriler|isortaklari|nakit-dekont|is-muhasebe-olustur|is-muhasebe|tamamlanan-is-muhasebeleri|hesap-takip|fatura-takip|yillik-butce|dilekce|istakibi|yonetim)$/, function(m){
+                    var map = { "teklif-liste":"teklif-liste-page", "teklif-olustur":"teklif-olustur-page", "tm-fiyatlar":"tm-fiyatlar-page", "piyasa-fiyatlari":"piyasa-fiyatlari-page", "musteriler":"musteriler-page", "isortaklari":"isortaklari-page", "nakit-dekont":"nakit-dekont-page", "is-muhasebe-olustur":"is-muhasebe-olustur-page", "is-muhasebe":"is-muhasebe-page", "tamamlanan-is-muhasebeleri":"tamamlanan-is-muhasebeleri-page", "hesap-takip":"hesap-takip-page", "fatura-takip":"fatura-takip-page", "yillik-butce":"yillik-butce-page", "dilekce":"dilekce-page", "istakibi":"istakibi-page", "yonetim":"yonetim-page" };
+                    return map[m] || m;
+                });
+                var menuItem = document.getElementById("sub-" + (s.page || ""));
+                h += '<div class="dash-shortcut-item" onclick="menudenSayfaAc(\'' + (s.page||"") + '\',\'' + pageId + '\',document.getElementById(\'sub-' + (s.page||"") + '\'))">';
+                h += '<span class="dash-short-icon">' + (s.icon||"📌") + '</span>';
+                h += '<span>' + (s.label||"Sayfa") + '</span></div>';
+            });
+            if (!h) {
+                konteyner.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:12px;color:var(--text-light);font-size:12px;">Henüz kısayol bulunmuyor.</div>';
+            } else {
+                konteyner.innerHTML = h;
+            }
         }
 
         /* ================= PORTFÖY MODÜLÜ (MÜŞTERİLER) MOTORU ================= */
