@@ -1,3 +1,6 @@
+        /* Production - console loglari kapat */
+        console.log=0; console.warn=0; console.error=0;
+
         /* --- Firebase Sync Katmani (verileri buluta yedekler) --- */
         const firebaseConfig = {
             apiKey: "AIzaSyAgKERI5UOh5urGPTS2ODRoI-Qb8H7Ro1k",

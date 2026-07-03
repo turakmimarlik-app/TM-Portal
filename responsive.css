@@ -1,0 +1,54 @@
+        /* ==================== MOBIL / TABLET UYUMLULUK ==================== */
+        .sidebar-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9; }
+        .sidebar-overlay.active { display:block; }
+        .hamburger-btn { display:none; position:fixed; top:10px; left:10px; z-index:8; width:40px; height:40px; background:var(--sidebar-bg); color:white; border:none; border-radius:8px; font-size:22px; cursor:pointer; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+        @media (max-width:768px) {
+            .hamburger-btn { display:flex; }
+            .sidebar { transform:translateX(-100%); left:0; z-index:11; transition:transform 0.3s ease; }
+            .sidebar.mobile-open { transform:translateX(0); }
+            .sidebar .sidebar-toggle { display:none; }
+            .sidebar.collapsed { width:var(--sidebar-width); }
+            .sidebar.collapsed .menu-text { display:inline; }
+            .sidebar.collapsed .submenu-list { display:none !important; }
+            .sidebar.collapsed .sidebar-header h3,
+            .sidebar.collapsed .sidebar-header p { display:block; }
+            .sidebar.collapsed .sidebar-users-section { display:block; }
+            .sidebar.collapsed .sidebar-copyright-area { display:block; }
+            .sidebar.collapsed .menu-item { justify-content:flex-start; padding:16px 20px; border-left-width:4px; font-size:15px; }
+            .sidebar.collapsed .menu-item span[id$="-icon"] { display:inline; }
+            .main-content { margin-left:0; width:100%; padding:15px; }
+            .sidebar.collapsed + .main-content { margin-left:0; width:100%; }
+            .page { padding:15px; }
+            .row { flex-direction:column; }
+            .checkbox-group { grid-template-columns:1fr; }
+            .app-table, .dash-table-widget, .ft-table, .it-tablo { display:block; overflow-x:auto; white-space:nowrap; }
+            .portfolio-grid { grid-template-columns:1fr; }
+            .dash-stat-row { grid-template-columns:repeat(2,1fr); gap:10px; }
+            .dash-fin-row { grid-template-columns:1fr; gap:10px; }
+            .as-col-main { min-width:0; width:100%; }
+            .as-col-side { min-width:0; width:100%; }
+            .as-grid { flex-direction:column; }
+            .live-summary-card { width:100%; margin-left:0; }
+            .login-logo-left { position:static; transform:none; text-align:center; }
+            .login-logo-left img { max-width:90vw; }
+            .login-card { padding:25px; }
+            .yb-top-bar { flex-direction:column; }
+            .search-box { max-width:100%; }
+            .bank-input-row { flex-direction:column; }
+            .sidebar.collapsed .btn-logout span { display:inline; }
+            .sidebar.collapsed .sidebar-footer-row { justify-content:space-between; }
+            .sidebar.collapsed .theme-toggle { display:block; }
+            .sidebar.collapsed .sidebar-header .sidebar-logo-img { display:block; }
+            .form-row-3 { grid-template-columns:1fr; }
+            .ft-filter-grid { grid-template-columns:1fr; }
+            .tmf-excel { font-size:12px; }
+            .tmf-excel .tmf-ex-input { font-size:12px; padding:4px; }
+        }
+        @media (max-width:480px) {
+            .dash-stat-row { grid-template-columns:1fr; }
+            .page { padding:10px; }
+            .main-content { padding:10px; }
+            .btn { padding:10px 16px; font-size:13px; }
+            input, select, textarea { padding:10px; font-size:13px; }
+            .sidebar-toggle { display:none; }
+        }
