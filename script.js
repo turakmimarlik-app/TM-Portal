@@ -790,6 +790,7 @@
             try { localStorage.setItem("tm_active_user", kullanici); } catch(e) { console.error("Oturum kaydetme hatasi:", e); }
             try { sessionStorage.setItem("tm_session_active", "1"); } catch(e) { console.error("Session kaydetme hatasi:", e); }
             girisCikisLogla(kullanici, "GİRİŞ");
+            aktiviteEkle("Giriş yaptı", "Sistem");
             try { localStorage.removeItem('tm_active_page'); } catch(e) { console.error("Sayfa temizleme hatasi:", e); }
             menuyuInsaEt(yetkiler);
             sidebarKullanicilariYenile();
@@ -909,6 +910,7 @@
                 try { sessionStorage.removeItem("tm_session_active"); } catch(e) { console.error("Session temizlik hatasi:", e); }
                 try { localStorage.removeItem("tm_active_page"); } catch(e) { console.error("Sayfa temizlik hatasi:", e); }
                 girisCikisLogla(cikan, "ÇIKIŞ");
+                aktiviteEkle("Çıkış yaptı", "Sistem");
                 sidebarKullanicilariYenile();
             });
         }
@@ -1004,6 +1006,38 @@
             document.getElementById("tmAlertOverlay").style.display = "flex";
             document.getElementById("tmAlertOk").onclick = function() { document.getElementById("tmAlertOverlay").style.display = "none"; };
         }
+        function bildirimSesi() {
+            try {
+                var ctx = new (window.AudioContext || window.webkitAudioContext)();
+                var osc = ctx.createOscillator();
+                var gain = ctx.createGain();
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.frequency.value = 880; osc.type = 'sine';
+                gain.gain.setValueAtTime(0.25, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.4);
+            } catch(e) {}
+        }
+        function aktiviteEkle(islem, sayfa) {
+            try {
+                var k = localStorage.getItem("tm_active_user") || "SISTEM";
+                var log = JSON.parse(localStorage.getItem("tm_aktivite_log")) || [];
+                log.unshift({ kullanici: k, islem: islem, sayfa: sayfa, zaman: new Date().toLocaleString("tr-TR") });
+                if (log.length > 500) log.length = 500;
+                localStorage.setItem("tm_aktivite_log", JSON.stringify(log));
+            } catch(e) { console.error("Aktivite log hatasi:", e); }
+        }
+        function aktiviteListele() {
+            var el = document.getElementById("tmAktiviteLogBody");
+            if (!el) return;
+            var log = JSON.parse(localStorage.getItem("tm_aktivite_log")) || [];
+            if (log.length === 0) { el.innerHTML = "<tr><td colspan='4' style='padding:20px;text-align:center;color:var(--text-light);'>Henüz aktivite kaydı yok.</td></tr>"; return; }
+            var h = "";
+            log.slice(0, 100).forEach(function(k) {
+                h += "<tr><td style='padding:8px 12px;font-size:12px;'>" + k.zaman + "</td><td style='padding:8px 12px;font-size:12px;font-weight:600;'>" + k.kullanici + "</td><td style='padding:8px 12px;font-size:12px;'>" + k.islem + "</td><td style='padding:8px 12px;font-size:12px;color:var(--text-light);'>" + k.sayfa + "</td></tr>";
+            });
+            el.innerHTML = h;
+        }
         function menudenSayfaAc(yetkiKodu, pageId, element) {
             if (tmFormDirty) { tmConfirm("Bu sayfadan ayrılırken kaydedilmemiş değişiklikler kaybolacak. Yine de çıkmak istiyor musunuz?", function() { tmFormDirty = false; menudenSayfaAc(yetkiKodu, pageId, element); }); return; }
             sidebarAc();
@@ -1071,7 +1105,7 @@
                 else if (pageId === 'dilekce-page') { dlkListele(); dlkIdGuncelle(); }
                 else if (pageId === 'tm-fiyatlar-page') { tmfSayfayiYukle(); }
                 else if (pageId === 'istakibi-page') { itGoster(); }
-                else if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); multiLogoGridRender(); sonYedekTarihiGoster(); }
+                else if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); aktiviteListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); multiLogoGridRender(); sonYedekTarihiGoster(); }
                 else if (pageId === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
             } catch(e) { console.warn('sayfa yenileme hatasi', e); }
             localStorage.setItem('tm_active_page', pageId);
@@ -1328,6 +1362,45 @@
                 }
             }
 
+            // GRAFİK
+            try {
+                if (typeof Chart !== 'undefined') {
+                    var ctx = document.getElementById('dashAylikChart');
+                    if (ctx) {
+                        if (window._dashChart) { window._dashChart.destroy(); }
+                        var bd = ybVeriYukle();
+                        var yil = bd.aktifYil;
+                        var kayit = bd.yillar[yil];
+                        var aylar = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+                        var gelirAylik=[], giderAylik=[];
+                        for (var i=0;i<12;i++) {
+                            var ay = kayit && kayit.aylar && kayit.aylar[i];
+                            var g=0, gd=0;
+                            if (ay) {
+                                if (ay.gelir) Object.values(ay.gelir).forEach(function(k){ g+=k.tutar||0; });
+                                if (ay.gider) Object.values(ay.gider).forEach(function(k){ gd+=k.tutar||0; });
+                            }
+                            gelirAylik.push(g); giderAylik.push(gd);
+                        }
+                        window._dashChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: aylar,
+                                datasets: [
+                                    { label: 'Gelir', data: gelirAylik, backgroundColor: '#2E7D32', borderRadius: 4 },
+                                    { label: 'Gider', data: giderAylik, backgroundColor: '#C62828', borderRadius: 4 }
+                                ]
+                            },
+                            options: {
+                                responsive: true, maintainAspectRatio: true,
+                                plugins: { legend: { labels: { font: {size:11} } }, datalabels: { display: false } },
+                                scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' ₺'; } } } }
+                            }
+                        });
+                    }
+                }
+            } catch(e) { console.warn('Dashboard grafik hatasi:', e); }
+
             function setText(id, val) {
                 const el = document.getElementById(id);
                 if(el) el.innerText = val;
@@ -1371,10 +1444,12 @@
             if(editId === "-1") {
                 db.push({ id: Date.now(), ad, sirket, unvan, tel, eposta, tipi, kimlik, vergiDairesi, vergiNo, adres, bankalar });
                 tmNotify("Müşteri profil kartı başarıyla eklendi.", "success");
+                aktiviteEkle("Müşteri eklendi: " + ad, "Portföy");
             } else {
                 const targetId = parseInt(editId);
                 db = db.map(item => item.id === targetId ? { ...item, ad, sirket, unvan, tel, eposta, tipi, kimlik, vergiDairesi, vergiNo, adres, bankalar } : item);
                 tmNotify("Müşteri profil kartı güncellendi.", "success");
+                aktiviteEkle("Müşteri güncellendi: " + ad, "Portföy");
             }
             
             try { localStorage.setItem("tm_musteriler_db", JSON.stringify(db)); } catch(e) { console.error("Musteri db kaydetme hatasi:", e); tmNotify("Müşteri kaydedilirken hata oluştu!", "error"); }
@@ -1537,6 +1612,7 @@
             if(editId === "-1") {
                 db.push({ id: Date.now(), ad, sirket, unvan, brans, tel, eposta, kimlik, vergiDairesi, vergiNo, status, adres, bankalar });
                 tmNotify("İş ortağı başarıyla sisteme kaydedildi.", "success");
+                aktiviteEkle("İş ortağı eklendi: " + ad, "Portföy");
             } else {
                 const targetId = parseInt(editId);
                 db = db.map(item => item.id === targetId ? { ...item, ad, sirket, unvan, brans, tel, eposta, kimlik, vergiDairesi, vergiNo, status, adres, bankalar } : item);
@@ -1896,6 +1972,7 @@
                     const master = { usr: mevcut.usr || "TUGAYTURAK", pass: pas, title: trToUpper(ttl) };
                     localStorage.setItem("tm_admin_creds_final", JSON.stringify(master));
                     tmNotify("KURUCU ADMİN PROFİLİ BAŞARIYLA GÜNCELLENDİ.", "success");
+                    aktiviteEkle("Admin profili güncellendi", "Yönetim");
                     formSifirla(); kullaniciListesiniYenile(); sidebarKullanicilariYenile(); return;
                 }
 
@@ -1918,6 +1995,7 @@
                 kullaniciListesiniYenile();
                 sidebarKullanicilariYenile();
                 tmNotify("Kullanıcı veri kaydı başarıyla güncellendi.", "success");
+                aktiviteEkle("Kullanıcı kaydedildi/güncellendi: " + usr, "Yönetim");
             } catch(e) { tmNotify("HATA: " + e.message, "error"); }
         }
 
@@ -1989,6 +2067,7 @@
                     kullaniciListesiniYenile();
                     sidebarKullanicilariYenile();
                     tmNotify("Kullanıcı silindi.", "success");
+                    aktiviteEkle("Kullanıcı silindi", "Yönetim");
                 });
             } catch(e) { console.error("kullaniciSil hatasi:", e); tmNotify("Silme hatası: " + e.message, "error"); }
         }
@@ -2383,6 +2462,8 @@
             document.getElementById("asGorevAtamaFormu").style.display = "none";
             document.getElementById("asGorevAtaBtn").textContent = "➕ GÖREV ATA";
             tmNotify("Görev atandı.", "success");
+            aktiviteEkle("Görev atandı: " + baslik + " → " + atanan, "Dashboard");
+            bildirimSesi();
         }
         function asGorevListele() {
             const container = document.getElementById("asGorevListesi");
@@ -2643,6 +2724,7 @@
             musteriKartlariniYenile();
             
             tmNotify("TEKLİF HAFIZAYA BÜYÜK HARFLERLE KAYDEDİLDİ.", "success");
+            aktiviteEkle("Teklif oluşturuldu: #" + yeniId + " - " + (veri.musteriAd || ""), "Teklif");
             menudenSayfaAc('teklif-liste', 'teklif-liste-page', document.getElementById('sub-teklif-liste'));
         }
 
@@ -2818,6 +2900,7 @@
                 teklifListesiniYenile(); 
                 dashboardVerileriniGuncelle();
                 musteriKartlariniYenile();
+                aktiviteEkle("Teklif silindi: #" + dbId, "Teklif");
             });
         }
         
@@ -3019,10 +3102,12 @@
                     kalemler: []
                 });
                 tmNotify("İş muhasebesi kaydı başarıyla oluşturuldu.", "success");
+                aktiviteEkle("İş muhasebesi oluşturuldu: " + (isAdi || ""), "Muhasebe");
             } else {
                 const targetId = parseInt(editId);
                 db = db.map(item => item.id === targetId ? { ...item, isAdi, firma, pafta, ada, parsel, anlasmaUcreti, anlasmaTarihi: anlasmaTarihi || anlikTarihGetir() } : item);
                 tmNotify("İş muhasebesi kaydı güncellendi.", "success");
+                aktiviteEkle("İş muhasebesi güncellendi: " + (isAdi || ""), "Muhasebe");
                 document.getElementById("isMuhEditId").value = "-1";
                 document.getElementById("isMuhFormTitle").innerText = "Yeni İş Muhasebesi Kaydı Oluştur";
             }
@@ -4063,6 +4148,7 @@
             nakitDekontFormuTemizle();
             nakitDekontListesiniYenile();
             tmNotify("Nakit ödeme dekontu başarıyla kaydedildi. Dekont #" + String(yeniId).padStart(5, '0'), "success");
+            aktiviteEkle("Dekont kaydedildi: #" + String(yeniId).padStart(5, '0'), "Muhasebe");
         }
 
         function nakitDekontFormuTemizle() {

@@ -158,6 +158,12 @@
         <div class="dash-fin-card"><span class="lbl">YILLIK GELİR</span><span class="val orange" id="dashFinGelir">0,00 ₺</span></div>
         <div class="dash-fin-card"><span class="lbl">YILLIK GİDER</span><span class="val red" id="dashFinGider">0,00 ₺</span></div>
     </div>
+    <div id="dashChartSection" class="as-card" data-perm='["yillik-butce","hesap-takip"]' style="margin-bottom:24px;">
+        <div class="as-card-header"><span class="as-card-icon">📊</span><span class="as-card-title">GELİR / GİDER GRAFİĞİ</span></div>
+        <div class="as-card-body" style="padding:15px;">
+            <canvas id="dashAylikChart" style="width:100%;max-height:300px;"></canvas>
+        </div>
+    </div>
     <div class="as-grid">
         <div class="as-col-main">
             <div id="dashTakvimSection" class="as-card as-card-takvim" data-perm="anasayfa.takvim" style="margin-bottom:24px;">
@@ -1166,6 +1172,15 @@
                     </div>
                 </div>
 
+                <div style="background:var(--bg-main); padding:20px; border-radius:8px; border:1px solid var(--border-color); margin-top:20px;">
+                    <h3>📝 Aktivite Kaydı (Son 100)</h3>
+                    <div style="max-height:300px; overflow-y:auto; border:1px solid var(--border-color); border-radius:6px;">
+                        <table class="app-table" style="margin:0;">
+                            <thead><tr><th style="position:sticky;top:0;background:var(--panel-bg);">Zaman</th><th style="position:sticky;top:0;background:var(--panel-bg);">Kullanıcı</th><th style="position:sticky;top:0;background:var(--panel-bg);">İşlem</th><th style="position:sticky;top:0;background:var(--panel-bg);">Sayfa</th></tr></thead>
+                            <tbody id="tmAktiviteLogBody"></tbody>
+                        </table>
+                    </div>
+                </div>
                 <div style="background:var(--bg-main); padding:20px; border-radius:8px; border:1px solid var(--border-color); margin-top:20px;">
                     <h3>💾 Yedek & Geri Yükle</h3>
                     <p style="font-size:13px; color:var(--text-light); margin-bottom:15px;">Tüm verileri JSON dosyası olarak dışa aktarır veya önceden aldığınız yedeği geri yükler.</p>
