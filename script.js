@@ -2727,7 +2727,7 @@
             musteriKartlariniYenile();
             
             tmNotify("TEKLİF HAFIZAYA BÜYÜK HARFLERLE KAYDEDİLDİ.", "success");
-            aktiviteEkle("Teklif oluşturuldu: #" + yeniId + " - " + (veri.musteriAd || ""), "Teklif");
+            aktiviteEkle("Teklif oluşturuldu: #" + veri.id + " - " + (veri.musteriAd || ""), "Teklif");
             menudenSayfaAc('teklif-liste', 'teklif-liste-page', document.getElementById('sub-teklif-liste'));
         }
 
@@ -7666,7 +7666,7 @@ function itDurumMetni(o) {
             itGoster();
             itAcKalanYukle(openIds);
             tmNotify("📜 Ruhsat onayı alındı.", "success");
-            aktiviteEkle("Ruhsat onayı verildi", "İş Takibi");
+            aktiviteEkle("Ruhsat onayı verildi: " + (liste[idx].isAdi || ""), "İş Takibi");
         }
 
         function itTahsilatOnayiVer(id) {
@@ -7679,7 +7679,7 @@ function itDurumMetni(o) {
             itGoster();
             itAcKalanYukle(openIds);
             tmNotify("✅ Tahsilat onayı verildi.", "success");
-            aktiviteEkle("Tahsilat onayı verildi", "İş Takibi");
+            aktiviteEkle("Tahsilat onayı verildi: " + (liste[idx].isAdi || ""), "İş Takibi");
         }
 
         function itTamamla(id) {
@@ -7694,7 +7694,7 @@ function itDurumMetni(o) {
                 itDbKaydet(liste);
                 itGoster();
                 tmNotify("İş tamamlandı olarak işaretlendi.", "success");
-                aktiviteEkle("İş tamamlandı", "İş Takibi");
+                aktiviteEkle("İş tamamlandı: " + (liste[idx].isAdi || ""), "İş Takibi");
             });
         }
 
