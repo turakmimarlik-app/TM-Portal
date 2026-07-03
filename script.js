@@ -339,6 +339,7 @@
             tamamlananIsMuhasebeListesiniYenile();
             nakitDekontListesiniYenile();
 
+            window.addEventListener('resize', tmScrollHintKontrol);
         });
 
         let AKTIF_KULLANICI_YETKILERI = [];
@@ -464,6 +465,70 @@
             if(!el) return;
             el.style.display = "none";
             el.classList.remove("show");
+        }
+
+        function tmLoadingGoster(msg) {
+            var lo = document.getElementById('tmLoadingIndicator');
+            if (!lo) {
+                lo = document.createElement('div');
+                lo.id = 'tmLoadingIndicator';
+                lo.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:99998;justify-content:center;align-items:center;backdrop-filter:blur(2px);';
+                lo.innerHTML = '<div style="background:var(--panel-bg);padding:30px 40px;border-radius:14px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);border:1px solid var(--border-color);min-width:200px;"><div style="border:3px solid var(--border-color);border-top:3px solid var(--accent-red);border-radius:50%;width:30px;height:30px;animation:tmLoadingSpin 0.8s linear infinite;margin:0 auto 14px;"></div><div style="font-size:13px;font-weight:700;color:var(--text-dark);letter-spacing:0.3px;" id="tmLoadingMsg">İşlem yapılıyor...</div></div>';
+                document.body.appendChild(lo);
+                var styleEl = document.createElement('style');
+                styleEl.id = 'tmLoadingStyle';
+                styleEl.textContent = '@keyframes tmLoadingSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }';
+                document.head.appendChild(styleEl);
+            }
+            document.getElementById('tmLoadingMsg').textContent = msg || 'İşlem yapılıyor...';
+            lo.style.display = 'flex';
+        }
+        function tmLoadingGizle() {
+            var lo = document.getElementById('tmLoadingIndicator');
+            if (lo) lo.style.display = 'none';
+        }
+
+        function tmEmptyStateHTML(icon, title, desc, btn) {
+            return '<div class="tm-empty-state"><div class="tm-empty-icon">' + (icon||'📭') + '</div><div class="tm-empty-title">' + (title||'Kayıt bulunamadı') + '</div><div class="tm-empty-desc">' + (desc||'Henüz kayıt eklenmemiş.') + '</div>' + (btn ? btn : '') + '</div>';
+        }
+
+        function tmScrollHintKontrol() {
+            document.querySelectorAll('.app-table, .it-tablo-wrapper, .ft-tbl-wrap, .tmf-excel-scroll').forEach(function(el){
+                if (el.scrollWidth > el.clientWidth || el.scrollWidth > el.parentElement.clientWidth) {
+                    el.classList.add('tm-scroll-hint-active');
+                } else {
+                    el.classList.remove('tm-scroll-hint-active');
+                }
+            });
+        }
+
+        function tmIkonButtonTooltipEkle() {
+            document.querySelectorAll('button, .btn, .it-btn-sil, .it-btn-tamamla, .it-btn-tahsilat, .it-btn-ruhsat, .btn-pdf-red, .btn-danger, .btn-warning').forEach(function(b){
+                var txt = b.textContent.replace(/[🔍📋📊📜✅🗑️📌📅📄➕💾🔷🚀🎨📤📥🧾⚙️📁✏️❌⭐✔️🎯🔗🔒🔓👁️🔄❓📎📩🖨️🔃🔔💳💰👤👥🏢🏠🛠️📦📝🖊️💵🔑🔧🔨🪛📐📏🖍️🎨🖼️🏗️🏘️🌳🏞️📰🗞️🗺️📍📌🔍🔎☀️🌙🔆🌓◀▶▲▼✕＋×\s]/g,'').trim();
+                if (!txt && b.textContent.trim().length > 0) {
+                    var iconText = b.textContent.trim().substring(0,2);
+                    var label = '';
+                    if (iconText.indexOf('🗑')!==-1) label = 'Sil';
+                    else if (iconText.indexOf('✏')!==-1) label = 'Düzenle';
+                    else if (iconText.indexOf('📜')!==-1) label = 'Ruhsat Onayı';
+                    else if (iconText.indexOf('✅')!==-1) label = 'Onayla';
+                    else if (iconText.indexOf('📄')!==-1) label = 'PDF';
+                    else if (iconText.indexOf('💾')!==-1) label = 'Kaydet';
+                    else if (iconText.indexOf('➕')!==-1) label = 'Ekle';
+                    else if (iconText.indexOf('🚀')!==-1) label = 'Başlat';
+                    else if (iconText.indexOf('🔷')!==-1) label = '3B Modelleme';
+                    else if (iconText.indexOf('📤')!==-1) label = 'Giden';
+                    else if (iconText.indexOf('📥')!==-1) label = 'Gelen';
+                    else if (iconText.indexOf('🔍')!==-1) label = 'Ara';
+                    else if (iconText.indexOf('📋')!==-1) label = 'Liste';
+                    else if (iconText.indexOf('📊')!==-1) label = 'Gantt';
+                    else if (iconText.indexOf('📅')!==-1) label = 'Takvim';
+                    if (label) {
+                        b.classList.add('tm-tooltip-wrap');
+                        b.innerHTML = b.innerHTML + '<span class="tm-tooltip-text">' + label + '</span>';
+                    }
+                }
+            });
         }
 
         function tmTutarFormatla(el) {
@@ -1110,6 +1175,7 @@
             } catch(e) { console.warn('sayfa yenileme hatasi', e); }
             localStorage.setItem('tm_active_page', pageId);
             sayfaLoadingBitir();
+            setTimeout(function(){ tmIkonButtonTooltipEkle(); tmScrollHintKontrol(); }, 100);
         }
         function yenileAktifSayfa() {
             try {
@@ -1246,7 +1312,7 @@
             const offerBody = document.getElementById("dashRecentOfferBody");
             if(offerBody) {
                 if(teklifDb.length === 0) {
-                    offerBody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-light);font-size:13px;">Kayıtlı teklif bulunmamaktadır.</td></tr>';
+                    offerBody.innerHTML = '<tr><td colspan="4">'+tmEmptyStateHTML('📄','Kayıtlı teklif bulunmamaktadır.','Yeni bir teklif oluşturmak için "Yeni Teklif" butonunu kullanın.')+'</td></tr>';
                 } else {
                     const son = [...teklifDb].sort(function(a,b){return b.id-a.id;}).slice(0,5);
                     offerBody.innerHTML = "";
@@ -1265,7 +1331,7 @@
             const jobsBody = document.getElementById("dashActiveJobsBody");
             if(jobsBody) {
                 if(isMuhDb.length === 0) {
-                    jobsBody.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-light);font-size:13px;">Aktif iş bulunmamaktadır.</div>';
+                    jobsBody.innerHTML = tmEmptyStateHTML('📅','Aktif iş bulunmamaktadır.','Dashboard\'da görüntülenecek aktif bir iş kaydı bulunmuyor.');
                 } else {
                     const sonIsler = [...isMuhDb].sort(function(a,b){return b.id-a.id;}).slice(0,4);
                     jobsBody.innerHTML = "";
@@ -1437,6 +1503,7 @@
 
             if(!ad) { tmNotify("Müşteri adı boş bırakılamaz!", "error"); return; }
 
+            tmLoadingGoster('Müşteri kaydediliyor...');
             var db, editId;
             try { db = JSON.parse(localStorage.getItem("tm_musteriler_db")) || []; } catch(e) { db = []; console.error("Musteri db yukleme hatasi:", e); }
             editId = document.getElementById("musteriEditId").value;
@@ -1453,6 +1520,7 @@
             }
             
             try { localStorage.setItem("tm_musteriler_db", JSON.stringify(db)); } catch(e) { console.error("Musteri db kaydetme hatasi:", e); tmNotify("Müşteri kaydedilirken hata oluştu!", "error"); }
+            tmLoadingGizle();
             musteriFormTemizle();
             musteriKartlariniYenile();
         }
@@ -1522,7 +1590,7 @@
                     <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam Yapılan İş</small><span style="font-weight:700; color:var(--btn-green); font-size:18px;">${toplamIs}</span></div>
                 `;
             }
-            if(db.length === 0) { konteyner.innerHTML = "<p style='color:var(--text-light);'>Kayıtlı müşteri portföyü bulunmamaktadır.</p>"; return; }
+            if(db.length === 0) { konteyner.innerHTML = tmEmptyStateHTML('👥','Kayıtlı müşteri bulunmamaktadır.','Yeni bir müşteri eklemek için "Müşteri Ekle" butonunu kullanın.'); return; }
             
             const tekliflerDb = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
             db.sort(function(a, b) {
@@ -1605,6 +1673,7 @@
 
             if(!ad || !brans) { tmNotify("Partner adı ve Branş alanı zorunludur!", "error"); return; }
 
+            tmLoadingGoster('İş ortağı kaydediliyor...');
             var db, editId;
             try { db = JSON.parse(localStorage.getItem("tm_isortaklari_db")) || []; } catch(e) { db = []; console.error("Isortagi db yukleme hatasi:", e); }
             editId = document.getElementById("partnerEditId").value;
@@ -1620,6 +1689,7 @@
             }
 
             try { localStorage.setItem("tm_isortaklari_db", JSON.stringify(db)); } catch(e) { console.error("Isortagi db kaydetme hatasi:", e); tmNotify("İş ortağı kaydedilirken hata oluştu!", "error"); }
+            tmLoadingGizle();
             partnerFormTemizle();
             isOrtaklariKartlariniYenile();
         }
@@ -1690,7 +1760,7 @@
                     <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam Yapılan İş</small><span style="font-weight:700; color:var(--btn-green); font-size:18px;">${toplamIs}</span></div>
                 `;
             }
-            if(db.length === 0) { konteyner.innerHTML = "<p style='color:var(--text-light);'>Kayıtlı iş ortağı/partner bulunmamaktadır.</p>"; return; }
+            if(db.length === 0) { konteyner.innerHTML = tmEmptyStateHTML('🤝','Kayıtlı iş ortağı bulunmamaktadır.','Yeni bir iş ortağı eklemek için "İş Ortağı Ekle" butonunu kullanın.'); return; }
 
             const piyasaDb = JSON.parse(localStorage.getItem("tm_piyasa_db_v2")) || [];
             db.sort(function(a, b) {
@@ -1967,6 +2037,7 @@
 
                 if (!usr || !pas) { tmNotify("Kullanıcı adı ve şifre alanları boş bırakılamaz!", "error"); return; }
 
+                tmLoadingGoster('Kullanıcı kaydediliyor...');
                 const secilenYetkiler = yetkiSecilenleriTopla();
 
                 if (editIndex === "master_tugay") {
@@ -1996,9 +2067,10 @@
                 formSifirla();
                 kullaniciListesiniYenile();
                 sidebarKullanicilariYenile();
+                tmLoadingGizle();
                 tmNotify("Kullanıcı veri kaydı başarıyla güncellendi.", "success");
                 aktiviteEkle("Kullanıcı kaydedildi/güncellendi: " + usr, "Yönetim");
-            } catch(e) { tmNotify("HATA: " + e.message, "error"); }
+            } catch(e) { tmLoadingGizle(); tmNotify("HATA: " + e.message, "error"); }
         }
 
         function kullaniciDuzenle(index) {
@@ -2416,7 +2488,7 @@
                 }
                 h += '</div>';
             });
-            if (etkinlikler.length === 0) { h = '<div style="padding:16px;text-align:center;color:var(--text-light);font-style:italic;">Hiç etkinlik bulunmamaktadır.</div>'; }
+            if (etkinlikler.length === 0) { h = tmEmptyStateHTML('📅','Hiç etkinlik bulunmamaktadır.','Takvimden yeni bir etkinlik ekleyebilirsiniz.'); }
             document.getElementById("asGunInfoBody").innerHTML = h;
             document.getElementById("asGunInfoModal").style.display = "flex";
         }
@@ -2492,7 +2564,7 @@
             const benimGorevlerim = gorevler.filter(function(g) { return atananKontrol(g, aktifUser); });
             const verdigimGorevler = gorevler.filter(function(g) { return g.veren === aktifUser && !atananKontrol(g, aktifUser); });
             let html = '<div class="as-section-label" style="color:#2e7d32;">📥 BANA ATANAN GÖREVLER</div>';
-            if (benimGorevlerim.length === 0) { html += '<div style="font-size:11px;color:var(--text-light);font-style:italic;margin-bottom:12px;padding:4px 0;">Size atanmış görev bulunmamaktadır.</div>'; }
+            if (benimGorevlerim.length === 0) { html += '<div style="padding:8px 0;">'+tmEmptyStateHTML('✅','Size atanmış görev bulunmamaktadır.','','')+'</div>'; }
             else {
                 benimGorevlerim.forEach(function(g) {
                     const renk = asGorevRenk(g.durum, g.tarih);
@@ -2506,7 +2578,7 @@
                 });
             }
             html += '<div class="as-section-label" style="color:var(--accent-red);margin-top:14px;">📤 VERDİĞİM GÖREVLER</div>';
-            if (verdigimGorevler.length === 0) { html += '<div style="font-size:11px;color:var(--text-light);font-style:italic;padding:4px 0;">Verdiğiniz görev bulunmamaktadır.</div>'; }
+            if (verdigimGorevler.length === 0) { html += '<div style="padding:8px 0;">'+tmEmptyStateHTML('📋','Verdiğiniz görev bulunmamaktadır.','','')+'</div>'; }
             else {
                 verdigimGorevler.forEach(function(g) {
                     const renk = asGorevRenk(g.durum, g.tarih);
@@ -2718,9 +2790,11 @@
         function teklifFormuKaydet() {
             const veri = formVerileriniTopla();
             if(veri.musteriAd === "-" && veri.firma === "-") { tmNotify("Müşteri adı veya firma ünvanı alanını doldurunuz.", "error"); return; }
+            tmLoadingGoster('Teklif kaydediliyor...');
             const db = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
             db.push(veri);
             localStorage.setItem("tm_teklifler_db_final", JSON.stringify(db));
+            tmLoadingGizle();
             teklifFormuTemizle();
             dashboardVerileriniGuncelle();
             teklifListesiniYenile();
@@ -2809,7 +2883,7 @@
                 if (r.style.display === "table-row") acikRows.add(r.id);
             });
             tbody.innerHTML = "";
-            if(db.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Henüz kayıtlı teklif bulunmuyor.</td></tr>`; return; }
+            if(db.length === 0) { tbody.innerHTML = '<tr><td colspan="7">'+tmEmptyStateHTML('📄','Henüz kayıtlı teklif bulunmuyor.','Yeni bir teklif oluşturmak için yukarıdaki butonu kullanın.')+'</td></tr>'; return; }
 
             db.sort((a, b) => {
                 const parseDate = (dateStr) => {
@@ -3232,7 +3306,7 @@
             }
 
             if(db.length === 0) {
-                konteyner.innerHTML = "<p style='color:var(--text-light); padding:20px;'>Henüz iş muhasebesi kaydı bulunmamaktadır. Lütfen önce 'İş Muhasebesi Oluştur' sayfasından bir kayıt oluşturun.</p>";
+                konteyner.innerHTML = tmEmptyStateHTML('📊','Henüz iş muhasebesi kaydı bulunmamaktadır.','Önce "İş Muhasebesi Oluştur" sayfasından bir kayıt oluşturun.');
                 return;
             }
 
@@ -3707,7 +3781,7 @@
 
             const db = tamamlananIsMuhasebeVerileriniYukle();
             if(db.length === 0) {
-                konteyner.innerHTML = "<p style='color:var(--text-light); padding:20px;'>Henüz tamamlanan iş muhasebesi bulunmamaktadır.</p>";
+                konteyner.innerHTML = tmEmptyStateHTML('✅','Henüz tamamlanan iş muhasebesi bulunmamaktadır.','Tamamlanan iş muhasebesi kayıtları burada görüntülenecek.');
                 return;
             }
 
@@ -4132,6 +4206,7 @@
             const tutar = tmTutarCoz(tutarStr);
             if(isNaN(tutar) || tutar <= 0) { tmNotify("Geçerli bir tutar giriniz! (Örn: 5000,00)", "error"); return; }
 
+            tmLoadingGoster('Dekont kaydediliyor...');
             let db = nakitDekontVerileriniYukle();
             const maxId = db.reduce((max, item) => (item.id > max ? item.id : max), 0);
             const yeniId = maxId + 1;
@@ -4148,6 +4223,7 @@
             });
 
             localStorage.setItem("tm_nakit_dekont_db", JSON.stringify(db));
+            tmLoadingGizle();
             nakitDekontFormuTemizle();
             nakitDekontListesiniYenile();
             tmNotify("Nakit ödeme dekontu başarıyla kaydedildi. Dekont #" + String(yeniId).padStart(5, '0'), "success");
@@ -4181,7 +4257,7 @@
             let db = nakitDekontVerileriniYukle();
 
             if(db.length === 0) {
-                konteyner.innerHTML = "<p style='color:var(--text-light); padding:20px;'>Henüz nakit ödeme dekontu bulunmamaktadır.</p>";
+                konteyner.innerHTML = tmEmptyStateHTML('💵','Henüz nakit ödeme dekontu bulunmamaktadır.','Yeni bir nakit ödeme dekontu oluşturmak için formu doldurun.');
                 return;
             }
 
@@ -5267,7 +5343,7 @@
             if(!konteyner) return;
             var db = htVeriYukle();
             if(!db.islemler || db.islemler.length === 0) {
-                konteyner.innerHTML = "<p style='color:var(--text-light); padding:20px;'>Henüz hesap hareketi bulunmamaktadır.</p>";
+                konteyner.innerHTML = tmEmptyStateHTML('💳','Henüz hesap hareketi bulunmamaktadır.','Hesap hareketi eklemek için "Hareket Ekle" butonunu kullanın.');
                 return;
             }
             function hesapAdiBul(id) {
@@ -5372,7 +5448,7 @@
             const tbody = document.getElementById("tmFiyatTabloGovde");
             if(!tbody) return;
             const db = tmFiyatVerileriniYukle();
-            if(db.length === 0) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-light); padding:30px;">Henüz fiyat kaydı bulunmamaktadır.</td></tr>'; return; }
+            if(db.length === 0) { tbody.innerHTML = '<tr><td colspan="8">'+tmEmptyStateHTML('💰','Henüz fiyat kaydı bulunmamaktadır.','Yeni bir piyasa fiyatı eklemek için formu kullanın.')+'</td></tr>'; return; }
             let h = "";
             db.forEach((k, i) => {
                 const aralikStr = k.aralikMax >= 99999 ? k.aralikMin + " m² & ÜZERİ" : k.aralikMin + " - " + k.aralikMax + " m²";
@@ -5549,7 +5625,7 @@
             if (tmfAktifId) {
                 tmfExcelGoster(tmfAktifId);
             } else {
-                content.innerHTML = '<div class="tmf-tab-empty"><p>Henüz sayfa bulunmamaktadır.</p><button class="btn btn-save-green" onclick="tmfSayfaEkle()" style="margin-top:10px; padding:8px 20px;">İlk Sayfayı Oluştur</button></div>';
+                content.innerHTML = tmEmptyStateHTML('📑','Henüz sayfa bulunmamaktadır.','İlk Excel sayfasını oluşturarak başlayın.','<button class="tm-empty-btn" onclick="tmfSayfaEkle()">İlk Sayfayı Oluştur</button>');
             }
         }
 
@@ -6129,7 +6205,7 @@
             if (!konteyner) return;
             var sayac = document.getElementById("ftGelenSayac");
             if (sayac) sayac.innerText = liste.length + " kayıt";
-            if (!liste.length) { konteyner.innerHTML = "<p style='color:var(--text-light);padding:20px;text-align:center;'>📭 Henüz gelen fatura bulunmamaktadır.</p>"; return; }
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('📥','Henüz gelen fatura bulunmamaktadır.','Yeni bir gelen fatura eklemek için "Fatura Ekle" butonunu kullanın.'); return; }
             var h = '<div class="ft-tbl-wrap"><table class="ft-table"><thead><tr><th>Firma</th><th>Fatura No</th><th>Vergi D.</th><th>Vergi No</th><th>Tarih</th><th>Vade</th><th>Tutar</th><th>KDV</th><th>Toplam</th><th>Durum</th><th>Ödeme T.</th><th></th></tr></thead><tbody>';
             liste.slice().reverse().forEach(function(f) {
                 var dc = f.odemeDurumu, dt = dc==="odendi"?"Ödendi":dc==="kismi"?"Kısmi":"Ödenmedi";
@@ -6236,7 +6312,7 @@
             if (!konteyner) return;
             var sayac = document.getElementById("ftGidenSayac");
             if (sayac) sayac.innerText = liste.length + " kayıt";
-            if (!liste.length) { konteyner.innerHTML = "<p style='color:var(--text-light);padding:20px;text-align:center;'>📭 Henüz giden fatura bulunmamaktadır.</p>"; return; }
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('📤','Henüz giden fatura bulunmamaktadır.','Yeni bir giden fatura eklemek için "Fatura Ekle" butonunu kullanın.'); return; }
             var h = '<div class="ft-tbl-wrap"><table class="ft-table"><thead><tr><th>Firma</th><th>Fatura No</th><th>Vergi D.</th><th>Vergi No</th><th>Tarih</th><th>Vade</th><th>Tutar</th><th>KDV</th><th>Toplam</th><th>Durum</th><th>Tahsilat T.</th><th></th></tr></thead><tbody>';
             liste.slice().reverse().forEach(function(f) {
                 var dc = f.tahsilatDurumu, dt = dc==="tahsilEdildi"?"Tah.Edildi":dc==="kismi"?"Kısmi":"Tah.Edilmedi";
@@ -6345,7 +6421,7 @@
             if (!konteyner) return;
             var sayac = document.getElementById("ftOdenenVergiSayac");
             if (sayac) sayac.innerText = liste.length + " kayıt";
-            if (!liste.length) { konteyner.innerHTML = "<p style='color:var(--text-light);padding:20px;text-align:center;'>🧾 Henüz ödenen vergi kaydı bulunmamaktadır.</p>"; return; }
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('🧾','Henüz ödenen vergi kaydı bulunmamaktadır.','Ödenen vergi kaydı eklemek için formu kullanın.'); return; }
             var h = '<div class="ft-tbl-wrap"><table class="ft-table"><thead><tr><th>Vergi Adı</th><th>Tutar</th><th>Ödeme Tarihi</th><th>Dönem</th><th>Açıklama</th><th></th></tr></thead><tbody>';
             liste.slice().reverse().forEach(function(v) {
                 h += '<tr data-ftodenenv="'+(v.vergiAdi||"").toLowerCase()+'">';
@@ -6397,7 +6473,7 @@
             var donemler = Object.keys(harita).sort();
             var konteyner = document.getElementById("ftKdvTablosu");
             if (!konteyner) return;
-            if (!donemler.length) { konteyner.innerHTML = "<p style='color:var(--text-light);padding:20px;text-align:center;'>📊 Henüz KDV verisi bulunmamaktadır.</p>"; return; }
+            if (!donemler.length) { konteyner.innerHTML = tmEmptyStateHTML('📊','Henüz KDV verisi bulunmamaktadır.','KDV verisi eklemek için formu kullanın.'); return; }
             var h = '<table class="ft-table"><thead><tr class="ft-kdv-header"><th>Dönem</th><th>Gelen</th><th>Giden</th><th>Gelen KDV</th><th>Giden KDV</th><th>KDV Farkı</th></tr></thead><tbody>';
             donemler.forEach(function(key) {
                 var dm = harita[key], fark = dm.gidenKdv - dm.gelenKdv;
@@ -6506,7 +6582,7 @@
             var liste = yv.data.vergiEtkinlikleri || [];
             var konteyner = document.getElementById("ftTakvimListesi");
             if (!konteyner) return;
-            if (!liste.length) { konteyner.innerHTML = "<p style='color:var(--text-light);padding:20px;text-align:center;'>📅 Henüz vergi etkinliği bulunmamaktadır.</p>"; return; }
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('📅','Henüz vergi etkinliği bulunmamaktadır.','Vergi takvimine yeni bir etkinlik ekleyin.'); return; }
             var simdi = new Date();
             simdi.setHours(0,0,0,0);
             var h = '<div class="ft-takvim-list">';
@@ -6570,11 +6646,11 @@
 
             h += '<h3 style="font-size:14px;margin-bottom:8px;">📥 Gelen Faturalar</h3>';
             if (gelen.length) { h += '<table style="width:100%;border-collapse:collapse;margin-bottom:25px;"><thead><tr style="background:#f5f5f5;"><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Firma</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Fatura No</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tarih</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">Tutar</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">KDV</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">Toplam</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Durum</th></tr></thead><tbody>'; gelen.slice().reverse().forEach(function(f){h+=satir(f,"gelen");}); h += '</tbody></table>'; }
-            else h += '<p style="color:#999;">Gelen fatura bulunmamaktadır.</p>';
+            else h += '<div style="padding:16px;">'+tmEmptyStateHTML('📥','Gelen fatura bulunmamaktadır.','','')+'</div>';
 
             h += '<h3 style="font-size:14px;margin-bottom:8px;">📤 Giden Faturalar</h3>';
             if (giden.length) { h += '<table style="width:100%;border-collapse:collapse;margin-bottom:25px;"><thead><tr style="background:#f5f5f5;"><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Firma</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Fatura No</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tarih</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">Tutar</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">KDV</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">Toplam</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Durum</th></tr></thead><tbody>'; giden.slice().reverse().forEach(function(f){h+=satir(f,"giden");}); h += '</tbody></table>'; }
-            else h += '<p style="color:#999;">Giden fatura bulunmamaktadır.</p>';
+            else h += '<div style="padding:16px;">'+tmEmptyStateHTML('📤','Giden fatura bulunmamaktadır.','','')+'</div>';
 
             if (etk.length) {
                 h += '<h3 style="font-size:14px;margin-bottom:8px;">📅 Vergi Takvimi</h3><table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f5f5f5;"><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tarih</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Başlık</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tür</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Durum</th></tr></thead><tbody>';
@@ -6848,7 +6924,7 @@ function itDurumMetni(o) {
             var arama = (document.getElementById("itAktifAra")||{}).value||"";
             liste = itFiltreVeSirala(liste, arama, itAktifSort);
             var konteyner = document.getElementById("itAktifKartlar");
-            if (!liste.length) { konteyner.innerHTML = '<div class="it-bos-mesaj">📂 Bu bölümde aktif iş bulunmamaktadır.</div>'; return; }
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('📂','Bu bölümde aktif iş bulunmamaktadır.','Farklı bir sekme seçin veya yeni bir iş ekleyin.'); return; }
             var h = '<div class="it-tablo-wrapper"><table class="it-tablo"><thead><tr>' +
                 '<th style="width:32px;"></th>' +
                 '<th class="th-sortable" onclick="itAktifSortGuncelle(\'id\')" style="width:40px;">#<span id="itAktifSortId">'+itSortOk("id",itAktifSort)+'</span></th>' +
@@ -6902,7 +6978,7 @@ function itDurumMetni(o) {
             var arama = (document.getElementById("itTamamlananAra")||{}).value||"";
             liste = itFiltreVeSirala(liste, arama, itTamamlananSort);
             var konteyner = document.getElementById("itTamamlananTablo");
-            if (!liste.length) { konteyner.innerHTML = '<div class="it-bos-mesaj">✅ Bu bölümde tamamlanan iş bulunmamaktadır.</div>'; return; }
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('✅','Bu bölümde tamamlanan iş bulunmamaktadır.','Tamamlanan iş kayıtları burada görüntülenecek.'); return; }
             var isTaslak = tur === "Taslak";
             var isUygulamaProje = tur === "Uygulama Proje";
             var showActionCol = isTaslak || isUygulamaProje;
@@ -6938,6 +7014,93 @@ function itDurumMetni(o) {
             konteyner.innerHTML = h;
         }
 
+        /* ================= GANTT ŞEMASI ================= */
+        var itGanttAktif = false;
+        function itGanttToggleGoruntu() {
+            itGanttAktif = !itGanttAktif;
+            var btn = document.getElementById("itGanttToggle");
+            var kartlar = document.getElementById("itAktifKartlar");
+            var gantt = document.getElementById("itGanttContainer");
+            if (itGanttAktif) {
+                btn.textContent = "📋 Liste";
+                kartlar.style.display = "none";
+                gantt.style.display = "block";
+                itGanttGoster();
+            } else {
+                btn.textContent = "📊 Gantt";
+                kartlar.style.display = "";
+                gantt.style.display = "none";
+            }
+        }
+        function itGanttGoster() {
+            var konteyner = document.getElementById("itGanttContainer");
+            var liste = itDbYukle().filter(function(x){return !x.tamamlandi;});
+            if (!liste.length) { konteyner.innerHTML = '<div class="it-gantt-notice"><div style="font-size:32px;margin-bottom:6px;">📊</div>Gantt şeması gösterilecek aktif iş bulunmamaktadır.<p>Yeni iş ekleyerek başlayın.</p></div>'; return; }
+            var aylar = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+            var minDate = Infinity, maxDate = -Infinity;
+            liste.forEach(function(is){
+                var d = new Date(is.tarih || Date.now());
+                if (d.getTime() < minDate) minDate = d.getTime();
+                if (is.bitisTarihi) { var e = new Date(is.bitisTarihi); if (e.getTime() > maxDate) maxDate = e.getTime(); }
+                else { var n = Date.now(); if (n > maxDate) maxDate = n; }
+            });
+            var minD = new Date(minDate); minD.setDate(1); minD.setMonth(minD.getMonth() - 1);
+            var maxD = new Date(maxDate); maxD.setDate(1); maxD.setMonth(maxD.getMonth() + 2);
+            var totalMonths = (maxD.getFullYear() - minD.getFullYear()) * 12 + (maxD.getMonth() - minD.getMonth());
+            if (totalMonths < 3) { maxD.setMonth(maxD.getMonth() + 3); totalMonths = (maxD.getFullYear() - minD.getFullYear()) * 12 + (maxD.getMonth() - minD.getMonth()); }
+            if (totalMonths > 36) { maxD.setMonth(minD.getMonth() + 36); totalMonths = 36; }
+            var totalDays = (maxD - minD) / (1000*60*60*24);
+            var today = new Date();
+            today.setHours(0,0,0,0);
+            var h = '<div class="it-gantt-wrap"><table class="it-gantt-table"><thead><tr><th style="width:180px;text-align:left;padding:6px 10px;">İş Adı</th>';
+            for (var m = 0; m < totalMonths; m++) {
+                var dt = new Date(minD); dt.setMonth(dt.getMonth() + m);
+                h += '<th style="width:' + (100/totalMonths) + '%"><span class="it-gantt-month-label">' + aylar[dt.getMonth()] + ' ' + dt.getFullYear() + '</span></th>';
+            }
+            h += '</tr></thead><tbody>';
+            liste.forEach(function(is){
+                var startDate = new Date(is.tarih || Date.now());
+                var endDate = is.bitisTarihi ? new Date(is.bitisTarihi) : new Date();
+                if (endDate < startDate) endDate = new Date(startDate.getTime() + 30*24*60*60*1000);
+                startDate.setHours(0,0,0,0); endDate.setHours(0,0,0,0);
+                var leftDays = (startDate - minD) / (1000*60*60*24);
+                var spanDays = (endDate - startDate) / (1000*60*60*24);
+                if (spanDays < 7) spanDays = 7;
+                var leftPct = (leftDays / totalDays) * 100;
+                var widthPct = (spanDays / totalDays) * 100;
+                if (leftPct < 0) { widthPct += leftPct; leftPct = 0; }
+                if (widthPct > 100 - leftPct) widthPct = 100 - leftPct;
+                if (widthPct < 2) widthPct = 2;
+                var avgPct = itJobOrtalamaPct(is);
+                var durum = itJobDurumMetni(is);
+                var turKisaltma = is.tur === "Uygulama Proje" ? "UygulamaProje" : (is.tur === "3B Modelleme ve Tasarım" ? "3B" : is.tur);
+                var firmaBilgi = (is.firma || "").toUpperCase();
+                h += '<tr><td class="it-gantt-job-cell">' + esc(is.isAdi || "İSİMSİZ") + '<span class="it-gantt-meta">' + esc(firmaBilgi || "-") + ' <span class="it-gantt-tur-tag it-gantt-tur-' + turKisaltma + '">' + esc(is.tur) + '</span></span></td>';
+                h += '<td colspan="' + totalMonths + '" style="position:relative;padding:0;">';
+                h += '<div class="it-gantt-bar-wrap">';
+                h += '<div class="it-gantt-bar" style="left:' + leftPct + '%;width:' + widthPct + '%;background:' + durum.bg + ';" title="' + esc(is.isAdi) + ' - ' + durum.text + ' (' + avgPct + '%)">';
+                if (avgPct > 0 && avgPct < 100) {
+                    var donePct = Math.min(avgPct, 100);
+                    h += '<div class="it-gantt-bar-seg" style="width:' + donePct + '%;background:rgba(255,255,255,0.2);"></div>';
+                }
+                h += '<div class="it-gantt-bar-label' + (widthPct < 8 ? ' overflow' : '') + '">' + durum.text + ' ' + avgPct + '%</div>';
+                h += '</div>';
+                (is.ortaklar||[]).forEach(function(o, oi){
+                    if (o.projeTeslimTarihi) {
+                        var msDate = new Date(o.projeTeslimTarihi);
+                        msDate.setHours(0,0,0,0);
+                        var msLeft = (msDate - minD) / (1000*60*60*24);
+                        var msPct = (msLeft / totalDays) * 100;
+                        if (msPct >= 0 && msPct <= 100) {
+                            h += '<div class="it-gantt-milestone it-gantt-milestone-complete" style="left:' + msPct + '%;" title="Teslim: ' + esc(o.ortakAdi || "") + ' (' + tarihStr(o.projeTeslimTarihi) + ')"></div>';
+                        }
+                    }
+                });
+                h += '</div></td></tr>';
+            });
+            h += '</tbody></table></div>';
+            konteyner.innerHTML = h;
+        }
         function itAktifSortGuncelle(col) {
             if (itAktifSort.col === col) { itAktifSort.dir = itAktifSort.dir === "asc" ? "desc" : "asc"; }
             else { itAktifSort.col = col; itAktifSort.dir = "asc"; }
@@ -7641,6 +7804,7 @@ function itDurumMetni(o) {
             var not = document.getElementById("itFormNot").value.trim().toUpperCase();
             itFormAdiGuncelle();
             var isAdi = trToUpper(document.getElementById("itFormAd").value.trim());
+            tmLoadingGoster('İş kaydediliyor...');
             if (!isAdi) { tmNotify("İş adı zorunludur!", "error"); return; }
             if (id) {
                 var idx = liste.findIndex(function(x){return x.id == id;});
@@ -7650,6 +7814,7 @@ function itDurumMetni(o) {
                 liste.push({ id:maxId+1, tur:tur, isAdi:isAdi, firma:firma, pafta:pafta, ada:ada, parsel:parsel, tarih:tarih, not:not, tamamlandi:false, tahsilatOnayi:false, ruhsatOnayi:false, bitisTarihi:"", ortaklar:[] });
             }
             itDbKaydet(liste);
+            tmLoadingGizle();
             itFormKapat();
             itGoster();
             tmNotify(id ? "İş güncellendi." : "İş eklendi.", "success");

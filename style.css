@@ -18,17 +18,38 @@
             --panel-bg: #1c222a;
             --sidebar-bg: #0f1318;
             --sidebar-active: #1c222a;
-            --text-dark: #f7fafc;
-            --text-light: #a0aec0;
-            --border-color: #4a5568;
-            --input-bg: #1c222a;
-            --input-text: #f7fafc;
+            --text-dark: #e8edf3;
+            --text-light: #8899aa;
+            --border-color: #3a4a5e;
+            --input-bg: #1e2630;
+            --input-text: #e8edf3;
         }
 
         [data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea {
             background: var(--input-bg) !important;
             color: var(--input-text) !important;
+            border-color: var(--border-color) !important;
         }
+        [data-theme="dark"] .app-table th { background:#1a222c; color:#7a8a9f; }
+        [data-theme="dark"] .app-table td { border-bottom-color:#2a3545; }
+        [data-theme="dark"] .search-box { background:var(--input-bg); color:var(--input-text); }
+        [data-theme="dark"] h2, [data-theme="dark"] h3 { color:var(--text-dark); }
+        [data-theme="dark"] .stat-box { background:var(--panel-bg); border-color:var(--border-color); }
+        [data-theme="dark"] .dashboard-card { background:var(--panel-bg); }
+        [data-theme="dark"] .dash-widget { background:var(--panel-bg); }
+        [data-theme="dark"] .dash-mini-job { background:var(--bg-main); }
+        [data-theme="dark"] .btn-clear-gray { background:#3a4a5e; color:#e8edf3; }
+        [data-theme="dark"] .btn-clear-gray:hover { background:#4a5a6e; }
+        [data-theme="dark"] .inline-form { background:var(--bg-main); }
+        [data-theme="dark"] .detail-grid-box { background:var(--panel-bg); }
+        [data-theme="dark"] .portfolio-card { background:var(--panel-bg); }
+        [data-theme="dark"] .it-ortak-card { background:var(--panel-bg); }
+        [data-theme="dark"] .it-ortak-card .it-ortak-row input[type="text"] { background:var(--input-bg); }
+        [data-theme="dark"] .it-form-card { background:var(--panel-bg); }
+        [data-theme="dark"] .lock-popup { background:var(--panel-bg); }
+        [data-theme="dark"] .it-not-card { background:var(--panel-bg); }
+        [data-theme="dark"] .it-not-card textarea { background:var(--input-bg); }
+        [data-theme="dark"] .it-form-card input, [data-theme="dark"] .it-form-card select, [data-theme="dark"] .it-form-card textarea { background:var(--input-bg); }
 
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-main); margin: 0; padding: 0; color: var(--text-dark); transition: background 0.3s, color 0.3s; }
         
@@ -136,6 +157,13 @@
         .page-loading-bar { position:fixed; top:0; left:0; height:3px; background:var(--accent-red); z-index:10002; width:0; transition:width 0.3s ease; pointer-events:none; }
         .page-loading-bar.active { width:60%; }
         .page-loading-bar.done { width:100%; opacity:0; transition:width 0.15s ease, opacity 0.4s ease 0.15s; }
+
+        .tm-empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; text-align:center; background:var(--bg-main); border-radius:12px; border:1px dashed var(--border-color); margin:12px 0; }
+        .tm-empty-state .tm-empty-icon { font-size:42px; margin-bottom:10px; opacity:0.8; }
+        .tm-empty-state .tm-empty-title { font-size:15px; font-weight:700; color:var(--text-dark); margin-bottom:4px; }
+        .tm-empty-state .tm-empty-desc { font-size:12px; color:var(--text-light); max-width:360px; line-height:1.5; margin-bottom:14px; }
+        .tm-empty-state .tm-empty-btn { padding:8px 20px; background:var(--accent-red); color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; }
+        .tm-empty-state .tm-empty-btn:hover { filter:brightness(1.15); }
 
         .tm-notif { position:sticky; top:0; z-index:999; padding:14px 20px; border-radius:8px; margin-bottom:20px; font-weight:700; font-size:14px; display:none; align-items:center; gap:12px; border:1px solid; }
         .tm-notif.show { display:flex; }
@@ -676,6 +704,39 @@
         .it-mini-bar-fill { height:100%; border-radius:3px; transition:width 0.3s; }
         .it-mini-bar-pct { font-weight:700; font-size:11px; min-width:22px; text-align:right; }
 
+        /* ================= GANTT ŞEMASI ================= */
+        .it-gantt-wrap { overflow-x:auto; border:1px solid var(--border-color); border-radius:10px; background:var(--panel-bg); }
+        .it-gantt-table { width:100%; border-collapse:collapse; min-width:800px; table-layout:fixed; }
+        .it-gantt-table th { background:var(--bg-main); padding:6px 4px; font-size:9px; font-weight:700; color:var(--text-light); text-align:center; border-bottom:2px solid var(--border-color); border-right:1px solid var(--border-color); white-space:nowrap; }
+        .it-gantt-table td { padding:0; border-bottom:1px solid var(--border-color); border-right:1px solid var(--border-color); vertical-align:middle; height:40px; }
+        .it-gantt-table .it-gantt-job-cell { padding:6px 10px; font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .it-gantt-table .it-gantt-meta { font-size:9px; color:var(--text-light); font-weight:400; display:block; }
+        .it-gantt-bar-wrap { position:relative; width:100%; height:100%; min-height:34px; }
+        .it-gantt-bar { position:absolute; top:6px; height:22px; border-radius:12px; overflow:hidden; cursor:pointer; transition:box-shadow 0.2s; min-width:10px; box-shadow:0 1px 4px rgba(0,0,0,0.15); }
+        .it-gantt-bar:hover { box-shadow:0 2px 10px rgba(0,0,0,0.25); }
+        .it-gantt-bar-seg { float:left; height:100%; transition:width 0.3s; }
+        .it-gantt-bar-label { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,0.4); pointer-events:none; white-space:nowrap; padding:0 6px; }
+        .it-gantt-bar-label.overflow { display:none; }
+        .it-gantt-milestone { position:absolute; top:2px; width:16px; height:16px; border-radius:50%; transform:translateX(-50%); z-index:2; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.3); cursor:pointer; transition:transform 0.15s; }
+        .it-gantt-milestone:hover { transform:translateX(-50%) scale(1.3); z-index:3; }
+        .it-gantt-milestone-complete { background:#2e7d32; }
+        .it-gantt-milestone-partial { background:#f9a825; }
+        .it-gantt-milestone-pending { background:#e53935; }
+        .it-gantt-weekend { background:rgba(0,0,0,0.02); }
+        .it-gantt-today { background:rgba(158,42,43,0.06); position:relative; }
+        .it-gantt-today::after { content:'•'; position:absolute; top:-10px; left:50%; transform:translateX(-50%); font-size:16px; color:var(--accent-red); }
+        .it-gantt-month-label { font-size:10px; }
+        .it-gantt-tur-tag { display:inline-block; font-size:8px; font-weight:700; padding:1px 6px; border-radius:4px; margin-left:4px; vertical-align:middle; }
+        .it-gantt-tur-Taslak { background:#e53935; color:#fff; }
+        .it-gantt-tur-UygulamaProje { background:#1565C0; color:#fff; }
+        .it-gantt-tur-3B { background:#fb8c00; color:#fff; }
+        .it-gantt-tur-Diger { background:#6a1b9a; color:#fff; }
+        .it-gantt-notice { padding:30px; text-align:center; color:var(--text-light); font-size:14px; font-weight:600; background:var(--bg-main); border-radius:8px; border:1px dashed var(--border-color); }
+        .it-gantt-notice p { margin:8px 0 0 0; font-size:12px; font-weight:400; }
+        [data-theme="dark"] .it-gantt-table th { background:var(--sidebar-bg); }
+        [data-theme="dark"] .it-gantt-weekend { background:rgba(255,255,255,0.015); }
+        [data-theme="dark"] .it-gantt-today { background:rgba(158,42,43,0.12); }
+
         /* ================= TM FİYAT LİSTESİ EXCEL TAB SİSTEMİ ================= */
         .tmf-tab-bar { display:flex; gap:4px; flex-wrap:wrap; align-items:stretch; min-height:38px; background:var(--bg-main); border-radius:8px; padding:4px; border:1px solid var(--border-color); }
         .tmf-tab { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:600; font-size:13px; color:var(--text-light); background:transparent; transition:0.15s; user-select:none; white-space:nowrap; border:1px solid transparent; }
@@ -755,6 +816,18 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .cs-option { padding:9px 14px; cursor:pointer; font-size:13px; font-weight:500; border-bottom:1px solid var(--bg-main); transition:0.1s; }
         .cs-option:hover { background:var(--bg-main); }
         .cs-option.sel { background:var(--accent-red); color:#fff; font-weight:700; }
+        .tm-scroll-hint { position:relative; }
+        .tm-scroll-hint::after { content:'← → kaydır'; display:none; position:absolute; bottom:2px; right:8px; font-size:9px; font-weight:700; color:var(--text-light); background:var(--panel-bg); padding:2px 8px; border-radius:4px; border:1px solid var(--border-color); opacity:0.7; pointer-events:none; animation:tmScrollPulse 2s ease-in-out infinite; z-index:2; }
+        @keyframes tmScrollPulse { 0%,100% { opacity:0.4; } 50% { opacity:0.9; } }
+        @media (hover:none) and (max-width:768px) {
+            .app-table, .it-tablo, .it-tablo-wrapper, .ft-tbl-wrap, .tmf-excel-scroll, .dash-table-widget, .ft-table { position:relative; }
+            .app-table.tm-scroll-hint-active::after, .it-tablo.tm-scroll-hint-active::after, .it-tablo-wrapper.tm-scroll-hint-active::after, .ft-tbl-wrap.tm-scroll-hint-active::after, .tmf-excel-scroll.tm-scroll-hint-active::after { content:'← → kaydır'; display:block; }
+        }
+        .tm-tooltip-wrap { position:relative; display:inline-flex; }
+        .tm-tooltip-text { visibility:hidden; opacity:0; position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:var(--sidebar-bg); color:#fff; font-size:10px; font-weight:600; padding:4px 10px; border-radius:5px; white-space:nowrap; pointer-events:none; transition:opacity 0.15s; z-index:999; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+        .tm-tooltip-text::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:4px solid transparent; border-top-color:var(--sidebar-bg); }
+        .tm-tooltip-wrap:hover .tm-tooltip-text { visibility:visible; opacity:1; }
+
         ::-webkit-scrollbar { width:6px; height:6px; }
         ::-webkit-scrollbar-track { background:transparent; }
         ::-webkit-scrollbar-thumb { background:rgba(128,128,128,0.4); border-radius:3px; }
