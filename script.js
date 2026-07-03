@@ -4726,7 +4726,7 @@
             }
             h += `<div style="text-align:center;margin-top:30px;padding-top:15px;border-top:1px solid #dee2e6;font-size:10px;color:#999;">Turak Mimarlık - ${yil} Yılı Bütçe Raporu - Otomatik Oluşturulmuştur</div></div>`;
             const el = document.createElement("div"); el.innerHTML = h; document.body.appendChild(el);
-            html2pdf().set({margin:[10,10,10,10],filename:`Butce_Raporu_${yil}.pdf`,html2canvas:{scale:6},jsPDF:{format:'a4',orientation:'portrait'}}).from(el).save().then(function(){try{document.body.removeChild(el)}catch(ex){console.error("Butce PDF DOM temizlik:",ex);}}).catch(function(e){console.error("Butce PDF hatasi:",e);tmNotify("Bütçe PDF oluşturulurken hata: "+e.message,"error");try{document.body.removeChild(el)}catch(ex){}});
+            html2canvas(el,{scale:6,useCORS:true}).then(function(c){var doc=new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});var imgW=190;var imgH=c.height*imgW/c.width;doc.addImage(c.toDataURL('image/png'),'PNG',10,10,imgW,imgH);doc.save(`Butce_Raporu_${yil}.pdf`);try{document.body.removeChild(el)}catch(ex){console.error("Butce PDF DOM temizlik:",ex);}}).catch(function(e){console.error("Butce PDF hatasi:",e);tmNotify("Bütçe PDF oluşturulurken hata: "+e.message,"error");try{document.body.removeChild(el)}catch(ex){}});
         }
 
         /* ================= HESAP TAKİP SİSTEMİ ================= */
@@ -6486,7 +6486,7 @@
             h += '<div style="margin-top:35px;padding-top:15px;border-top:1px solid #ddd;font-size:10px;color:#999;text-align:center;">Turak Mimarlık Portal — Rapor: '+new Date().toLocaleDateString("tr-TR")+'</div></div>';
 
             var el = document.createElement("div"); el.innerHTML = h; document.body.appendChild(el);
-            html2pdf().set({margin:0, filename:'Fatura_Takip_Raporu_'+yil+'.pdf', html2canvas:{scale:6}, jsPDF:{format:'a4', orientation:'portrait'}}).from(el).save().then(function(){try{document.body.removeChild(el)}catch(ex){console.error("Fatura PDF DOM temizlik:",ex);}}).catch(function(e){console.error("Fatura PDF hatasi:",e);tmNotify("Fatura PDF oluşturulurken hata: "+e.message,"error");try{document.body.removeChild(el)}catch(ex){}});
+            html2canvas(el,{scale:6,useCORS:true}).then(function(c){var doc=new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});var imgW=190;var imgH=c.height*imgW/c.width;doc.addImage(c.toDataURL('image/png'),'PNG',10,10,imgW,imgH);doc.save('Fatura_Takip_Raporu_'+yil+'.pdf');try{document.body.removeChild(el)}catch(ex){console.error("Fatura PDF DOM temizlik:",ex);}}).catch(function(e){console.error("Fatura PDF hatasi:",e);tmNotify("Fatura PDF oluşturulurken hata: "+e.message,"error");try{document.body.removeChild(el)}catch(ex){}});
         }
 
         /* ---------- İş Takibi ---------- */
