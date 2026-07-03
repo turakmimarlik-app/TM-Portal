@@ -3,10 +3,11 @@
 
         /* --- EmailJS - Gorev Bildirim Maili --- */
 var EMAILJS_CONFIG = {
-    publicKey: "YOUR_PUBLIC_KEY",  // https://dashboard.emailjs.com  -> Account -> API Keys
-    serviceId: "YOUR_SERVICE_ID",  // Email Services -> Add Service (Gmail/Outlook vb.)
-    templateId: "YOUR_TEMPLATE_ID" // Email Templates -> Create Template (variables: to_name, to_email, from_name, task_title, task_msg, task_date)
+    publicKey: "yCeI9aqnQrtmGtq7D",
+    serviceId: "service_661y4sd",
+    templateId: "template_920ilvh"
 };
+if (typeof emailjs !== 'undefined') { emailjs.init(EMAILJS_CONFIG.publicKey); }
 function gorevMailGonder(gorev) {
     if (typeof emailjs === 'undefined') { console.warn("EmailJS SDK yuklu degil, mail gonderilemedi."); return; }
     if (EMAILJS_CONFIG.publicKey.indexOf("YOUR_") === 0) { console.warn("EmailJS yapilandirilmamis, mail gonderilemedi."); return; }
