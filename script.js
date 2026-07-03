@@ -7758,6 +7758,7 @@ function itDurumMetni(o) {
             dlkListele();
             dlkFormTemizle();
             tmNotify("Dilekçe " + dlkIdStr(id, anlikTarihGetir()) + " kaydedildi.", "success");
+            aktiviteEkle("Dilekçe kaydedildi: " + dlkIdStr(id, anlikTarihGetir()) + " - " + (v.konu || ""), "Dilekçe");
         }
 
         function dlkPdfGoster(mod, id) {
@@ -8044,6 +8045,7 @@ function itDurumMetni(o) {
                 dlkDbKaydet(db);
                 dlkListele();
                 tmNotify("Dilekçe silindi.", "success");
+                aktiviteEkle("Dilekçe silindi", "Dilekçe");
             });
         }
 
