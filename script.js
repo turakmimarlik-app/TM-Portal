@@ -2277,6 +2277,7 @@ function gorevMailGonder(gorev) {
                     var email = document.getElementById("newEmail").value.trim().toLowerCase() || "";
                     const master = { usr: mevcut.usr || "TUGAYTURAK", pass: pas, title: trToUpper(ttl), email: email };
                     localStorage.setItem("tm_admin_creds_final", JSON.stringify(master));
+                    tmLoadingGizle();
                     tmNotify("KURUCU ADMİN PROFİLİ BAŞARIYLA GÜNCELLENDİ.", "success");
                     aktiviteEkle("Admin profili güncellendi", "Yönetim");
                     formSifirla(); kullaniciListesiniYenile(); sidebarKullanicilariYenile(); return;
