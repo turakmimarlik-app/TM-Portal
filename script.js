@@ -74,7 +74,7 @@ function gorevMailGonder(gorev) {
             'tm-fiyatlar-page': ['tm_fiyat_listesi_db'],
         };
         function fsSyncDenetle(k) {
-            if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_admin_creds_final" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k !== "tm_yillik_butce_clean" && k !== "tm_sidebar_collapsed" && k !== "tm_submenu_open" && k.indexOf("tm_multi_logo_") !== 0) return true;
+            if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k !== "tm_yillik_butce_clean" && k !== "tm_sidebar_collapsed" && k !== "tm_submenu_open" && k.indexOf("tm_multi_logo_") !== 0) return true;
             return false;
         }
         function fsDosyaIslem(k, raw) {
@@ -953,7 +953,29 @@ function gorevMailGonder(gorev) {
             if (errorDiv) errorDiv.style.display = "none";
             var master;
             try { master = JSON.parse(localStorage.getItem("tm_admin_creds_final")); } catch(e) { master = null; console.error("Admin creds parse hatasi:", e); }
-            if (!master) { document.getElementById("loginCardGiris").style.display = "none"; document.getElementById("loginCardKurulum").style.display = "block"; return; }
+            if (!master) {
+                if (typeof fdb !== 'undefined') {
+                    fdb.collection(FS_COLLECTION).doc('tm_admin_creds_final').get({ source: 'server' }).then(function(snap) {
+                        if (snap && snap.exists) {
+                            var data = snap.data();
+                            if (data && data.data) {
+                                try { origSetItem("tm_admin_creds_final", JSON.stringify(data.data)); } catch(e) {}
+                                sistemeGirisYap();
+                                return;
+                            }
+                        }
+                        document.getElementById("loginCardGiris").style.display = "none";
+                        document.getElementById("loginCardKurulum").style.display = "block";
+                    }).catch(function() {
+                        document.getElementById("loginCardGiris").style.display = "none";
+                        document.getElementById("loginCardKurulum").style.display = "block";
+                    });
+                } else {
+                    document.getElementById("loginCardGiris").style.display = "none";
+                    document.getElementById("loginCardKurulum").style.display = "block";
+                }
+                return;
+            }
 
             var hedefKullanici = null;
             var hedefYetkiler = null;
