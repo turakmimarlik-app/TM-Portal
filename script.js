@@ -9,14 +9,17 @@ var EMAILJS_CONFIG = {
 };
 if (typeof emailjs !== 'undefined') { emailjs.init(EMAILJS_CONFIG.publicKey); }
 function gorevMailGonder(gorev) {
+    tmNotify("Mail gonderiliyor...", "info");
     if (typeof emailjs === 'undefined') { tmNotify("EmailJS SDK yuklu degil! (<script> eksik)", "error"); return; }
     if (EMAILJS_CONFIG.publicKey.indexOf("YOUR_") === 0) { tmNotify("EmailJS yapilandirilmamis!", "error"); return; }
     var kullanicilar;
     try { kullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || []; } catch(e) { kullanicilar = []; }
     var atanan = gorev.atanan;
+    tmNotify("Aranan kullanici: " + atanan + ", mevcut kullanicilar: " + kullanicilar.length, "info");
     var atananArr = Array.isArray(atanan) ? atanan : [atanan];
     atananArr.forEach(function(usr){
         var u = kullanicilar.find(function(x){ return x.usr === usr; });
+        tmNotify("Kullanici bulundu: " + (u ? u.usr : "HAYIR") + ", email: " + (u ? u.email : "-"), "info");
         if (!u || !u.email || u.email === "-" || !u.email.includes("@")) {
             tmNotify("Mail gonderilemedi: '" + usr + "' kullanicisinin e-posta adresi tanimli degil!", "error");
             return;
@@ -29,12 +32,13 @@ function gorevMailGonder(gorev) {
             task_msg: gorev.mesaj || "",
             task_date: gorev.tarih || ""
         };
+        tmNotify("EmailJS send cagriliyor -> service:" + EMAILJS_CONFIG.serviceId + " template:" + EMAILJS_CONFIG.templateId + " to:" + u.email, "info");
         emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams, { publicKey: EMAILJS_CONFIG.publicKey })
             .then(function(){
                 tmNotify("Mail gonderildi -> " + u.email, "success");
             })
             .catch(function(e){
-                tmNotify("Mail hatasi: " + (e.text || e.message || "bilinmeyen hata"), "error");
+                tmNotify("Mail hatasi: " + (e.text || e.message || JSON.stringify(e) || "bilinmeyen hata"), "error");
             });
     });
 }
