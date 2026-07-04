@@ -7276,7 +7276,7 @@ function itDurumMetni(o) {
                     '<td>' + (is.bitisTarihi ? tarihStr(is.bitisTarihi) : "-") + '</td>' +
                     (showActionCol ? '<td style="text-align:center;"><div style="display:flex;gap:4px;justify-content:center;">' +
                         (isTaslak ? '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();itTaslakUygulamayaGec(' + is.id + ')" style="white-space:nowrap;">🚀 UYGULAMA PROJEYE BAŞLA</button>' : '') +
-                        '<button class="btn btn-sm" onclick="event.stopPropagation();it3bModellemeyeGec(' + is.id + ')" style="background:#d68910;color:white;border:none;white-space:nowrap;border-radius:6px;">🔷 3B MODELLEMEYE BAŞLA</button>' +
+                        '<button class="btn btn-sm btn-pdf-red" onclick="event.stopPropagation();it3bModellemeyeGec(' + is.id + ')" style="white-space:nowrap;">🔷 3B MODELLEMEYE BAŞLA</button>' +
                         '</div></td>' : '') +
                     '</tr>' +
                     '<tr class="it-row-detail' + (acik ? ' open' : '') + '" id="itTamDetayRow_' + is.id + '">' +
@@ -7731,7 +7731,7 @@ function itDurumMetni(o) {
                 if (tamamBtn) tamamBtn.remove();
                 // Add appropriate elements
                 if (isTam2 && is_.tur === "Taslak") {
-                    var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; btn.style.background = '#2e7d32';
+                    var btn = document.createElement('button'); btn.className = 'it-btn-tamamla';
                     btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '✅ İŞ TAMAMLANDI';
                     if (silBtn) actionsDiv.insertBefore(btn, silBtn); else actionsDiv.appendChild(btn);
                 } else if (isTam2 && is_.tur === "Uygulama Proje") {
@@ -7752,14 +7752,14 @@ function itDurumMetni(o) {
                         if (silBtn) actionsDiv.insertBefore(tSp, silBtn); else actionsDiv.appendChild(tSp);
                     }
                     if (is_.ruhsatOnayi && is_.tahsilatOnayi) {
-                        var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; btn.style.background = '#2e7d32';
+                        var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; ;
                         btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '✅ İŞ TAMAMLANDI';
                         if (silBtn) actionsDiv.insertBefore(btn, silBtn); else actionsDiv.appendChild(btn);
                     }
                 } else if (isTam2 && is_.tahsilatOnayi) {
                     var sp = document.createElement('span'); sp.className = 'it-tahsilat-badge'; sp.innerText = '✅ İŞİN TAHSİLATI ONAYLANDI';
                     if (silBtn) actionsDiv.insertBefore(sp, silBtn); else actionsDiv.appendChild(sp);
-                    var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; btn.style.background = '#2e7d32';
+                    var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; ;
                     btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '✅ İŞ TAMAMLANDI';
                     if (silBtn) actionsDiv.insertBefore(btn, silBtn); else actionsDiv.appendChild(btn);
                 } else if (isTam2 && !is_.tahsilatOnayi) {
