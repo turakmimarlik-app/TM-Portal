@@ -332,8 +332,10 @@
 
 .btn-clear-gray:hover { background: #494F54; }
 
-        .yb-sekme-bar { display:flex; gap:4px; margin-bottom:15px; flex-wrap:wrap; }
-        .yb-sekme { padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600; font-size:12px; background:var(--btn-gray); color:white; transition:0.2s; user-select:none; }
+.yb-sekme-bar { display:flex; gap:4px; margin-bottom:15px; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; padding-bottom:4px; }
+.yb-sekme-bar::-webkit-scrollbar { height:4px; }
+.yb-sekme-bar::-webkit-scrollbar-thumb { background:var(--text-light); border-radius:2px; }
+.yb-sekme { padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600; font-size:12px; background:var(--btn-gray); color:white; transition:0.2s; user-select:none; flex-shrink:0; }
         .yb-sekme:hover { opacity:0.85; }
         .yb-sekme-aktif { background:var(--accent-red); color:white; }
         .yb-top-bar { display:flex; gap:20px; align-items:flex-end; margin-bottom:20px; flex-wrap:wrap; }

@@ -4725,11 +4725,115 @@ function gorevMailGonder(gorev) {
         }
 
         function ybSayfayiYukle() {
+            ybGosterilenYil = null;
             const db = ybVeriYukle();
+            // Örnek veri: tamamlanan yıl yoksa 2025 ekle
+            if(!db.tamamlananYillar || db.tamamlananYillar.length===0) {
+                const ornek = {
+                    yil: 2025,
+                    baslangicBakiye: 50000,
+                    gelirKategorileri: [...YB_GELIR_VARSAYILAN],
+                    giderKategorileri: [...YB_GIDER_VARSAYILAN],
+                    aylar: {}
+                };
+                [0,1,2,3,4,5,6,7,8,9,10,11].forEach(a => {
+                    ornek.aylar[a] = {
+                        gelirler: {
+                            projeler: [{id:Date.now()+a*10+1, aciklama:"Proje "+(a+1)+" danışmanlık", tutar:85000+Math.round(Math.random()*30000)},
+                                       {id:Date.now()+a*10+2, aciklama:"Proje "+(a+1)+" uygulama", tutar:40000+Math.round(Math.random()*20000)}],
+                            komisyonlar: [{id:Date.now()+a*10+3, aciklama:"Referans komisyonu", tutar:Math.round(Math.random()*8000)}],
+                            faizler: [{id:Date.now()+a*10+4, aciklama:"Vadeli mevduat faizi", tutar:Math.round(1500+Math.random()*2000)}],
+                            kiralar: [{id:Date.now()+a*10+5, aciklama:"Ofis alt kiracı", tutar:5000}],
+                            satışlar: a%3===0 ? [{id:Date.now()+a*10+6, aciklama:"Proje satışı", tutar:20000+Math.round(Math.random()*40000)}] : []
+                        },
+                        giderler: {
+                            projeler: [{id:Date.now()+a*10+20, aciklama:"Proje maliyeti", tutar:35000+Math.round(Math.random()*15000)}],
+                            faturalar: [{id:Date.now()+a*10+21, aciklama:"Elektrik+Su+İnternet", tutar:Math.round(4000+Math.random()*3000)},
+                                        {id:Date.now()+a*10+22, aciklama:"Kırtasiye", tutar:Math.round(500+Math.random()*1500)}],
+                            vergi: [{id:Date.now()+a*10+23, aciklama:"KDV+Stopaj", tutar:15000+Math.round(Math.random()*10000)}],
+                            komisyon: [{id:Date.now()+a*10+24, aciklama:"Acenta komisyonu", tutar:Math.round(3000+Math.random()*4000)}],
+                            maaş: [{id:Date.now()+a*10+25, aciklama:"Personel maaşları", tutar:42000+Math.round(Math.random()*5000)}],
+                            sigorta: [{id:Date.now()+a*10+26, aciklama:"SGK+Bağkur", tutar:9500+Math.round(Math.random()*2000)}]
+                        }
+                    };
+                });
+                db.tamamlananYillar = db.tamamlananYillar || [];
+                db.tamamlananYillar.push(ornek);
+                ybVeriKaydet(db);
+            }
             document.getElementById("ybAktifYilLabel").textContent = String(db.aktifYil);
             const kayit = ybYilVerisi();
             ybTamamlananlariGoster();
             ybSekmeGoster("rapor");
+        }
+
+        let ybGosterilenYil = null; // null = cari yil, sayi = gecmis yil
+
+        function ybGecmisYilGoster(yil) {
+            const db = ybVeriYukle();
+            const kayit = db.tamamlananYillar.find(function(y){return y.yil===yil;});
+            if(!kayit) { tmNotify("Yıl verisi bulunamadı!","error"); return; }
+            ybGosterilenYil = yil;
+            ybGecmisYilRaporuGoster(kayit, yil);
+        }
+
+        function ybCariYilaDon() {
+            ybGosterilenYil = null;
+            const aktif = document.querySelector("#ybSekmeBar .yb-sekme-aktif");
+            ybSekmeGoster(aktif ? aktif.dataset.sekme : "rapor");
+        }
+
+        function ybGecmisYilRaporuGoster(kayit, yil) {
+            const icerik = document.getElementById("ybSekmeIcerik");
+            const aylikGelir = Array.from({length:12}, (_,i) => ybAylikToplam(kayit,"gelir",i));
+            const aylikGider = Array.from({length:12}, (_,i) => ybAylikToplam(kayit,"gider",i));
+            const toplamGelir = aylikGelir.reduce((s,v)=>s+v,0);
+            const toplamGider = aylikGider.reduce((s,v)=>s+v,0);
+            const bakiye = (kayit.baslangicBakiye||0) + toplamGelir - toplamGider;
+
+            let h = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;flex-wrap:wrap;gap:10px;">
+                <h3 style="margin:0;">📂 ${yil} Yılı Bütçe Raporu</h3>
+                <button class="btn btn-primary" onclick="ybCariYilaDon()" style="padding:8px 18px;font-size:12px;">🔙 Cari Yıla Dön</button>
+            </div>`;
+
+            h += `<div id="ybGrafikAlani"><h4>📊 Grafikler</h4>
+                <div style="background:var(--bg-main);padding:20px;border-radius:8px;border:1px solid var(--border-color);margin-bottom:20px;position:relative;height:320px;"><canvas id="ybChartNetDurum"></canvas></div>
+                <div style="display:flex;gap:20px;margin-bottom:20px;">
+                    <div style="flex:1;background:var(--bg-main);padding:20px;border-radius:8px;border:1px solid var(--border-color);position:relative;height:320px;"><canvas id="ybChartGelirDagilim"></canvas></div>
+                    <div style="flex:1;background:var(--bg-main);padding:20px;border-radius:8px;border:1px solid var(--border-color);position:relative;height:320px;"><canvas id="ybChartGiderDagilim"></canvas></div>
+                </div>
+                <div style="background:var(--bg-main);padding:20px;border-radius:8px;border:1px solid var(--border-color);position:relative;height:320px;"><canvas id="ybChartAylikKarsilastirma"></canvas></div>
+            </div>`;
+
+            h += `<div style="background:var(--bg-main);padding:15px 25px;border-radius:8px;border:2px solid var(--border-color);display:flex;gap:30px;justify-content:center;text-align:center;font-weight:700;margin-bottom:20px;flex-wrap:wrap;">
+                <div><small style="font-size:11px;color:var(--text-light);display:block;">Başlangıç Bakiyesi</small><span style="font-size:18px;">${(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})} ₺</span></div>
+                <div><small style="font-size:11px;color:var(--text-light);display:block;">Toplam Gelir</small><span style="font-size:18px;color:var(--btn-green);">${toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</span></div>
+                <div><small style="font-size:11px;color:var(--text-light);display:block;">Toplam Gider</small><span style="font-size:18px;color:var(--accent-red);">${toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</span></div>
+                <div><small style="font-size:11px;color:var(--text-light);display:block;">Net Bakiye</small><span style="font-size:22px;font-weight:800;color:${bakiye>=0?'var(--btn-green)':'var(--accent-red)'};">${bakiye.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</span></div>
+            </div>`;
+
+            // Monthly breakdown
+            for(let i=0;i<12;i++) {
+                const ay = kayit.aylar[i];
+                if(!ay) continue;
+                const aG = ybAylikToplam(kayit,"gelir",i);
+                const aGi = ybAylikToplam(kayit,"gider",i);
+                if(aG===0 && aGi===0) continue;
+                h += `<h4 style="margin:15px 0 6px 0;font-size:13px;color:var(--text-dark);border-left:4px solid var(--accent-red);padding-left:10px;">${YB_AY_ADI[i].toUpperCase()}</h4>
+                    <table class="app-table" style="font-size:11px;margin-bottom:12px;">
+                    <thead><tr><th>Kategori</th><th>Tür</th><th>Açıklama</th><th style="text-align:right;">Tutar</th></tr></thead><tbody>`;
+                Object.entries(ay.gelirler||{}).forEach(([ktg,items]) => items.forEach(k => {
+                    h += `<tr><td style="font-weight:600;">${ktg.toUpperCase()}</td><td style="color:var(--btn-green);font-weight:600;">GELİR</td><td>${k.aciklama||''}</td><td style="text-align:right;font-weight:600;">${(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr>`;
+                }));
+                Object.entries(ay.giderler||{}).forEach(([ktg,items]) => items.forEach(k => {
+                    h += `<tr><td style="font-weight:600;">${ktg.toUpperCase()}</td><td style="color:var(--accent-red);font-weight:600;">GİDER</td><td>${k.aciklama||''}</td><td style="text-align:right;font-weight:600;">${(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr>`;
+                }));
+                h += `<tr style="background:var(--bg-main);font-weight:700;"><td colspan="3" style="text-align:right;">Aylık Toplam</td><td style="text-align:right;color:${(aG-aGi)>=0?'var(--btn-green)':'var(--accent-red)'};">${(aG-aGi).toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr>`;
+                h += `</tbody></table>`;
+            }
+
+            icerik.innerHTML = h;
+            setTimeout(() => ybGrafikleriCiz(kayit, aylikGelir, aylikGider, toplamGelir, toplamGider), 50);
         }
 
         function ybTamamlananlariGoster() {
@@ -4742,21 +4846,23 @@ function gorevMailGonder(gorev) {
             [...arr].sort((a,b)=>b.yil-a.yil).forEach(y => {
                 const tG = ybYilToplam(y,"gelir"), tGi = ybYilToplam(y,"gider");
                 const net = (y.baslangicBakiye||0)+tG-tGi;
-                h += `<tr><td style="font-weight:700;font-size:14px;">${y.yil}</td>
+                h += `<tr style="cursor:pointer;"><td style="font-weight:700;font-size:14px;" onclick="ybGecmisYilGoster(${y.yil})">🔍 ${y.yil}</td>
                     <td>${(y.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td>
                     <td style="color:var(--btn-green);">${tG.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td>
                     <td style="color:var(--accent-red);">${tGi.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td>
                     <td style="font-weight:700;color:${net>=0?'var(--btn-green)':'var(--accent-red)'};">${net.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td>
-                    <td><button class="btn btn-pdf-red" onclick="ybPdfIndir(${y.yil})" style="padding:4px 10px;font-size:11px;">📄 PDF</button></td></tr>`;
+                    <td style="white-space:nowrap;"><button class="btn btn-sm btn-warning" onclick="event.stopPropagation();ybGecmisYilGoster(${y.yil})">📂 Görüntüle</button> <button class="btn btn-pdf-red" onclick="ybPdfIndir(${y.yil})" style="padding:4px 10px;font-size:11px;">📄 PDF</button></td></tr>`;
             });
             tbody.innerHTML = h;
         }
 
         function ybSekmeGoster(sekme) {
+            if(ybGosterilenYil !== null) ybCariYilaDon();
             document.querySelectorAll("#ybSekmeBar .yb-sekme").forEach(el => el.classList.remove("yb-sekme-aktif"));
             const aktif = document.querySelector(`#ybSekmeBar .yb-sekme[data-sekme="${sekme}"]`);
             if(aktif) aktif.classList.add("yb-sekme-aktif");
             if(sekme==="rapor") ybRaporGoster();
+            else if(sekme==="karsilastir") ybKarsilastirGoster();
             else ybAyGoster(parseInt(sekme));
         }
 
@@ -4805,7 +4911,7 @@ function gorevMailGonder(gorev) {
                             </td>
                             <td style="padding:5px 6px;width:35%;border-bottom:1px solid var(--border-color);">
                                 <div style="display:flex;align-items:center;gap:4px;">
-                                    <input type="text" value="${(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})}" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle(${k.id},'tutar',this.value);ybSekmeGoster('${ayIdx}')" style="width:100%;padding:7px 10px;border:1px solid var(--border-color);border-radius:4px;background:var(--input-bg);color:var(--text-dark);font-size:13px;text-align:right;font-weight:600;box-sizing:border-box;">
+                                    <input type="text" value="${(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})}" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle(${k.id},'tutar',this.value)" style="width:100%;padding:7px 10px;border:1px solid var(--border-color);border-radius:4px;background:var(--input-bg);color:var(--text-dark);font-size:13px;text-align:right;font-weight:600;box-sizing:border-box;">
                                     <span style="font-weight:700;color:var(--text-light);font-size:13px;min-width:18px;">₺</span>
                                 </div>
                             </td>
@@ -4839,7 +4945,7 @@ function gorevMailGonder(gorev) {
                 h += `<button class="btn btn-primary" onclick="var f=document.getElementById('ekleForm_gelir_${ktg}_${ayIdx}');f.style.display=f.style.display==='none'?'flex':'none'" style="padding:6px 14px;font-size:11px;border-radius:4px;margin-top:4px;">➕ Kalem Ekle</button>`;
                 h += `</div>`;
             });
-            h += `<button class="btn btn-primary" onclick="ybKategoriEkle('gelir')" style="padding:7px 16px;font-size:12px;border-radius:5px;">➕ Yeni Gelir Kategorisi Ekle</button></div>`;
+            h += `<button class="btn btn-primary" onclick="ybKategoriYonet('gelir')" style="padding:7px 16px;font-size:12px;border-radius:5px;">📂 Kategorileri Yönet</button></div>`;
 
             h += `<div style="border-top:3px dashed var(--border-color);margin:25px 0;"></div>`;
 
@@ -4862,7 +4968,7 @@ function gorevMailGonder(gorev) {
                             </td>
                             <td style="padding:5px 6px;width:35%;border-bottom:1px solid var(--border-color);">
                                 <div style="display:flex;align-items:center;gap:4px;">
-                                    <input type="text" value="${(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})}" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle(${k.id},'tutar',this.value);ybSekmeGoster('${ayIdx}')" style="width:100%;padding:7px 10px;border:1px solid var(--border-color);border-radius:4px;background:var(--input-bg);color:var(--text-dark);font-size:13px;text-align:right;font-weight:600;box-sizing:border-box;">
+                                    <input type="text" value="${(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})}" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle(${k.id},'tutar',this.value)" style="width:100%;padding:7px 10px;border:1px solid var(--border-color);border-radius:4px;background:var(--input-bg);color:var(--text-dark);font-size:13px;text-align:right;font-weight:600;box-sizing:border-box;">
                                     <span style="font-weight:700;color:var(--text-light);font-size:13px;min-width:18px;">₺</span>
                                 </div>
                             </td>
@@ -4895,7 +5001,7 @@ function gorevMailGonder(gorev) {
                 h += `<button class="btn btn-primary" onclick="var f=document.getElementById('ekleForm_gider_${ktg}_${ayIdx}');f.style.display=f.style.display==='none'?'flex':'none'" style="padding:6px 14px;font-size:11px;border-radius:4px;margin-top:4px;">➕ Kalem Ekle</button>`;
                 h += `</div>`;
             });
-            h += `<button class="btn btn-primary" onclick="ybKategoriEkle('gider')" style="padding:7px 16px;font-size:12px;border-radius:5px;">➕ Yeni Gider Kategorisi Ekle</button></div>`;
+            h += `<button class="btn btn-primary" onclick="ybKategoriYonet('gider')" style="padding:7px 16px;font-size:12px;border-radius:5px;">📂 Kategorileri Yönet</button></div>`;
 
             icerik.innerHTML = h;
         }
@@ -4968,6 +5074,100 @@ function gorevMailGonder(gorev) {
             h += `<td style="padding:4px;text-align:right;font-weight:800;font-size:12px;color:var(--accent-red);">${toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr></tbody></table>`;
             icerik.innerHTML = h;
             setTimeout(() => ybGrafikleriCiz(kayit, aylikGelir, aylikGider, toplamGelir, toplamGider), 50);
+        }
+
+        function ybKarsilastirGoster() {
+            const icerik = document.getElementById("ybSekmeIcerik");
+            const db = ybVeriYukle();
+            const cariYil = db.aktifYil;
+            const cariKayit = ybYilVerisi();
+            const gecmis = db.tamamlananYillar || [];
+            // Dropdown varsa seçili değeri oku, yoksa ilk tamamlanan yılı al
+            const secimEl = document.getElementById("ybKarsilastirSecim");
+            const seciliYil = secimEl ? parseInt(secimEl.value) : (gecmis.length > 0 ? gecmis[0].yil : null);
+
+            let h = `<h3 style="margin-bottom:15px;">🔁 Yıl Karşılaştırması</h3>`;
+
+            if(!seciliYil) {
+                h += `<p style="color:var(--text-light);">Karşılaştırma yapmak için tamamlanmış bir yıl bulunmuyor.</p>`;
+                icerik.innerHTML = h; return;
+            }
+
+            const seciliKayit = gecmis.find(y => y.yil === seciliYil);
+            if(!seciliKayit) { ybKarsilastirGoster(); return; }
+            const cGelir = Array.from({length:12}, (_,i) => ybAylikToplam(cariKayit,"gelir",i));
+            const cGider = Array.from({length:12}, (_,i) => ybAylikToplam(cariKayit,"gider",i));
+            const sGelir = Array.from({length:12}, (_,i) => ybAylikToplam(seciliKayit,"gelir",i));
+            const sGider = Array.from({length:12}, (_,i) => ybAylikToplam(seciliKayit,"gider",i));
+            const cTopG = cGelir.reduce((s,v)=>s+v,0), cTopGi = cGider.reduce((s,v)=>s+v,0);
+            const sTopG = sGelir.reduce((s,v)=>s+v,0), sTopGi = sGider.reduce((s,v)=>s+v,0);
+
+            h += `<div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap;">
+                <label style="font-weight:600;font-size:13px;">Karşılaştırılacak Yıl:</label>
+                <select id="ybKarsilastirSecim" onchange="ybKarsilastirGoster()" style="padding:8px 12px;border-radius:6px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-dark);font-size:13px;font-weight:600;">
+                    ${gecmis.map(y => `<option value="${y.yil}" ${y.yil===seciliYil?'selected':''}>${y.yil}</option>`).join('')}
+                </select>
+            </div>`;
+
+            h += `<div style="display:flex;gap:20px;margin-bottom:25px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:200px;background:var(--bg-main);padding:18px;border-radius:10px;border:1px solid var(--border-color);text-align:center;">
+                    <small style="font-size:10px;color:var(--text-light);display:block;letter-spacing:0.5px;">${cariYil} Gelir</small>
+                    <span style="font-size:20px;font-weight:800;color:var(--btn-green);">${cTopG.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</span>
+                </div>
+                <div style="flex:1;min-width:200px;background:var(--bg-main);padding:18px;border-radius:10px;border:1px solid var(--border-color);text-align:center;">
+                    <small style="font-size:10px;color:var(--text-light);display:block;letter-spacing:0.5px;">${seciliYil} Gelir</small>
+                    <span style="font-size:20px;font-weight:800;color:var(--btn-green);">${sTopG.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</span>
+                </div>
+                <div style="flex:1;min-width:200px;background:var(--bg-main);padding:18px;border-radius:10px;border:1px solid var(--border-color);text-align:center;">
+                    <small style="font-size:10px;color:var(--text-light);display:block;letter-spacing:0.5px;">Fark (${cariYil} - ${seciliYil})</small>
+                    <span style="font-size:20px;font-weight:800;color:${(cTopG-sTopG)>=0?'var(--btn-green)':'var(--accent-red)'};">${(cTopG-sTopG).toLocaleString('tr-TR',{minFractionDigits:2})} ₺</span>
+                </div>
+            </div>`;
+
+            h += `<div style="display:flex;gap:20px;margin-bottom:25px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:200px;background:var(--bg-main);padding:18px;border-radius:10px;border:1px solid var(--border-color);text-align:center;">
+                    <small style="font-size:10px;color:var(--text-light);display:block;letter-spacing:0.5px;">${cariYil} Gider</small>
+                    <span style="font-size:20px;font-weight:800;color:var(--accent-red);">${cTopGi.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</span>
+                </div>
+                <div style="flex:1;min-width:200px;background:var(--bg-main);padding:18px;border-radius:10px;border:1px solid var(--border-color);text-align:center;">
+                    <small style="font-size:10px;color:var(--text-light);display:block;letter-spacing:0.5px;">${seciliYil} Gider</small>
+                    <span style="font-size:20px;font-weight:800;color:var(--accent-red);">${sTopGi.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</span>
+                </div>
+                <div style="flex:1;min-width:200px;background:var(--bg-main);padding:18px;border-radius:10px;border:1px solid var(--border-color);text-align:center;">
+                    <small style="font-size:10px;color:var(--text-light);display:block;letter-spacing:0.5px;">Fark (${cariYil} - ${seciliYil})</small>
+                    <span style="font-size:20px;font-weight:800;color:${(cTopGi-sTopGi)>=0?'var(--accent-red)':'var(--btn-green)'};">${(cTopGi-sTopGi).toLocaleString('tr-TR',{minFractionDigits:2})} ₺</span>
+                </div>
+            </div>`;
+
+            h += `<div style="background:var(--bg-main);padding:20px;border-radius:8px;border:1px solid var(--border-color);position:relative;height:320px;"><canvas id="ybChartKarsilastirma"></canvas></div>`;
+
+            icerik.innerHTML = h;
+            setTimeout(() => ybKarsilastirmaGrafikCiz(cariYil, seciliYil, cGelir, cGider, sGelir, sGider), 50);
+        }
+
+        function ybKarsilastirmaGrafikCiz(cariYil, seciliYil, cGelir, cGider, sGelir, sGider) {
+            try {
+                if(window._ybKarsChart) { window._ybKarsChart.destroy(); window._ybKarsChart = null; }
+                const ctx = document.getElementById("ybChartKarsilastirma");
+                if(!ctx) return;
+                window._ybKarsChart = new Chart(ctx, {
+                    type:'bar',
+                    data: {
+                        labels: YB_AY_KISA,
+                        datasets: [
+                            { label:cariYil+' Gelir', data:cGelir, backgroundColor:'rgba(46,125,50,0.7)', borderRadius:3 },
+                            { label:seciliYil+' Gelir', data:sGelir, backgroundColor:'rgba(46,125,50,0.3)', borderRadius:3 },
+                            { label:cariYil+' Gider', data:cGider, backgroundColor:'rgba(158,42,43,0.7)', borderRadius:3 },
+                            { label:seciliYil+' Gider', data:sGider, backgroundColor:'rgba(158,42,43,0.3)', borderRadius:3 }
+                        ]
+                    },
+                    options: {
+                        responsive:true, maintainAspectRatio:false,
+                        plugins: { legend:{position:'top',labels:{font:{size:10,weight:'bold'}}}, datalabels:{display:false} },
+                        scales: { y:{ beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺'} } }
+                    }
+                });
+            } catch(e) { console.warn("Karşılaştırma grafiği çizilemedi:", e); }
         }
 
         function ybGrafikleriCiz(kayit, aylikGelir, aylikGider, toplamYillikGelir, toplamYillikGider) {
@@ -5107,20 +5307,67 @@ function gorevMailGonder(gorev) {
             }
         }
 
-        function ybKategoriEkle(tip) {
-            const etiket = tip==='gelir'?'gelir':'gider';
-            tmPrompt(`Yeni ${etiket} kategorisi adı:`, function(ad) {
-                if(!ad||!ad.trim()) return;
-                const kayit = ybYilVerisi();
-                const ktg = trToUpper(ad.trim());
-                const list = tip==="gelir"?kayit.gelirKategorileri:kayit.giderKategorileri;
-                if(list.includes(ktg)) { tmNotify("Bu kategori zaten mevcut!","error"); return; }
-                list.push(ktg);
-                Object.values(kayit.aylar).forEach(ay => { if(tip==="gelir") ay.gelirler[ktg]=[]; else ay.giderler[ktg]=[]; });
-                const db = ybVeriYukle(); db.yillar[db.aktifYil] = kayit; ybVeriKaydet(db);
-                tmNotify("Kategori eklendi.","success");
-                ybSekmeGoster(document.querySelector("#ybSekmeBar .yb-sekme-aktif")?.dataset?.sekme||"rapor");
-            });
+        function ybKategoriYonet(aktifTip) {
+            const modal = document.getElementById("ybKategoriModal");
+            const body = document.getElementById("ybKategoriModalBody");
+            const kayit = ybYilVerisi();
+            const db = ybVeriYukle();
+
+            function render() {
+                let h = `<div style="display:flex;gap:10px;margin-bottom:15px;">
+                    <button class="btn btn-sm ${aktifTip==='gelir'?'btn-save-green':'btn-clear-gray'}" onclick="ybKategoriYonet('gelir')" style="flex:1;">📈 Gelir Kategorileri</button>
+                    <button class="btn btn-sm ${aktifTip==='gider'?'btn-save-green':'btn-clear-gray'}" onclick="ybKategoriYonet('gider')" style="flex:1;">📉 Gider Kategorileri</button>
+                </div>`;
+
+                const list = aktifTip === "gelir" ? kayit.gelirKategorileri : kayit.giderKategorileri;
+                const etiket = aktifTip === "gelir" ? "gelir" : "gider";
+
+                if(list.length===0) h += `<p style="color:var(--text-light);text-align:center;">Henüz kategori eklenmemiş.</p>`;
+                list.forEach((ktg, idx) => {
+                    h += `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;background:var(--bg-main);border-radius:6px;border:1px solid var(--border-color);">
+                        <span style="flex:1;font-weight:600;font-size:13px;">${ktg}</span>
+                        <input type="text" id="ybKatYenidenAd_${aktifTip}_${idx}" value="${ktg}" style="display:none;flex:1;padding:6px 10px;border:1px solid var(--accent-red);border-radius:4px;background:var(--input-bg);color:var(--text-dark);font-size:13px;">
+                        <button class="btn btn-sm btn-warning" onclick="document.getElementById('ybKatYenidenAd_${aktifTip}_${idx}').style.display='block';this.style.display='none';document.getElementById('ybKatKaydet_${aktifTip}_${idx}').style.display='inline-flex'" style="padding:4px 10px;">✏️</button>
+                        <button class="btn btn-sm btn-save-green" id="ybKatKaydet_${aktifTip}_${idx}" style="display:none;padding:4px 10px;" onclick="var inp=document.getElementById('ybKatYenidenAd_${aktifTip}_${idx}');var yeni=trToUpper(inp.value.trim());if(!yeni){tmNotify('Ad boş olamaz!','error');return;}const k=ybYilVerisi();const l=${aktifTip==='gelir'?'k.gelirKategorileri':'k.giderKategorileri'};if(l.includes(yeni)){tmNotify('Bu kategori zaten var!','error');return;}l[l.indexOf('${ktg}')]=yeni;ybVeriKaydet(Object.assign(ybVeriYukle(),{yillar:{[Object.assign(ybVeriYukle()).aktifYil]:k}}));tmNotify('Kategori adı güncellendi.','success');ybKategoriYonet('${aktifTip}');">💾</button>
+                        <button class="btn btn-sm btn-danger" onclick="tmConfirm('${ktg} kategorisini silmek istediğinize emin misiniz?\\nBu kategoriye ait tüm kalemler de silinecek.',function(){const k=ybYilVerisi();const l=${aktifTip==='gelir'?'k.gelirKategorileri':'k.giderKategorileri'};const idx=l.indexOf('${ktg}');if(idx>-1){l.splice(idx,1);Object.values(k.aylar).forEach(function(ay){delete (${aktifTip==='gelir'?'ay.gelirler':'ay.giderler'})['${ktg}'];});}const db2=ybVeriYukle();db2.yillar[db2.aktifYil]=k;ybVeriKaydet(db2);tmNotify('Kategori silindi.','success');ybKategoriYonet('${aktifTip}');});" style="padding:4px 10px;">🗑</button>
+                    </div>`;
+                });
+
+                // Add new
+                h += `<div style="margin-top:12px;padding:12px;background:var(--bg-main);border-radius:6px;border:1px dashed var(--border-color);">
+                    <label style="font-size:10px;font-weight:600;color:var(--text-light);display:block;margin-bottom:4px;">Yeni ${etiket} Kategorisi Ekle</label>
+                    <div style="display:flex;gap:8px;">
+                        <input type="text" id="ybKatEkleInput_${aktifTip}" placeholder="Kategori adı" style="flex:1;padding:8px 12px;border:1px solid var(--border-color);border-radius:4px;background:var(--input-bg);color:var(--text-dark);font-size:13px;" onkeydown="if(event.key==='Enter')ybKatEkle('${aktifTip}')">
+                        <button class="btn btn-primary" onclick="ybKatEkle('${aktifTip}')" style="padding:8px 16px;border-radius:4px;">➕ Ekle</button>
+                    </div>
+                </div>`;
+
+                body.innerHTML = h;
+            }
+
+            render();
+            modal.style.display = "flex";
+        }
+
+        function ybKatEkle(tip) {
+            const inp = document.getElementById("ybKatEkleInput_"+tip);
+            if(!inp) return;
+            const ad = trToUpper(inp.value.trim());
+            if(!ad) { tmNotify("Kategori adı giriniz!","error"); return; }
+            const kayit = ybYilVerisi();
+            const list = tip==="gelir"?kayit.gelirKategorileri:kayit.giderKategorileri;
+            if(list.includes(ad)) { tmNotify("Bu kategori zaten mevcut!","error"); return; }
+            list.push(ad);
+            Object.values(kayit.aylar).forEach(ay => { if(tip==="gelir") ay.gelirler[ad]=[]; else ay.giderler[ad]=[]; });
+            const db = ybVeriYukle(); db.yillar[db.aktifYil] = kayit; ybVeriKaydet(db);
+            tmNotify("Kategori eklendi.","success");
+            ybKategoriYonet(tip);
+        }
+
+        function ybKategoriModalKapat() {
+            document.getElementById("ybKategoriModal").style.display = "none";
+            const aktif = document.querySelector("#ybSekmeBar .yb-sekme-aktif");
+            if(aktif) ybSekmeGoster(aktif.dataset.sekme);
         }
 
         function ybPdfIndir(yil) {
@@ -5129,45 +5376,128 @@ function gorevMailGonder(gorev) {
             if(!kayit) { tmNotify("Veri bulunamadı!","error"); return; }
             const tG = ybYilToplam(kayit,"gelir"), tGi = ybYilToplam(kayit,"gider");
             const net = (kayit.baslangicBakiye||0)+tG-tGi;
-            let h = `<div style="padding:30px 40px;font-family:'Segoe UI',Arial,sans-serif;color:#222;">
-                <div style="text-align:center;border-bottom:3px solid #2E7D32;padding-bottom:15px;margin-bottom:25px;">
-                    <h1 style="margin:0 0 5px 0;font-size:26px;font-weight:900;letter-spacing:4px;color:#111;line-height:1.1;">TURAK MİMARLIK</h1>
-                    <h2 style="margin:5px 0 0 0;font-size:18px;color:#555;">${yil} YILI BÜTÇE RAPORU</h2>
-                </div>
-                <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin-bottom:25px;border:1px solid #dee2e6;">
-                    <table style="width:100%;border-collapse:collapse;font-size:13px;">
-                        <tr><td style="padding:6px 10px;font-weight:600;color:#555;">Başlangıç Bakiyesi</td><td style="padding:6px 10px;text-align:right;">${(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr>
-                        <tr><td style="padding:6px 10px;font-weight:600;color:#2E7D32;">Toplam Gelir</td><td style="padding:6px 10px;text-align:right;font-weight:600;color:#2E7D32;">${tG.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr>
-                        <tr><td style="padding:6px 10px;font-weight:600;color:#C62828;">Toplam Gider</td><td style="padding:6px 10px;text-align:right;font-weight:600;color:#C62828;">${tGi.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr>
-                        <tr style="border-top:2px solid #dee2e6;"><td style="padding:8px 10px;font-weight:800;font-size:15px;">Net Bakiye</td><td style="padding:8px 10px;text-align:right;font-weight:800;font-size:15px;color:${net>=0?'#2E7D32':'#C62828'};">${net.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr>
-                    </table>
-                </div>`;
-            for(let i=0;i<12;i++) {
-                const ay = kayit.aylar[i]; if(!ay) continue;
-                const aG = Object.entries(ay.gelirler||{}).reduce((s,[_,a])=>s+a.reduce((x,y)=>x+(y.tutar||0),0),0);
-                const aGi = Object.entries(ay.giderler||{}).reduce((s,[_,a])=>s+a.reduce((x,y)=>x+(y.tutar||0),0),0);
-                if(aG===0&&aGi===0) continue;
-                const fark = aG - aGi;
-                h += `<h3 style="margin:20px 0 8px 0;font-size:14px;color:#1B5E20;border-left:4px solid #2E7D32;padding-left:10px;">${YB_AY_ADI[i].toUpperCase()}</h3>
-                    <table style="width:100%;border-collapse:collapse;font-size:11px;">
-                    <thead><tr style="background:#2E7D32;color:#fff;">
-                        <th style="padding:6px 8px;text-align:left;font-size:10px;">KATEGORİ</th>
-                        <th style="padding:6px 8px;text-align:left;font-size:10px;">TÜR</th>
-                        <th style="padding:6px 8px;text-align:left;font-size:10px;">AÇIKLAMA</th>
-                        <th style="padding:6px 8px;text-align:right;font-size:10px;">TUTAR</th>
-                    </tr></thead><tbody>`;
-                Object.entries(ay.gelirler||{}).forEach(([ktg,items]) => items.forEach(k => {
-                    h += `<tr style="background:#f0f7f0;"><td style="padding:4px 8px;font-weight:600;">${ktg.toUpperCase()}</td><td style="padding:4px 8px;color:#2E7D32;font-weight:600;">GELİR</td><td style="padding:4px 8px;">${k.aciklama||''}</td><td style="padding:4px 8px;text-align:right;font-weight:600;">${(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr>`;
-                }));
-                Object.entries(ay.giderler||{}).forEach(([ktg,items]) => items.forEach(k => {
-                    h += `<tr style="background:#fef0f0;"><td style="padding:4px 8px;font-weight:600;">${ktg.toUpperCase()}</td><td style="padding:4px 8px;color:#C62828;font-weight:600;">GİDER</td><td style="padding:4px 8px;">${k.aciklama||''}</td><td style="padding:4px 8px;text-align:right;font-weight:600;">${(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr>`;
-                }));
-                h += `<tr style="background:#e9ecef;font-weight:700;"><td colspan="3" style="padding:6px 8px;text-align:right;">Aylık Toplam</td><td style="padding:6px 8px;text-align:right;color:${fark>=0?'#2E7D32':'#C62828'};">${fark.toLocaleString('tr-TR',{minFractionDigits:2})} ₺</td></tr>`;
-                h += `</tbody></table>`;
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ format:'a4', orientation:'portrait', unit:'mm' });
+                const sayfaGenislik = 190;
+                const solMarj = 10;
+                let yPos = 15;
+
+                // Header
+                doc.setFont("Helvetica","bold");
+                doc.setFontSize(24);
+                doc.setTextColor(17,17,17);
+                doc.text("TURAK MİMARLIK", sayfaGenislik/2, yPos, {align:"center"});
+                yPos += 8;
+                doc.setFontSize(16);
+                doc.setTextColor(85,85,85);
+                doc.text(yil + " YILI BÜTÇE RAPORU", sayfaGenislik/2, yPos, {align:"center"});
+                yPos += 6;
+                doc.setDrawColor(46,125,50);
+                doc.setLineWidth(1.5);
+                doc.line(solMarj, yPos, solMarj+sayfaGenislik, yPos);
+                yPos += 8;
+
+                // Summary table
+                doc.autoTable({
+                    startY: yPos,
+                    head: [['Kalem', 'Tutar']],
+                    body: [
+                        ['Başlangıç Bakiyesi', (kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺'],
+                        ['Toplam Gelir', tG.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺'],
+                        ['Toplam Gider', tGi.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺'],
+                        ['Net Bakiye', net.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺']
+                    ],
+                    theme:'grid',
+                    headStyles: { fillColor:[46,125,50], fontSize:10, fontStyle:'bold', halign:'center' },
+                    bodyStyles: { fontSize:10 },
+                    columnStyles: { 0: {cellWidth:80, fontStyle:'bold'}, 1: {cellWidth:60, halign:'right', fontStyle:'bold'} },
+                    didParseCell: function(data) {
+                        if(data.section==='body') {
+                            if(data.row.index===1) { data.cell.styles.textColor=[46,125,50]; }
+                            if(data.row.index===2) { data.cell.styles.textColor=[198,40,40]; }
+                            if(data.row.index===3) { data.cell.styles.fontSize=12; data.cell.styles.textColor=net>=0?[46,125,50]:[198,40,40]; }
+                        }
+                    },
+                    tableWidth: 140,
+                    margin: { left: (210-140)/2 }
+                });
+                yPos = doc.lastAutoTable.finalY + 8;
+
+                // Monthly breakdown
+                for(let i=0;i<12;i++) {
+                    const ay = kayit.aylar[i];
+                    if(!ay) continue;
+                    const aGelir = Object.entries(ay.gelirler||{}).reduce((s,[_,a])=>s+a.reduce((x,y)=>x+(y.tutar||0),0),0);
+                    const aGider = Object.entries(ay.giderler||{}).reduce((s,[_,a])=>s+a.reduce((x,y)=>x+(y.tutar||0),0),0);
+                    if(aGelir===0 && aGider===0) continue;
+                    const fark = aGelir - aGider;
+
+                    // Check page break
+                    if(yPos > 250) { doc.addPage(); yPos = 15; }
+
+                    // Month header
+                    doc.setFont("Helvetica","bold");
+                    doc.setFontSize(12);
+                    doc.setTextColor(27,94,32);
+                    doc.text(YB_AY_ADI[i].toUpperCase(), solMarj, yPos);
+                    yPos += 5;
+
+                    // Items table
+                    const rows = [];
+                    Object.entries(ay.gelirler||{}).forEach(([ktg,items]) => {
+                        items.forEach(k => {
+                            rows.push([ktg.toUpperCase(), 'GELİR', k.aciklama||'', (k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺']);
+                        });
+                    });
+                    Object.entries(ay.giderler||{}).forEach(([ktg,items]) => {
+                        items.forEach(k => {
+                            rows.push([ktg.toUpperCase(), 'GİDER', k.aciklama||'', (k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺']);
+                        });
+                    });
+                    rows.push(['', '', 'Aylık Toplam', fark.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺']);
+
+                    doc.autoTable({
+                        startY: yPos,
+                        head: [['KATEGORİ', 'TÜR', 'AÇIKLAMA', 'TUTAR']],
+                        body: rows,
+                        theme:'grid',
+                        headStyles: { fillColor:[46,125,50], fontSize:8, fontStyle:'bold', halign:'center' },
+                        bodyStyles: { fontSize:8 },
+                        columnStyles: { 0:{cellWidth:35,fontStyle:'bold'}, 1:{cellWidth:18,halign:'center'}, 2:{cellWidth:75}, 3:{cellWidth:30,halign:'right',fontStyle:'bold'} },
+                        didParseCell: function(data) {
+                            if(data.section==='body') {
+                                const val = data.cell.raw;
+                                if(val==='GELİR') { data.cell.styles.textColor=[46,125,50]; }
+                                if(val==='GİDER') { data.cell.styles.textColor=[198,40,40]; }
+                                if(val==='Aylık Toplam' || (data.column.index===3 && data.row.index===rows.length-1)) {
+                                    data.cell.styles.fontStyle='bold';
+                                    data.cell.styles.fontSize=9;
+                                    data.cell.styles.fillColor=[233,236,239];
+                                }
+                            }
+                        },
+                        margin: { left: solMarj }
+                    });
+                    yPos = doc.lastAutoTable.finalY + 6;
+
+                    // Redraw header on each page
+                    if(doc.lastAutoTable.finalY >= 270) yPos = 15;
+                }
+
+                // Footer
+                doc.setFont("Helvetica","normal");
+                doc.setFontSize(8);
+                doc.setTextColor(153,153,153);
+                doc.text("Turak Mimarlık - " + yil + " Yılı Bütçe Raporu - Otomatik Oluşturulmuştur", sayfaGenislik/2, 290, {align:"center"});
+
+                doc.save('Butce_Raporu_' + yil + '.pdf');
+                tmNotify("Bütçe PDF oluşturuldu.","success");
+            } catch(e) {
+                console.error("Bütçe PDF hatası:", e);
+                tmNotify("Bütçe PDF oluşturulurken hata: " + e.message, "error");
             }
-            h += `<div style="text-align:center;margin-top:30px;padding-top:15px;border-top:1px solid #dee2e6;font-size:10px;color:#999;">Turak Mimarlık - ${yil} Yılı Bütçe Raporu - Otomatik Oluşturulmuştur</div></div>`;
-            const el = document.createElement("div"); el.innerHTML = h; document.body.appendChild(el);
-            html2canvas(el,{scale:6,useCORS:true}).then(function(c){var doc=new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});var imgW=190;var imgH=c.height*imgW/c.width;doc.addImage(c.toDataURL('image/png'),'PNG',10,10,imgW,imgH);doc.save(`Butce_Raporu_${yil}.pdf`);try{document.body.removeChild(el)}catch(ex){console.error("Butce PDF DOM temizlik:",ex);}}).catch(function(e){console.error("Butce PDF hatasi:",e);tmNotify("Bütçe PDF oluşturulurken hata: "+e.message,"error");try{document.body.removeChild(el)}catch(ex){}});
         }
 
         /* ================= HESAP TAKİP SİSTEMİ ================= */

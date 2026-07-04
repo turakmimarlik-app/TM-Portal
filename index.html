@@ -10,6 +10,7 @@
     <script>!function(){var c=document.createElement('canvas');c.width=32;c.height=32;var x=c.getContext('2d');x.fillStyle='#000';x.beginPath();x.arc(16,16,16,0,Math.PI*2);x.fill();x.fillStyle='#E53935';x.font='bold 22px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText('TM',16,16);var l=document.createElement('link');l.rel='icon';l.type='image/png';l.href=c.toDataURL('image/png');document.head.appendChild(l)}();</script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -128,7 +129,7 @@
                 </div>
             </div>
             <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.00.0</div>
+                <div class="version-tag">V1.01.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -602,21 +603,22 @@
                     <div class="yb-yil-gosterge">Yıl: <strong id="ybAktifYilLabel"></strong></div>
                 </div>
 
-                <div class="yb-sekme-bar" id="ybSekmeBar">
-                    <div class="yb-sekme yb-sekme-aktif" data-sekme="rapor" onclick="ybSekmeGoster('rapor')">📋 Rapor</div>
-                    <div class="yb-sekme" data-sekme="0" onclick="ybSekmeGoster('0')">Ocak</div>
-                    <div class="yb-sekme" data-sekme="1" onclick="ybSekmeGoster('1')">Şubat</div>
-                    <div class="yb-sekme" data-sekme="2" onclick="ybSekmeGoster('2')">Mart</div>
-                    <div class="yb-sekme" data-sekme="3" onclick="ybSekmeGoster('3')">Nisan</div>
-                    <div class="yb-sekme" data-sekme="4" onclick="ybSekmeGoster('4')">Mayıs</div>
-                    <div class="yb-sekme" data-sekme="5" onclick="ybSekmeGoster('5')">Haziran</div>
-                    <div class="yb-sekme" data-sekme="6" onclick="ybSekmeGoster('6')">Temmuz</div>
-                    <div class="yb-sekme" data-sekme="7" onclick="ybSekmeGoster('7')">Ağustos</div>
-                    <div class="yb-sekme" data-sekme="8" onclick="ybSekmeGoster('8')">Eylül</div>
-                    <div class="yb-sekme" data-sekme="9" onclick="ybSekmeGoster('9')">Ekim</div>
-                    <div class="yb-sekme" data-sekme="10" onclick="ybSekmeGoster('10')">Kasım</div>
-                    <div class="yb-sekme" data-sekme="11" onclick="ybSekmeGoster('11')">Aralık</div>
-                </div>
+    <div class="yb-sekme-bar" id="ybSekmeBar">
+        <div class="yb-sekme yb-sekme-aktif" data-sekme="rapor" onclick="ybSekmeGoster('rapor')">📋 Rapor</div>
+        <div class="yb-sekme" data-sekme="karsilastir" onclick="ybSekmeGoster('karsilastir')">🔁 Karşılaştır</div>
+        <div class="yb-sekme" data-sekme="0" onclick="ybSekmeGoster('0')">Ocak</div>
+        <div class="yb-sekme" data-sekme="1" onclick="ybSekmeGoster('1')">Şubat</div>
+        <div class="yb-sekme" data-sekme="2" onclick="ybSekmeGoster('2')">Mart</div>
+        <div class="yb-sekme" data-sekme="3" onclick="ybSekmeGoster('3')">Nisan</div>
+        <div class="yb-sekme" data-sekme="4" onclick="ybSekmeGoster('4')">Mayıs</div>
+        <div class="yb-sekme" data-sekme="5" onclick="ybSekmeGoster('5')">Haziran</div>
+        <div class="yb-sekme" data-sekme="6" onclick="ybSekmeGoster('6')">Temmuz</div>
+        <div class="yb-sekme" data-sekme="7" onclick="ybSekmeGoster('7')">Ağustos</div>
+        <div class="yb-sekme" data-sekme="8" onclick="ybSekmeGoster('8')">Eylül</div>
+        <div class="yb-sekme" data-sekme="9" onclick="ybSekmeGoster('9')">Ekim</div>
+        <div class="yb-sekme" data-sekme="10" onclick="ybSekmeGoster('10')">Kasım</div>
+        <div class="yb-sekme" data-sekme="11" onclick="ybSekmeGoster('11')">Aralık</div>
+    </div>
 
                 <div id="ybSekmeIcerik"></div>
 
@@ -1310,6 +1312,16 @@
                     <div class="modal-body"><p id="tmAlertMsg"></p></div>
                     <div class="modal-actions">
                         <button class="btn btn-red" id="tmAlertOk">Tamam</button>
+                    </div>
+                </div>
+            </div>
+            <!-- YILLIK BÜTÇE KATEGORİ YÖNETİM MODAL -->
+            <div id="ybKategoriModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)ybKategoriModalKapat()">
+                <div class="modal-box" style="max-width:500px;">
+                    <div class="modal-header"><h3>📂 Kategori Yönetimi</h3></div>
+                    <div class="modal-body" id="ybKategoriModalBody"></div>
+                    <div class="modal-actions">
+                        <button class="btn btn-clear-gray" onclick="ybKategoriModalKapat()" style="padding:8px 20px;">Kapat</button>
                     </div>
                 </div>
             </div>
