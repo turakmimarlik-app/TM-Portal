@@ -7,9 +7,8 @@ var EMAILJS_CONFIG = {
     serviceId: "service_77j0plq",
     templateId: "template_920ilvh"
 };
-if (typeof emailjs !== 'undefined') { emailjs.init(EMAILJS_CONFIG.publicKey); }
+
 function gorevMailGonder(gorev) {
-    if (typeof emailjs === 'undefined') { tmNotify("EmailJS SDK yuklu degil! (<script> eksik)", "error"); return; }
     if (EMAILJS_CONFIG.publicKey.indexOf("YOUR_") === 0) { tmNotify("EmailJS yapilandirilmamis!", "error"); return; }
     var kullanicilar;
     try { kullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || []; } catch(e) { kullanicilar = []; }
@@ -33,12 +32,22 @@ function gorevMailGonder(gorev) {
             task_msg: gorev.mesaj || "",
             task_date: gorev.tarih || ""
         };
-        emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams, { publicKey: EMAILJS_CONFIG.publicKey })
-            .then(function(){
-                tmNotify("Mail gonderildi -> " + email, "success");
+        fetch("https://api.emailjs.com/api/v1.0/email/send", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                service_id: EMAILJS_CONFIG.serviceId,
+                template_id: EMAILJS_CONFIG.templateId,
+                user_id: EMAILJS_CONFIG.publicKey,
+                template_params: templateParams
+            })
+        })
+            .then(function(r){
+                if (r.ok) { tmNotify("Mail gonderildi -> " + email, "success"); }
+                else { r.text().then(function(t){ tmNotify("Mail hatasi: " + t, "error"); }); }
             })
             .catch(function(e){
-                tmNotify("Mail hatasi: " + (e.text || e.message || "bilinmeyen hata"), "error");
+                tmNotify("Mail hatasi: " + (e.message || "baglanti hatasi"), "error");
             });
     });
 }
