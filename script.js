@@ -1193,6 +1193,7 @@ function gorevMailGonder(gorev) {
             setTimeout(function(){ bar.classList.remove('done'); bar.style.width = '0'; }, 600);
         }
         function sayfaDegistir(pageId, element) {
+            window.scrollTo(0, 0);
             sayfaLoadingGoster();
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
