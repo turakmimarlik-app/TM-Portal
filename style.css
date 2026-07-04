@@ -6,7 +6,7 @@
             --text-dark: #2d3748;
             --text-light: #718096;
             --accent-red: #9E2A2B;
-            --btn-green: #2B6B30;
+            --btn-green: #2E7D32;
             --btn-gray: #5A626A;
             --border-color: #b4c6d8;
             --input-bg: #f1f5f9;
@@ -114,8 +114,8 @@
         .theme-toggle-thumb.dark { transform: translateX(100%); }
         .theme-toggle-option { flex: 1; text-align: center; font-size: 13px; position: relative; z-index: 2; line-height: 28px; color: rgba(255,255,255,0.5); transition: color 0.25s; }
         .theme-toggle-option.active { color: #fff; }
-        .sidebar-footer-row .btn-logout { padding: 6px 10px; background: transparent; color: var(--accent-red); border: 1px solid var(--accent-red); border-radius: 5px; font-weight: 600; font-size: 11px; cursor: pointer; transition: 0.2s; white-space: nowrap; border-color: var(--accent-red); }
-        .sidebar-footer-row .btn-logout:hover { background: var(--accent-red); color: white; border-color: var(--accent-red); }
+        .sidebar-footer-row .btn-logout { padding: 6px 10px; background: transparent; color: #ff4757; border: 1px solid #ff4757; border-radius: 5px; font-weight: 600; font-size: 11px; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .sidebar-footer-row .btn-logout:hover { background: #ff4757; color: white; }
         
         .sidebar-copyright-area { text-align: center; font-size: 9px; color: #718096; line-height: 1.3; font-weight: 600; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px; margin-top: 4px; }
         .version-tag { font-size: 10px; color: #e2e8f0; font-weight: bold; letter-spacing: 0.5px; }
@@ -244,56 +244,93 @@
         .live-summary-card { background: var(--bg-main); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); width: 320px; margin-left: auto; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
         .live-summary-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; }
         
-        /* ===== BUTON SISTEMI ===== */
+        /* BUTONLAR — Kurumsal Tasarim Sistemi */
         .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 6px; letter-spacing: 0.3px; line-height: 1.4; }
         .btn:hover { transform: translateY(-1px); }
 
-        /* YEŞİL: kaydet, oluştur, onay */
-        .btn-save-green { background: var(--btn-green); color: white; }
-        .btn-save-green:hover { background: #1F5223; }
+        /* Birincil / Ana Eylem — Lacivert (kurumsal, guven verir) */
+        .btn-primary { background: #1e3a5f; color: white; box-shadow: 0 2px 8px rgba(30,58,95,0.25); border: 1px solid transparent; }
+        .btn-primary:hover { background: #152d4a; box-shadow: 0 4px 14px rgba(30,58,95,0.35); border-color: rgba(255,255,255,0.1); }
 
-        /* BORDO: PDF, düzenle, ödeme, yedek */
-        .btn-pdf-red, .btn-success, .btn-red { background: var(--accent-red); color: white; }
-        .btn-pdf-red:hover, .btn-success:hover, .btn-red:hover { background: #7a2021; }
+        /* Ekle / Olustur — Lacivert (ana eylem ile ayni) */
+        .btn-add { background: #1e3a5f; color: white; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; box-shadow: 0 2px 6px rgba(30,58,95,0.2); letter-spacing: 0.3px; }
+        .btn-add:hover { background: #152d4a; box-shadow: 0 4px 12px rgba(30,58,95,0.35); }
 
-        /* AMBER: düzenle, uyarı */
-        .btn-warning { background: #B8860B; color: white; }
-        .btn-warning:hover { background: #9A7209; }
+        /* Kaydet / Basarili — Bordo */ 
+        .btn-success, .btn-red { background: #9E2A2B; color: white; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 8px rgba(158,42,43,0.2); }
+        .btn-success:hover, .btn-red:hover { background: #7a2021; box-shadow: 0 4px 14px rgba(158,42,43,0.35); }
 
-        /* LACİVERT: ekle, birincil aksiyon */
-        .btn-primary, .btn-add { background: #1e3a5f; color: white; border: 1px solid transparent; }
-        .btn-primary:hover, .btn-add:hover { background: #152d4a; }
+        /* Kaydet / Onay — Yesil (sadece olumlu kaydetme eylemleri) */
+        .btn-save-green { background: var(--btn-green); color: white; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; border: none; box-shadow: 0 2px 8px rgba(46,125,50,0.2); }
+        .btn-save-green:hover { background: #1B5E20; box-shadow: 0 4px 14px rgba(46,125,50,0.3); }
 
-        /* SİL — bordo outline */
-        .btn-danger { background: transparent; color: var(--accent-red); border: 1px solid var(--accent-red); padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
-        .btn-danger:hover { background: var(--accent-red); color: white; }
-        [data-theme="dark"] .btn-danger { border-color: var(--accent-red); color: #e57373; }
-        [data-theme="dark"] .btn-danger:hover { background: var(--accent-red); color: white; }
+        /* PDF / Rapor — Bordo */
+        .btn-pdf-red { background: #9E2A2B; color: white; padding: 8px 18px; border-radius: 8px; font-size: 12px; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(158,42,43,0.2); }
+        .btn-pdf-red:hover { background: #7a2021; box-shadow: 0 4px 12px rgba(158,42,43,0.35); }
 
-        /* GRİ: temizle, vazgeç, kapat, iptal */
-        .btn-clear-gray { background: #5A626A; color: white; }
+        /* Duzenle / Uyari — Amber */
+        .btn-warning { background: #d68910; color: white; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(214,137,16,0.25); }
+        .btn-warning:hover { background: #b8730d; box-shadow: 0 4px 12px rgba(214,137,16,0.35); }
+
+        /* Sil / Tehlikeli — Kirmizi */
+        .btn-danger { background: transparent; color: #c0392b; border: 1px solid #c0392b; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+        .btn-danger:hover { background: #c0392b; color: white; box-shadow: 0 4px 12px rgba(192,57,43,0.3); }
+
+        /* Iptal / Temizle — Gri */
+        .btn-clear-gray { background: #5A626A; color: white; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; border: none; }
         .btn-clear-gray:hover { background: #4a525a; }
         [data-theme="dark"] .btn-clear-gray { background: #3a4a5e; color: #e8edf3; }
         [data-theme="dark"] .btn-clear-gray:hover { background: #4a5a6e; }
 
-        /* KÜÇÜK BUTON (tablo içi) */
+        /* Kucuk buton varyantlari (tablo ici, alt islemler) */
         .btn-sm { padding: 5px 12px !important; font-size: 11px !important; border-radius: 6px !important; gap: 4px !important; }
 
-        /* FORM İÇİ KAYDET/İPTAL */
+        /* Form ici kaydet/iptal ikilisi */
         .btn-form-save { background: #1e3a5f; color: white; padding: 8px 20px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-form-save:hover { background: #152d4a; transform: translateY(-1px); }
-        .btn-form-cancel { background: transparent; color: #5A626A; border: 1px solid var(--border-color); padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-form-cancel:hover { background: var(--input-bg); color: var(--text-dark); transform: translateY(-1px); }
+        .btn-form-cancel { background: transparent; color: #5A626A; border: 1px solid #b4c6d8; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-form-cancel:hover { background: #f0f2f5; transform: translateY(-1px); }
         [data-theme="dark"] .btn-form-cancel { border-color: #3a4a5e; color: #8899aa; }
-        [data-theme="dark"] .btn-form-cancel:hover { background: #1a222c; color: #e8edf3; }
+        [data-theme="dark"] .btn-form-cancel:hover { background: #1a222c; }
 
-        /* İnline padding'li butonları düzgün boyutlandır */
+        /* Buton sinifi eklenmis ancak inline style ile boyutlandirilmis butonlari yakala */
         .btn-primary[style*="padding"], .btn-add[style*="padding"], .btn-danger[style*="padding"],
         .btn-warning[style*="padding"], .btn-pdf-red[style*="padding"], .btn-save-green[style*="padding"],
         .btn-clear-gray[style*="padding"], .btn-red[style*="padding"], .btn-success[style*="padding"] {
             padding: var(--btn-p, 7px 16px) !important;
             font-size: var(--btn-fs, 12px) !important;
         }
+
+        /* Mavi (#1565C0) inline background kullanan butonlar -> lacivert */
+        button[style*="background:#1565C0"], button[style*="background: #1565C0"] {
+            background: #1e3a5f !important; border: none !important; border-radius: 6px !important;
+            font-weight: 600 !important; transition: all 0.2s !important;
+        }
+        button[style*="background:#1565C0"]:hover, button[style*="background: #1565C0"]:hover {
+            background: #152d4a !important; transform: translateY(-1px);
+        }
+
+        /* Turuncu (#fb8c00) inline butonlar -> amber */
+        button[style*="background:#fb8c00"], button[style*="background: #fb8c00"] {
+            background: #d68910 !important; border: none !important; border-radius: 6px !important;
+            font-weight: 600 !important; transition: all 0.2s !important;
+        }
+        button[style*="background:#fb8c00"]:hover, button[style*="background: #fb8c00"]:hover {
+            background: #b8730d !important; transform: translateY(-1px);
+        }
+
+        /* Bordo/yesil inline background kullanan +/- butonlari */
+        button[style*="background:var(--btn-green)"] {
+            border-radius: 6px !important; border: none !important; transition: all 0.2s !important;
+        }
+        button[style*="background:var(--btn-green)"]:hover { transform: translateY(-1px); }
+        button[style*="background:var(--accent-red)"] {
+            border-radius: 6px !important; border: none !important; transition: all 0.2s !important;
+        }
+        button[style*="background:var(--accent-red)"]:hover { transform: translateY(-1px); }
+        
+
+.btn-clear-gray:hover { background: #494F54; }
 
         .yb-sekme-bar { display:flex; gap:4px; margin-bottom:15px; flex-wrap:wrap; }
         .yb-sekme { padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600; font-size:12px; background:var(--btn-gray); color:white; transition:0.2s; user-select:none; }
@@ -723,14 +760,12 @@
         .it-detay-actions button { padding:6px 14px; border:none; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600; transition:0.2s; }
         .it-btn-tamamla { background:var(--btn-green); color:#fff; }
         .it-btn-tamamla:hover { opacity:0.85; }
-        .it-btn-sil { background:transparent; color:var(--accent-red); border:1px solid var(--accent-red) !important; }
-        .it-btn-sil:hover { background:var(--accent-red); color:#fff; }
-        [data-theme="dark"] .it-btn-sil { border-color:var(--accent-red) !important; color:#e57373; }
-        [data-theme="dark"] .it-btn-sil:hover { background:var(--accent-red); color:#fff; }
-        .it-btn-tahsilat { background:#1e3a5f; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600; padding:6px 14px; transition:0.2s; white-space:nowrap; }
+        .it-btn-sil { background:transparent; color:#ff4757; border:1px solid #ff4757 !important; }
+        .it-btn-sil:hover { background:#ff4757; color:#fff; }
+        .it-btn-tahsilat { background:#1565C0; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600; padding:6px 14px; transition:0.2s; white-space:nowrap; }
         .it-btn-tahsilat:hover { opacity:0.85; }
-
-        .it-btn-ruhsat { background:#1e3a5f; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600; padding:6px 14px; transition:0.2s; white-space:nowrap; }
+        .it-tahsilat-badge { padding:6px 14px; border-radius:4px; font-size:12px; font-weight:600; background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; white-space:nowrap; user-select:none; }
+        .it-btn-ruhsat { background:#E65100; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600; padding:6px 14px; transition:0.2s; white-space:nowrap; }
         .it-btn-ruhsat:hover { opacity:0.85; }
         .it-ruhsat-badge { padding:6px 14px; border-radius:4px; font-size:12px; font-weight:600; background:#fff3e0; color:#e65100; border:1px solid #ffb74d; white-space:nowrap; user-select:none; }
         .it-detay-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; align-items:center; }
