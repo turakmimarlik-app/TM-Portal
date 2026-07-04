@@ -2388,10 +2388,6 @@ function gorevMailGonder(gorev) {
             document.getElementById("btnSave").innerText = "Kullanıcıyı Kaydet";
             document.getElementById("btnCancel").style.display = "none";
             yetkiCheckboxlariniRenderEt();
-            TM_YETKI_TANIMLARI.forEach(function(item) {
-                var el = document.getElementById("auth_" + item.key.replace(/[.-]/g,"_"));
-                if (el) el.checked = item.key !== "yonetim";
-            });
         }
 
         function kullaniciListesiniYenile() {
