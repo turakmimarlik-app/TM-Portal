@@ -1085,6 +1085,14 @@ function gorevMailGonder(gorev) {
         var tmFormDirty = false;
         var tmPendingNav = null;
         function tmFormTemizle() { tmFormDirty = false; }
+        function sayfaInputlariTemizle() {
+            var aktif = document.querySelector('.page.active');
+            if (!aktif) return;
+            aktif.querySelectorAll('input[type="text"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"], textarea').forEach(function(el){
+                if (el.closest('.dash-modern-card') || el.closest('.as-form') || el.closest('.cs-wrapper') || el.closest('.it-form-card') || el.closest('.modal') || el.closest('.lock-popup') || el.closest('.page-lock-overlay')) return;
+                el.value = "";
+            });
+        }
         document.addEventListener('input', function(e) {
             if (!tmFormDirty && e.target && e.target.closest && e.target.closest('.page.active')) tmFormDirty = true;
         });
@@ -1151,7 +1159,8 @@ function gorevMailGonder(gorev) {
             el.innerHTML = h;
         }
         function menudenSayfaAc(yetkiKodu, pageId, element) {
-            if (tmFormDirty) { tmConfirm("Bu sayfadan ayrılırken kaydedilmemiş değişiklikler kaybolacak. Yine de çıkmak istiyor musunuz?", function() { tmFormDirty = false; menudenSayfaAc(yetkiKodu, pageId, element); }); return; }
+            tmFormDirty = false;
+            sayfaInputlariTemizle();
             sidebarAc();
             document.querySelectorAll(".page-lock-overlay").forEach(lock => lock.classList.remove("active"));
             document.getElementById("lockPopupOverlay").classList.remove("active");
