@@ -128,7 +128,7 @@
                 </div>
             </div>
             <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.89.0</div>
+                <div class="version-tag">V1.90.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -202,7 +202,7 @@
             <div class="dash-widget-body">
                 <div class="as-takvim-toolbar">
                     <button class="as-btn-toggle" onclick="asTakvimGorunumDegistir()" id="asTakvimToggleBtn">📅 HAFTALIK</button>
-                    <button class="as-btn-toggle" onclick="asTumEtkinlikleriGoster()" style="background:#2B6CB0;">📋 ETKİNLİKLER</button>
+                    <button class="btn btn-primary btn-sm" onclick="asTumEtkinlikleriGoster()">📋 ETKİNLİKLER</button>
                     <div class="as-takvim-nav">
                         <button class="as-btn-nav" onclick="asTakvimGeri()">◀</button>
                         <span class="as-takvim-baslik" id="asTakvimBaslik"></span>
@@ -494,7 +494,7 @@
                 </div>
                 <h3>🏦 Banka Hesapları</h3>
                 <div id="htHesapKartlar" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:16px; margin-bottom:15px;"></div>
-                <button class="btn btn-primary" onclick="htHesapFormAc()" style="margin-bottom:25px; padding:8px 18px; font-size:13px;">➕ Yeni Hesap Ekle</button>
+                    <button class="btn btn-primary" onclick="htHesapFormAc()" style="margin-bottom:20px;">➕ Yeni Hesap Ekle</button>
                 <div id="htHesapForm" class="inline-form" style="margin-bottom:20px;"></div>
                 <h3 style="margin-top:25px;">➕ Yeni İşlem</h3>
                 <div id="htYeniIslemForm" style="margin-bottom:20px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; padding:16px;">
@@ -510,7 +510,7 @@
                         <div style="flex:1;"><label>İşlem Türü</label><select id="htYeniTur" style="width:100%;"><option value="GELEN" style="color:var(--btn-green);">💰 GELEN</option><option value="GİDEN" style="color:var(--accent-red);">💸 GİDEN</option><option value="TRANSFER">🔄 HESAPLAR ARASI TRANSFER</option></select></div>
                     </div>
                     <div style="display:flex;">
-                        <button onclick="htYeniIslemEkle()" style="flex:1; padding:10px 0; font-size:14px; border:none; border-radius:4px; font-weight:bold; cursor:pointer; background:#1565C0; color:white;">💾 Ekle</button>
+                        <button class="btn btn-primary" onclick="htYeniIslemEkle()" style="flex:1; border-radius:6px;">💾 Ekle</button>
                     </div>
                 </div>
                 <h3>📋 Tüm Hesap Hareketleri</h3>
@@ -519,7 +519,7 @@
                 <div id="htIslemTablosu"></div>
                 </div>
                 <div id="htHesapDetayAlan" style="display:none; margin-top:20px;">
-                    <button class="btn btn-clear-gray" onclick="htHesapDetayKapat()" style="margin-bottom:15px; padding:6px 14px; font-size:12px;">← Geri</button>
+                        <button class="btn btn-clear-gray" onclick="htHesapDetayKapat()" style="margin-bottom:15px;">← Geri</button>
                     <h3 id="htDetayBaslik" style="border:none; padding:0;"></h3>
                     <div id="htDetayBilgi" style="margin-top:8px; margin-bottom:15px; font-size:13px; color:var(--text-light);"></div>
                     <input type="text" id="htDetayArama" class="search-box" onkeyup="htDetayIslemFiltrele()" placeholder="🔍 Bu hesapta ara..." style="max-width:300px; margin-bottom:10px;">
@@ -535,7 +535,7 @@
                         <div class="ft-yil-select">
                             <label style="font-size:12px; font-weight:600;">Yıl:</label>
                             <select id="ftYilSec" onchange="faturaYilDegistir(this.value)"></select>
-                            <button class="btn btn-pdf-red" onclick="faturaPdfIndir()" style="padding:8px 16px; font-size:12px;">📄 PDF Rapor</button>
+                            <button class="btn btn-pdf-red" onclick="faturaPdfIndir()">📄 PDF Rapor</button>
                         </div>
                     </div>
 
@@ -557,7 +557,7 @@
                         <h3 style="display:flex;align-items:center;justify-content:space-between;"><span>📥 Gelen Faturalar <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Ödenecek)</span></span><span class="ft-vergi-badge ft-vergi-badge-gelir" style="position:static;font-size:11px;padding:4px 14px;">📉 VERGI OLARAK DÜŞECEK</span></h3>
                         <div id="ftGelenForm" class="inline-form" style="margin-bottom:12px;"></div>
                         <div style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                            <button class="btn btn-primary" onclick="ftGelenFormAc()" style="padding:7px 16px; font-size:12px;">➕ Gelen Fatura Ekle</button>
+                            <button class="btn btn-primary" onclick="ftGelenFormAc()">➕ Gelen Fatura Ekle</button>
                             <input type="text" id="ftGelenArama" class="search-box" onkeyup="ftGelenFiltrele()" placeholder="🔍 Firma veya fatura no ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
                             <span id="ftGelenSayac" style="font-size:11px; color:var(--text-light); margin-left:auto;">0 kayıt</span>
                         </div>
@@ -568,7 +568,7 @@
                         <h3 style="display:flex;align-items:center;justify-content:space-between;"><span>📤 Giden Faturalar <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Tahsil Edilecek)</span></span><span class="ft-vergi-badge ft-vergi-badge-gider" style="position:static;font-size:11px;padding:4px 14px;">📈 VERGI OLARAK ÖDENECEK</span></h3>
                         <div id="ftGidenForm" class="inline-form" style="margin-bottom:12px;"></div>
                         <div style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                            <button class="btn btn-primary" onclick="ftGidenFormAc()" style="padding:7px 16px; font-size:12px;">➕ Giden Fatura Ekle</button>
+                            <button class="btn btn-primary" onclick="ftGidenFormAc()">➕ Giden Fatura Ekle</button>
                             <input type="text" id="ftGidenArama" class="search-box" onkeyup="ftGidenFiltrele()" placeholder="🔍 Firma veya fatura no ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
                             <span id="ftGidenSayac" style="font-size:11px; color:var(--text-light); margin-left:auto;">0 kayıt</span>
                         </div>
@@ -579,7 +579,7 @@
                         <h3>🧾 Ödenen Vergiler <span id="ftOdenenVergiTurleri" style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;"></span></h3>
                         <div id="ftOdenenVergiForm" class="inline-form" style="margin-bottom:12px;"></div>
                         <div style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                            <button class="btn btn-primary" onclick="ftOdenenVergiFormAc()" style="padding:7px 16px; font-size:12px;">➕ Ödenen Vergi Ekle</button>
+                            <button class="btn btn-primary" onclick="ftOdenenVergiFormAc()">➕ Ödenen Vergi Ekle</button>
                             <input type="text" id="ftOdenenVergiArama" class="search-box" onkeyup="ftOdenenVergiFiltrele()" placeholder="🔍 Vergi adı ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
                             <span id="ftOdenenVergiSayac" style="font-size:11px; color:var(--text-light); margin-left:auto;">0 kayıt</span>
                         </div>
@@ -589,7 +589,7 @@
                     <div class="ft-bolum">
                         <h3>📅 Vergi Takvimi <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Ödeme tarihleri ve hatırlatıcılar)</span></h3>
                         <div id="ftTakvimForm" class="inline-form" style="margin-bottom:12px;"></div>
-                        <div style="margin-bottom:12px;"><button class="btn btn-primary" onclick="ftTakvimFormAc()" style="padding:7px 16px; font-size:12px;">➕ Vergi Etkinliği Ekle</button></div>
+                        <div style="margin-bottom:12px;"><button class="btn btn-primary" onclick="ftTakvimFormAc()">➕ Vergi Etkinliği Ekle</button></div>
                         <div id="ftTakvimListesi"></div>
                     </div>
                 </div>
@@ -689,7 +689,7 @@
                                     <option value="0" selected>%0</option>
                                 </select>
                             </td>
-                            <td><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
+                            <td><button class="btn btn-danger btn-sm" onclick="teklifFormSatirSil(this)">Sil</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -735,7 +735,7 @@
                 <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px; flex-wrap:wrap;">
                     <h2 style="border:none; padding:0; margin:0;">📈 TM Fiyat Listesi</h2>
                     <div style="display:flex; gap:8px; align-items:center;">
-                        <button class="btn btn-save-green" onclick="tmfSayfaEkle()" style="padding:6px 14px; font-size:12px;">+ Yeni Sayfa</button>
+                        <button class="btn btn-save-green btn-sm" onclick="tmfSayfaEkle()">+ Yeni Sayfa</button>
                     </div>
                 </div>
                 <div class="tmf-tab-bar" id="tmfTabBar"></div>
@@ -870,7 +870,7 @@
 
                     <div style="display: flex; gap: 10px;">
                         <button id="btnMusteriSave" class="btn btn-save-green" onclick="musteriProfilKaydet()">💾 Profil Kartını Kaydet</button>
-                        <button id="btnMusteriCancel" class="btn btn-primary" onclick="musteriFormTemizle()" style="display:none;">Vazgeç</button>
+                        <button id="btnMusteriCancel" class="btn btn-clear-gray" onclick="musteriFormTemizle()" style="display:none;">Vazgeç</button>
                         <button class="btn btn-clear-gray" onclick="musteriFormTemizle()">🧹 Formu Temizle</button>
                     </div>
                 </div>
@@ -957,7 +957,7 @@
 
                     <div style="display: flex; gap: 10px;">
                         <button id="btnPartnerSave" class="btn btn-save-green" onclick="isOrtagiProfilKaydet()">💾 Partner Profilini Kaydet</button>
-                        <button id="btnPartnerCancel" class="btn btn-primary" onclick="partnerFormTemizle()" style="display:none;">Vazgeç</button>
+                        <button id="btnPartnerCancel" class="btn btn-clear-gray" onclick="partnerFormTemizle()" style="display:none;">Vazgeç</button>
                         <button class="btn btn-clear-gray" onclick="partnerFormTemizle()">🧹 Formu Temizle</button>
                     </div>
                 </div>
@@ -1055,7 +1055,7 @@
                             <button class="it-sekme" data-tur="Uygulama Proje" onclick="itAktifSekmeDegistir('Uygulama Proje')">Uygulama Proje</button>
                             <button class="it-sekme" data-tur="3B Modelleme ve Tasarım" onclick="itAktifSekmeDegistir('3B Modelleme ve Tasarım')">3B Modelleme ve Tasarım</button>
                             <button class="it-sekme" data-tur="Diğer" onclick="itAktifSekmeDegistir('Diğer')">Diğer</button>
-                            <button class="it-sekme it-sekme-gantt" id="itGanttToggle" onclick="itGanttToggleGoruntu()" style="margin-left:auto;background:var(--accent-red);color:#fff;border-radius:6px;padding:10px 16px;">📊 Gantt</button>
+                            <button class="btn btn-pdf-red" id="itGanttToggle" onclick="itGanttToggleGoruntu()" style="margin-left:auto;border-radius:8px;">📊 Gantt</button>
                         </div>
                         <div id="itAktifKartlar"></div>
                         <div id="itGanttContainer" style="display:none;margin-top:8px;"></div>
@@ -1181,7 +1181,7 @@
                         <div id="yetkiCheckboxContainer"></div>
                     </div>
                     <button id="btnSave" class="btn btn-red" onclick="kullaniciKaydet()">Kullanıcıyı Kaydet</button>
-                    <button id="btnCancel" class="btn btn-primary" onclick="formSifirla()" style="display:none; margin-left: 10px;">Vazgeç</button>
+                    <button id="btnCancel" class="btn btn-clear-gray" onclick="formSifirla()" style="display:none; margin-left: 10px;">Vazgeç</button>
                 </div>
 
                 <h3>Mevcut Kullanıcı Listesi</h3>
@@ -1204,7 +1204,7 @@
                     <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; margin-bottom:15px;">
                         <div style="flex:1; min-width:160px;"><label style="font-size:11px;font-weight:600;display:block;margin-bottom:4px;">GÖREVİ VEREBİLECEK KULLANICI</label><select id="gorevYetkiVeren" class="form-select" style="width:100%;"></select></div>
                         <div style="flex:1; min-width:160px;"><label style="font-size:11px;font-weight:600;display:block;margin-bottom:4px;">GÖREV ATANACAK KULLANICI</label><select id="gorevYetkiAlan" class="form-select" style="width:100%;"></select></div>
-                        <button class="btn btn-red" onclick="gorevYetkiEkle()" style="padding:8px 16px; font-size:12px; height:36px;">➕ EKLE</button>
+                        <button class="btn btn-primary btn-sm" onclick="gorevYetkiEkle()" style="height:36px;">➕ EKLE</button>
                     </div>
                     <table class="app-table">
                         <thead><tr><th>Görevi Veren</th><th>Görev Atanacak</th><th>İşlem</th></tr></thead>
@@ -1219,7 +1219,7 @@
                         <div id="logoPreview">
                             <div class="logo-placeholder">Logo yüklemek için tıklayın (PNG/JPG)</div>
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="event.stopPropagation(); logoyuTemizle()" style="margin-top:8px; font-size:11px; padding:4px 12px;">Logoyu Kaldır</button>
+                        <button type="button" class="btn btn-clear-gray btn-sm" onclick="event.stopPropagation(); logoyuTemizle()" style="margin-top:8px;">Logoyu Kaldır</button>
                     </div>
                     <div class="ci-form">
                         <div><label>Firma Adı</label><input type="text" id="ciAd" value="TURAK MİMARLIK"></div>

@@ -38,8 +38,6 @@
         [data-theme="dark"] .dashboard-card { background:var(--panel-bg); }
         [data-theme="dark"] .dash-widget { background:var(--panel-bg); }
         [data-theme="dark"] .dash-mini-job { background:var(--bg-main); }
-        [data-theme="dark"] .btn-clear-gray { background:#3a4a5e; color:#e8edf3; }
-        [data-theme="dark"] .btn-clear-gray:hover { background:#4a5a6e; }
         [data-theme="dark"] .inline-form { background:var(--bg-main); }
         [data-theme="dark"] .detail-grid-box { background:var(--panel-bg); }
         [data-theme="dark"] .portfolio-card { background:var(--panel-bg); }
@@ -246,24 +244,81 @@
         .live-summary-card { background: var(--bg-main); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); width: 320px; margin-left: auto; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
         .live-summary-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; }
         
-        /* BUTONLAR */
-        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; letter-spacing:0.3px; }
-        .btn-primary { background: var(--accent-red); color: white; box-shadow: 0 2px 8px rgba(158,42,43,0.25); }
-        .btn-primary:hover { background: #7a2021; box-shadow: 0 4px 14px rgba(158,42,43,0.35); transform: translateY(-1px); }
-        .btn-warning { background: #f1c40f; color: #000; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; display:inline-flex; align-items:center; gap:4px; }
-        .btn-warning:hover { background: #d4a800; transform: translateY(-1px); }
-        .btn-danger { background: transparent; color: var(--accent-red); border: 1px solid var(--accent-red); padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; }
-        .btn-danger:hover { background: var(--accent-red); color: white; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(158,42,43,0.3); }
-        .btn-add { background: var(--accent-red); color: white; border: none; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(158,42,43,0.2); letter-spacing:0.3px; }
-        .btn-add:hover { background: #7a2021; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(158,42,43,0.35); }
-        .btn-save-green { background: var(--btn-green); color: white; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight:600; border:none; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(46,125,50,0.2); }
-        .btn-save-green:hover { background: #1B5E20; transform: translateY(-1px); box-shadow:0 4px 14px rgba(46,125,50,0.3); }
-        .btn-red { background: var(--accent-red); color: white; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight:600; border:none; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(158,42,43,0.2); }
-        .btn-red:hover { background: #7a2021; transform: translateY(-1px); box-shadow:0 4px 14px rgba(158,42,43,0.35); }
-        .btn-pdf-red { background: var(--accent-red); color: white; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight:600; border:none; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; }
-        .btn-pdf-red:hover { background: #7a2021; transform: translateY(-1px); }
-        .btn-clear-gray { background: var(--btn-gray); color: white; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight:600; border:none; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:6px; }
-        .btn-clear-gray:hover { background: #4a525a; transform: translateY(-1px); }
+        /* BUTONLAR — Kurumsal Tasarim Sistemi */
+        .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 6px; letter-spacing: 0.3px; line-height: 1.4; }
+        .btn:hover { transform: translateY(-1px); }
+
+        /* Birincil / Ana Eylem — Lacivert (kurumsal, guven verir) */
+        .btn-primary { background: #1e3a5f; color: white; box-shadow: 0 2px 8px rgba(30,58,95,0.25); border: 1px solid transparent; }
+        .btn-primary:hover { background: #152d4a; box-shadow: 0 4px 14px rgba(30,58,95,0.35); border-color: rgba(255,255,255,0.1); }
+
+        /* Ekle / Olustur — Lacivert (ana eylem ile ayni) */
+        .btn-add { background: #1e3a5f; color: white; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; box-shadow: 0 2px 6px rgba(30,58,95,0.2); letter-spacing: 0.3px; }
+        .btn-add:hover { background: #152d4a; box-shadow: 0 4px 12px rgba(30,58,95,0.35); }
+
+        /* Kaydet / Basarili — Bordo */ 
+        .btn-success, .btn-red { background: #9E2A2B; color: white; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 8px rgba(158,42,43,0.2); }
+        .btn-success:hover, .btn-red:hover { background: #7a2021; box-shadow: 0 4px 14px rgba(158,42,43,0.35); }
+
+        /* Kaydet / Onay — Yesil (sadece olumlu kaydetme eylemleri) */
+        .btn-save-green { background: var(--btn-green); color: white; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; border: none; box-shadow: 0 2px 8px rgba(46,125,50,0.2); }
+        .btn-save-green:hover { background: #1B5E20; box-shadow: 0 4px 14px rgba(46,125,50,0.3); }
+
+        /* PDF / Rapor — Bordo */
+        .btn-pdf-red { background: #9E2A2B; color: white; padding: 8px 18px; border-radius: 8px; font-size: 12px; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(158,42,43,0.2); }
+        .btn-pdf-red:hover { background: #7a2021; box-shadow: 0 4px 12px rgba(158,42,43,0.35); }
+
+        /* Duzenle / Uyari — Amber */
+        .btn-warning { background: #d68910; color: white; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(214,137,16,0.25); }
+        .btn-warning:hover { background: #b8730d; box-shadow: 0 4px 12px rgba(214,137,16,0.35); }
+
+        /* Sil / Tehlikeli — Kirmizi */
+        .btn-danger { background: transparent; color: #c0392b; border: 1px solid #c0392b; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+        .btn-danger:hover { background: #c0392b; color: white; box-shadow: 0 4px 12px rgba(192,57,43,0.3); }
+
+        /* Iptal / Temizle — Gri */
+        .btn-clear-gray { background: #5A626A; color: white; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; border: none; }
+        .btn-clear-gray:hover { background: #4a525a; }
+        [data-theme="dark"] .btn-clear-gray { background: #3a4a5e; color: #e8edf3; }
+        [data-theme="dark"] .btn-clear-gray:hover { background: #4a5a6e; }
+
+        /* Kucuk buton varyantlari (tablo ici, alt islemler) */
+        .btn-sm { padding: 5px 12px !important; font-size: 11px !important; border-radius: 6px !important; gap: 4px !important; }
+
+        /* Form ici kaydet/iptal ikilisi */
+        .btn-form-save { background: #1e3a5f; color: white; padding: 8px 20px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-form-save:hover { background: #152d4a; transform: translateY(-1px); }
+        .btn-form-cancel { background: transparent; color: #5A626A; border: 1px solid #b4c6d8; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-form-cancel:hover { background: #f0f2f5; transform: translateY(-1px); }
+        [data-theme="dark"] .btn-form-cancel { border-color: #3a4a5e; color: #8899aa; }
+        [data-theme="dark"] .btn-form-cancel:hover { background: #1a222c; }
+
+        /* Buton sinifi eklenmis ancak inline style ile boyutlandirilmis butonlari yakala */
+        .btn-primary[style*="padding"], .btn-add[style*="padding"], .btn-danger[style*="padding"],
+        .btn-warning[style*="padding"], .btn-pdf-red[style*="padding"], .btn-save-green[style*="padding"],
+        .btn-clear-gray[style*="padding"], .btn-red[style*="padding"], .btn-success[style*="padding"] {
+            padding: var(--btn-p, 7px 16px) !important;
+            font-size: var(--btn-fs, 12px) !important;
+        }
+
+        /* Mavi (#1565C0) inline background kullanan butonlar -> lacivert */
+        button[style*="background:#1565C0"], button[style*="background: #1565C0"] {
+            background: #1e3a5f !important; border: none !important; border-radius: 6px !important;
+            font-weight: 600 !important; transition: all 0.2s !important;
+        }
+        button[style*="background:#1565C0"]:hover, button[style*="background: #1565C0"]:hover {
+            background: #152d4a !important; transform: translateY(-1px);
+        }
+
+        /* Bordo/yesil inline background kullanan +/- butonlari */
+        button[style*="background:var(--btn-green)"] {
+            border-radius: 6px !important; border: none !important; transition: all 0.2s !important;
+        }
+        button[style*="background:var(--btn-green)"]:hover { transform: translateY(-1px); }
+        button[style*="background:var(--accent-red)"] {
+            border-radius: 6px !important; border: none !important; transition: all 0.2s !important;
+        }
+        button[style*="background:var(--accent-red)"]:hover { transform: translateY(-1px); }
         
 
 .btn-clear-gray:hover { background: #494F54; }
@@ -274,8 +329,8 @@
         .yb-sekme-aktif { background:var(--accent-red); color:white; }
         .yb-top-bar { display:flex; gap:20px; align-items:flex-end; margin-bottom:20px; flex-wrap:wrap; }
         .yb-yil-gosterge { font-size:18px; font-weight:600; padding:8px 0; }
-        .btn-add-item { background: transparent; color: var(--text-dark); border: 1px dashed var(--border-color); width: 100%; padding: 10px; margin-top: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.2s; }
-        .btn-add-item:hover { background: rgba(0,0,0,0.03); border-color: var(--accent-red); color: var(--accent-red); }
+        .btn-add-item { background: transparent; color: var(--text-dark); border: 2px dashed var(--border-color); width: 100%; padding: 12px; margin-top: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 8px; letter-spacing: 0.3px; }
+        .btn-add-item:hover { border-color: #1e3a5f; color: #1e3a5f; background: rgba(30,58,95,0.04); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,58,95,0.08); }
 
         .ht-card { background:var(--panel-bg); border:1px solid var(--border-color); border-radius:10px; padding:18px; display:flex; flex-direction:column; gap:8px; transition:0.2s; position:relative; }
         .ht-card:hover { box-shadow:0 4px 16px rgba(0,0,0,0.04); }
@@ -448,7 +503,8 @@
         .as-modal-actions { padding:0 20px 20px 20px; display:flex; gap:10px; justify-content:flex-end; }
         .as-btn-save { background:linear-gradient(135deg, #2e7d32, #388e3c); color:#fff; border:none; padding:9px 22px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; }
         .as-btn-save:hover { filter:brightness(1.1); }
-        .as-btn-cancel { background:var(--bg-main); border:1px solid var(--border-color); color:var(--text-dark); padding:9px 22px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; transition:0.15s; }
+        .as-btn-cancel { background:var(--bg-main); border:1px solid var(--border-color); color:var(--text-dark); padding:9px 22px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; transition:0.15s; display:inline-flex; align-items:center; gap:4px; }
+        .as-btn-cancel:hover { transform: translateY(-1px); }
         .as-btn-cancel:hover { background:var(--panel-bg); border-color:var(--accent-red); }
         .as-btn-delete { background:linear-gradient(135deg, #9e2a2b, #c0392b); color:#fff; border:none; padding:9px 22px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; }
         .as-btn-delete:hover { filter:brightness(1.1); }
