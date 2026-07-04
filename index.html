@@ -128,7 +128,7 @@
                 </div>
             </div>
             <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.87.0</div>
+                <div class="version-tag">V1.88.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -753,8 +753,8 @@
                             <label>Proje / Hizmet Dalı Seçimi:</label>
                             <div style="display: flex; gap: 10px;">
                                 <select id="pYonetimDal" style="flex: 2;"></select>
-                                <button class="btn btn-primary" onclick="yeniPiyasaDaliEklePrompt()" style="padding: 10px 12px; font-size: 12px;">[+] Dal Ekle</button>
-                                <button class="btn btn-danger" onclick="piyasaDaliSilPrompt()" style="padding: 10px 12px; font-size: 12px;">[-] Sil</button>
+                                <button class="btn-add" onclick="yeniPiyasaDaliEklePrompt()">➕ Dal Ekle</button>
+                                <button class="btn-danger" onclick="piyasaDaliSilPrompt()">🗑 Sil</button>
                             </div>
                         </div>
                     </div>
@@ -778,8 +778,8 @@
                             <label>Hesap Yöntemi / Birim Tipi:</label>
                             <div style="display: flex; gap: 10px;">
                                 <select id="pYonetimBirimTipi" style="flex: 2;"></select>
-                                <button class="btn btn-primary" onclick="yeniPiyasaBirimEklePrompt()" style="padding: 10px 12px; font-size: 12px;">[+] Ekle</button>
-                                <button class="btn btn-danger" onclick="piyasaBirimSilPrompt()" style="padding: 10px 12px; font-size: 12px;">[-] Sil</button>
+                                <button class="btn-add" onclick="yeniPiyasaBirimEklePrompt()">➕ Ekle</button>
+                                <button class="btn-danger" onclick="piyasaBirimSilPrompt()">🗑 Sil</button>
                             </div>
                         </div>
                         <div class="col">
@@ -835,8 +835,8 @@
                             <label>Müşteri Tipi / Etiket:</label>
                             <div style="display: flex; gap: 10px;">
                                 <select id="mTipi" style="flex: 2;"></select>
-                                <button class="btn btn-primary" onclick="yeniMusteriEtiketiEklePrompt()" style="padding: 10px 12px; font-size: 12px;">[+] Ekle</button>
-                                <button class="btn btn-danger" onclick="musteriEtiketiSilPrompt()" style="padding: 10px 12px; font-size: 12px;">[-] Sil</button>
+                                <button class="btn-add" onclick="yeniMusteriEtiketiEklePrompt()">➕ Ekle</button>
+                                <button class="btn-danger" onclick="musteriEtiketiSilPrompt()">🗑 Sil</button>
                             </div>
                         </div>
                     </div>
@@ -865,7 +865,7 @@
                         <label>Banka Hesabı Bilgileri (Çoklu Giriş):</label>
                         <div id="musteriBankaKonteyner">
                         </div>
-                        <button class="btn btn-primary" onclick="bankaSatiriEkle('musteriBankaKonteyner')" style="margin-top:5px; padding: 6px 12px; font-size:12px;">[+] Banka Hesabı Ekle</button>
+                        <button class="btn-add" onclick="bankaSatiriEkle('musteriBankaKonteyner')" style="margin-top:5px;">🏦 Banka Hesabı Ekle</button>
                     </div>
 
                     <div style="display: flex; gap: 10px;">
@@ -904,12 +904,12 @@
                     </div>
                     <div class="row">
                         <div class="col" style="flex:3.5;">
-                            <label>Hizmet Branşı Seçimi:</label>
-                            <div style="display: flex; gap: 10px;">
-                                <select id="ioBrans" style="flex: 2;"></select>
-                                <button class="btn btn-primary" onclick="yeniPiyasaDaliEklePrompt()" style="padding: 10px 12px; font-size: 12px;">[+] Ekle</button>
-                                <button class="btn btn-danger" onclick="piyasaDaliSilPrompt()" style="padding: 10px 12px; font-size: 12px;">[-] Sil</button>
-                            </div>
+        <label>Hizmet Branşı Seçimi:</label>
+        <div style="display: flex; gap: 10px;">
+            <select id="ioBrans" style="flex: 2;"></select>
+            <button class="btn-add" onclick="yeniPiyasaDaliEklePrompt()">➕ Ekle</button>
+            <button class="btn-danger" onclick="piyasaDaliSilPrompt()">🗑 Sil</button>
+        </div>
                         </div>
                         <div class="col" style="flex:1;">
                             <label>Telefon:</label>
@@ -952,7 +952,7 @@
                         <label>Banka Hesabı Bilgileri (Çoklu Giriş):</label>
                         <div id="partnerBankaKonteyner">
                         </div>
-                        <button class="btn btn-primary" onclick="bankaSatiriEkle('partnerBankaKonteyner')" style="margin-top:5px; padding: 6px 12px; font-size:12px;">[+] Banka Hesabı Ekle</button>
+                        <button class="btn-add" onclick="bankaSatiriEkle('partnerBankaKonteyner')" style="margin-top:5px;">🏦 Banka Hesabı Ekle</button>
                     </div>
 
                     <div style="display: flex; gap: 10px;">

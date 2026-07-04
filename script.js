@@ -276,6 +276,7 @@ function gorevMailGonder(gorev) {
                     tmOnlineHeartbeatBaslat(u);
                     if (savedPage && savedPage !== 'anasayfa-page' && document.getElementById(savedPage)) {
                         sayfaDegistir(savedPage, null);
+                        history.replaceState({ pageId: savedPage, yetkiKodu: savedPage.replace("-page","") }, "", "#" + savedPage);
                     }
                     var subMap={"teklif-submenu":"arrow-icon","portfoy-submenu":"arrow-portfoy-icon","muhasebe-submenu":"arrow-muhasebe-icon"};var openSub=localStorage.getItem("tm_submenu_open");if(openSub&&subMap[openSub]){var sm=document.getElementById(openSub);if(sm){sm.classList.add("open");var ar=document.getElementById(subMap[openSub]);if(ar)ar.innerText="▲";}}if(savedPage&&savedPage!=='anasayfa-page'){var si=document.getElementById('sub-'+savedPage.replace('-page',''));if(si)si.classList.add('active');}
                 } else {
@@ -1164,6 +1165,7 @@ function gorevMailGonder(gorev) {
             if (subPageMap[pageId]) { try { origSetItem("tm_submenu_open", subPageMap[pageId]); } catch(e) { console.error("Submenu kaydetme hatasi:", e); } }
             sidebarMobileKapat();
             sayfaDegistir(pageId, element);
+            history.pushState({ pageId: pageId, yetkiKodu: yetkiKodu }, "", "#" + pageId);
         }
         function kapatLockPopup() { document.getElementById("lockPopupOverlay").classList.remove("active"); }
 
@@ -1220,6 +1222,7 @@ function gorevMailGonder(gorev) {
                 else if (pageId === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
             } catch(e) { console.warn('sayfa yenileme hatasi', e); }
             localStorage.setItem('tm_active_page', pageId);
+            tmFormDirty = false;
             sayfaLoadingBitir();
             setTimeout(function(){ tmIkonButtonTooltipEkle(); tmScrollHintKontrol(); }, 100);
         }
@@ -1297,6 +1300,12 @@ function gorevMailGonder(gorev) {
         window.addEventListener("beforeunload", function() {
             var u = localStorage.getItem("tm_active_user");
             if (u) tmOnlineCikisYap(u);
+        });
+        window.addEventListener("popstate", function(e) {
+            if (e.state && e.state.pageId) {
+                tmFormDirty = false;
+                sayfaDegistir(e.state.pageId, null);
+            }
         });
 
         try { if(typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') Chart.register(ChartDataLabels); } catch(e) { console.warn("Chart.js yüklenemedi:", e); }
