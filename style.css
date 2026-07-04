@@ -310,6 +310,15 @@
             background: #152d4a !important; transform: translateY(-1px);
         }
 
+        /* Turuncu (#fb8c00) inline butonlar -> amber */
+        button[style*="background:#fb8c00"], button[style*="background: #fb8c00"] {
+            background: #d68910 !important; border: none !important; border-radius: 6px !important;
+            font-weight: 600 !important; transition: all 0.2s !important;
+        }
+        button[style*="background:#fb8c00"]:hover, button[style*="background: #fb8c00"]:hover {
+            background: #b8730d !important; transform: translateY(-1px);
+        }
+
         /* Bordo/yesil inline background kullanan +/- butonlari */
         button[style*="background:var(--btn-green)"] {
             border-radius: 6px !important; border: none !important; transition: all 0.2s !important;

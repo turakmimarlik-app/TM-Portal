@@ -3776,8 +3776,8 @@ function gorevMailGonder(gorev) {
 
                         <div class="card-actions">
                             <button class="btn-warning" onclick="event.stopPropagation(); isMuhasebeDuzenle(${kayit.id})">Düzenle</button>
-                            <button class="btn btn-pdf-red" onclick="event.stopPropagation(); isMuhasebePdfUret(${kayit.id})" style="padding:6px 12px; font-size:12px;">📄 PDF</button>
-                            <button class="btn-save-green" onclick="event.stopPropagation(); isMuhasebeBitirVeTasi(${kayit.id})" style="padding:6px 12px; border-radius:4px; font-size:12px; font-weight:bold; border:none; cursor:${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'not-allowed' : 'pointer'}; background:var(--btn-green); color:white;${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'opacity:0.5;' : ''}" ${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'disabled' : ''}>✅ İŞ BİTİRME ONAYI</button>
+                            <button class="btn btn-pdf-red" onclick="event.stopPropagation(); isMuhasebePdfUret(${kayit.id})">📄 PDF</button>
+                            <button class="btn-save-green" onclick="event.stopPropagation(); isMuhasebeBitirVeTasi(${kayit.id})" style="cursor:${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'not-allowed' : 'pointer'};${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'opacity:0.5;' : ''}" ${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'disabled' : ''}>✅ İŞ BİTİRME ONAYI</button>
                             <button class="btn-danger" onclick="event.stopPropagation(); isMuhasebeSil(${kayit.id})">Sil</button>
                         </div>
                         </div>
@@ -4151,7 +4151,7 @@ function gorevMailGonder(gorev) {
 
                         <div class="card-actions">
                             <button class="btn-warning" onclick="event.stopPropagation(); tamamlananIsMuhasebeGeriAl(${kayit.id})">↩ Geri Al</button>
-                            <button class="btn btn-pdf-red" onclick="event.stopPropagation(); isMuhasebePdfUret(${kayit.id})" style="padding:6px 12px; font-size:12px;">📄 PDF</button>
+                            <button class="btn btn-pdf-red" onclick="event.stopPropagation(); isMuhasebePdfUret(${kayit.id})">📄 PDF</button>
                             <button class="btn-danger" onclick="event.stopPropagation(); tamamlananIsMuhasebeSil(${kayit.id})">Sil</button>
                         </div>
                         </div>
@@ -5255,8 +5255,8 @@ function gorevMailGonder(gorev) {
                 h += '<div class="ht-detay-satir" style="color:rgba(255,255,255,0.9);"><span style="text-transform:none;">IBAN: '+htIbanGoster(hs.iban)+'</span></div>';
                 h += '<div class="ht-detay-satir" style="color:rgba(255,255,255,0.9);"><span style="text-transform:none;">Kart Şifre: '+hs.kartSifre+'</span><span style="text-transform:none;">İnternet Şifre: '+hs.internetSifre+'</span></div>';
                 h += '<div class="ht-card-actions" onclick="event.stopPropagation();">';
-                h += '<button class="btn-warning" onclick="htHesapFormAc('+hs.id+')" style="font-size:11px; padding:4px 8px; background:rgba(255,255,255,0.25); color:white; border:1px solid rgba(255,255,255,0.4);">✏️ Düzenle</button>';
-                h += '<button class="btn-danger" onclick="htHesapSil('+hs.id+')" style="font-size:11px; padding:4px 8px; background:rgba(255,255,255,0.25); color:white; border:1px solid rgba(255,255,255,0.4);">Sil</button>';
+                h += '<button class="btn-warning btn-sm" onclick="htHesapFormAc('+hs.id+')" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);">✏️ Düzenle</button>';
+                h += '<button class="btn-danger btn-sm" onclick="htHesapSil('+hs.id+')" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);">Sil</button>';
                 h += '</div></div>';
             });
             konteyner.innerHTML = h;
@@ -6629,8 +6629,8 @@ function gorevMailGonder(gorev) {
             form.innerHTML = '<div style="width:100%;">' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
                 '<div style="flex:2;min-width:160px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi Adı</label><div style="display:flex;gap:4px;"><select id="ftOdenenVergiAdi" style="flex:1;padding:10px;box-sizing:border-box;text-align:center;">'+turOpts+'</select>' +
-                '<button title="Tür Ekle" onclick="yeniVergiTuruEklePrompt()" style="padding:10px 8px;border:none;border-radius:6px;background:var(--btn-green);color:#fff;cursor:pointer;font-size:16px;line-height:1;">➕</button>' +
-                '<button title="Tür Sil" onclick="vergiTuruSilPrompt()" style="padding:10px 8px;border:none;border-radius:6px;background:var(--accent-red);color:#fff;cursor:pointer;font-size:16px;line-height:1;">➖</button></div></div>' +
+                '<button class="btn btn-save-green" title="Tür Ekle" onclick="yeniVergiTuruEklePrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;">➕</button>' +
+                '<button class="btn btn-danger btn-sm" title="Tür Sil" onclick="vergiTuruSilPrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;">➖</button></div></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Tutar (₺)</label><input type="text" id="ftOdenenVergiTutar" value="'+tutarVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Ödeme Tarihi</label><input type="date" id="ftOdenenVergiTarih" value="'+(v?v.odemeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Dönem</label><select id="ftOdenenVergiDonem" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;">'+donemOpts+'</select></div>' +
@@ -6760,8 +6760,8 @@ function gorevMailGonder(gorev) {
                 '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Başlık</label><input type="text" id="ftTakvimBaslik" value="'+(e?e.baslik:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
                 '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Tarih</label><input type="date" id="ftTakvimTarih" value="'+(e?e.tarih:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:140px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Tür</label><div style="display:flex;gap:4px;"><select id="ftTakvimTur" style="flex:1;padding:10px;box-sizing:border-box;text-align:center;">'+turOpts+'</select>' +
-                '<button title="Tür Ekle" onclick="yeniVergiTuruEklePrompt()" style="padding:10px 8px;border:none;border-radius:6px;background:var(--btn-green);color:#fff;cursor:pointer;font-size:16px;line-height:1;">➕</button>' +
-                '<button title="Tür Sil" onclick="vergiTuruSilPrompt()" style="padding:10px 8px;border:none;border-radius:6px;background:var(--accent-red);color:#fff;cursor:pointer;font-size:16px;line-height:1;">➖</button></div></div>' +
+                '<button class="btn btn-save-green" title="Tür Ekle" onclick="yeniVergiTuruEklePrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;">➕</button>' +
+                '<button class="btn btn-danger btn-sm" title="Tür Sil" onclick="vergiTuruSilPrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;">➖</button></div></div>' +
                 '<div style="flex:2;min-width:150px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Açıklama</label><input type="text" id="ftTakvimAciklama" value="'+(e?e.aciklama:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
                 '<div style="display:flex;gap:8px;justify-content:center;padding-top:6px;">' +
@@ -7256,8 +7256,8 @@ function itDurumMetni(o) {
                     '<td>' + (is.tarih ? tarihStr(is.tarih) : "-") + '</td>' +
                     '<td>' + (is.bitisTarihi ? tarihStr(is.bitisTarihi) : "-") + '</td>' +
                     (showActionCol ? '<td style="text-align:center;"><div style="display:flex;gap:4px;justify-content:center;">' +
-                        (isTaslak ? '<button onclick="event.stopPropagation();itTaslakUygulamayaGec(' + is.id + ')" style="padding:3px 8px;background:#1565C0;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:10px;font-weight:600;white-space:nowrap;">🚀 UYGULAMA PROJEYE BAŞLA</button>' : '') +
-                        '<button onclick="event.stopPropagation();it3bModellemeyeGec(' + is.id + ')" style="padding:3px 8px;background:#fb8c00;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:10px;font-weight:600;white-space:nowrap;">🔷 3B MODELLEMEYE BAŞLA</button>' +
+                        (isTaslak ? '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();itTaslakUygulamayaGec(' + is.id + ')" style="white-space:nowrap;">🚀 UYGULAMA PROJEYE BAŞLA</button>' : '') +
+                        '<button class="btn btn-sm" onclick="event.stopPropagation();it3bModellemeyeGec(' + is.id + ')" style="background:#d68910;color:white;border:none;white-space:nowrap;border-radius:6px;">🔷 3B MODELLEMEYE BAŞLA</button>' +
                         '</div></td>' : '') +
                     '</tr>' +
                     '<tr class="it-row-detail' + (acik ? ' open' : '') + '" id="itTamDetayRow_' + is.id + '">' +
@@ -7560,7 +7560,7 @@ function itDurumMetni(o) {
                     h += '</div>';
                 });
                 h += '</div>';
-                h += '<div style="display:flex;gap:4px;"><input id="itOrtakNotInput_' + jobId + '_' + i + '" placeholder="NOT EKLE" style="flex:1;padding:4px 8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-main);font-size:12px;text-transform:uppercase;" onkeydown="if(event.key===\'Enter\'){event.stopPropagation();itOrtakNotEkle(' + jobId + ',' + i + ')}"><button onclick="event.stopPropagation();itOrtakNotEkle(' + jobId + ',' + i + ')" style="padding:4px 10px;background:#1565C0;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap;">+</button></div>';
+                h += '<div style="display:flex;gap:4px;"><input id="itOrtakNotInput_' + jobId + '_' + i + '" placeholder="NOT EKLE" style="flex:1;padding:4px 8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-main);font-size:12px;text-transform:uppercase;" onkeydown="if(event.key===\'Enter\'){event.stopPropagation();itOrtakNotEkle(' + jobId + ',' + i + ')}"><button class="btn btn-primary btn-sm" onclick="event.stopPropagation();itOrtakNotEkle(' + jobId + ',' + i + ')" style="white-space:nowrap;">+</button></div>';
                 h += '</div>';
                 h += '</div></div>';
             });
@@ -7584,7 +7584,7 @@ function itDurumMetni(o) {
                     h += '<option value="' + esc(b) + '">' + esc(b) + '</option>';
                 });
                 h += '</select></div>';
-                h += '<button onclick="event.stopPropagation();itOrtakEkleDetay(' + jobId + ')" style="padding:7px 16px;background:#1565C0;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;height:32px;">➕ EKLE</button>';
+                h += '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();itOrtakEkleDetay(' + jobId + ')" style="white-space:nowrap;height:32px;">➕ EKLE</button>';
                 h += '</div></div></div>';
             }
             var jobNot = (job.not||"").trim();
@@ -7854,7 +7854,7 @@ function itDurumMetni(o) {
             };
             var kaydetBtn = document.createElement('button');
             kaydetBtn.textContent = 'KAYDET';
-            kaydetBtn.style.cssText = 'padding:2px 8px;background:#1565C0;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:11px;font-weight:600;line-height:1.6;white-space:nowrap;';
+            kaydetBtn.className = 'btn btn-primary btn-sm';
             kaydetBtn.onclick = function(e){ e.stopPropagation(); itOrtakNotDuzenleKaydet(inp); };
             var refNode = textSpan.nextSibling;
             item.insertBefore(inp, refNode);
