@@ -9,7 +9,7 @@ var EMAILJS_CONFIG = {
 };
 
 function gorevMailGonder(gorev) {
-    if (EMAILJS_CONFIG.publicKey.indexOf("YOUR_") === 0) { tmNotify("EmailJS yapilandirilmamis!", "error"); return; }
+    if (EMAILJS_CONFIG.publicKey.indexOf("YOUR_") === 0) return;
     var kullanicilar;
     try { kullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || []; } catch(e) { kullanicilar = []; }
     var master;
@@ -20,10 +20,7 @@ function gorevMailGonder(gorev) {
         var u = kullanicilar.find(function(x){ return x.usr === usr; });
         var email = u ? u.email : null;
         if (!email && master && master.usr === usr) { email = master.email; }
-        if (!email || email === "-" || !email.includes("@")) {
-            tmNotify("Mail gonderilemedi: '" + usr + "' kullanicisinin e-posta adresi tanimli degil!", "error");
-            return;
-        }
+        if (!email || email === "-" || !email.includes("@")) return;
         var templateParams = {
             to_name: usr,
             to_email: email,
@@ -41,14 +38,7 @@ function gorevMailGonder(gorev) {
                 user_id: EMAILJS_CONFIG.publicKey,
                 template_params: templateParams
             })
-        })
-            .then(function(r){
-                if (r.ok) { tmNotify("Mail gonderildi -> " + email, "success"); }
-                else { r.text().then(function(t){ tmNotify("Mail hatasi: " + t, "error"); }); }
-            })
-            .catch(function(e){
-                tmNotify("Mail hatasi: " + (e.message || "baglanti hatasi"), "error");
-            });
+        });
     });
 }
 
