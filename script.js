@@ -4,7 +4,7 @@
         /* --- EmailJS - Gorev Bildirim Maili --- */
 var EMAILJS_CONFIG = {
     publicKey: "yCeI9aqnQrtmGtq7D",
-    serviceId: "service_z0siamq",
+    serviceId: "service_77j0plq",
     templateId: "template_920ilvh"
 };
 if (typeof emailjs !== 'undefined') { emailjs.init(EMAILJS_CONFIG.publicKey); }
