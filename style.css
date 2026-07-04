@@ -114,8 +114,8 @@
         .theme-toggle-thumb.dark { transform: translateX(100%); }
         .theme-toggle-option { flex: 1; text-align: center; font-size: 13px; position: relative; z-index: 2; line-height: 28px; color: rgba(255,255,255,0.5); transition: color 0.25s; }
         .theme-toggle-option.active { color: #fff; }
-        .sidebar-footer-row .btn-logout { padding: 6px 10px; background: transparent; color: var(--accent-red); border: 1px solid var(--accent-red); border-radius: 5px; font-weight: 600; font-size: 11px; cursor: pointer; transition: 0.2s; white-space: nowrap; }
-        .sidebar-footer-row .btn-logout:hover { background: var(--accent-red); color: white; }
+        .sidebar-footer-row .btn-logout { padding: 6px 10px; background: transparent; color: var(--accent-red); border: 1px solid var(--accent-red); border-radius: 5px; font-weight: 600; font-size: 11px; cursor: pointer; transition: 0.2s; white-space: nowrap; border-color: var(--accent-red); }
+        .sidebar-footer-row .btn-logout:hover { background: var(--accent-red); color: white; border-color: var(--accent-red); }
         
         .sidebar-copyright-area { text-align: center; font-size: 9px; color: #718096; line-height: 1.3; font-weight: 600; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px; margin-top: 4px; }
         .version-tag { font-size: 10px; color: #e2e8f0; font-weight: bold; letter-spacing: 0.5px; }
@@ -249,21 +249,25 @@
         .btn { padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 6px; letter-spacing: 0.3px; line-height: 1.4; }
         .btn:hover { transform: translateY(-1px); }
 
-        /* BİRİNCİL AKSİYON: kaydet, oluştur, tamamla — lacivert */
-        .btn-primary, .btn-add { background: #1e3a5f; color: white; border: 1px solid transparent; }
+        /* YEŞİL: kaydet, oluştur, tamamla, onay — koyu muted yeşil */
+        .btn-save-green { background: #2B6B30; color: white; }
+        .btn-save-green:hover { background: #1F5223; }
+
+        /* BORDO: PDF, düzenle, ödeme, yedek — tema aksan rengi */
+        .btn-pdf-red, .btn-warning, .btn-success, .btn-red { background: var(--accent-red); color: white; }
+        .btn-pdf-red:hover, .btn-warning:hover, .btn-success:hover, .btn-red:hover { background: #7a2021; }
+
+        /* LACİVERT: ekle, birincil aksiyon */
+        .btn-primary, .btn-add { background: #1e3a5f; color: white; }
         .btn-primary:hover, .btn-add:hover { background: #152d4a; }
 
-        /* İKİNCİL AKSİYON: düzenle, PDF, ödeme, yedek — koyu bordo */
-        .btn-save-green, .btn-pdf-red, .btn-warning, .btn-success, .btn-red { background: var(--accent-red); color: white; }
-        .btn-save-green:hover, .btn-pdf-red:hover, .btn-warning:hover, .btn-success:hover, .btn-red:hover { background: #7a2021; }
+        /* SİL — bordo outline (ince border) */
+        .btn-danger { background: transparent; color: var(--accent-red); border: 1px solid var(--accent-red); padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+        .btn-danger:hover { background: var(--accent-red); color: white; }
+        [data-theme="dark"] .btn-danger { border-color: var(--accent-red); color: #e57373; }
+        [data-theme="dark"] .btn-danger:hover { background: var(--accent-red); color: white; }
 
-        /* SİL / İPTAL — outline (ince border, transparan) */
-        .btn-danger { background: transparent; color: var(--text-light); border: 1px solid var(--border-color); padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
-        .btn-danger:hover { background: var(--input-bg); color: var(--text-dark); }
-        [data-theme="dark"] .btn-danger { border-color: #3a4a5e; color: #8899aa; }
-        [data-theme="dark"] .btn-danger:hover { background: #1a222c; color: #e8edf3; }
-
-        /* TEMİZLE / VAZGEÇ / KAPAT — gri */
+        /* GRİ: temizle, vazgeç, kapat, iptal */
         .btn-clear-gray { background: #5A626A; color: white; }
         .btn-clear-gray:hover { background: #4a525a; }
         [data-theme="dark"] .btn-clear-gray { background: #3a4a5e; color: #e8edf3; }
@@ -273,8 +277,8 @@
         .btn-sm { padding: 5px 12px !important; font-size: 11px !important; border-radius: 6px !important; gap: 4px !important; }
 
         /* FORM İÇİ KAYDET/İPTAL */
-        .btn-form-save { background: var(--accent-red); color: white; padding: 8px 20px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-form-save:hover { background: #7a2021; transform: translateY(-1px); }
+        .btn-form-save { background: #1e3a5f; color: white; padding: 8px 20px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-form-save:hover { background: #152d4a; transform: translateY(-1px); }
         .btn-form-cancel { background: transparent; color: #5A626A; border: 1px solid var(--border-color); padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-form-cancel:hover { background: var(--input-bg); color: var(--text-dark); transform: translateY(-1px); }
         [data-theme="dark"] .btn-form-cancel { border-color: #3a4a5e; color: #8899aa; }
@@ -714,12 +718,12 @@
         .it-asama-segment.pending .it-asama-seg-label { font-weight:600; }
         .it-detay-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
         .it-detay-actions button { padding:6px 14px; border:none; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600; transition:0.2s; }
-        .it-btn-tamamla { background:var(--accent-red); color:#fff; }
+        .it-btn-tamamla { background:#2B6B30; color:#fff; }
         .it-btn-tamamla:hover { opacity:0.85; }
-        .it-btn-sil { background:transparent; color:var(--text-light); border:1px solid var(--border-color) !important; }
-        .it-btn-sil:hover { background:var(--input-bg); color:var(--text-dark); }
-        [data-theme="dark"] .it-btn-sil { border-color:#3a4a5e !important; color:#8899aa; }
-        [data-theme="dark"] .it-btn-sil:hover { background:#1a222c; color:#e8edf3; }
+        .it-btn-sil { background:transparent; color:var(--accent-red); border:1px solid var(--accent-red) !important; }
+        .it-btn-sil:hover { background:var(--accent-red); color:#fff; }
+        [data-theme="dark"] .it-btn-sil { border-color:var(--accent-red) !important; color:#e57373; }
+        [data-theme="dark"] .it-btn-sil:hover { background:var(--accent-red); color:#fff; }
         .it-btn-tahsilat { background:#1e3a5f; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600; padding:6px 14px; transition:0.2s; white-space:nowrap; }
         .it-btn-tahsilat:hover { opacity:0.85; }
 
