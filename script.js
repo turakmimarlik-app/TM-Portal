@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.01.6';
+        var APP_VERSION = 'V1.01.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5551,7 +5551,7 @@ function gorevMailGonder(gorev) {
                             new Chart(c, { type:'doughnut',
                                 data:{ labels:etiket, datasets:[{ data:veri, backgroundColor:renkPalet.slice(0,veri.length), borderWidth:3 }] },
                                 options:{ responsive:false, maintainAspectRatio:true,
-                                    plugins:{ legend:{position:'right',labels:{font:{size:45}}}, title:{display:true,text:baslik,font:{size:60,weight:'bold'}} }
+                                    plugins:{ legend:{position:'right',labels:{font:{size:32}}}, title:{display:true,text:baslik,font:{size:44,weight:'bold'}} }
                                 },
                                 plugins: [{
                                     id:'pastaEtiket',
@@ -5559,6 +5559,7 @@ function gorevMailGonder(gorev) {
                                         var ctx=chart.ctx, ds=chart.data.datasets[0], meta=chart.getDatasetMeta(0);
                                         var total=ds.data.reduce(function(a,b){return a+b;},0);
                                         if(total<=0)return;
+                                        ctx.fillStyle='#fff'; ctx.fillRect(0,0,chart.width,chart.height);
                                         ctx.save(); ctx.textBaseline='middle';
                                         meta.data.forEach(function(arc,idx){
                                             var val=ds.data[idx];
@@ -5569,24 +5570,24 @@ function gorevMailGonder(gorev) {
                                             var deg=Math.abs((arc.endAngle-arc.startAngle)*180/Math.PI);
                                             var rMid=arc.outerRadius-(arc.outerRadius-arc.innerRadius)*0.55;
                                             var ix=arc.x+Math.cos(midAngle)*rMid, iy=arc.y+Math.sin(midAngle)*rMid;
-                                            ctx.font='bold 30px Helvetica';
+                                            ctx.font='bold 22px Helvetica';
                                             var tw=Math.max(ctx.measureText(pct).width,ctx.measureText(amt).width);
                                             var arcW=rMid*(arc.endAngle-arc.startAngle);
-                                            if(deg>30 && tw<arcW*0.85){
+                                            if(deg>35 && tw<arcW*0.85){
                                                 ctx.fillStyle='#000'; ctx.textAlign='center';
-                                                ctx.font='bold 30px Helvetica'; ctx.fillText(pct,ix,iy-13);
-                                                ctx.font='25px Helvetica'; ctx.fillText(amt,ix,iy+16);
+                                                ctx.font='bold 22px Helvetica'; ctx.fillText(pct,ix,iy-9);
+                                                ctx.font='18px Helvetica'; ctx.fillText(amt,ix,iy+11);
                                             } else {
                                                 var ox=arc.x+Math.cos(midAngle)*arc.outerRadius, oy=arc.y+Math.sin(midAngle)*arc.outerRadius;
-                                                var ext=35, lx=arc.x+Math.cos(midAngle)*(arc.outerRadius+ext), ly=arc.y+Math.sin(midAngle)*(arc.outerRadius+ext);
-                                                ctx.strokeStyle='rgba(0,0,0,0.35)'; ctx.lineWidth=1.5;
+                                                var ext=12, lx=arc.x+Math.cos(midAngle)*(arc.outerRadius+ext), ly=arc.y+Math.sin(midAngle)*(arc.outerRadius+ext);
+                                                ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=1;
                                                 ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(lx,ly); ctx.stroke();
-                                                ctx.fillStyle='rgba(0,0,0,0.35)';
-                                                ctx.beginPath(); ctx.arc(ox,oy,3.5,0,Math.PI*2); ctx.fill();
+                                                ctx.fillStyle='rgba(0,0,0,0.3)';
+                                                ctx.beginPath(); ctx.arc(ox,oy,2.5,0,Math.PI*2); ctx.fill();
                                                 ctx.fillStyle='#000'; ctx.textAlign=isRight?'left':'right';
-                                                var tx=isRight?lx+5:lx-5;
-                                                ctx.font='bold 30px Helvetica'; ctx.fillText(pct,tx,ly-13);
-                                                ctx.font='25px Helvetica'; ctx.fillText(amt,tx,ly+16);
+                                                var tx=isRight?lx+4:lx-4;
+                                                ctx.font='bold 22px Helvetica'; ctx.fillText(pct,tx,ly-9);
+                                                ctx.font='18px Helvetica'; ctx.fillText(amt,tx,ly+11);
                                             }
                                         });
                                         ctx.restore();
@@ -5602,9 +5603,9 @@ function gorevMailGonder(gorev) {
                         }
                     }
 
-                    // 3-4) Doughnut - kare canvas (tam yuvarlak icin)
-                    var c3 = cC(800,800); doughnutOlustur(c3, gelirEtiket, gelirVeri, 'Gelir Dagilimi');
-                    var c4 = cC(800,800); doughnutOlustur(c4, giderEtiket, giderVeri, 'Gider Dagilimi');
+                    // 3-4) Doughnut - genis canvas (etiketlerin sigmasi icin)
+                    var c3 = cC(950,900); doughnutOlustur(c3, gelirEtiket, gelirVeri, 'Gelir Dagilimi');
+                    var c4 = cC(950,900); doughnutOlustur(c4, giderEtiket, giderVeri, 'Gider Dagilimi');
 
                     await new Promise(function(r){setTimeout(r,800);});
 
@@ -5718,17 +5719,11 @@ function gorevMailGonder(gorev) {
                     y += 62;
 
                     SB='grafik34';
-                    // --- GRAFIK 3-4: Doughnut (yan yana) ---
+                    // --- GRAFIK 3-4: Doughnut (yan yana, cercevesiz) ---
                     var dw = (W - 14) / 2;
-                    doc.setDrawColor(220, 222, 227);
-                    doc.setLineWidth(0.3);
-                    doc.roundedRect(M-2, y-2, dw+2, dw+2, 2, 2, 'S');
-                    doc.addImage(grafikler.gelirDoughnut, 'PNG', M, y, dw, dw);
-                    doc.setDrawColor(220, 222, 227);
-                    doc.setLineWidth(0.3);
-                    doc.roundedRect(M+dw+12-2, y-2, dw+2, dw+2, 2, 2, 'S');
-                    doc.addImage(grafikler.giderDoughnut, 'PNG', M+dw+12, y, dw, dw);
-                    y += dw + 12;
+                    doc.addImage(grafikler.gelirDoughnut, 'PNG', M, y, dw, dw * 900/950);
+                    doc.addImage(grafikler.giderDoughnut, 'PNG', M+dw+12, y, dw, dw * 900/950);
+                    y += dw * 900/950 + 12;
 
                     SB='altbilgi1';
                     // --- Alt Bilgi ---
