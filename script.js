@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.02.7';
+        var APP_VERSION = 'V1.02.8';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5559,6 +5559,7 @@ function gorevMailGonder(gorev) {
                                         fs=Math.max(14,fs);
                                         ctx.font='bold '+fs+'px Helvetica';
                                         var tw=ctx.measureText(amt).width;
+                                        while(tw>bh-4&&fs>10){fs--;ctx.font='bold '+fs+'px Helvetica';tw=ctx.measureText(amt).width;}
                                         ctx.save(); ctx.translate(pp.x,pp.y); ctx.rotate(-Math.PI/2);
                                         ctx.fillText(amt,-Math.floor(tw/2)-2,0);
                                         ctx.restore();
