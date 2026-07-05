@@ -6,44 +6,50 @@ function tmSesCal(tur) {
     try {
         var ctx = new (window.AudioContext || window.webkitAudioContext)();
         var t = ctx.currentTime;
-        var v = 0.3;
-        function ton(freq, start, dur, type, vol, pan) {
+        var v = 0.25;
+        function pad(freq, start, dur, vol, detune) {
             var o = ctx.createOscillator();
             var g = ctx.createGain();
-            if (pan !== undefined) { var p = ctx.createStereoPanner(); o.connect(g); g.connect(p); p.connect(ctx.destination); p.pan.value = pan; }
-            else { o.connect(g); g.connect(ctx.destination); }
-            o.type = type || 'sine';
+            o.connect(g); g.connect(ctx.destination);
+            o.type = 'sine';
             o.frequency.value = freq;
+            if (detune) o.detune.value = detune;
             g.gain.setValueAtTime(0, start);
-            g.gain.linearRampToValueAtTime(vol || v, start + 0.005);
+            g.gain.linearRampToValueAtTime(vol || v * 0.6, start + 0.08);
             g.gain.exponentialRampToValueAtTime(0.001, start + dur);
             o.start(start); o.stop(start + dur);
-        }
-        function akor(freqs, start, dur, type, vol) {
-            freqs.forEach(function(f, i) {
-                var p = i === 0 ? -0.3 : (i === 1 ? 0.3 : 0);
-                ton(f, start + i * 0.04, dur, type, vol, p);
-            });
+            var o2 = ctx.createOscillator();
+            var g2 = ctx.createGain();
+            o2.connect(g2); g2.connect(ctx.destination);
+            o2.type = 'sine';
+            o2.frequency.value = freq * 2;
+            g2.gain.setValueAtTime(0, start);
+            g2.gain.linearRampToValueAtTime((vol || v * 0.6) * 0.15, start + 0.06);
+            g2.gain.exponentialRampToValueAtTime(0.001, start + dur * 0.7);
+            o2.start(start); o2.stop(start + dur * 0.7);
         }
         if (tur === 'giris') {
-            akor([523.25, 659.25, 783.99], t, 0.5, 'triangle', v);
-            akor([587.33, 739.99, 880], t + 0.22, 0.5, 'triangle', v);
-            akor([659.25, 830.61, 987.77], t + 0.44, 0.6, 'triangle', v);
+            pad(261.63, t, 0.9, v * 0.8);
+            pad(329.63, t + 0.15, 0.75, v * 0.6);
+            pad(392, t + 0.3, 0.6, v * 0.5);
+            pad(523.25, t + 0.42, 0.5, v * 0.35);
         } else if (tur === 'cikis') {
-            akor([783.99, 659.25, 523.25], t, 0.5, 'triangle', v);
-            akor([659.25, 554.37, 440], t + 0.25, 0.5, 'triangle', v);
-            akor([523.25, 440, 349.23], t + 0.5, 0.6, 'triangle', v);
+            pad(523.25, t, 0.9, v * 0.8);
+            pad(392, t + 0.18, 0.75, v * 0.6);
+            pad(329.63, t + 0.35, 0.6, v * 0.5);
+            pad(261.63, t + 0.5, 0.5, v * 0.35);
         } else if (tur === 'basarili') {
-            ton(523.25, t, 0.15, 'triangle', v, -0.3);
-            ton(659.25, t + 0.08, 0.15, 'triangle', v, 0);
-            ton(783.99, t + 0.16, 0.15, 'triangle', v, 0.3);
-            ton(1046.5, t + 0.24, 0.35, 'triangle', v * 0.6, 0);
+            pad(392, t, 0.08, v * 0.8);
+            pad(523.25, t + 0.06, 0.08, v * 0.7);
+            pad(659.25, t + 0.12, 0.08, v * 0.6);
+            pad(783.99, t + 0.18, 0.35, v * 0.5);
         } else if (tur === 'silme') {
-            ton(466.16, t, 0.25, 'sawtooth', v * 0.7, -0.3);
-            ton(415.3, t + 0.1, 0.25, 'sawtooth', v * 0.7, 0);
-            ton(369.99, t + 0.2, 0.3, 'sawtooth', v * 0.7, 0.3);
+            pad(369.99, t, 0.1, v * 0.7);
+            pad(329.63, t + 0.08, 0.1, v * 0.6);
+            pad(293.66, t + 0.16, 0.1, v * 0.5);
+            pad(261.63, t + 0.24, 0.4, v * 0.4);
         } else {
-            ton(800, t, 0.15, 'sine', v);
+            pad(800, t, 0.12, v * 0.6);
         }
     } catch(e) {}
 }
