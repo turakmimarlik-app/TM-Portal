@@ -5746,17 +5746,13 @@ function gorevMailGonder(gorev) {
                         doc.line(M, y, M+W, y);
                         y += 6;
 
-                        SB='tablolar-ay'+ai;
-                        // --- Tablo Ayarlari ---
+                        // --- GELIR TABLOSU (autoTable ile) ---
                         var tStil = { fontSize:7, lineColor:[210,212,217], lineWidth:0.3 };
                         var bStil = { fillColor:[SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]], fontSize:7, fontStyle:'bold', textColor:[255,255,255], halign:'center' };
                         var cStil = { 0:{cellWidth:35,fontStyle:'bold',fontSize:6.5}, 1:{cellWidth:Math.max(W-63,10),fontSize:6.5}, 2:{cellWidth:28,halign:'right',fontStyle:'bold',fontSize:7} };
-                        var tOps = { theme:'grid', headStyles:bStil, bodyStyles:tStil, columnStyles:cStil, margin:{top:10,left:M,right:M,bottom:14}, tableWidth:W };
-
-                        // --- GELIR TABLOSU ---
                         var gRows = [];
                         Object.entries(ayd.gelirler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), ((x.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL')]); });
+                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL']); });
                         });
                         if(gRows.length>0) {
                             if(y > 255) { doc.addPage(); sayfaSayisi++; y = 18; }
@@ -5764,35 +5760,49 @@ function gorevMailGonder(gorev) {
                             doc.setTextColor(POZITIF[0], POZITIF[1], POZITIF[2]);
                             doc.text(t("GELIRLER"), M, y);
                             y += 5;
-                            SB='gelirAutoTable-ay'+ai;
                             doc.autoTable({
                                 startY: y, head: [[t('KATEGORI'), t('ACIKLAMA'), t('TUTAR')]],
-                                body: gRows, ...tOps,
+                                body: gRows,
+                                theme: 'grid', headStyles:bStil, bodyStyles:tStil, columnStyles:cStil,
+                                margin:{top:10,left:M,right:M,bottom:14}, tableWidth:W,
                                 didParseCell: function(data) { if(data.section==='body') data.cell.styles.fillColor = [245,252,245]; }
                             });
                             y = (doc.lastAutoTable ? doc.lastAutoTable.finalY : y) + 12;
                         }
 
-                        // --- GIDER TABLOSU ---
+                        // --- GIDER TABLOSU (autoTable kullanilmadan) ---
                         var gdRows = [];
                         Object.entries(ayd.giderler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), ((x.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL')]); });
+                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL']); });
                         });
                         if(gdRows.length>0) {
-                            if(isNaN(y)||y>280){doc.addPage();y=18;}
+                            if(isNaN(y)||y>277){doc.addPage();y=18;}
+                            // baslik
                             doc.setFont(FN, "bold"); doc.setFontSize(9);
                             doc.setTextColor(NEGATIF[0], NEGATIF[1], NEGATIF[2]);
                             doc.text(t("GIDERLER"), M, y);
-                            y += 5;
-                            SB='giderAutoTable-ay'+ai;
-                            try {
-                            doc.autoTable({
-                                startY: y, head: [[t('KATEGORI'), t('ACIKLAMA'), t('TUTAR')]],
-                                body: gdRows, ...tOps,
-                                didParseCell: function(data) { if(data.section==='body') data.cell.styles.fillColor = [252,245,245]; }
-                            });
-                            } catch(gt) { throw new Error("giderAT y="+y+" rows="+gdRows.length+" err="+gt.message); }
-                            y = (doc.lastAutoTable ? doc.lastAutoTable.finalY : y) + 12;
+                            y += 6;
+                            // tablo baslik satiri
+                            var tw=[35,Math.max(W-63,10),28], rh=6;
+                            doc.setFont(FN,"bold");doc.setFontSize(6.5);
+                            doc.setFillColor(SEKME_RENGI[0],SEKME_RENGI[1],SEKME_RENGI[2]);
+                            for(var ci=0;ci<3;ci++){var cx=M+(ci===0?0:tw[0]+(ci===1?0:tw[1]));doc.rect(cx,y,tw[ci],rh,'F');doc.setTextColor(255,255,255);doc.text(t(['KATEGORI','ACIKLAMA','TUTAR'][ci]),cx+tw[ci]/2,y+4.5,{align:'center'});}
+                            y+=rh;
+                            // veri satirlari
+                            doc.setFont(FN,"normal");doc.setFontSize(6.5);
+                            for(var ri=0;ri<gdRows.length;ri++){
+                                if(y>277){doc.addPage();y=18;}
+                                for(var ci=0;ci<3;ci++){
+                                    var cx=M+(ci===0?0:tw[0]+(ci===1?0:tw[1]));
+                                    doc.setFillColor(252,245,245);doc.rect(cx,y,tw[ci],rh,'F');
+                                    doc.setDrawColor(220,222,227);doc.rect(cx,y,tw[ci],rh,'S');
+                                    doc.setTextColor(50,50,50);
+                                    if(ci===2) doc.text(gdRows[ri][ci],cx+tw[ci]-2,y+4.5,{align:'right'});
+                                    else doc.text(gdRows[ri][ci],cx+2,y+4.5);
+                                }
+                                y+=rh;
+                            }
+                            doc.setDrawColor(210,212,217);doc.line(M,y,M+W,y);y+=4;
                         }
 
                         // --- Ay Toplam Bilgisi ---
