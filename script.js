@@ -6,7 +6,7 @@ function tmSesCal(tur) {
     try {
         var ctx = new (window.AudioContext || window.webkitAudioContext)();
         var t = ctx.currentTime;
-        var v = 0.25;
+        var v = 0.6;
         function pad(freq, start, dur, vol, detune) {
             var o = ctx.createOscillator();
             var g = ctx.createGain();
