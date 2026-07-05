@@ -5588,13 +5588,14 @@ function gorevMailGonder(gorev) {
                     return false;
                 }
 
-                // Turkce karakter guvenli metin - font yoksa ASCII donusumu
-                function t(s) { return fontYuklendi ? s : (trAscii ? trAscii(s||'') : (s||'')); }
+                var _fontVar = false;
 
                 async function pdfOlustur() {
                     var grafikler, logoResim = null;
-                    var fontYuklendi = await fontYukle();
-                    var FN = fontYuklendi ? 'OpenSans' : 'Helvetica';
+                    _fontVar = await fontYukle();
+                    var FN = _fontVar ? 'OpenSans' : 'Helvetica';
+
+                function t(s) { return _fontVar ? s : (trAscii ? trAscii(s||'') : (s||'')); }
 
                     grafikler = await grafikBase64Uret();
 
@@ -5720,7 +5721,7 @@ function gorevMailGonder(gorev) {
                         var autotableOps = {
                             theme:'grid', headStyles:baslikStil, bodyStyles:ortakStil, columnStyles:sutunStil,
                             margin:{left:M,right:M}, tableWidth:'auto',
-                            styles: fontYuklendi ? {font:'OpenSans'} : {}
+                            styles: _fontVar ? {font:'OpenSans'} : {}
                         };
 
                         // GELIR TABLOSU
