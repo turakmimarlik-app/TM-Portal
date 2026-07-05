@@ -5762,17 +5762,19 @@ function gorevMailGonder(gorev) {
                             e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), ((x.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL')]); });
                         });
                         if(gdRows.length>0) {
-                            if(y > 255) { doc.addPage(); sayfaSayisi++; y = 18; }
+                            if(isNaN(y)||y>280){doc.addPage();y=18;}
                             doc.setFont(FN, "bold"); doc.setFontSize(9);
                             doc.setTextColor(NEGATIF[0], NEGATIF[1], NEGATIF[2]);
                             doc.text(t("GIDERLER"), M, y);
                             y += 5;
                             SB='giderAutoTable-ay'+ai;
+                            try {
                             doc.autoTable({
                                 startY: y, head: [[t('KATEGORI'), t('ACIKLAMA'), t('TUTAR')]],
                                 body: gdRows, ...tOps,
                                 didParseCell: function(data) { if(data.section==='body') data.cell.styles.fillColor = [252,245,245]; }
                             });
+                            } catch(gt) { throw new Error("giderAT y="+y+" rows="+gdRows.length+" err="+gt.message); }
                             y = (doc.lastAutoTable ? doc.lastAutoTable.finalY : y) + 12;
                         }
 
