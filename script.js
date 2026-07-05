@@ -5465,14 +5465,18 @@ function gorevMailGonder(gorev) {
             try {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ format:'a4', orientation:'portrait', unit:'mm' });
+                // tüm jsPDF metodlarina NaN korumasi
+                ['text','rect','roundedRect','addImage','line','setFontSize','setLineWidth'].forEach(function(m){
+                    var orig=doc[m]; doc[m]=function(){for(var i=0;i<arguments.length;i++){if(typeof arguments[i]==='number'&&isNaN(arguments[i])){console.error('NaN in '+m+' arg'+i,arguments);if(m==='setFontSize')return orig.call(doc,10);return;}}return orig.apply(doc,arguments);};
+                });
                 const M = 14, W = 182, O = 105;
 
                 var aylikGelir = [], aylikGider = [];
                 for(var i=0;i<12;i++) {
                     var ay = kayit.aylar[i], g=0, gd=0;
                     if(ay) {
-                        Object.entries(ay.gelirler||{}).forEach(function(e){e[1].forEach(function(x){g+=x.tutar||0;});});
-                        Object.entries(ay.giderler||{}).forEach(function(e){e[1].forEach(function(x){gd+=x.tutar||0;});});
+                        Object.entries(ay.gelirler||{}).forEach(function(e){e[1].forEach(function(x){g+=Number(x.tutar)||0;});});
+                        Object.entries(ay.giderler||{}).forEach(function(e){e[1].forEach(function(x){gd+=Number(x.tutar)||0;});});
                     }
                     aylikGelir.push(g); aylikGider.push(gd);
                 }
@@ -5736,7 +5740,7 @@ function gorevMailGonder(gorev) {
                                 body: gRows, ...tOps,
                                 didParseCell: function(data) { if(data.section==='body') data.cell.styles.fillColor = [245,252,245]; }
                             });
-                            y = doc.lastAutoTable.finalY + 12;
+                            y = (doc.lastAutoTable ? doc.lastAutoTable.finalY : y) + 12;
                         }
 
                         // --- GIDER TABLOSU ---
@@ -5755,7 +5759,7 @@ function gorevMailGonder(gorev) {
                                 body: gdRows, ...tOps,
                                 didParseCell: function(data) { if(data.section==='body') data.cell.styles.fillColor = [252,245,245]; }
                             });
-                            y = doc.lastAutoTable.finalY + 12;
+                            y = (doc.lastAutoTable ? doc.lastAutoTable.finalY : y) + 12;
                         }
 
                         // --- Ay Toplam Bilgisi ---
