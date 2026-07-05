@@ -5502,8 +5502,8 @@ function gorevMailGonder(gorev) {
                             { label:'Sirket Bakiyesi', data:bakiyeAylik, borderColor:'#F57C00', fill:true, tension:0.3, borderWidth:4, pointRadius:6, pointHoverRadius:8 }
                         ]},
                         options:{ responsive:false, maintainAspectRatio:false,
-                            plugins:{ legend:{position:'top',labels:{font:{size:18}}}, title:{display:true,text:yil+' Yili Net Durum Trendi',font:{size:22,weight:'bold'}} },
-                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:14}} }, x:{ticks:{font:{size:14}}} }
+                            plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:yil+' Yili Net Durum Trendi',font:{size:28,weight:'bold'}} },
+                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
                         }
                     });
 
@@ -5515,8 +5515,8 @@ function gorevMailGonder(gorev) {
                             { label:'Gider', data:aylikGider, backgroundColor:'#9E2A2B', borderRadius:4 }
                         ]},
                         options:{ responsive:false, maintainAspectRatio:false,
-                            plugins:{ legend:{position:'top',labels:{font:{size:18}}}, title:{display:true,text:'Aylik Gelir / Gider Karsilastirmasi',font:{size:22,weight:'bold'}} },
-                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:14}} }, x:{ticks:{font:{size:14}}} }
+                            plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:'Aylik Gelir / Gider Karsilastirmasi',font:{size:28,weight:'bold'}} },
+                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
                         }
                     });
 
@@ -5526,13 +5526,13 @@ function gorevMailGonder(gorev) {
                             new Chart(c, { type:'doughnut',
                                 data:{ labels:etiket, datasets:[{ data:veri, backgroundColor:renkPalet.slice(0,veri.length), borderWidth:3 }] },
                                 options:{ responsive:false, maintainAspectRatio:true,
-                                    plugins:{ legend:{position:'right',labels:{font:{size:14}}}, title:{display:true,text:baslik,font:{size:18,weight:'bold'}} }
+                                    plugins:{ legend:{position:'right',labels:{font:{size:18}}}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}} }
                                 }
                             });
                         } else {
                             new Chart(c, { type:'doughnut', data:{labels:['Veri Yok'],datasets:[{data:[1],backgroundColor:['#e0e0e0']}]},
                                 options:{ responsive:false, maintainAspectRatio:true,
-                                    plugins:{ legend:{display:false}, title:{display:true,text:baslik,font:{size:18,weight:'bold'}} }
+                                    plugins:{ legend:{display:false}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}} }
                                 }
                             });
                         }
@@ -5562,34 +5562,12 @@ function gorevMailGonder(gorev) {
                     return s;
                 }
 
-                async function fontYukle() {
-                    async function fontIndir(url) {
-                        var y = await fetch(url, { mode:'cors' });
-                        if(!y.ok) return null;
-                        var d = buf2str(await y.arrayBuffer());
-                        return d.length > 50000 ? d : null;
-                    }
-                    try {
-                        var fontVeri = await fontIndir('https://raw.githubusercontent.com/google/fonts/main/ofl/tinos/Tinos-Regular.ttf');
-                        if(fontVeri) {
-                            doc.addFileToVFS('Tinos.ttf', fontVeri);
-                            doc.addFont('Tinos.ttf','Tinos','normal');
-                            var boldVeri = await fontIndir('https://raw.githubusercontent.com/google/fonts/main/ofl/tinos/Tinos-Bold.ttf');
-                            if(boldVeri) { doc.addFileToVFS('TinosBold.ttf', boldVeri); doc.addFont('TinosBold.ttf','Tinos','bold'); }
-                            return true;
-                        }
-                    } catch(e) { console.log('font yukleme hatasi',e); }
-                    return false;
-                }
+                var FN = 'Helvetica';
 
-                var _fontVar = false;
+                function t(s) { return trAscii ? trAscii(s||'') : (s||''); }
 
                 async function pdfOlustur() {
                     var grafikler, logoResim = null;
-                    _fontVar = await fontYukle();
-                    var FN = _fontVar ? 'Tinos' : 'Helvetica';
-
-                function t(s) { var v = (s||''); return _fontVar ? v : (trAscii ? trAscii(v) : v); }
 
                     grafikler = await grafikBase64Uret();
 
@@ -5652,11 +5630,11 @@ function gorevMailGonder(gorev) {
                     y += kY + 8;
 
                     // GRAFIK 1: Net Durum
-                    doc.addImage(grafikler.netDurum, 'PNG', M, y, W, 45);
-                    y += 52;
+                    doc.addImage(grafikler.netDurum, 'PNG', M, y, W, 55);
+                    y += 62;
                     // GRAFIK 2: Bar
-                    doc.addImage(grafikler.aylikBar, 'PNG', M, y, W, 43);
-                    y += 50;
+                    doc.addImage(grafikler.aylikBar, 'PNG', M, y, W, 53);
+                    y += 60;
                     // GRAFIK 3-4: Doughnut (kare, tam yuvarlak)
                     var dw = (W - 10) / 2;
                     doc.addImage(grafikler.gelirDoughnut, 'PNG', M, y, dw, dw);
@@ -5713,8 +5691,7 @@ function gorevMailGonder(gorev) {
                         var sutunStil = { 0:{cellWidth:'auto',fontStyle:'bold',fontSize:6.5}, 1:{cellWidth:'auto',fontSize:6.5}, 2:{cellWidth:30,halign:'right',fontStyle:'bold',fontSize:7} };
                         var autotableOps = {
                             theme:'grid', headStyles:baslikStil, bodyStyles:ortakStil, columnStyles:sutunStil,
-                            margin:{left:M,right:M}, tableWidth:'auto',
-                            styles: _fontVar ? {font:'Tinos'} : {}
+                            margin:{left:M,right:M}, tableWidth:'auto'
                         };
 
                         // GELIR TABLOSU
