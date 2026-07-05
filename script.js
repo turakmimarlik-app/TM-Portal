@@ -5789,7 +5789,7 @@ function gorevMailGonder(gorev) {
 
                         // --- Ay Toplam Bilgisi ---
                         if(y > 277) { doc.addPage(); sayfaSayisi++; y = 18; }
-                        doc.setFillColor(fark>=0?[39,120,60]:[192,57,43]);
+                        var farkRenk = fark>=0 ? POZITIF : NEGATIF; doc.setFillColor(farkRenk[0], farkRenk[1], farkRenk[2]);
                         doc.roundedRect(M, y, W, 8, 2, 2, 'F');
                         doc.setFont(FN, "bold"); doc.setFontSize(10);
                         doc.setTextColor(255, 255, 255);
