@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.02.3';
+        var APP_VERSION = 'V1.02.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5547,20 +5547,20 @@ function gorevMailGonder(gorev) {
                             id:'barEtiket',
                             afterDraw:function(chart){
                                 var ctx=chart.ctx, gD=chart.data.datasets, meta0=chart.getDatasetMeta(0), meta1=chart.getDatasetMeta(1);
-                                ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#fff';
+                                ctx.save(); ctx.textAlign='center'; ctx.textBaseline='bottom'; ctx.fillStyle='#fff';
                                 for(var i=0;i<gD[0].data.length;i++){
                                     var gVal=gD[0].data[i], gdVal=gD[1].data[i];
                                     if(gVal+gdVal<=0)continue;
                                     [{v:gVal,p:meta0.data[i]},{v:gdVal,p:meta1.data[i]}].forEach(function(d){
                                         if(d.v<=0)return;
-                                        var pp=d.p.getProps(['x','y','base','width'],true), bw=pp.width, bh=pp.base-pp.y, cy=(pp.y+pp.base)/2;
+                                        var pp=d.p.getProps(['x','y','base','width'],true), bw=pp.width, bh=pp.base-pp.y;
                                         var amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
-                                        ctx.font='bold 16px Helvetica';
+                                        ctx.font='bold 18px Helvetica';
                                         var tw=ctx.measureText(amt).width;
-                                        var fs=Math.max(10,Math.min(18,Math.floor(bh*0.8/tw*16),Math.floor(bw*0.7)));
+                                        var fs=Math.max(12,Math.min(27,Math.floor(bh*0.9/tw*18*1.5),Math.floor(bw*0.75)));
                                         ctx.font='bold '+fs+'px Helvetica';
-                                        ctx.save(); ctx.translate(pp.x,cy); ctx.rotate(-Math.PI/2);
-                                        ctx.fillText(amt,0,0);
+                                        ctx.save(); ctx.translate(pp.x,pp.base); ctx.rotate(-Math.PI/2);
+                                        ctx.fillText(amt,4,0);
                                         ctx.restore();
                                     });
                                 }
