@@ -1203,9 +1203,6 @@ function gorevMailGonder(gorev) {
         }
         function bildirimSesi() {
             tmSesCal('basarili');
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-                osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.4);
-            } catch(e) {}
         }
         function aktiviteEkle(islem, sayfa) {
             try {
