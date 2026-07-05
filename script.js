@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.01.8';
+        var APP_VERSION = 'V1.02.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5542,7 +5542,29 @@ function gorevMailGonder(gorev) {
                         options:{ responsive:false, maintainAspectRatio:false,
                             plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:'Aylik Gelir / Gider Karsilastirmasi',font:{size:28,weight:'bold'}} },
                             scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
-                        }
+                        },
+                        plugins: [{
+                            id:'barEtiket',
+                            afterDraw:function(chart){
+                                var ctx=chart.ctx, gD=chart.data.datasets, meta0=chart.getDatasetMeta(0), meta1=chart.getDatasetMeta(1);
+                                ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#fff';
+                                for(var i=0;i<gD[0].data.length;i++){
+                                    var gVal=gD[0].data[i], gdVal=gD[1].data[i], tM=gVal+gdVal;
+                                    if(tM<=0)continue;
+                                    [   {v:gVal,p:meta0.data[i],c:'#2E7D32'},
+                                        {v:gdVal,p:meta1.data[i],c:'#9E2A2B'}
+                                    ].forEach(function(d){
+                                        if(d.v<=0)return;
+                                        var pp=d.p.getProps(['x','y'],true), bx=pp.x, by=pp.y, pct=(d.v/tM*100).toFixed(1)+'%', amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
+                                        ctx.save(); ctx.translate(bx,by); ctx.rotate(-Math.PI/2);
+                                        ctx.font='bold 16px Helvetica'; ctx.fillText(amt,6,0);
+                                        ctx.font='bold 12px Helvetica'; ctx.fillText(pct,26,0);
+                                        ctx.restore();
+                                    });
+                                }
+                                ctx.restore();
+                            }
+                        }]
                     });
 
                     // Doughnut yardimci - sade grafik, etiket yok
