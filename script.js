@@ -1,3 +1,5 @@
+        var APP_VERSION = 'V1.01.6';
+
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
 
@@ -285,6 +287,8 @@ function gorevMailGonder(gorev) {
         }
 
         document.addEventListener("DOMContentLoaded", function() {
+            try { document.querySelector('.version-tag').textContent = APP_VERSION; } catch(e){}
+
             if(!localStorage.getItem("tm_yillik_butce_clean")) { localStorage.removeItem("tm_yillik_butce_db"); origSetItem("tm_yillik_butce_clean","1"); }
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
