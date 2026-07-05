@@ -387,6 +387,12 @@
         .dash-stat-box .icon { font-size: 20px; margin-bottom: 2px; }
         
         .dash-fin-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
+
+        .dash-kalan-row { margin-bottom: 22px; }
+        .dash-kalan-row .dash-section-label { font-size:12px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:10px; padding-left:2px; }
+        .dash-kalan-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .dash-fin-card.dfc-kalan { border-left-color:#6A1B9A; }
+        @media (max-width: 768px) { .dash-kalan-cards { grid-template-columns: 1fr; } }
         
         .dash-widget { background: var(--panel-bg); border-radius: 14px; border: 1px solid var(--border-color); overflow: hidden; transition: 0.25s; }
         .dash-widget:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
