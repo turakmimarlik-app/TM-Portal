@@ -5464,10 +5464,27 @@ function gorevMailGonder(gorev) {
 
             try {
                 const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({ format:'a4', orientation:'portrait', unit:'mm' });
-                // tüm jsPDF metodlarina NaN korumasi + stack trace log
-                ['text','rect','roundedRect','addImage','line','setFontSize','setLineWidth','setDrawColor','setFillColor','setTextColor'].forEach(function(m){
+                var doc = new jsPDF({ format:'a4', orientation:'portrait', unit:'mm' });
+                // tüm jsPDF metodlarina NaN korumasi (direkt doc uzerinde, autoTable icin)
+                ['text','rect','roundedRect','addImage','line','setFontSize','setLineWidth','setDrawColor','setFillColor','setTextColor','setFont'].forEach(function(m){
                     var orig=doc[m]; doc[m]=function(){for(var i=0;i<arguments.length;i++){if(typeof arguments[i]==='number'&&isNaN(arguments[i])){console.error('NaN in '+m+' arg'+i,arguments,new Error().stack);if(m==='setFontSize')return orig.call(doc,10);return;}}return orig.apply(doc,arguments);};
+                });
+                // Proxy ile ayrica NaN korumasi (en dis katman)
+                var _doc = doc; doc = new Proxy(_doc, {
+                    get: function(t, p) {
+                        var v = t[p];
+                        if(typeof v !== 'function' || p==='f2' || p==='getTextWidth' || p==='getStringUnitWidth') return v;
+                        return function() {
+                            for(var i=0;i<arguments.length;i++) {
+                                if(typeof arguments[i]==='number'&&isNaN(arguments[i])) {
+                                    console.error('NaN(P) in '+p,JSON.stringify(Array.from(arguments)).slice(0,500));
+                                    if(p==='setFontSize') return t.setFontSize(10);
+                                    return;
+                                }
+                            }
+                            return v.apply(t, arguments);
+                        };
+                    }
                 });
                 const M = 14, W = 182, O = 105;
 
@@ -5734,7 +5751,7 @@ function gorevMailGonder(gorev) {
                         var tStil = { fontSize:7, lineColor:[210,212,217], lineWidth:0.3 };
                         var bStil = { fillColor:[SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]], fontSize:7, fontStyle:'bold', textColor:[255,255,255], halign:'center' };
                         var cStil = { 0:{cellWidth:35,fontStyle:'bold',fontSize:6.5}, 1:{cellWidth:Math.max(W-63,10),fontSize:6.5}, 2:{cellWidth:28,halign:'right',fontStyle:'bold',fontSize:7} };
-                        var tOps = { theme:'grid', headStyles:bStil, bodyStyles:tStil, columnStyles:cStil, margin:{left:M,right:M}, tableWidth:W };
+                        var tOps = { theme:'grid', headStyles:bStil, bodyStyles:tStil, columnStyles:cStil, margin:{top:10,left:M,right:M,bottom:14}, tableWidth:W };
 
                         // --- GELIR TABLOSU ---
                         var gRows = [];
