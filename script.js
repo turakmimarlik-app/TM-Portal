@@ -5807,11 +5807,11 @@ function gorevMailGonder(gorev) {
 
                     doc.save('Butce_Raporu_'+yil+'.pdf');
                     tmNotify(t("Butce PDF olusturuldu."),"success");
-                    } catch(e) { throw new Error(SB+": "+e.message); }
+                    } catch(e) { e.message = SB+": "+e.message; throw e; }
                 }
 
                 async function giris() {
-                    try { await pdfOlustur(); } catch(e) { console.error("PDF hatasi:", e, e&&e.stack); alert("PDF hatasi: "+e.message+"\n\nDetay:\n"+((e&&e.stack)||"stack yok")); tmNotify("PDF hatasi: "+e.message,"error"); }
+                    try { await pdfOlustur(); } catch(e) { console.error("PDF hatasi:", e, e&&e.stack); try { var ta=document.createElement('textarea');ta.style.cssText='position:fixed;top:10px;left:10px;width:90%;height:80%;z-index:99999;font-size:12px';ta.value="PDF hatasi: "+e.message+"\n\nStack:\n"+(e&&e.stack||'yok');document.body.appendChild(ta);setTimeout(function(){ta.select();},100); } catch(ex){} tmNotify("PDF hatasi: "+e.message+" | Konsola bak (F12)","error"); }
                 }
                 giris();
 
