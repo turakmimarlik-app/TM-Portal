@@ -5584,67 +5584,83 @@ function gorevMailGonder(gorev) {
 
                     var bugun = new Date();
                     var tarihStr = bugun.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});
+                    var sayfaSayisi = 1;
 
-                    // ======== SAYFA 1 ========
-                    var y = 14;
+                    // ======== SAYFA 1 (OZET) ========
+                    var y = 12;
 
-                    // Logo (orantili, tasma yok)
+                    // --- Ust Bar (Logo + Baslik) ---
+                    doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                    doc.rect(0, 0, 210, 22, 'F');
                     if(logoResim) {
-                        var lMaxH = 16, lMaxW = 48;
+                        var lMaxH = 14, lMaxW = 40;
                         var lw = logoResim.naturalWidth * (lMaxH / logoResim.naturalHeight);
                         var lh = lMaxH;
                         if(lw > lMaxW) { lw = lMaxW; lh = lw * logoResim.naturalHeight / logoResim.naturalWidth; }
-                        doc.addImage(logoData, 'PNG', M, y, lw, lh);
-                        y += lh + 4;
-                    } else { y += 5; }
-
-                    doc.setFont(FN, "bold"); doc.setFontSize(20);
-                    doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                    doc.text(t(yil+" YILI BUTCE RAPORU"), O, y, {align:"center"});
-                    y += 6;
-                    doc.setFont(FN, "normal"); doc.setFontSize(8);
-                    doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
-                    doc.text(t("Rapor Tarihi: ")+tarihStr, O, y, {align:"center"});
-                    y += 9;
-
-                    // OZET KARTLARI
-                    var kartV = [
-                        {l:t("BASLANGIC BAKIYESI"), v:kayit.baslangicBakiye||0, c:GRI_METIN},
-                        {l:t("TOPLAM GELIR"), v:tG, c:POZITIF},
-                        {l:t("TOPLAM GIDER"), v:tGi, c:NEGATIF},
-                        {l:t("NET BAKIYE"), v:net, c:net>=0?POZITIF:NEGATIF}
-                    ];
-                    var kG = (W-9)/4, kY = 16;
-                    for(var k=0;k<4;k++) {
-                        var v = kartV[k], kx = M + k*(kG+3);
-                        doc.setFillColor(ACIK_GR[0], ACIK_GR[1], ACIK_GR[2]);
-                        doc.setDrawColor(210,212,217);
-                        doc.roundedRect(kx, y, kG, kY, 2, 2, 'FD');
-                        doc.setFont(FN, "bold"); doc.setFontSize(5);
-                        doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
-                        doc.text(v.l, kx+kG/2, y+5, {align:"center"});
-                        doc.setFontSize(v.l===t("NET BAKIYE")?10:9);
-                        doc.setTextColor(v.c[0], v.c[1], v.c[2]);
-                        doc.text((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL', kx+kG/2, y+13, {align:"center"});
+                        doc.addImage(logoData, 'PNG', M, 4, lw, lh);
                     }
-                    y += kY + 8;
+                    doc.setFont(FN, "bold"); doc.setFontSize(14);
+                    doc.setTextColor(255, 255, 255);
+                    doc.text(t(yil+" YILI BUTCE RAPORU"), O, 14, {align:"center"});
+                    doc.setFont(FN, "normal"); doc.setFontSize(7);
+                    doc.setTextColor(200, 210, 230);
+                    doc.text(t("Rapor Tarihi: ")+tarihStr, M+W, 18, {align:"right"});
+                    y = 30;
 
-                    // GRAFIK 1: Net Durum
-                    doc.addImage(grafikler.netDurum, 'PNG', M, y, W, 55);
+                    // --- OZET KARTLARI (4 adet, renkli) ---
+                    var kartV = [
+                        {l:t("BASLANGIC BAKIYESI"), v:kayit.baslangicBakiye||0, c:[80,90,105]},
+                        {l:t("TOPLAM GELIR"), v:tG, c:[39,120,60]},
+                        {l:t("TOPLAM GIDER"), v:tGi, c:[192,57,43]},
+                        {l:t("NET BAKIYE"), v:net, c:net>=0?[39,120,60]:[192,57,43]}
+                    ];
+                    var kG = (W-12)/4, kY = 22;
+                    for(var k=0;k<4;k++) {
+                        var v = kartV[k], kx = M + k*(kG+4);
+                        doc.setFillColor(v.c[0], v.c[1], v.c[2]);
+                        doc.roundedRect(kx, y, kG, kY, 3, 3, 'F');
+                        doc.setFont(FN, "bold"); doc.setFontSize(6);
+                        doc.setTextColor(255, 255, 255);
+                        doc.text(v.l, kx+kG/2, y+7, {align:"center"});
+                        doc.setFontSize(10);
+                        doc.text((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL', kx+kG/2, y+17, {align:"center"});
+                    }
+                    y += kY + 10;
+
+                    // --- GRAFIK 1: Net Durum Trendi ---
+                    doc.setDrawColor(210, 212, 217);
+                    doc.setFillColor(ACIK_GR[0], ACIK_GR[1], ACIK_GR[2]);
+                    doc.roundedRect(M-2, y-2, W+4, 60, 2, 2, 'FD');
+                    doc.addImage(grafikler.netDurum, 'PNG', M, y, W, 56);
+                    y += 64;
+
+                    // --- GRAFIK 2: Gelir/Gider Bar ---
+                    doc.setDrawColor(210, 212, 217);
+                    doc.setFillColor(ACIK_GR[0], ACIK_GR[1], ACIK_GR[2]);
+                    doc.roundedRect(M-2, y-2, W+4, 58, 2, 2, 'FD');
+                    doc.addImage(grafikler.aylikBar, 'PNG', M, y, W, 54);
                     y += 62;
-                    // GRAFIK 2: Bar
-                    doc.addImage(grafikler.aylikBar, 'PNG', M, y, W, 53);
-                    y += 60;
-                    // GRAFIK 3-4: Doughnut (kare, tam yuvarlak)
-                    var dw = (W - 10) / 2;
-                    doc.addImage(grafikler.gelirDoughnut, 'PNG', M, y, dw, dw);
-                    doc.addImage(grafikler.giderDoughnut, 'PNG', M+dw+10, y, dw, dw);
-                    y += dw + 10;
 
-                    // Alt bilgi
+                    // --- GRAFIK 3-4: Doughnut (yan yana) ---
+                    var dw = (W - 14) / 2;
+                    doc.setDrawColor(210, 212, 217);
+                    doc.setFillColor(ACIK_GR[0], ACIK_GR[1], ACIK_GR[2]);
+                    doc.roundedRect(M-2, y-2, dw+2, dw+2, 2, 2, 'FD');
+                    doc.addImage(grafikler.gelirDoughnut, 'PNG', M, y, dw, dw);
+                    doc.setDrawColor(210, 212, 217);
+                    doc.setFillColor(ACIK_GR[0], ACIK_GR[1], ACIK_GR[2]);
+                    doc.roundedRect(M+dw+12-2, y-2, dw+2, dw+2, 2, 2, 'FD');
+                    doc.addImage(grafikler.giderDoughnut, 'PNG', M+dw+12, y, dw, dw);
+                    y += dw + 12;
+
+                    // --- Alt Bilgi ---
+                    y = Math.max(y, 280);
+                    doc.setDrawColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                    doc.line(M, y, M+W, y);
                     doc.setFont(FN, "normal"); doc.setFontSize(6);
                     doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
-                    doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, O, y, {align:"center"});
+                    doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, M, y+4);
+                    doc.text(t("Sayfa ")+sayfaSayisi, M+W, y+4, {align:"right"});
 
                     // ======== AYLIK DOKUM SAYFALARI ========
                     for(var ai=0;ai<12;ai++) {
@@ -5652,101 +5668,112 @@ function gorevMailGonder(gorev) {
                         if(!ayd) continue;
                         var aG = aylikGelir[ai], aGi = aylikGider[ai];
                         if(aG===0 && aGi===0) continue;
-
+                        sayfaSayisi++;
                         doc.addPage();
-                        y = 14;
 
-                        // Logo (orantili)
+                        // --- Ust Bar (Sayfa 2+) ---
+                        doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        doc.rect(0, 0, 210, 18, 'F');
                         if(logoResim) {
-                            var sMaxH = 13, sMaxW = 28;
+                            var sMaxH = 11, sMaxW = 24;
                             var slw = logoResim.naturalWidth * (sMaxH / logoResim.naturalHeight);
                             var slh = sMaxH;
                             if(slw > sMaxW) { slw = sMaxW; slh = slw * logoResim.naturalHeight / logoResim.naturalWidth; }
-                            doc.addImage(logoData, 'PNG', M, y-1, slw, slh);
+                            doc.addImage(logoData, 'PNG', M, 3, slw, slh);
                         }
-                        doc.setFont(FN, "bold"); doc.setFontSize(7);
-                        doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        doc.text(t(yil+" YILI BUTCE RAPORU"), M+W, y+1, {align:"right"});
-                        y += 14;
-
-                        // Ay basligi
-                        doc.setFont(FN, "bold"); doc.setFontSize(18);
-                        doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        doc.text(t(YB_AY_ADI[ai].toUpperCase()+" "+yil), O, y, {align:"center"});
-                        y += 9;
-
-                        // Ozet
-                        var fark = aG - aGi;
                         doc.setFont(FN, "bold"); doc.setFontSize(8);
-                        doc.setTextColor(POZITIF[0], POZITIF[1], POZITIF[2]);
-                        doc.text(t("Gelir: ")+aG.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+10, y);
-                        doc.setTextColor(NEGATIF[0], NEGATIF[1], NEGATIF[2]);
-                        doc.text(t("Gider: ")+aGi.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+75, y);
-                        doc.setTextColor(fark>=0?POZITIF[0]:NEGATIF[0], fark>=0?POZITIF[1]:NEGATIF[1], fark>=0?POZITIF[2]:NEGATIF[2]);
-                        doc.text(t("Net: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+140, y);
-                        y += 8;
+                        doc.setTextColor(255, 255, 255);
+                        doc.text(t(yil+" YILI BUTCE RAPORU"), M+W, 11, {align:"right"});
+                        y = 26;
 
-                        var ortakStil = { fontSize:7, lineColor:[210,212,217], lineWidth:0.3 };
-                        var baslikStil = { fillColor:[SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]], fontSize:7, fontStyle:'bold', textColor:[255,255,255], halign:'center' };
-                        var sutunStil = { 0:{cellWidth:'auto',fontStyle:'bold',fontSize:6.5}, 1:{cellWidth:'auto',fontSize:6.5}, 2:{cellWidth:30,halign:'right',fontStyle:'bold',fontSize:7} };
-                        var autotableOps = {
-                            theme:'grid', headStyles:baslikStil, bodyStyles:ortakStil, columnStyles:sutunStil,
-                            margin:{left:M,right:M}, tableWidth:'auto'
-                        };
+                        // --- Ay Basligi (banner) ---
+                        doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        doc.roundedRect(M, y, W, 10, 2, 2, 'F');
+                        doc.setFont(FN, "bold"); doc.setFontSize(12);
+                        doc.setTextColor(255, 255, 255);
+                        doc.text(t(YB_AY_ADI[ai].toUpperCase()+" "+yil), O, y+7, {align:"center"});
+                        y += 16;
 
-                        // GELIR TABLOSU
+                        // --- Ozet Satiri ---
+                        var fark = aG - aGi;
+                        doc.setFont(FN, "bold"); doc.setFontSize(9);
+                        var oRenk = [POZITIF[0], POZITIF[1], POZITIF[2]];
+                        doc.setTextColor(oRenk[0], oRenk[1], oRenk[2]);
+                        doc.text(t("GELIR"), M, y);
+                        doc.text(aG.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+18, y);
+                        oRenk = [NEGATIF[0], NEGATIF[1], NEGATIF[2]];
+                        doc.setTextColor(oRenk[0], oRenk[1], oRenk[2]);
+                        doc.text(t("GIDER"), M+65, y);
+                        doc.text(aGi.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+83, y);
+                        oRenk = fark>=0?POZITIF:NEGATIF;
+                        doc.setTextColor(oRenk[0], oRenk[1], oRenk[2]);
+                        doc.text(t("NET"), M+135, y);
+                        doc.text(fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+153, y);
+                        y += 6;
+                        doc.setDrawColor(210, 212, 217);
+                        doc.line(M, y, M+W, y);
+                        y += 6;
+
+                        // --- Tablo Ayarlari ---
+                        var tStil = { fontSize:7, lineColor:[210,212,217], lineWidth:0.3 };
+                        var bStil = { fillColor:[SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]], fontSize:7, fontStyle:'bold', textColor:[255,255,255], halign:'center' };
+                        var cStil = { 0:{cellWidth:35,fontStyle:'bold',fontSize:6.5}, 1:{cellWidth:'auto',fontSize:6.5}, 2:{cellWidth:28,halign:'right',fontStyle:'bold',fontSize:7} };
+                        var tOps = { theme:'grid', headStyles:bStil, bodyStyles:tStil, columnStyles:cStil, margin:{left:M,right:M}, tableWidth:'auto' };
+
+                        // --- GELIR TABLOSU ---
                         var gRows = [];
                         Object.entries(ayd.gelirler||{}).forEach(function(e) {
                             e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), ((x.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL')]); });
                         });
                         if(gRows.length>0) {
-                            if(y > 260) { doc.addPage(); y = 14; }
-                            doc.setFont(FN, "bold"); doc.setFontSize(8.5);
+                            if(y > 255) { doc.addPage(); sayfaSayisi++; y = 18; }
+                            doc.setFont(FN, "bold"); doc.setFontSize(9);
                             doc.setTextColor(POZITIF[0], POZITIF[1], POZITIF[2]);
                             doc.text(t("GELIRLER"), M, y);
-                            y += 6;
+                            y += 5;
                             doc.autoTable({
                                 startY: y, head: [[t('KATEGORI'), t('ACIKLAMA'), t('TUTAR')]],
-                                body: gRows,
-                                ...autotableOps,
+                                body: gRows, ...tOps,
                                 didParseCell: function(data) { if(data.section==='body') data.cell.styles.fillColor = [245,252,245]; }
                             });
-                            y = doc.lastAutoTable.finalY + 14;
+                            y = doc.lastAutoTable.finalY + 12;
                         }
 
-                        // GIDER TABLOSU
+                        // --- GIDER TABLOSU ---
                         var gdRows = [];
                         Object.entries(ayd.giderler||{}).forEach(function(e) {
                             e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), ((x.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL')]); });
                         });
                         if(gdRows.length>0) {
-                            if(y > 260) { doc.addPage(); y = 14; }
-                            doc.setFont(FN, "bold"); doc.setFontSize(8.5);
+                            if(y > 255) { doc.addPage(); sayfaSayisi++; y = 18; }
+                            doc.setFont(FN, "bold"); doc.setFontSize(9);
                             doc.setTextColor(NEGATIF[0], NEGATIF[1], NEGATIF[2]);
                             doc.text(t("GIDERLER"), M, y);
-                            y += 6;
+                            y += 5;
                             doc.autoTable({
                                 startY: y, head: [[t('KATEGORI'), t('ACIKLAMA'), t('TUTAR')]],
-                                body: gdRows,
-                                ...autotableOps,
+                                body: gdRows, ...tOps,
                                 didParseCell: function(data) { if(data.section==='body') data.cell.styles.fillColor = [252,245,245]; }
                             });
-                            y = doc.lastAutoTable.finalY + 14;
+                            y = doc.lastAutoTable.finalY + 12;
                         }
 
-                        // Ay toplam seridi
-                        if(y > 275) { doc.addPage(); y = 14; }
-                        doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        doc.roundedRect(M, y, W, 6, 1.5, 1.5, 'F');
-                        doc.setFont(FN, "bold"); doc.setFontSize(8.5);
-                        doc.setTextColor(255,255,255);
-                        doc.text(t("AYLIK NET TOPLAM: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', O, y+4, {align:"center"});
-                        y += 12;
+                        // --- Ay Toplam Bilgisi ---
+                        if(y > 277) { doc.addPage(); sayfaSayisi++; y = 18; }
+                        doc.setFillColor(fark>=0?[39,120,60]:[192,57,43]);
+                        doc.roundedRect(M, y, W, 8, 2, 2, 'F');
+                        doc.setFont(FN, "bold"); doc.setFontSize(10);
+                        doc.setTextColor(255, 255, 255);
+                        doc.text(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', O, y+5.5, {align:"center"});
+                        y += 14;
 
-                        // Footer
+                        // --- Alt Bilgi ---
+                        doc.setDrawColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        doc.line(M, y, M+W, y);
                         doc.setFont(FN, "normal"); doc.setFontSize(5.5);
                         doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
-                        doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, O, y, {align:"center"});
+                        doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, M, y+4);
+                        doc.text(t("Sayfa ")+sayfaSayisi, M+W, y+4, {align:"right"});
                     }
 
                     doc.save('Butce_Raporu_'+yil+'.pdf');
