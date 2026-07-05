@@ -5547,7 +5547,7 @@ function gorevMailGonder(gorev) {
                             new Chart(c, { type:'doughnut',
                                 data:{ labels:etiket, datasets:[{ data:veri, backgroundColor:renkPalet.slice(0,veri.length), borderWidth:3 }] },
                                 options:{ responsive:false, maintainAspectRatio:true,
-                                    plugins:{ legend:{position:'right',labels:{font:{size:18}}}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}} }
+                                    plugins:{ legend:{position:'right',labels:{font:{size:45}}}, title:{display:true,text:baslik,font:{size:60,weight:'bold'}} }
                                 },
                                 plugins: [{
                                     id:'pastaEtiket',
@@ -5563,26 +5563,26 @@ function gorevMailGonder(gorev) {
                                             var midAngle=arc.startAngle+(arc.endAngle-arc.startAngle)/2;
                                             var isRight=Math.cos(midAngle)>=0;
                                             var deg=Math.abs((arc.endAngle-arc.startAngle)*180/Math.PI);
-                                            var rIn=55, rMid=arc.outerRadius-(arc.outerRadius-arc.innerRadius)*0.55;
+                                            var rMid=arc.outerRadius-(arc.outerRadius-arc.innerRadius)*0.55;
                                             var ix=arc.x+Math.cos(midAngle)*rMid, iy=arc.y+Math.sin(midAngle)*rMid;
-                                            ctx.font='bold 12px Helvetica';
+                                            ctx.font='bold 30px Helvetica';
                                             var tw=Math.max(ctx.measureText(pct).width,ctx.measureText(amt).width);
                                             var arcW=rMid*(arc.endAngle-arc.startAngle);
-                                            if(deg>25 && tw<arcW*0.8){
+                                            if(deg>30 && tw<arcW*0.85){
                                                 ctx.fillStyle='#000'; ctx.textAlign='center';
-                                                ctx.font='bold 12px Helvetica'; ctx.fillText(pct,ix,iy-5);
-                                                ctx.font='10px Helvetica'; ctx.fillText(amt,ix,iy+6);
+                                                ctx.font='bold 30px Helvetica'; ctx.fillText(pct,ix,iy-13);
+                                                ctx.font='25px Helvetica'; ctx.fillText(amt,ix,iy+16);
                                             } else {
                                                 var ox=arc.x+Math.cos(midAngle)*arc.outerRadius, oy=arc.y+Math.sin(midAngle)*arc.outerRadius;
-                                                var ext=22+(isRight?0:0), lx=arc.x+Math.cos(midAngle)*(arc.outerRadius+ext), ly=arc.y+Math.sin(midAngle)*(arc.outerRadius+ext);
-                                                ctx.strokeStyle='rgba(0,0,0,0.35)'; ctx.lineWidth=1;
+                                                var ext=35, lx=arc.x+Math.cos(midAngle)*(arc.outerRadius+ext), ly=arc.y+Math.sin(midAngle)*(arc.outerRadius+ext);
+                                                ctx.strokeStyle='rgba(0,0,0,0.35)'; ctx.lineWidth=1.5;
                                                 ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(lx,ly); ctx.stroke();
                                                 ctx.fillStyle='rgba(0,0,0,0.35)';
-                                                ctx.beginPath(); ctx.arc(ox,oy,2.5,0,Math.PI*2); ctx.fill();
+                                                ctx.beginPath(); ctx.arc(ox,oy,3.5,0,Math.PI*2); ctx.fill();
                                                 ctx.fillStyle='#000'; ctx.textAlign=isRight?'left':'right';
-                                                var tx=isRight?lx+3:lx-3;
-                                                ctx.font='bold 12px Helvetica'; ctx.fillText(pct,tx,ly-5);
-                                                ctx.font='10px Helvetica'; ctx.fillText(amt,tx,ly+6);
+                                                var tx=isRight?lx+5:lx-5;
+                                                ctx.font='bold 30px Helvetica'; ctx.fillText(pct,tx,ly-13);
+                                                ctx.font='25px Helvetica'; ctx.fillText(amt,tx,ly+16);
                                             }
                                         });
                                         ctx.restore();
