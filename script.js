@@ -5548,7 +5548,7 @@ function gorevMailGonder(gorev) {
                                 data:{ labels:etiket, datasets:[{ data:veri, backgroundColor:renkPalet.slice(0,veri.length), borderWidth:3 }] },
                                 options:{ responsive:false, maintainAspectRatio:true,
                                     plugins:{ legend:{position:'right',labels:{font:{size:18}}}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}},
-                                        datalabels:{ color:'#fff', font:{size:16,weight:'bold'}, formatter:function(v,ctx){var t=ctx.dataset.data.reduce(function(a,b){return a+b;},0);if(t<=0||v<=0)return '';return (v/t*100).toFixed(1)+'%\n'+v.toLocaleString('tr-TR',{minFractionDigits:2})+' TL';} }
+                                        datalabels:{ display:true, color:'#fff', font:{size:14,weight:'bold'}, offset:0, formatter:function(v,ctx){var t=ctx.dataset.data.reduce(function(a,b){return a+b;},0);if(t<=0)return null;return [(v/t*100).toFixed(1)+'%', v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL'];} }
                                     }
                                 }
                             });
