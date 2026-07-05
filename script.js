@@ -5541,21 +5541,41 @@ function gorevMailGonder(gorev) {
                         }
                     });
 
-                    // Doughnut yardimci - kare canvas, tam yuvarlak
+                    // Doughnut yardimci - kare canvas, tam yuvarlak, etiketler manuel cizilir
                     function doughnutOlustur(c, etiket, veri, baslik) {
                         if(veri.some(function(v){return v>0;})) {
                             new Chart(c, { type:'doughnut',
                                 data:{ labels:etiket, datasets:[{ data:veri, backgroundColor:renkPalet.slice(0,veri.length), borderWidth:3 }] },
                                 options:{ responsive:false, maintainAspectRatio:true,
-                                    plugins:{ legend:{position:'right',labels:{font:{size:18}}}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}},
-                                        datalabels:{ display:true, color:'#fff', font:{size:14,weight:'bold'}, offset:0, formatter:function(v,ctx){var t=ctx.dataset.data.reduce(function(a,b){return a+b;},0);if(t<=0)return null;return [(v/t*100).toFixed(1)+'%', v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL'];} }
+                                    plugins:{ legend:{position:'right',labels:{font:{size:18}}}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}} }
+                                },
+                                plugins: [{
+                                    id:'pastaEtiket',
+                                    afterDraw:function(chart){
+                                        var ctx=chart.ctx, ds=chart.data.datasets[0], meta=chart.getDatasetMeta(0);
+                                        var total=ds.data.reduce(function(a,b){return a+b;},0);
+                                        if(total<=0)return;
+                                        ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle';
+                                        meta.data.forEach(function(arc,idx){
+                                            var val=ds.data[idx];
+                                            if(val<=0)return;
+                                            var pct=(val/total*100).toFixed(1)+'%', amt=val.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
+                                            var midAngle=arc.startAngle+(arc.endAngle-arc.startAngle)/2;
+                                            var radius=arc.outerRadius-(arc.outerRadius-arc.innerRadius)*0.55;
+                                            var x=arc.x+Math.cos(midAngle)*radius, y=arc.y+Math.sin(midAngle)*radius;
+                                            ctx.fillStyle='#fff'; ctx.font='bold 14px Helvetica';
+                                            ctx.fillText(pct,x,y-6);
+                                            ctx.font='bold 11px Helvetica';
+                                            ctx.fillText(amt,x,y+7);
+                                        });
+                                        ctx.restore();
                                     }
-                                }
+                                }]
                             });
                         } else {
                             new Chart(c, { type:'doughnut', data:{labels:['Veri Yok'],datasets:[{data:[1],backgroundColor:['#e0e0e0']}]},
                                 options:{ responsive:false, maintainAspectRatio:true,
-                                    plugins:{ legend:{display:false}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}}, datalabels:{display:false} }
+                                    plugins:{ legend:{display:false}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}} }
                                 }
                             });
                         }
