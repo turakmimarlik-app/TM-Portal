@@ -5747,6 +5747,7 @@ function gorevMailGonder(gorev) {
                             doc.setTextColor(POZITIF[0], POZITIF[1], POZITIF[2]);
                             doc.text(t("GELIRLER"), M, y);
                             y += 5;
+                            SB='gelirAutoTable-ay'+ai;
                             doc.autoTable({
                                 startY: y, head: [[t('KATEGORI'), t('ACIKLAMA'), t('TUTAR')]],
                                 body: gRows, ...tOps,
@@ -5766,6 +5767,7 @@ function gorevMailGonder(gorev) {
                             doc.setTextColor(NEGATIF[0], NEGATIF[1], NEGATIF[2]);
                             doc.text(t("GIDERLER"), M, y);
                             y += 5;
+                            SB='giderAutoTable-ay'+ai;
                             doc.autoTable({
                                 startY: y, head: [[t('KATEGORI'), t('ACIKLAMA'), t('TUTAR')]],
                                 body: gdRows, ...tOps,
