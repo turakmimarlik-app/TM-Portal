@@ -5563,31 +5563,22 @@ function gorevMailGonder(gorev) {
                 }
 
                 async function fontYukle() {
-                    async function getTtfUrl(cssUrl) {
-                        var c = await fetch(cssUrl, { mode:'cors', headers:{'User-Agent':'Mozilla/5.0 (compatible; MSIE 9.0)'} });
-                        if(!c.ok) return null;
-                        var css = await c.text();
-                        var m = css.match(/url\(([^)]+)\)/);
-                        return m ? m[1].replace(/['"]/g,'').trim() : null;
+                    async function fontIndir(url) {
+                        var y = await fetch(url, { mode:'cors' });
+                        if(!y.ok) return null;
+                        var d = buf2str(await y.arrayBuffer());
+                        return d.length > 50000 ? d : null;
                     }
                     try {
-                        var ttf = await getTtfUrl('https://fonts.googleapis.com/css2?family=Open+Sans&text=ABC%C3%87DEFG%C4%9EHI%C4%B0JKLMNO%C3%96PRS%C5%9ETU%C3%9CVYZabc%C3%A7defg%C4%9Fh%C4%B1ijklmno%C3%B6prs%C5%9Ftu%C3%BCvyz0123456789TL');
-                        if(!ttf) ttf = await getTtfUrl('https://fonts.googleapis.com/css2?family=Open+Sans');
-                        if(!ttf) ttf = 'https://raw.githubusercontent.com/google/fonts/main/ofl/opensans/OpenSans%5Bwdth,wght%5D.ttf';
-                        var yanit = await fetch(ttf, { mode:'cors' });
-                        if(yanit.ok) {
-                            var veri = buf2str(await yanit.arrayBuffer());
-                            if(veri.length > 10000) {
-                                doc.addFileToVFS('OpenSans.ttf', veri);
-                                doc.addFont('OpenSans.ttf','OpenSans','normal');
-                                try {
-                                    var yB = await fetch(ttf, { mode:'cors' });
-                                    if(yB.ok) { doc.addFileToVFS('OpenSansBold.ttf', buf2str(await yB.arrayBuffer())); doc.addFont('OpenSansBold.ttf','OpenSans','bold'); }
-                                } catch(eb) {}
-                                return true;
-                            }
+                        var fontVeri = await fontIndir('https://raw.githubusercontent.com/google/fonts/main/ofl/tinos/Tinos-Regular.ttf');
+                        if(fontVeri) {
+                            doc.addFileToVFS('Tinos.ttf', fontVeri);
+                            doc.addFont('Tinos.ttf','Tinos','normal');
+                            var boldVeri = await fontIndir('https://raw.githubusercontent.com/google/fonts/main/ofl/tinos/Tinos-Bold.ttf');
+                            if(boldVeri) { doc.addFileToVFS('TinosBold.ttf', boldVeri); doc.addFont('TinosBold.ttf','Tinos','bold'); }
+                            return true;
                         }
-                    } catch(e) {}
+                    } catch(e) { console.log('font yukleme hatasi',e); }
                     return false;
                 }
 
@@ -5596,7 +5587,7 @@ function gorevMailGonder(gorev) {
                 async function pdfOlustur() {
                     var grafikler, logoResim = null;
                     _fontVar = await fontYukle();
-                    var FN = _fontVar ? 'OpenSans' : 'Helvetica';
+                    var FN = _fontVar ? 'Tinos' : 'Helvetica';
 
                 function t(s) { var v = (s||''); return _fontVar ? v : (trAscii ? trAscii(v) : v); }
 
@@ -5723,7 +5714,7 @@ function gorevMailGonder(gorev) {
                         var autotableOps = {
                             theme:'grid', headStyles:baslikStil, bodyStyles:ortakStil, columnStyles:sutunStil,
                             margin:{left:M,right:M}, tableWidth:'auto',
-                            styles: _fontVar ? {font:'OpenSans'} : {}
+                            styles: _fontVar ? {font:'Tinos'} : {}
                         };
 
                         // GELIR TABLOSU
