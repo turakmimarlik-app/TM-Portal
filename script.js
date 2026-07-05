@@ -1,7 +1,52 @@
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
 
-        /* --- EmailJS - Gorev Bildirim Maili --- */
+        /* --- Ses Bildirim Sistemi --- */
+function tmSesCal(tur) {
+    try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        gain.gain.value = 0.1;
+        if (tur === 'giris') {
+            osc.frequency.setValueAtTime(523, ctx.currentTime);
+            osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.4);
+        } else if (tur === 'cikis') {
+            osc.frequency.setValueAtTime(784, ctx.currentTime);
+            osc.frequency.setValueAtTime(659, ctx.currentTime + 0.12);
+            osc.frequency.setValueAtTime(523, ctx.currentTime + 0.24);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.45);
+        } else if (tur === 'basarili') {
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            osc.frequency.setValueAtTime(1108, ctx.currentTime + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.25);
+        } else if (tur === 'silme') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(600, ctx.currentTime);
+            osc.frequency.linearRampToValueAtTime(200, ctx.currentTime + 0.25);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.3);
+        } else {
+            osc.frequency.setValueAtTime(800, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.15);
+        }
+    } catch(e) {}
+}
+
+/* --- EmailJS - Gorev Bildirim Maili --- */
 var EMAILJS_CONFIG = {
     publicKey: "yCeI9aqnQrtmGtq7D",
     serviceId: "service_77j0plq",
@@ -487,7 +532,7 @@ function gorevMailGonder(gorev) {
             return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
         }
 
-        function tmNotify(msg, tip) {
+        function tmNotify(msg, tip, ses) {
             const el = document.getElementById("tmNotif");
             const text = document.getElementById("tmNotifText");
             if(!el || !text) return;
@@ -496,6 +541,11 @@ function gorevMailGonder(gorev) {
             el.style.display = "flex";
             clearTimeout(el._timer);
             el._timer = setTimeout(tmNotifKapat, 3500);
+            if (ses) { tmSesCal(ses); return; }
+            if (tip === "success") {
+                if (msg.indexOf("silindi") > -1 || msg.indexOf("Silindi") > -1) { tmSesCal("silme"); }
+                else { tmSesCal("basarili"); }
+            }
         }
 
         function tmNotifGoster(msg, tur) {
@@ -907,6 +957,7 @@ function gorevMailGonder(gorev) {
             menuyuInsaEt(yetkiler);
             sidebarKullanicilariYenile();
             tmOnlineHeartbeatBaslat(kullanici);
+            tmSesCal('giris');
         }
         function tmOnlineKullaniciKontrol(kullanici, callback) {
             if (typeof fdb === 'undefined') { callback(true); return; }
@@ -1046,6 +1097,7 @@ function gorevMailGonder(gorev) {
                 girisCikisLogla(cikan, "ÇIKIŞ");
                 aktiviteEkle("Çıkış yaptı", "Sistem");
                 sidebarKullanicilariYenile();
+                tmSesCal('cikis');
             });
         }
 
@@ -1149,13 +1201,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("tmAlertOk").onclick = function() { document.getElementById("tmAlertOverlay").style.display = "none"; };
         }
         function bildirimSesi() {
-            try {
-                var ctx = new (window.AudioContext || window.webkitAudioContext)();
-                var osc = ctx.createOscillator();
-                var gain = ctx.createGain();
-                osc.connect(gain); gain.connect(ctx.destination);
-                osc.frequency.value = 880; osc.type = 'sine';
-                gain.gain.setValueAtTime(0.25, ctx.currentTime);
+            tmSesCal('basarili');
                 gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
                 osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.4);
             } catch(e) {}
