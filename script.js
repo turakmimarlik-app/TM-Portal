@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.02.2';
+        var APP_VERSION = 'V1.02.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5549,17 +5549,19 @@ function gorevMailGonder(gorev) {
                                 var ctx=chart.ctx, gD=chart.data.datasets, meta0=chart.getDatasetMeta(0), meta1=chart.getDatasetMeta(1);
                                 ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#fff';
                                 for(var i=0;i<gD[0].data.length;i++){
-                                    var gVal=gD[0].data[i], gdVal=gD[1].data[i], tM=gVal+gdVal;
-                                    if(tM<=0)continue;
+                                    var gVal=gD[0].data[i], gdVal=gD[1].data[i];
+                                    if(gVal+gdVal<=0)continue;
                                     [{v:gVal,p:meta0.data[i]},{v:gdVal,p:meta1.data[i]}].forEach(function(d){
                                         if(d.v<=0)return;
-                                        var pp=d.p.getProps(['x','y','base','width'],true), bw=pp.width, cy=(pp.y+pp.base)/2;
+                                        var pp=d.p.getProps(['x','y','base','width'],true), bw=pp.width, bh=pp.base-pp.y, cy=(pp.y+pp.base)/2;
                                         var amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
                                         ctx.font='bold 16px Helvetica';
                                         var tw=ctx.measureText(amt).width;
-                                        var fs=Math.min(18,Math.max(10,Math.floor(bw*0.85/tw*16)));
+                                        var fs=Math.max(10,Math.min(18,Math.floor(bh*0.8/tw*16),Math.floor(bw*0.7)));
                                         ctx.font='bold '+fs+'px Helvetica';
-                                        ctx.fillText(amt,pp.x,cy);
+                                        ctx.save(); ctx.translate(pp.x,cy); ctx.rotate(-Math.PI/2);
+                                        ctx.fillText(amt,0,0);
+                                        ctx.restore();
                                     });
                                 }
                                 ctx.restore();
