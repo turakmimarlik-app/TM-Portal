@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.01.7';
+        var APP_VERSION = 'V1.01.8';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5545,67 +5545,27 @@ function gorevMailGonder(gorev) {
                         }
                     });
 
-                    // Doughnut yardimci - kare canvas, tam yuvarlak, etiketler manuel cizilir
+                    // Doughnut yardimci - sade grafik, etiket yok
                     function doughnutOlustur(c, etiket, veri, baslik) {
                         if(veri.some(function(v){return v>0;})) {
                             new Chart(c, { type:'doughnut',
                                 data:{ labels:etiket, datasets:[{ data:veri, backgroundColor:renkPalet.slice(0,veri.length), borderWidth:3 }] },
                                 options:{ responsive:false, maintainAspectRatio:true,
-                                    plugins:{ legend:{position:'right',labels:{font:{size:32}}}, title:{display:true,text:baslik,font:{size:44,weight:'bold'}} }
-                                },
-                                plugins: [{
-                                    id:'pastaEtiket',
-                                    afterDraw:function(chart){
-                                        var ctx=chart.ctx, ds=chart.data.datasets[0], meta=chart.getDatasetMeta(0);
-                                        var total=ds.data.reduce(function(a,b){return a+b;},0);
-                                        if(total<=0)return;
-                                        ctx.fillStyle='#fff'; ctx.fillRect(0,0,chart.width,chart.height);
-                                        ctx.save(); ctx.textBaseline='middle';
-                                        meta.data.forEach(function(arc,idx){
-                                            var val=ds.data[idx];
-                                            if(val<=0)return;
-                                            var pct=(val/total*100).toFixed(1)+'%', amt=val.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
-                                            var midAngle=arc.startAngle+(arc.endAngle-arc.startAngle)/2;
-                                            var isRight=Math.cos(midAngle)>=0;
-                                            var deg=Math.abs((arc.endAngle-arc.startAngle)*180/Math.PI);
-                                            var rMid=arc.outerRadius-(arc.outerRadius-arc.innerRadius)*0.55;
-                                            var ix=arc.x+Math.cos(midAngle)*rMid, iy=arc.y+Math.sin(midAngle)*rMid;
-                                            ctx.font='bold 22px Helvetica';
-                                            var tw=Math.max(ctx.measureText(pct).width,ctx.measureText(amt).width);
-                                            var arcW=rMid*(arc.endAngle-arc.startAngle);
-                                            if(deg>35 && tw<arcW*0.85){
-                                                ctx.fillStyle='#000'; ctx.textAlign='center';
-                                                ctx.font='bold 22px Helvetica'; ctx.fillText(pct,ix,iy-9);
-                                                ctx.font='18px Helvetica'; ctx.fillText(amt,ix,iy+11);
-                                            } else {
-                                                var ox=arc.x+Math.cos(midAngle)*arc.outerRadius, oy=arc.y+Math.sin(midAngle)*arc.outerRadius;
-                                                var ext=12, lx=arc.x+Math.cos(midAngle)*(arc.outerRadius+ext), ly=arc.y+Math.sin(midAngle)*(arc.outerRadius+ext);
-                                                ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=1;
-                                                ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(lx,ly); ctx.stroke();
-                                                ctx.fillStyle='rgba(0,0,0,0.3)';
-                                                ctx.beginPath(); ctx.arc(ox,oy,2.5,0,Math.PI*2); ctx.fill();
-                                                ctx.fillStyle='#000'; ctx.textAlign=isRight?'left':'right';
-                                                var tx=isRight?lx+4:lx-4;
-                                                ctx.font='bold 22px Helvetica'; ctx.fillText(pct,tx,ly-9);
-                                                ctx.font='18px Helvetica'; ctx.fillText(amt,tx,ly+11);
-                                            }
-                                        });
-                                        ctx.restore();
-                                    }
-                                }]
+                                    plugins:{ legend:{position:'right',labels:{font:{size:22}}}, title:{display:true,text:baslik,font:{size:30,weight:'bold'}} }
+                                }
                             });
                         } else {
                             new Chart(c, { type:'doughnut', data:{labels:['Veri Yok'],datasets:[{data:[1],backgroundColor:['#e0e0e0']}]},
                                 options:{ responsive:false, maintainAspectRatio:true,
-                                    plugins:{ legend:{display:false}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}} }
+                                    plugins:{ legend:{display:false}, title:{display:true,text:baslik,font:{size:22,weight:'bold'}} }
                                 }
                             });
                         }
                     }
 
-                    // 3-4) Doughnut - genis canvas (etiketlerin sigmasi icin)
-                    var c3 = cC(950,900); doughnutOlustur(c3, gelirEtiket, gelirVeri, 'Gelir Dagilimi');
-                    var c4 = cC(950,900); doughnutOlustur(c4, giderEtiket, giderVeri, 'Gider Dagilimi');
+                    // 3-4) Doughnut
+                    var c3 = cC(700,700); doughnutOlustur(c3, gelirEtiket, gelirVeri, '');
+                    var c4 = cC(700,700); doughnutOlustur(c4, giderEtiket, giderVeri, '');
 
                     await new Promise(function(r){setTimeout(r,800);});
 
@@ -5719,11 +5679,29 @@ function gorevMailGonder(gorev) {
                     y += 62;
 
                     SB='grafik34';
-                    // --- GRAFIK 3-4: Doughnut (yan yana, cercevesiz) ---
-                    var dw = (W - 14) / 2;
-                    doc.addImage(grafikler.gelirDoughnut, 'PNG', M, y, dw, dw * 900/950);
-                    doc.addImage(grafikler.giderDoughnut, 'PNG', M+dw+12, y, dw, dw * 900/950);
-                    y += dw * 900/950 + 12;
+                    // --- GRAFIK 3-4: Doughnut + altinda veri listesi ---
+                    var dw = (W - 14) / 2, dgy = y;
+                    doc.addImage(grafikler.gelirDoughnut, 'PNG', M, dgy, dw, dw);
+                    doc.addImage(grafikler.giderDoughnut, 'PNG', M+dw+12, dgy, dw, dw);
+                    function hr(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+                    function vc(x,yl,et,vd){
+                        var tp=vd.reduce(function(a,b){return a+b;},0); if(tp<=0)return yl;
+                        doc.setFont(FN,"normal");doc.setFontSize(5);
+                        for(var i=0;i<et.length;i++){
+                            if(vd[i]<=0||yl>275)continue;
+                            var c=hr(renkPalet[i%renkPalet.length]);
+                            doc.setFillColor(c[0],c[1],c[2]);doc.rect(x,yl,2,2,'F');
+                            doc.setTextColor(50,50,50);doc.text(t(et[i]).slice(0,16),x+3,yl+1.5);
+                            doc.setTextColor(GRI_METIN[0],GRI_METIN[1],GRI_METIN[2]);
+                            doc.text((vd[i]/tp*100).toFixed(1)+'%',x+38,yl+1.5);
+                            doc.setTextColor(SEKME_RENGI[0],SEKME_RENGI[1],SEKME_RENGI[2]);
+                            doc.text(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+' TL',x+56,yl+1.5);
+                            yl+=3.5;
+                        } return yl;
+                    }
+                    var y1=vc(M, dgy+dw+3, gelirEtiket, gelirVeri);
+                    var y2=vc(M+dw+12, dgy+dw+3, giderEtiket, giderVeri);
+                    y = Math.max(y1, y2) + 4;
 
                     SB='altbilgi1';
                     // --- Alt Bilgi ---
