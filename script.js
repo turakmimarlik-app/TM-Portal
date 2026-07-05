@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.02.4';
+        var APP_VERSION = 'V1.02.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5547,7 +5547,7 @@ function gorevMailGonder(gorev) {
                             id:'barEtiket',
                             afterDraw:function(chart){
                                 var ctx=chart.ctx, gD=chart.data.datasets, meta0=chart.getDatasetMeta(0), meta1=chart.getDatasetMeta(1);
-                                ctx.save(); ctx.textAlign='center'; ctx.textBaseline='bottom'; ctx.fillStyle='#fff';
+                                ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#fff';
                                 for(var i=0;i<gD[0].data.length;i++){
                                     var gVal=gD[0].data[i], gdVal=gD[1].data[i];
                                     if(gVal+gdVal<=0)continue;
@@ -5555,12 +5555,11 @@ function gorevMailGonder(gorev) {
                                         if(d.v<=0)return;
                                         var pp=d.p.getProps(['x','y','base','width'],true), bw=pp.width, bh=pp.base-pp.y;
                                         var amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
-                                        ctx.font='bold 18px Helvetica';
-                                        var tw=ctx.measureText(amt).width;
-                                        var fs=Math.max(12,Math.min(27,Math.floor(bh*0.9/tw*18*1.5),Math.floor(bw*0.75)));
+                                        var fs=Math.min(Math.floor(bw*0.55),Math.floor(bh*0.45),24);
+                                        fs=Math.max(12,fs);
                                         ctx.font='bold '+fs+'px Helvetica';
                                         ctx.save(); ctx.translate(pp.x,pp.base); ctx.rotate(-Math.PI/2);
-                                        ctx.fillText(amt,4,0);
+                                        ctx.fillText(amt,Math.floor(fs*0.4),0);
                                         ctx.restore();
                                     });
                                 }
