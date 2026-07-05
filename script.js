@@ -5733,8 +5733,8 @@ function gorevMailGonder(gorev) {
                         // --- Tablo Ayarlari ---
                         var tStil = { fontSize:7, lineColor:[210,212,217], lineWidth:0.3 };
                         var bStil = { fillColor:[SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]], fontSize:7, fontStyle:'bold', textColor:[255,255,255], halign:'center' };
-                        var cStil = { 0:{cellWidth:35,fontStyle:'bold',fontSize:6.5}, 1:{cellWidth:'auto',fontSize:6.5}, 2:{cellWidth:28,halign:'right',fontStyle:'bold',fontSize:7} };
-                        var tOps = { theme:'grid', headStyles:bStil, bodyStyles:tStil, columnStyles:cStil, margin:{left:M,right:M}, tableWidth:'auto' };
+                        var cStil = { 0:{cellWidth:35,fontStyle:'bold',fontSize:6.5}, 1:{cellWidth:Math.max(W-63,10),fontSize:6.5}, 2:{cellWidth:28,halign:'right',fontStyle:'bold',fontSize:7} };
+                        var tOps = { theme:'grid', headStyles:bStil, bodyStyles:tStil, columnStyles:cStil, margin:{left:M,right:M}, tableWidth:W };
 
                         // --- GELIR TABLOSU ---
                         var gRows = [];
