@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.02.6';
+        var APP_VERSION = 'V1.02.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5555,11 +5555,12 @@ function gorevMailGonder(gorev) {
                                         if(d.v<=0)return;
                                         var pp=d.p.getProps(['x','y','base','width'],true), bw=pp.width, bh=pp.base-pp.y;
                                         var amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
-                                        var fs=Math.min(Math.floor(bw*0.55),Math.floor(bh*0.45),24);
-                                        fs=Math.max(12,fs);
+                                        var fs=Math.min(Math.floor(bw*0.55),24);
+                                        fs=Math.max(14,fs);
                                         ctx.font='bold '+fs+'px Helvetica';
-                                        ctx.save(); ctx.translate(pp.x,pp.base); ctx.rotate(-Math.PI/2);
-                                        ctx.fillText(amt,Math.floor(fs*0.4),0);
+                                        var tw=ctx.measureText(amt).width;
+                                        ctx.save(); ctx.translate(pp.x,pp.y); ctx.rotate(-Math.PI/2);
+                                        ctx.fillText(amt,-Math.floor(tw/2)-2,0);
                                         ctx.restore();
                                     });
                                 }
