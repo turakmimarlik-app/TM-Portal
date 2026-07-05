@@ -5571,10 +5571,13 @@ function gorevMailGonder(gorev) {
                 function t(s) { return trAscii ? trAscii(s||'') : (s||''); }
 
                 async function pdfOlustur() {
+                    var SB = 'baslangic';
+                    try {
                     var grafikler, logoResim = null;
 
-                    grafikler = await grafikBase64Uret();
+                    SB='grafik'; grafikler = await grafikBase64Uret();
 
+                    SB='logo';
                     if(logoData && logoData.length > 100) {
                         try {
                             logoResim = await new Promise(function(res) {
@@ -5586,13 +5589,16 @@ function gorevMailGonder(gorev) {
                         } catch(e){}
                     }
 
+                    SB='tarih';
                     var bugun = new Date();
                     var tarihStr = bugun.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});
                     var sayfaSayisi = 1;
 
+                    SB='sayfa1';
                     // ======== SAYFA 1 (OZET) ========
                     var y = 12;
 
+                    SB='ustbar';
                     // --- Ust Bar (Logo + Baslik) ---
                     doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
                     doc.rect(0, 0, 210, 22, 'F');
@@ -5631,6 +5637,7 @@ function gorevMailGonder(gorev) {
                     }
                     y += kY + 10;
 
+                    SB='grafik1';
                     // --- GRAFIK 1: Net Durum Trendi ---
                     doc.setDrawColor(210, 212, 217);
                     doc.setFillColor(ACIK_GR[0], ACIK_GR[1], ACIK_GR[2]);
@@ -5638,6 +5645,7 @@ function gorevMailGonder(gorev) {
                     doc.addImage(grafikler.netDurum, 'PNG', M, y, W, 56);
                     y += 64;
 
+                    SB='grafik2';
                     // --- GRAFIK 2: Gelir/Gider Bar ---
                     doc.setDrawColor(210, 212, 217);
                     doc.setFillColor(ACIK_GR[0], ACIK_GR[1], ACIK_GR[2]);
@@ -5645,6 +5653,7 @@ function gorevMailGonder(gorev) {
                     doc.addImage(grafikler.aylikBar, 'PNG', M, y, W, 54);
                     y += 62;
 
+                    SB='grafik34';
                     // --- GRAFIK 3-4: Doughnut (yan yana) ---
                     var dw = (W - 14) / 2;
                     doc.setDrawColor(210, 212, 217);
@@ -5657,6 +5666,7 @@ function gorevMailGonder(gorev) {
                     doc.addImage(grafikler.giderDoughnut, 'PNG', M+dw+12, y, dw, dw);
                     y += dw + 12;
 
+                    SB='altbilgi1';
                     // --- Alt Bilgi ---
                     y = Math.max(y, 280);
                     doc.setDrawColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
@@ -5666,6 +5676,7 @@ function gorevMailGonder(gorev) {
                     doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, M, y+4);
                     doc.text(t("Sayfa ")+sayfaSayisi, M+W, y+4, {align:"right"});
 
+                    SB='ayliklar';
                     // ======== AYLIK DOKUM SAYFALARI ========
                     for(var ai=0;ai<12;ai++) {
                         var ayd = kayit.aylar[ai];
@@ -5718,6 +5729,7 @@ function gorevMailGonder(gorev) {
                         doc.line(M, y, M+W, y);
                         y += 6;
 
+                        SB='tablolar-ay'+ai;
                         // --- Tablo Ayarlari ---
                         var tStil = { fontSize:7, lineColor:[210,212,217], lineWidth:0.3 };
                         var bStil = { fillColor:[SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]], fontSize:7, fontStyle:'bold', textColor:[255,255,255], halign:'center' };
@@ -5782,10 +5794,11 @@ function gorevMailGonder(gorev) {
 
                     doc.save('Butce_Raporu_'+yil+'.pdf');
                     tmNotify(t("Butce PDF olusturuldu."),"success");
+                    } catch(e) { throw new Error(SB+": "+e.message); }
                 }
 
                 async function giris() {
-                    try { await pdfOlustur(); } catch(e) { console.error("PDF hatasi:", e, e.stack); tmNotify("PDF hatasi: "+e.message+" | Konsola (F12) bak.","error"); }
+                    try { await pdfOlustur(); } catch(e) { console.error("PDF hatasi:", e, e&&e.stack); alert("PDF hatasi: "+e.message+"\n\nDetay:\n"+((e&&e.stack)||"stack yok")); tmNotify("PDF hatasi: "+e.message,"error"); }
                 }
                 giris();
 
