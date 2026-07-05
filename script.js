@@ -1455,6 +1455,21 @@ function gorevMailGonder(gorev) {
                 }
             } catch(e) { /* budget function not available */ }
 
+            // İŞ MUHASEBESİ KALAN TAHSİLAT / KALAN ÖDEME
+            try {
+                const imDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_db")) || [];
+                let imHacim = 0, imTahsilat = 0, imVerecek = 0, imOdenen = 0;
+                imDb.forEach(function(kayit) {
+                    imHacim += kayit.anlasmaUcreti || 0;
+                    (kayit.kalemler || []).forEach(function(k) {
+                        if(k.tip === "alacak") imTahsilat += k.tutar || 0;
+                        else { imVerecek += k.tutar || 0; imOdenen += (k.odenenTutar || 0); }
+                    });
+                });
+                setText("dashFinKalanTahsilat", tmTl(imHacim - imTahsilat));
+                setText("dashFinKalanOdeme", tmTl(imVerecek - imOdenen));
+            } catch(e) { setText("dashFinKalanTahsilat", "0,00 ₺"); setText("dashFinKalanOdeme", "0,00 ₺"); }
+
             // SON TEKLİFLER TABLOSU
             const offerBody = document.getElementById("dashRecentOfferBody");
             if(offerBody) {
@@ -3561,6 +3576,7 @@ function gorevMailGonder(gorev) {
                 db = db.filter(k => k.id !== id);
                 localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
                 isMuhasebeListesiniYenile();
+                tmNotify("İş muhasebesi kaydı silindi.", "success");
             });
         }
 
@@ -3608,6 +3624,7 @@ function gorevMailGonder(gorev) {
                 });
                 const genelKar = genelHacim - genelVerecek;
                 const genelKalan = genelVerecek - genelOdenen;
+                const genelKalanTahsilat = genelHacim - genelTahsilat;
                 const genelNet = genelTahsilat - genelVerecek;
                 const genelKarYuzde = genelHacim > 0 ? ((genelKar / genelHacim) * 100).toFixed(1) : "0.0";
                 const karRenk = genelKar >= 0 ? "var(--btn-green)" : "var(--accent-red)";
@@ -3627,6 +3644,7 @@ function gorevMailGonder(gorev) {
                         </div>
                         <div style="display:flex; justify-content:space-around; text-align:center; gap:8px; padding-top:10px; border-top:1px solid var(--border-color);">
                             <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KALAN ÖDEME</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelKalan.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">KALAN TAHSİLAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelKalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
                             <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">NET</small><span style="font-weight:900; color:${netRenk}; font-size:22px;">${genelNet.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
                         </div>
                     </div>
@@ -3911,6 +3929,7 @@ function gorevMailGonder(gorev) {
             localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
             isMuhasebeFormKapat("tahsilatForm_" + dbId);
             isMuhasebeListesiniYenile();
+            tmNotify("Tahsilat eklendi: " + tmTl(tutar), "success");
         }
 
         function isMuhasebeOdemeKaydet(dbId) {
@@ -3946,6 +3965,7 @@ function gorevMailGonder(gorev) {
             localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
             isMuhasebeFormKapat("odemeForm_" + dbId);
             isMuhasebeListesiniYenile();
+            tmNotify("Ödeme kalemi eklendi: " + tmTl(tutar), "success");
         }
 
         function isMuhasebeOdemeYapKaydet(dbId, kalemId) {
@@ -3973,6 +3993,7 @@ function gorevMailGonder(gorev) {
             localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
             isMuhasebeFormKapat("odemeYapForm_" + dbId + "_" + kalemId, dbId + "_" + kalemId);
             isMuhasebeListesiniYenile();
+            tmNotify("Ödeme yapıldı: " + tmTl(yeniOdeme), "success");
         }
 
         function isMuhasebeOdemeGecmisiGosterEdit(dbId, kalemId, idx) {
@@ -4029,6 +4050,7 @@ function gorevMailGonder(gorev) {
 
                 localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
                 isMuhasebeListesiniYenile();
+                tmNotify("Ödeme geçmişi silindi.", "success");
             });
         }
 
@@ -4040,6 +4062,7 @@ function gorevMailGonder(gorev) {
                 kayit.kalemler = kayit.kalemler.filter(k => k.kalemId !== kalemId);
                 localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
                 isMuhasebeListesiniYenile();
+                tmNotify("Kalem silindi.", "success");
             });
         }
 
