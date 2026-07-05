@@ -96,8 +96,8 @@ function gorevMailGonder(gorev) {
             messagingSenderId: "336034204213",
             appId: "1:336034204213:web:76d63b921e545f5fb9ff7c"
         };
-        firebase.initializeApp(firebaseConfig);
-        const fdb = firebase.firestore();
+        var fdb = null;
+        try { firebase.initializeApp(firebaseConfig); fdb = firebase.firestore(); } catch(e) { console.error("Firebase init error:", e); }
         const FS_COLLECTION = "tm_sync";
         let fsTimer = null;
         let fsUnsubscribe = null;
@@ -133,6 +133,7 @@ function gorevMailGonder(gorev) {
             return null;
         }
         function fsLoad() {
+            if (!fdb) return;
             // Eski all_data'dan bireysel dokümanlara geçiş (bir kere)
             fdb.collection(FS_COLLECTION).doc('all_data').get().then(function(snap) {
                 if (snap && snap.exists) {
@@ -200,7 +201,7 @@ function gorevMailGonder(gorev) {
         var fsReady = false;
         var fsSentKeys = {};
         function fsSync() {
-            if (!fsReady) return;
+            if (!fsReady || !fdb) return;
             var dirtyList = Object.keys(fsDirtyKeys);
             if (dirtyList.length === 0) return;
             var batch = fdb.batch();
@@ -331,7 +332,7 @@ function gorevMailGonder(gorev) {
                 overlayGizle();
             }
             if (oncekiKullanici) {
-                if (typeof fdb !== 'undefined') {
+                if (fdb) {
                     fdb.collection("tm_online").get().then(function(snap) {
                         var baskaAktif = null;
                         snap.forEach(function(doc) {
@@ -960,7 +961,7 @@ function gorevMailGonder(gorev) {
             tmSesCal('giris');
         }
         function tmOnlineKullaniciKontrol(kullanici, callback) {
-            if (typeof fdb === 'undefined') { callback(true); return; }
+            if (!fdb) { callback(true); return; }
             var esik = Date.now() - 6000;
             fdb.collection("tm_online").get().then(function(snap) {
                 var aktif = null;
@@ -1005,7 +1006,7 @@ function gorevMailGonder(gorev) {
             var master;
             try { master = JSON.parse(localStorage.getItem("tm_admin_creds_final")); } catch(e) { master = null; console.error("Admin creds parse hatasi:", e); }
             if (!master) {
-                if (typeof fdb !== 'undefined') {
+                if (fdb) {
                     fdb.collection(FS_COLLECTION).doc('tm_admin_creds_final').get({ source: 'server' }).then(function(snap) {
                         if (snap && snap.exists) {
                             var data = snap.data();
@@ -1055,7 +1056,7 @@ function gorevMailGonder(gorev) {
                 tmOnlineKullaniciKontrol(hedefKullanici, function(izin) {
                     if (izin) girisBasarili(hedefKullanici, hedefYetkiler);
                 });
-            } else if (typeof fdb !== 'undefined') {
+            } else if (fdb) {
                 if (errorDiv) { errorDiv.innerText = "Kullanıcı bulunamadı. Firebase'den senkronize ediliyor..."; errorDiv.style.display = "block"; }
                 fdb.collection(FS_COLLECTION).doc('tm_users_final_v8').get({ source: 'server' }).then(function(snap) {
                     if (snap && snap.exists) {
@@ -2259,7 +2260,7 @@ function gorevMailGonder(gorev) {
                     localStorage.setItem("tm_multi_logo_" + num, data);
                     document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
             if (num === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
-                    if (typeof fdb !== 'undefined') {
+                    if (fdb) {
                         fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
                             tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
                         }).catch(function(e) {
@@ -2277,7 +2278,7 @@ function gorevMailGonder(gorev) {
             if (num === 3) sidebardaLogoyuGoster();
         }
         function multiLogolariFirebaseCek() {
-            if (typeof fdb === 'undefined') return;
+            if (!fdb) return;
             for (var i = 1; i <= 10; i++) {
                 (function(idx) {
                     var mevcut = localStorage.getItem("tm_multi_logo_" + idx);
@@ -2509,7 +2510,7 @@ function gorevMailGonder(gorev) {
         var tmOnlinePullTimer = null;
         function tmOnlineHeartbeatBaslat(kullanici) {
             tmOnlineHeartbeatDurdur();
-            if (typeof fdb === 'undefined') return;
+            if (!fdb) return;
             function heartbeat() {
                 fdb.collection("tm_online").doc(kullanici).set({ onlineAt: Date.now() }).catch(function(e){ console.error("Online heartbeat hatasi:", e); });
             }
@@ -2521,7 +2522,7 @@ function gorevMailGonder(gorev) {
         }
         function tmOnlinePullBaslat() {
             if (tmOnlinePullTimer) clearInterval(tmOnlinePullTimer);
-            if (typeof fdb === 'undefined') return;
+            if (!fdb) return;
             function pull() {
                 fdb.collection("tm_online").get().then(function(snap) {
                     var cache = {};
@@ -2538,7 +2539,7 @@ function gorevMailGonder(gorev) {
         }
         function tmOnlineCikisYap(kullanici) {
             tmOnlineHeartbeatDurdur();
-            if (typeof fdb === 'undefined') return;
+            if (!fdb) return;
             fdb.collection("tm_online").doc(kullanici).delete().catch(function(e){ console.error("Online cikis hatasi:", e); });
         }
 
