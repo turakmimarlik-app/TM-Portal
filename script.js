@@ -5756,6 +5756,7 @@ function gorevMailGonder(gorev) {
                         });
                         if(gRows.length>0) {
                             if(y > 255) { doc.addPage(); sayfaSayisi++; y = 18; }
+                            SB='oy-ay'+ai+'-gelirAutoTable';
                             doc.setFont(FN, "bold"); doc.setFontSize(9);
                             doc.setTextColor(POZITIF[0], POZITIF[1], POZITIF[2]);
                             doc.text(t("GELIRLER"), M, y);
