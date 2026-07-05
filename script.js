@@ -5555,10 +5555,10 @@ function gorevMailGonder(gorev) {
                                         {v:gdVal,p:meta1.data[i],c:'#9E2A2B'}
                                     ].forEach(function(d){
                                         if(d.v<=0)return;
-                                        var pp=d.p.getProps(['x','y'],true), bx=pp.x, by=pp.y, pct=(d.v/tM*100).toFixed(1)+'%', amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
-                                        ctx.save(); ctx.translate(bx,by); ctx.rotate(-Math.PI/2);
-                                        ctx.font='bold 16px Helvetica'; ctx.fillText(amt,6,0);
-                                        ctx.font='bold 12px Helvetica'; ctx.fillText(pct,26,0);
+                                        var pp=d.p.getProps(['x','y','base'],true), bx=pp.x, cy=(pp.y+pp.base)/2, pct=(d.v/tM*100).toFixed(1)+'%', amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
+                                        ctx.save(); ctx.translate(bx,cy); ctx.rotate(-Math.PI/2);
+                                        ctx.font='bold 14px Helvetica'; ctx.fillText(amt,-6,0);
+                                        ctx.font='bold 11px Helvetica'; ctx.fillText(pct,12,0);
                                         ctx.restore();
                                     });
                                 }
