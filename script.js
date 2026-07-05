@@ -5377,123 +5377,246 @@ function gorevMailGonder(gorev) {
             const tG = ybYilToplam(kayit,"gelir"), tGi = ybYilToplam(kayit,"gider");
             const net = (kayit.baslangicBakiye||0)+tG-tGi;
 
+            // Şirket bilgilerini yükle
+            let sirket = {};
+            try { sirket = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) {}
+            const firmaAd = sirket.ad || "TURAK MİMARLIK";
+            const firmaAdres = sirket.adres || "";
+            const firmaTel = sirket.telefon || "";
+            const firmaGsm = sirket.gsm || "0544 235 98 32";
+            const firmaEposta = sirket.email || "turakmimarlik@gmail.com";
+            const firmaVergiDaire = sirket.vergiDaire || "DEMİRKÖY";
+            const firmaVergiNo = sirket.vergiNo || "8670608801";
+            const imzaAd = sirket.imzaAd || "TUGAY TURAK";
+
+            // Logo #1 (tm_multi_logo_1)
+            const logoData = localStorage.getItem("tm_multi_logo_1");
+
             try {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ format:'a4', orientation:'portrait', unit:'mm' });
-                const sayfaGenislik = 190;
-                const solMarj = 10;
-                let yPos = 15;
+                const M = 12; // margin
+                const W = 186; // page width - 2*M
+                const sayfaMerkez = 105;
 
-                // Header
-                doc.setFont("Helvetica","bold");
-                doc.setFontSize(24);
-                doc.setTextColor(17,17,17);
-                doc.text("TURAK MİMARLIK", sayfaGenislik/2, yPos, {align:"center"});
-                yPos += 8;
-                doc.setFontSize(16);
-                doc.setTextColor(85,85,85);
-                doc.text(yil + " YILI BÜTÇE RAPORU", sayfaGenislik/2, yPos, {align:"center"});
-                yPos += 6;
-                doc.setDrawColor(46,125,50);
-                doc.setLineWidth(1.5);
-                doc.line(solMarj, yPos, solMarj+sayfaGenislik, yPos);
-                yPos += 8;
-
-                // Summary table
-                doc.autoTable({
-                    startY: yPos,
-                    head: [['Kalem', 'Tutar']],
-                    body: [
-                        ['Başlangıç Bakiyesi', (kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺'],
-                        ['Toplam Gelir', tG.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺'],
-                        ['Toplam Gider', tGi.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺'],
-                        ['Net Bakiye', net.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺']
-                    ],
-                    theme:'grid',
-                    headStyles: { fillColor:[46,125,50], fontSize:10, fontStyle:'bold', halign:'center' },
-                    bodyStyles: { fontSize:10 },
-                    columnStyles: { 0: {cellWidth:80, fontStyle:'bold'}, 1: {cellWidth:60, halign:'right', fontStyle:'bold'} },
-                    didParseCell: function(data) {
-                        if(data.section==='body') {
-                            if(data.row.index===1) { data.cell.styles.textColor=[46,125,50]; }
-                            if(data.row.index===2) { data.cell.styles.textColor=[198,40,40]; }
-                            if(data.row.index===3) { data.cell.styles.fontSize=12; data.cell.styles.textColor=net>=0?[46,125,50]:[198,40,40]; }
-                        }
-                    },
-                    tableWidth: 140,
-                    margin: { left: (210-140)/2 }
-                });
-                yPos = doc.lastAutoTable.finalY + 8;
-
-                // Monthly breakdown
-                for(let i=0;i<12;i++) {
-                    const ay = kayit.aylar[i];
-                    if(!ay) continue;
-                    const aGelir = Object.entries(ay.gelirler||{}).reduce((s,[_,a])=>s+a.reduce((x,y)=>x+(y.tutar||0),0),0);
-                    const aGider = Object.entries(ay.giderler||{}).reduce((s,[_,a])=>s+a.reduce((x,y)=>x+(y.tutar||0),0),0);
-                    if(aGelir===0 && aGider===0) continue;
-                    const fark = aGelir - aGider;
-
-                    // Check page break
-                    if(yPos > 250) { doc.addPage(); yPos = 15; }
-
-                    // Month header
+                // ========== YARDIMCI FONKSİYON ==========
+                function baslikEkle(text, y) {
+                    doc.setDrawColor(46,125,50);
+                    doc.setLineWidth(0.8);
+                    doc.line(M, y, M+W, y);
                     doc.setFont("Helvetica","bold");
-                    doc.setFontSize(12);
+                    doc.setFontSize(14);
                     doc.setTextColor(27,94,32);
-                    doc.text(YB_AY_ADI[i].toUpperCase(), solMarj, yPos);
-                    yPos += 5;
-
-                    // Items table
-                    const rows = [];
-                    Object.entries(ay.gelirler||{}).forEach(([ktg,items]) => {
-                        items.forEach(k => {
-                            rows.push([ktg.toUpperCase(), 'GELİR', k.aciklama||'', (k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺']);
-                        });
-                    });
-                    Object.entries(ay.giderler||{}).forEach(([ktg,items]) => {
-                        items.forEach(k => {
-                            rows.push([ktg.toUpperCase(), 'GİDER', k.aciklama||'', (k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺']);
-                        });
-                    });
-                    rows.push(['', '', 'Aylık Toplam', fark.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺']);
-
-                    doc.autoTable({
-                        startY: yPos,
-                        head: [['KATEGORİ', 'TÜR', 'AÇIKLAMA', 'TUTAR']],
-                        body: rows,
-                        theme:'grid',
-                        headStyles: { fillColor:[46,125,50], fontSize:8, fontStyle:'bold', halign:'center' },
-                        bodyStyles: { fontSize:8 },
-                        columnStyles: { 0:{cellWidth:35,fontStyle:'bold'}, 1:{cellWidth:18,halign:'center'}, 2:{cellWidth:75}, 3:{cellWidth:30,halign:'right',fontStyle:'bold'} },
-                        didParseCell: function(data) {
-                            if(data.section==='body') {
-                                const val = data.cell.raw;
-                                if(val==='GELİR') { data.cell.styles.textColor=[46,125,50]; }
-                                if(val==='GİDER') { data.cell.styles.textColor=[198,40,40]; }
-                                if(val==='Aylık Toplam' || (data.column.index===3 && data.row.index===rows.length-1)) {
-                                    data.cell.styles.fontStyle='bold';
-                                    data.cell.styles.fontSize=9;
-                                    data.cell.styles.fillColor=[233,236,239];
-                                }
-                            }
-                        },
-                        margin: { left: solMarj }
-                    });
-                    yPos = doc.lastAutoTable.finalY + 6;
-
-                    // Redraw header on each page
-                    if(doc.lastAutoTable.finalY >= 270) yPos = 15;
+                    doc.text(text, M+6, y-2);
+                    return y + 8;
                 }
 
-                // Footer
-                doc.setFont("Helvetica","normal");
-                doc.setFontSize(8);
-                doc.setTextColor(153,153,153);
-                doc.text("Turak Mimarlık - " + yil + " Yılı Bütçe Raporu - Otomatik Oluşturulmuştur", sayfaGenislik/2, 290, {align:"center"});
+                // ========== LOGO YÜKLEME (asenkron) ==========
+                async function pdfOlustur() {
+                    let logoResim = null;
+                    if(logoData && logoData.length > 100) {
+                        try {
+                            logoResim = await new Promise(function(res, rej) {
+                                var img = new Image();
+                                img.onload = function() { res(img); };
+                                img.onerror = function() { res(null); };
+                                img.src = logoData;
+                            });
+                        } catch(e) {}
+                    }
 
-                doc.save('Butce_Raporu_' + yil + '.pdf');
-                tmNotify("Bütçe PDF oluşturuldu.","success");
+                    let yPos = 12;
+
+                    // ===== HEADER =====
+                    if(logoResim) {
+                        // Logo sol tarafta
+                        const logoYukseklik = 22;
+                        const logoGenislik = logoResim.naturalWidth * (logoYukseklik / logoResim.naturalHeight);
+                        doc.addImage(logoData, 'PNG', M, yPos, logoGenislik, logoYukseklik);
+                        // Firma bilgisi sağ tarafta
+                        doc.setFont("Helvetica","bold");
+                        doc.setFontSize(16);
+                        doc.setTextColor(17,17,17);
+                        doc.text(firmaAd, M+W, yPos, {align:"right"});
+                        doc.setFont("Helvetica","normal");
+                        doc.setFontSize(8);
+                        doc.setTextColor(100,100,100);
+                        var infoY = yPos + 5;
+                        if(firmaAdres) { doc.text(firmaAdres, M+W, infoY, {align:"right"}); infoY += 3.5; }
+                        if(firmaVergiDaire && firmaVergiNo) { doc.text("V.D: " + firmaVergiDaire + " | V.NO: " + firmaVergiNo, M+W, infoY, {align:"right"}); infoY += 3.5; }
+                        doc.text("Tel: " + firmaGsm + " | E-posta: " + firmaEposta, M+W, infoY, {align:"right"});
+                        yPos = Math.max(yPos + logoYukseklik + 4, infoY + 4);
+                    } else {
+                        // Logosuz: ortalanmış başlık
+                        doc.setFont("Helvetica","bold");
+                        doc.setFontSize(20);
+                        doc.setTextColor(17,17,17);
+                        doc.text(firmaAd, sayfaMerkez, yPos + 8, {align:"center"});
+                        doc.setFont("Helvetica","normal");
+                        doc.setFontSize(8);
+                        doc.setTextColor(100,100,100);
+                        doc.text("V.D: " + firmaVergiDaire + " | V.NO: " + firmaVergiNo + " | Tel: " + firmaGsm, sayfaMerkez, yPos + 13, {align:"center"});
+                        yPos += 16;
+                    }
+
+                    // Altın yeşil çizgi
+                    doc.setDrawColor(46,125,50);
+                    doc.setLineWidth(1.2);
+                    doc.line(M, yPos, M+W, yPos);
+                    yPos += 6;
+
+                    // ===== BAŞLIK =====
+                    doc.setFont("Helvetica","bold");
+                    doc.setFontSize(22);
+                    doc.setTextColor(30,30,30);
+                    doc.text(yil + " YILI BÜTÇE RAPORU", sayfaMerkez, yPos, {align:"center"});
+                    yPos += 6;
+                    const bugun = new Date();
+                    const tarihStr = bugun.toLocaleDateString('tr-TR', {day:'2-digit', month:'long', year:'numeric'});
+                    doc.setFont("Helvetica","normal");
+                    doc.setFontSize(9);
+                    doc.setTextColor(140,140,140);
+                    doc.text("Rapor Tarihi: " + tarihStr, sayfaMerkez, yPos, {align:"center"});
+                    yPos += 8;
+
+                    // ===== ÖZET KARTLARI =====
+                    const kartGenislik = (W - 12) / 4;
+                    const kartYukseklik = 18;
+                    const kartBas = M;
+                    const kartVerileri = [
+                        {label:"BAŞLANGIÇ BAKİYESİ", val:(kayit.baslangicBakiye||0), renk:[80,80,80], bg:[245,245,245]},
+                        {label:"TOPLAM GELİR", val:tG, renk:[46,125,50], bg:[235,245,235]},
+                        {label:"TOPLAM GİDER", val:tGi, renk:[198,40,40], bg:[250,235,235]},
+                        {label:"NET BAKİYE", val:net, renk:net>=0?[46,125,50]:[198,40,40], bg:[245,245,250]}
+                    ];
+
+                    for(let k=0; k<4; k++) {
+                        const v = kartVerileri[k];
+                        const kx = kartBas + k*(kartGenislik+4);
+                        // Arka plan
+                        doc.setFillColor(v.bg[0], v.bg[1], v.bg[2]);
+                        doc.setDrawColor(210,210,210);
+                        doc.roundedRect(kx, yPos, kartGenislik, kartYukseklik, 2, 2, 'FD');
+                        // Label
+                        doc.setFont("Helvetica","bold");
+                        doc.setFontSize(5.5);
+                        doc.setTextColor(120,120,120);
+                        doc.text(v.label, kx + kartGenislik/2, yPos + 5.5, {align:"center"});
+                        // Value
+                        doc.setFont("Helvetica","bold");
+                        doc.setFontSize(k===3?11:10);
+                        doc.setTextColor(v.renk[0], v.renk[1], v.renk[2]);
+                        doc.text(v.val.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺', kx + kartGenislik/2, yPos + 13.5, {align:"center"});
+                    }
+                    yPos += kartYukseklik + 10;
+
+                    // ===== AYLIK DÖKÜM =====
+                    for(let i=0;i<12;i++) {
+                        const ay = kayit.aylar[i];
+                        if(!ay) continue;
+                        const aGelir = Object.entries(ay.gelirler||{}).reduce((s,[_,a])=>s+a.reduce((x,y)=>x+(y.tutar||0),0),0);
+                        const aGider = Object.entries(ay.giderler||{}).reduce((s,[_,a])=>s+a.reduce((x,y)=>x+(y.tutar||0),0),0);
+                        if(aGelir===0 && aGider===0) continue;
+                        const fark = aGelir - aGider;
+
+                        // Sayfa kontrolü
+                        if(yPos > 258) { doc.addPage(); yPos = 15; }
+
+                        // Ay başlığı
+                        yPos = baslikEkle(YB_AY_ADI[i].toUpperCase() + " " + yil, yPos);
+
+                        // Tablo satırları
+                        const rows = [];
+                        function formatTl(v) { return v.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺'; }
+                        Object.entries(ay.gelirler||{}).forEach(([ktg,items]) => {
+                            items.forEach(k => {
+                                rows.push([ktg.toUpperCase(), k.aciklama||'', formatTl(k.tutar||0), 'GELİR']);
+                            });
+                        });
+                        Object.entries(ay.giderler||{}).forEach(([ktg,items]) => {
+                            items.forEach(k => {
+                                rows.push([ktg.toUpperCase(), k.aciklama||'', formatTl(k.tutar||0), 'GİDER']);
+                            });
+                        });
+                        // Sırala: gelirler önce
+                        rows.sort(function(a,b) { return a[3]===b[3] ? 0 : (a[3]==='GELİR' ? -1 : 1); });
+
+                        // AutoTable
+                        doc.autoTable({
+                            startY: yPos + 1,
+                            head: [['KATEGORİ', 'AÇIKLAMA', 'TUTAR', '']],
+                            body: rows.map(r => [r[0], r[1], r[2], r[3]]),
+                            theme:'grid',
+                            headStyles: {
+                                fillColor:[46,125,50], fontSize:8, fontStyle:'bold',
+                                halign:'center', textColor:[255,255,255]
+                            },
+                            bodyStyles: { fontSize:7.5 },
+                            columnStyles: {
+                                0: {cellWidth:30, fontStyle:'bold', fontSize:7},
+                                1: {cellWidth:88, fontSize:7},
+                                2: {cellWidth:28, halign:'right', fontStyle:'bold', fontSize:7.5},
+                                3: {cellWidth:16, halign:'center', fontSize:7}
+                            },
+                            didParseCell: function(data) {
+                                if(data.section==='body') {
+                                    const tur = data.row.raw ? data.row.raw[3] : '';
+                                    if(tur === 'GELİR') {
+                                        data.cell.styles.textColor = [46,125,50];
+                                        data.cell.styles.fillColor = [245,252,245];
+                                    } else if(tur === 'GİDER') {
+                                        data.cell.styles.textColor = [198,40,40];
+                                        data.cell.styles.fillColor = [252,245,245];
+                                    }
+                                }
+                            },
+                            didDrawPage: function(data) {
+                                // Sayfa başına header tekrarı
+                            },
+                            margin: { left: M, right: M }
+                        });
+
+                        // Ay toplam satırı
+                        yPos = doc.lastAutoTable.finalY + 2;
+                        doc.setFillColor(240,242,245);
+                        doc.roundedRect(M, yPos, W, 7, 1, 1, 'F');
+                        doc.setFont("Helvetica","bold");
+                        doc.setFontSize(8.5);
+                        doc.setTextColor(fark>=0 ? 46 : 198, fark>=0 ? 125 : 40, fark>=0 ? 50 : 40);
+                        doc.text("AYLIK TOPLAM: " + fark.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺', M+W-2, yPos+5, {align:"right"});
+                        yPos += 10;
+
+                        // Gelir/Gider alt toplam
+                        doc.setFontSize(7);
+                        doc.setTextColor(100,100,100);
+                        doc.text("Gelir: " + aGelir.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺', M+2, yPos);
+                        doc.text("Gider: " + aGider.toLocaleString('tr-TR',{minFractionDigits:2}) + ' ₺', M+50, yPos);
+                        yPos += 6;
+                    }
+
+                    // ===== ALT BİLGİ =====
+                    if(yPos > 275) doc.addPage();
+                    doc.setDrawColor(200,200,200);
+                    doc.setLineWidth(0.5);
+                    doc.line(M, yPos, M+W, yPos);
+                    yPos += 4;
+                    doc.setFont("Helvetica","normal");
+                    doc.setFontSize(7);
+                    doc.setTextColor(150,150,150);
+                    doc.text(firmaAd + " - " + yil + " Yılı Bütçe Raporu - Otomatik Oluşturulmuştur", sayfaMerkez, yPos, {align:"center"});
+                    yPos += 3.5;
+                    doc.text("Rapor: " + tarihStr + " | Hazırlayan: " + imzaAd, sayfaMerkez, yPos, {align:"center"});
+
+                    // ===== KAYDET =====
+                    doc.save('Butce_Raporu_' + yil + '.pdf');
+                    tmNotify("Bütçe PDF oluşturuldu.","success");
+                }
+
+                pdfOlustur().catch(function(e) {
+                    console.error("Bütçe PDF hatası:", e);
+                    tmNotify("Bütçe PDF oluşturulurken hata: " + e.message, "error");
+                });
+
             } catch(e) {
                 console.error("Bütçe PDF hatası:", e);
                 tmNotify("Bütçe PDF oluşturulurken hata: " + e.message, "error");
