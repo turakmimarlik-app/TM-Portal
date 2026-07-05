@@ -5488,57 +5488,61 @@ function gorevMailGonder(gorev) {
 
                 async function grafikBase64Uret() {
                     var container = document.createElement('div');
-                    container.style.cssText = 'position:fixed;left:-9999px;top:0;width:800px;height:2000px;background:#fff;z-index:99999';
+                    container.style.cssText = 'position:fixed;left:-9999px;top:0;width:1200px;height:2500px;background:#fff;z-index:99999';
                     document.body.appendChild(container);
 
                     function cC(w,h) { var c=document.createElement('canvas'); c.width=w; c.height=h; container.appendChild(c); return c; }
 
-                    var c1 = cC(700,170);
+                    // 1) Net Durum - yüksek çözünürlük
+                    var c1 = cC(1100,250);
                     new Chart(c1, { type:'line',
                         data:{ labels:YB_AY_KISA, datasets:[
-                            { label:'Gelir', data:aylikGelir, borderColor:'#2E7D32', fill:false, tension:0.3, pointRadius:3 },
-                            { label:'Gider', data:aylikGider, borderColor:'#9E2A2B', fill:false, tension:0.3, pointRadius:3 },
-                            { label:'Şirket Bakiyesi', data:bakiyeAylik, borderColor:'#F57C00', fill:true, tension:0.3, borderWidth:2, pointRadius:3 }
+                            { label:'Gelir', data:aylikGelir, borderColor:'#2E7D32', fill:false, tension:0.3, pointRadius:4, pointHoverRadius:6 },
+                            { label:'Gider', data:aylikGider, borderColor:'#9E2A2B', fill:false, tension:0.3, pointRadius:4, pointHoverRadius:6 },
+                            { label:'Sirket Bakiyesi', data:bakiyeAylik, borderColor:'#F57C00', fill:true, tension:0.3, borderWidth:3, pointRadius:4, pointHoverRadius:6 }
                         ]},
                         options:{ responsive:false, maintainAspectRatio:false,
-                            plugins:{ legend:{position:'top',labels:{font:{size:10}}}, title:{display:true,text:yil+' Yili Net Durum Trendi',font:{size:12,weight:'bold'}} },
-                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:8}} }, x:{ticks:{font:{size:8}}} }
+                            plugins:{ legend:{position:'top',labels:{font:{size:13}}}, title:{display:true,text:yil+' Yili Net Durum Trendi',font:{size:15,weight:'bold'}} },
+                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:10}} }, x:{ticks:{font:{size:10}}} }
                         }
                     });
 
-                    var c2 = cC(700,160);
+                    // 2) Bar chart - yüksek çözünürlük
+                    var c2 = cC(1100,240);
                     new Chart(c2, { type:'bar',
                         data:{ labels:YB_AY_KISA, datasets:[
-                            { label:'Gelir', data:aylikGelir, backgroundColor:'#2E7D32', borderRadius:3 },
-                            { label:'Gider', data:aylikGider, backgroundColor:'#9E2A2B', borderRadius:3 }
+                            { label:'Gelir', data:aylikGelir, backgroundColor:'#2E7D32', borderRadius:4 },
+                            { label:'Gider', data:aylikGider, backgroundColor:'#9E2A2B', borderRadius:4 }
                         ]},
                         options:{ responsive:false, maintainAspectRatio:false,
-                            plugins:{ legend:{position:'top',labels:{font:{size:10}}}, title:{display:true,text:'Aylik Gelir / Gider Karsilastirmasi',font:{size:12,weight:'bold'}} },
-                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:8}} }, x:{ticks:{font:{size:8}}} }
+                            plugins:{ legend:{position:'top',labels:{font:{size:13}}}, title:{display:true,text:'Aylik Gelir / Gider Karsilastirmasi',font:{size:15,weight:'bold'}} },
+                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:10}} }, x:{ticks:{font:{size:10}}} }
                         }
                     });
 
+                    // Doughnut yardimci - kare canvas, tam yuvarlak
                     function doughnutOlustur(c, etiket, veri, baslik) {
                         if(veri.some(function(v){return v>0;})) {
                             new Chart(c, { type:'doughnut',
-                                data:{ labels:etiket, datasets:[{ data:veri, backgroundColor:renkPalet.slice(0,veri.length), borderWidth:1 }] },
-                                options:{ responsive:false, maintainAspectRatio:false,
-                                    plugins:{ legend:{position:'right',labels:{font:{size:9}}}, title:{display:true,text:baslik,font:{size:11,weight:'bold'}} }
+                                data:{ labels:etiket, datasets:[{ data:veri, backgroundColor:renkPalet.slice(0,veri.length), borderWidth:2 }] },
+                                options:{ responsive:false, maintainAspectRatio:true,
+                                    plugins:{ legend:{position:'right',labels:{font:{size:10}}}, title:{display:true,text:baslik,font:{size:13,weight:'bold'}} }
                                 }
                             });
                         } else {
                             new Chart(c, { type:'doughnut', data:{labels:['Veri Yok'],datasets:[{data:[1],backgroundColor:['#e0e0e0']}]},
-                                options:{ responsive:false, maintainAspectRatio:false,
-                                    plugins:{ legend:{display:false}, title:{display:true,text:baslik,font:{size:11,weight:'bold'}} }
+                                options:{ responsive:false, maintainAspectRatio:true,
+                                    plugins:{ legend:{display:false}, title:{display:true,text:baslik,font:{size:13,weight:'bold'}} }
                                 }
                             });
                         }
                     }
 
-                    var c3 = cC(350,240); doughnutOlustur(c3, gelirEtiket, gelirVeri, 'Gelir Dagilimi');
-                    var c4 = cC(350,240); doughnutOlustur(c4, giderEtiket, giderVeri, 'Gider Dagilimi');
+                    // 3-4) Doughnut - kare canvas (tam yuvarlak icin)
+                    var c3 = cC(400,400); doughnutOlustur(c3, gelirEtiket, gelirVeri, 'Gelir Dagilimi');
+                    var c4 = cC(400,400); doughnutOlustur(c4, giderEtiket, giderVeri, 'Gider Dagilimi');
 
-                    await new Promise(function(r){setTimeout(r,300);});
+                    await new Promise(function(r){setTimeout(r,400);});
 
                     var resimler = {
                         netDurum: c1.toDataURL('image/png'),
@@ -5572,7 +5576,6 @@ function gorevMailGonder(gorev) {
                                 if(veri.length > 10000) {
                                     doc.addFileToVFS('OpenSans.ttf', veri);
                                     doc.addFont('OpenSans.ttf','OpenSans','normal');
-                                    // bold
                                     try {
                                         var yB = await fetch(kaynaklar[si].replace('400-normal','700-normal').replace('OpenSans-Regular','OpenSans-Bold'), { mode:'cors' });
                                         if(yB.ok) { doc.addFileToVFS('OpenSansBold.ttf', buf2str(await yB.arrayBuffer())); doc.addFont('OpenSansBold.ttf','OpenSans','bold'); }
@@ -5584,6 +5587,9 @@ function gorevMailGonder(gorev) {
                     }
                     return false;
                 }
+
+                // Turkce karakter guvenli metin - font yoksa ASCII donusumu
+                function t(s) { return fontYuklendi ? s : (trAscii ? trAscii(s||'') : (s||'')); }
 
                 async function pdfOlustur() {
                     var grafikler, logoResim = null;
@@ -5609,64 +5615,64 @@ function gorevMailGonder(gorev) {
                     // ======== SAYFA 1 ========
                     var y = 14;
 
-                    // Logo (orantılı)
+                    // Logo (orantili, tasma yok)
                     if(logoResim) {
-                        var lh = 16, maxW = 48;
-                        var lw = logoResim.naturalWidth * (lh / logoResim.naturalHeight);
-                        if(lw > maxW) { lw = maxW; lh = lw * logoResim.naturalHeight / logoResim.naturalWidth; }
+                        var lMaxH = 16, lMaxW = 48;
+                        var lw = logoResim.naturalWidth * (lMaxH / logoResim.naturalHeight);
+                        var lh = lMaxH;
+                        if(lw > lMaxW) { lw = lMaxW; lh = lw * logoResim.naturalHeight / logoResim.naturalWidth; }
                         doc.addImage(logoData, 'PNG', M, y, lw, lh);
-                        y += lh + 3;
-                    } else { y += 4; }
+                        y += lh + 4;
+                    } else { y += 5; }
 
-                    doc.setFont(FN, "bold");
-                    doc.setFontSize(20);
+                    doc.setFont(FN, "bold"); doc.setFontSize(20);
                     doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                    doc.text(yil+" YILI BUTCE RAPORU", O, y, {align:"center"});
-                    y += 5.5;
-                    doc.setFont(FN, "normal");
-                    doc.setFontSize(7.5);
+                    doc.text(t(yil+" YILI BUTCE RAPORU"), O, y, {align:"center"});
+                    y += 6;
+                    doc.setFont(FN, "normal"); doc.setFontSize(8);
                     doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
-                    doc.text("Rapor Tarihi: "+tarihStr, O, y, {align:"center"});
-                    y += 8;
+                    doc.text(t("Rapor Tarihi: ")+tarihStr, O, y, {align:"center"});
+                    y += 9;
 
-                    // ÖZET KARTLARI
+                    // OZET KARTLARI
                     var kartV = [
-                        {l:"BASLANGIC BAKIYESI", v:kayit.baslangicBakiye||0, c:GRI_METIN},
-                        {l:"TOPLAM GELIR", v:tG, c:POZITIF},
-                        {l:"TOPLAM GIDER", v:tGi, c:NEGATIF},
-                        {l:"NET BAKIYE", v:net, c:net>=0?POZITIF:NEGATIF}
+                        {l:t("BASLANGIC BAKIYESI"), v:kayit.baslangicBakiye||0, c:GRI_METIN},
+                        {l:t("TOPLAM GELIR"), v:tG, c:POZITIF},
+                        {l:t("TOPLAM GIDER"), v:tGi, c:NEGATIF},
+                        {l:t("NET BAKIYE"), v:net, c:net>=0?POZITIF:NEGATIF}
                     ];
-                    var kG = (W-9)/4, kY = 15;
+                    var kG = (W-9)/4, kY = 16;
                     for(var k=0;k<4;k++) {
                         var v = kartV[k], kx = M + k*(kG+3);
                         doc.setFillColor(ACIK_GR[0], ACIK_GR[1], ACIK_GR[2]);
                         doc.setDrawColor(210,212,217);
                         doc.roundedRect(kx, y, kG, kY, 2, 2, 'FD');
-                        doc.setFont(FN, "bold"); doc.setFontSize(4.8);
+                        doc.setFont(FN, "bold"); doc.setFontSize(5);
                         doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
-                        doc.text(v.l, kx+kG/2, y+4.5, {align:"center"});
-                        doc.setFontSize(v.l==="NET BAKIYE"?9:8);
+                        doc.text(v.l, kx+kG/2, y+5, {align:"center"});
+                        doc.setFontSize(v.l===t("NET BAKIYE")?10:9);
                         doc.setTextColor(v.c[0], v.c[1], v.c[2]);
-                        doc.text((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL', kx+kG/2, y+12, {align:"center"});
+                        doc.text((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL', kx+kG/2, y+13, {align:"center"});
                     }
-                    y += kY + 7;
+                    y += kY + 8;
 
                     // GRAFIK 1: Net Durum
-                    doc.addImage(grafikler.netDurum, 'PNG', M, y, W, 38);
-                    y += 41;
+                    doc.addImage(grafikler.netDurum, 'PNG', M, y, W, 42);
+                    y += 47;
                     // GRAFIK 2: Bar
-                    doc.addImage(grafikler.aylikBar, 'PNG', M, y, W, 36);
-                    y += 39;
-                    // GRAFIK 3-4: Doughnut
-                    var dw = (W - 6) / 2;
-                    doc.addImage(grafikler.gelirDoughnut, 'PNG', M, y, dw, 56);
-                    doc.addImage(grafikler.giderDoughnut, 'PNG', M+dw+6, y, dw, 56);
-                    y += 60;
+                    doc.addImage(grafikler.aylikBar, 'PNG', M, y, W, 40);
+                    y += 45;
+                    // GRAFIK 3-4: Doughnut (kare, tam yuvarlak)
+                    var dw = (W - 8) / 2;
+                    var dH = dw * 0.85;
+                    doc.addImage(grafikler.gelirDoughnut, 'PNG', M, y, dw, dw);
+                    doc.addImage(grafikler.giderDoughnut, 'PNG', M+dw+8, y, dw, dw);
+                    y += dw + 6;
 
                     // Alt bilgi
                     doc.setFont(FN, "normal"); doc.setFontSize(6);
                     doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
-                    doc.text(yil+" Yili Butce Raporu | "+tarihStr, O, y, {align:"center"});
+                    doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, O, y, {align:"center"});
 
                     // ======== AYLIK DOKUM SAYFALARI ========
                     for(var ai=0;ai<12;ai++) {
@@ -5678,38 +5684,39 @@ function gorevMailGonder(gorev) {
                         doc.addPage();
                         y = 14;
 
-                        // Logo (orantili, buyuk)
+                        // Logo (orantili)
                         if(logoResim) {
-                            var slh = 12, sMaxW = 26;
-                            var slw = logoResim.naturalWidth * (slh / logoResim.naturalHeight);
+                            var sMaxH = 13, sMaxW = 28;
+                            var slw = logoResim.naturalWidth * (sMaxH / logoResim.naturalHeight);
+                            var slh = sMaxH;
                             if(slw > sMaxW) { slw = sMaxW; slh = slw * logoResim.naturalHeight / logoResim.naturalWidth; }
                             doc.addImage(logoData, 'PNG', M, y-1, slw, slh);
                         }
                         doc.setFont(FN, "bold"); doc.setFontSize(7);
                         doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        doc.text(yil+" YILI BUTCE RAPORU", M+W, y+1, {align:"right"});
-                        y += 13;
+                        doc.text(t(yil+" YILI BUTCE RAPORU"), M+W, y+1, {align:"right"});
+                        y += 14;
 
                         // Ay basligi
-                        doc.setFont(FN, "bold"); doc.setFontSize(17);
+                        doc.setFont(FN, "bold"); doc.setFontSize(18);
                         doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        doc.text(YB_AY_ADI[ai].toUpperCase()+" "+yil, O, y, {align:"center"});
-                        y += 8;
+                        doc.text(t(YB_AY_ADI[ai].toUpperCase()+" "+yil), O, y, {align:"center"});
+                        y += 9;
 
                         // Ozet
                         var fark = aG - aGi;
-                        doc.setFont(FN, "bold"); doc.setFontSize(7.5);
+                        doc.setFont(FN, "bold"); doc.setFontSize(8);
                         doc.setTextColor(POZITIF[0], POZITIF[1], POZITIF[2]);
-                        doc.text("Gelir: "+aG.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+10, y);
+                        doc.text(t("Gelir: ")+aG.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+10, y);
                         doc.setTextColor(NEGATIF[0], NEGATIF[1], NEGATIF[2]);
-                        doc.text("Gider: "+aGi.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+75, y);
+                        doc.text(t("Gider: ")+aGi.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+75, y);
                         doc.setTextColor(fark>=0?POZITIF[0]:NEGATIF[0], fark>=0?POZITIF[1]:NEGATIF[1], fark>=0?POZITIF[2]:NEGATIF[2]);
-                        doc.text("Net: "+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+140, y);
-                        y += 7;
+                        doc.text(t("Net: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+140, y);
+                        y += 8;
 
-                        var ortakStil = { fontSize:6.5, lineColor:[210,212,217], lineWidth:0.3 };
+                        var ortakStil = { fontSize:7, lineColor:[210,212,217], lineWidth:0.3 };
                         var baslikStil = { fillColor:[SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]], fontSize:7, fontStyle:'bold', textColor:[255,255,255], halign:'center' };
-                        var sutunStil = { 0:{cellWidth:'auto',fontStyle:'bold',fontSize:6}, 1:{cellWidth:'auto',fontSize:6}, 2:{cellWidth:28,halign:'right',fontStyle:'bold',fontSize:6.5} };
+                        var sutunStil = { 0:{cellWidth:'auto',fontStyle:'bold',fontSize:6.5}, 1:{cellWidth:'auto',fontSize:6.5}, 2:{cellWidth:30,halign:'right',fontStyle:'bold',fontSize:7} };
                         var autotableOps = {
                             theme:'grid', headStyles:baslikStil, bodyStyles:ortakStil, columnStyles:sutunStil,
                             margin:{left:M,right:M}, tableWidth:'auto',
@@ -5719,70 +5726,70 @@ function gorevMailGonder(gorev) {
                         // GELIR TABLOSU
                         var gRows = [];
                         Object.entries(ayd.gelirler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gRows.push([e[0].toUpperCase(), (x.aciklama||''), ((x.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL')]); });
+                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), ((x.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL')]); });
                         });
                         if(gRows.length>0) {
-                            if(y > 265) { doc.addPage(); y = 14; }
-                            doc.setFont(FN, "bold"); doc.setFontSize(8);
+                            if(y > 260) { doc.addPage(); y = 14; }
+                            doc.setFont(FN, "bold"); doc.setFontSize(8.5);
                             doc.setTextColor(POZITIF[0], POZITIF[1], POZITIF[2]);
-                            doc.text("GELIRLER", M, y);
-                            y += 5;
+                            doc.text(t("GELIRLER"), M, y);
+                            y += 6;
                             doc.autoTable({
-                                startY: y, head: [['KATEGORI', 'ACIKLAMA', 'TUTAR']],
+                                startY: y, head: [[t('KATEGORI'), t('ACIKLAMA'), t('TUTAR')]],
                                 body: gRows,
                                 ...autotableOps,
                                 didParseCell: function(data) { if(data.section==='body') data.cell.styles.fillColor = [245,252,245]; }
                             });
-                            y = doc.lastAutoTable.finalY + 5;
+                            y = doc.lastAutoTable.finalY + 8;
                         }
 
                         // GIDER TABLOSU
                         var gdRows = [];
                         Object.entries(ayd.giderler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gdRows.push([e[0].toUpperCase(), (x.aciklama||''), ((x.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL')]); });
+                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), ((x.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL')]); });
                         });
                         if(gdRows.length>0) {
-                            if(y > 265) { doc.addPage(); y = 14; }
-                            doc.setFont(FN, "bold"); doc.setFontSize(8);
+                            if(y > 260) { doc.addPage(); y = 14; }
+                            doc.setFont(FN, "bold"); doc.setFontSize(8.5);
                             doc.setTextColor(NEGATIF[0], NEGATIF[1], NEGATIF[2]);
-                            doc.text("GIDERLER", M, y);
-                            y += 5;
+                            doc.text(t("GIDERLER"), M, y);
+                            y += 6;
                             doc.autoTable({
-                                startY: y, head: [['KATEGORI', 'ACIKLAMA', 'TUTAR']],
+                                startY: y, head: [[t('KATEGORI'), t('ACIKLAMA'), t('TUTAR')]],
                                 body: gdRows,
                                 ...autotableOps,
                                 didParseCell: function(data) { if(data.section==='body') data.cell.styles.fillColor = [252,245,245]; }
                             });
-                            y = doc.lastAutoTable.finalY + 5;
+                            y = doc.lastAutoTable.finalY + 8;
                         }
 
                         // Ay toplam seridi
                         if(y > 275) { doc.addPage(); y = 14; }
                         doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        doc.roundedRect(M, y, W, 5.5, 1.5, 1.5, 'F');
-                        doc.setFont(FN, "bold"); doc.setFontSize(8);
+                        doc.roundedRect(M, y, W, 6, 1.5, 1.5, 'F');
+                        doc.setFont(FN, "bold"); doc.setFontSize(8.5);
                         doc.setTextColor(255,255,255);
-                        doc.text("AYLIK NET TOPLAM: "+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', O, y+3.8, {align:"center"});
-                        y += 9;
+                        doc.text(t("AYLIK NET TOPLAM: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', O, y+4, {align:"center"});
+                        y += 10;
 
                         // Footer
                         doc.setFont(FN, "normal"); doc.setFontSize(5.5);
                         doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
-                        doc.text(yil+" Yili Butce Raporu | "+tarihStr, O, y, {align:"center"});
+                        doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, O, y, {align:"center"});
                     }
 
                     doc.save('Butce_Raporu_'+yil+'.pdf');
-                    tmNotify("Butce PDF olusturuldu.","success");
+                    tmNotify(t("Butce PDF olusturuldu."),"success");
                 }
 
-                pdfOlustur().catch(function(e) {
-                    console.error("Butce PDF hatasi:", e);
-                    tmNotify("Butce PDF olusturulurken hata: "+e.message,"error");
-                });
+                async function giris() {
+                    try { await pdfOlustur(); } catch(e) { console.error("PDF hatasi:", e); tmNotify("PDF hatasi: "+e.message,"error"); }
+                }
+                giris();
 
             } catch(e) {
                 console.error("Butce PDF hatasi:", e);
-                tmNotify("Butce PDF olusturulurken hata: "+e.message,"error");
+                tmNotify("Butce PDF hatasi: "+e.message,"error");
             }
         }
 
