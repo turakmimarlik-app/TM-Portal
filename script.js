@@ -5688,7 +5688,7 @@ function gorevMailGonder(gorev) {
                         var tp=vd.reduce(function(a,b){return a+b;},0); if(tp<=0)return yl;
                         doc.setFont(FN,"normal");doc.setFontSize(5);
                         for(var i=0;i<et.length;i++){
-                            if(vd[i]<=0||yl>275)continue;
+                            if(vd[i]<=0||yl>285)continue;
                             var c=hr(renkPalet[i%renkPalet.length]);
                             doc.setFillColor(c[0],c[1],c[2]);doc.rect(x,yl,2,2,'F');
                             doc.setTextColor(50,50,50);doc.text(t(et[i]).slice(0,16),x+3,yl+1.5);
@@ -5696,7 +5696,7 @@ function gorevMailGonder(gorev) {
                             doc.text((vd[i]/tp*100).toFixed(1)+'%',x+38,yl+1.5);
                             doc.setTextColor(SEKME_RENGI[0],SEKME_RENGI[1],SEKME_RENGI[2]);
                             doc.text(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+' TL',x+56,yl+1.5);
-                            yl+=3.5;
+                            yl+=3;
                         } return yl;
                     }
                     var y1=vc(M, dgy+dw+3, gelirEtiket, gelirVeri);
