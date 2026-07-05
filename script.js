@@ -5455,7 +5455,7 @@ function gorevMailGonder(gorev) {
             const tG = ybYilToplam(kayit,"gelir"), tGi = ybYilToplam(kayit,"gider");
             const net = (kayit.baslangicBakiye||0)+tG-tGi;
 
-            const logoData = localStorage.getItem("tm_multi_logo_3");
+            const logoData = localStorage.getItem("tm_multi_logo_1");
             const SEKME_RENGI = [27,42,74];
             const POZITIF = [39,120,60];
             const NEGATIF = [192,57,43];
