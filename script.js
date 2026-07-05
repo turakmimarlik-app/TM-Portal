@@ -5563,33 +5563,31 @@ function gorevMailGonder(gorev) {
                 }
 
                 async function fontYukle() {
-                    var kaynaklar = [
-                        {r:'https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgshZ0xQ.ttf', b:''},
-                        {r:'https://cdn.jsdelivr.net/npm/@fontsource/open-sans@5.1.1/files/open-sans-latin-ext-400-normal.ttf', b:'700-normal'},
-                        {r:'https://unpkg.com/@fontsource/open-sans@5.1.1/files/open-sans-latin-ext-400-normal.ttf', b:'700-normal'},
-                        {r:'https://cdn.jsdelivr.net/npm/@fontsource/open-sans@5.1.1/files/open-sans-latin-400-normal.ttf', b:'700-normal'}
-                    ];
-                    for(var si=0;si<kaynaklar.length;si++) {
-                        try {
-                            var yanit = await fetch(kaynaklar[si].r, { mode:'cors' });
-                            if(yanit.ok) {
-                                var veri = buf2str(await yanit.arrayBuffer());
-                                if(veri.length > 10000) {
-                                    doc.addFileToVFS('OpenSans.ttf', veri);
-                                    doc.addFont('OpenSans.ttf','OpenSans','normal');
-                                    if(kaynaklar[si].b) { try {
-                                        var boldUrl = kaynaklar[si].b;
-                                        if(!boldUrl.startsWith('http')) {
-                                            boldUrl = kaynaklar[si].r.replace('latin-ext-400','latin-ext-'+boldUrl).replace('latin-400','latin-'+boldUrl);
-                                        }
-                                        var yB = await fetch(boldUrl, { mode:'cors' });
-                                        if(yB.ok) { doc.addFileToVFS('OpenSansBold.ttf', buf2str(await yB.arrayBuffer())); doc.addFont('OpenSansBold.ttf','OpenSans','bold'); }
-                                    } catch(eb) {} }
-                                    return true;
-                                }
-                            }
-                        } catch(e) {}
+                    async function getTtfUrl(cssUrl) {
+                        var c = await fetch(cssUrl, { mode:'cors', headers:{'User-Agent':'Mozilla/5.0 (compatible; MSIE 9.0)'} });
+                        if(!c.ok) return null;
+                        var css = await c.text();
+                        var m = css.match(/url\(([^)]+)\)/);
+                        return m ? m[1].replace(/['"]/g,'').trim() : null;
                     }
+                    try {
+                        var ttf = await getTtfUrl('https://fonts.googleapis.com/css2?family=Open+Sans&text=ABC%C3%87DEFG%C4%9EHI%C4%B0JKLMNO%C3%96PRS%C5%9ETU%C3%9CVYZabc%C3%A7defg%C4%9Fh%C4%B1ijklmno%C3%B6prs%C5%9Ftu%C3%BCvyz0123456789TL');
+                        if(!ttf) ttf = await getTtfUrl('https://fonts.googleapis.com/css2?family=Open+Sans');
+                        if(!ttf) ttf = 'https://raw.githubusercontent.com/google/fonts/main/ofl/opensans/OpenSans%5Bwdth,wght%5D.ttf';
+                        var yanit = await fetch(ttf, { mode:'cors' });
+                        if(yanit.ok) {
+                            var veri = buf2str(await yanit.arrayBuffer());
+                            if(veri.length > 10000) {
+                                doc.addFileToVFS('OpenSans.ttf', veri);
+                                doc.addFont('OpenSans.ttf','OpenSans','normal');
+                                try {
+                                    var yB = await fetch(ttf, { mode:'cors' });
+                                    if(yB.ok) { doc.addFileToVFS('OpenSansBold.ttf', buf2str(await yB.arrayBuffer())); doc.addFont('OpenSansBold.ttf','OpenSans','bold'); }
+                                } catch(eb) {}
+                                return true;
+                            }
+                        }
+                    } catch(e) {}
                     return false;
                 }
 
@@ -5600,7 +5598,7 @@ function gorevMailGonder(gorev) {
                     _fontVar = await fontYukle();
                     var FN = _fontVar ? 'OpenSans' : 'Helvetica';
 
-                function t(s) { return _fontVar ? s : (trAscii ? trAscii(s||'') : (s||'')); }
+                function t(s) { var v = (s||''); return _fontVar ? v : (trAscii ? trAscii(v) : v); }
 
                     grafikler = await grafikBase64Uret();
 
