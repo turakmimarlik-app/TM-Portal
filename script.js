@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.02.1';
+        var APP_VERSION = 'V1.02.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5551,15 +5551,15 @@ function gorevMailGonder(gorev) {
                                 for(var i=0;i<gD[0].data.length;i++){
                                     var gVal=gD[0].data[i], gdVal=gD[1].data[i], tM=gVal+gdVal;
                                     if(tM<=0)continue;
-                                    [   {v:gVal,p:meta0.data[i],c:'#2E7D32'},
-                                        {v:gdVal,p:meta1.data[i],c:'#9E2A2B'}
-                                    ].forEach(function(d){
+                                    [{v:gVal,p:meta0.data[i]},{v:gdVal,p:meta1.data[i]}].forEach(function(d){
                                         if(d.v<=0)return;
-                                        var pp=d.p.getProps(['x','y','base'],true), bx=pp.x, cy=(pp.y+pp.base)/2, pct=(d.v/tM*100).toFixed(1)+'%', amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
-                                        ctx.save(); ctx.translate(bx,cy); ctx.rotate(-Math.PI/2);
-                                        ctx.font='bold 14px Helvetica'; ctx.fillText(amt,-6,0);
-                                        ctx.font='bold 11px Helvetica'; ctx.fillText(pct,12,0);
-                                        ctx.restore();
+                                        var pp=d.p.getProps(['x','y','base','width'],true), bw=pp.width, cy=(pp.y+pp.base)/2;
+                                        var amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
+                                        ctx.font='bold 16px Helvetica';
+                                        var tw=ctx.measureText(amt).width;
+                                        var fs=Math.min(18,Math.max(10,Math.floor(bw*0.85/tw*16)));
+                                        ctx.font='bold '+fs+'px Helvetica';
+                                        ctx.fillText(amt,pp.x,cy);
                                     });
                                 }
                                 ctx.restore();
