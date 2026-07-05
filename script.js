@@ -5446,7 +5446,7 @@ function gorevMailGonder(gorev) {
         }
 
         // ===== PDF Yardımcı =====
-        function trAscii(s) { var m={'İ':'I','ı':'i','Ş':'S','ş':'s','Ç':'C','ç':'c','Ö':'O','ö':'o','Ü':'U','ü':'u','Ğ':'G','ğ':'g','Â':'A','â':'a','I':'I'}; return (s||'').replace(/[İıŞşÇçÖöÜüĞğÂâI]/g,function(c){return m[c]||c;}); }
+        function trAscii(s) { var m={'İ':'I','ı':'i','Ğ':'G','ğ':'g','Ş':'S','ş':'s'}; return (s||'').replace(/[İıĞğŞş]/g,function(c){return m[c]||c;}); }
 
         function ybPdfIndir(yil) {
             const db = ybVeriYukle();
@@ -5455,7 +5455,7 @@ function gorevMailGonder(gorev) {
             const tG = ybYilToplam(kayit,"gelir"), tGi = ybYilToplam(kayit,"gider");
             const net = (kayit.baslangicBakiye||0)+tG-tGi;
 
-            const logoData = localStorage.getItem("tm_multi_logo_1");
+            const logoData = localStorage.getItem("tm_multi_logo_3");
             const SEKME_RENGI = [27,42,74];
             const POZITIF = [39,120,60];
             const NEGATIF = [192,57,43];
@@ -5547,13 +5547,15 @@ function gorevMailGonder(gorev) {
                             new Chart(c, { type:'doughnut',
                                 data:{ labels:etiket, datasets:[{ data:veri, backgroundColor:renkPalet.slice(0,veri.length), borderWidth:3 }] },
                                 options:{ responsive:false, maintainAspectRatio:true,
-                                    plugins:{ legend:{position:'right',labels:{font:{size:18}}}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}} }
+                                    plugins:{ legend:{position:'right',labels:{font:{size:18}}}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}},
+                                        datalabels:{ color:'#fff', font:{size:16,weight:'bold'}, formatter:function(v,ctx){var t=ctx.dataset.data.reduce(function(a,b){return a+b;},0);if(t<=0||v<=0)return '';return (v/t*100).toFixed(1)+'%\n'+v.toLocaleString('tr-TR',{minFractionDigits:2})+' TL';} }
+                                    }
                                 }
                             });
                         } else {
                             new Chart(c, { type:'doughnut', data:{labels:['Veri Yok'],datasets:[{data:[1],backgroundColor:['#e0e0e0']}]},
                                 options:{ responsive:false, maintainAspectRatio:true,
-                                    plugins:{ legend:{display:false}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}} }
+                                    plugins:{ legend:{display:false}, title:{display:true,text:baslik,font:{size:24,weight:'bold'}}, datalabels:{display:false} }
                                 }
                             });
                         }
@@ -5644,10 +5646,11 @@ function gorevMailGonder(gorev) {
                     var kG = (W-12)/4, kY = 22;
                     for(var k=0;k<4;k++) {
                         var v = kartV[k], kx = M + k*(kG+4);
-                        doc.setFillColor(v.c[0], v.c[1], v.c[2]);
-                        doc.roundedRect(kx, y, kG, kY, 3, 3, 'F');
+                        doc.setDrawColor(v.c[0], v.c[1], v.c[2]);
+                        doc.setLineWidth(0.5);
+                        doc.roundedRect(kx, y, kG, kY, 3, 3, 'S');
                         doc.setFont(FN, "bold"); doc.setFontSize(6);
-                        doc.setTextColor(255, 255, 255);
+                        doc.setTextColor(v.c[0], v.c[1], v.c[2]);
                         doc.text(v.l, kx+kG/2, y+7, {align:"center"});
                         doc.setFontSize(10);
                         doc.text((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL', kx+kG/2, y+17, {align:"center"});
@@ -5719,11 +5722,15 @@ function gorevMailGonder(gorev) {
                         y = 26;
 
                         // --- Ay Basligi (banner) ---
-                        doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        doc.roundedRect(M, y, W, 10, 2, 2, 'F');
+                        var ayMetin = t(YB_AY_ADI[ai].toUpperCase()+" "+yil);
                         doc.setFont(FN, "bold"); doc.setFontSize(12);
-                        doc.setTextColor(255, 255, 255);
-                        doc.text(t(YB_AY_ADI[ai].toUpperCase()+" "+yil), O, y+7, {align:"center"});
+                        var ayMetinW = doc.getTextWidth(ayMetin) + 10;
+                        var ayKx = O - ayMetinW/2;
+                        doc.setDrawColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        doc.setLineWidth(0.5);
+                        doc.roundedRect(ayKx, y, ayMetinW, 10, 3, 3, 'S');
+                        doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        doc.text(ayMetin, O, y+7, {align:"center"});
                         y += 16;
 
                         // --- Ozet Satiri ---
@@ -5789,11 +5796,16 @@ function gorevMailGonder(gorev) {
 
                         // --- Ay Toplam Bilgisi ---
                         if(y > 277) { doc.addPage(); sayfaSayisi++; y = 18; }
-                        var farkRenk = fark>=0 ? POZITIF : NEGATIF; doc.setFillColor(farkRenk[0], farkRenk[1], farkRenk[2]);
-                        doc.roundedRect(M, y, W, 8, 2, 2, 'F');
+                        var farkRenk = fark>=0 ? POZITIF : NEGATIF;
+                        var netMetin = t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL';
                         doc.setFont(FN, "bold"); doc.setFontSize(10);
-                        doc.setTextColor(255, 255, 255);
-                        doc.text(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', O, y+5.5, {align:"center"});
+                        var netMetinW = doc.getTextWidth(netMetin) + 10;
+                        var netKx = O - netMetinW/2;
+                        doc.setDrawColor(farkRenk[0], farkRenk[1], farkRenk[2]);
+                        doc.setLineWidth(0.5);
+                        doc.roundedRect(netKx, y, netMetinW, 8, 3, 3, 'S');
+                        doc.setTextColor(farkRenk[0], farkRenk[1], farkRenk[2]);
+                        doc.text(netMetin, O, y+5.5, {align:"center"});
                         y += 14;
 
                         // --- Alt Bilgi ---
