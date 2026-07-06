@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.08.1';
+        var APP_VERSION = 'V1.09.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5980,7 +5980,6 @@ function gorevMailGonder(gorev) {
             HT_AKTIF_DETAY_HESAP = null;
             document.getElementById("htHesapDetayAlan").style.display = "none";
             document.getElementById("htAnaSayfa").style.display = "";
-            htYeniIslemFormuDoldur();
             htHesapKartlariGoster();
             htNakitKartGoster();
             htIslemleriGoster();
@@ -6005,52 +6004,59 @@ function gorevMailGonder(gorev) {
                 konteyner.innerHTML = "<p style='color:var(--text-light); padding:20px;'>Henüz banka hesabı eklenmemiş.</p>";
                 return;
             }
-            var h = "";
+            var h = '<div class="ht-kart-grid">';
             db.hesaplar.forEach(function(hs) {
                 var bankaRenk = htBankaRenk(hs.bankaAdi);
-                var sirketEtiketi = hs.id === 1 ? ' <span style="font-size:10px; background:#C62828; color:white; padding:1px 6px; border-radius:3px; font-weight:700;">★ ŞİRKET HESABI</span>' : "";
-                h += '<div class="ht-card" onclick="htHesapDetayGoster('+hs.id+')" style="cursor:pointer; background:'+bankaRenk+'; color:white; text-transform:uppercase;">';
-                h += '<div class="ht-card-header"><div><div class="ht-banka-adi" style="color:white;">'+hs.bankaAdi+sirketEtiketi+'</div><div class="ht-hesap-sahibi" style="color:rgba(255,255,255,0.9);">'+hs.hesapSahibi+'</div></div><div class="ht-bakiye" style="color:white; text-transform:none;">'+htTl(hs.bakiye)+'</div></div>';
-                h += '<div class="ht-detay-satir" style="color:rgba(255,255,255,0.9);"><span style="text-transform:none;">IBAN: '+htIbanGoster(hs.iban)+'</span></div>';
-                h += '<div class="ht-detay-satir" style="color:rgba(255,255,255,0.9);"><span style="text-transform:none;">Kart Şifre: '+hs.kartSifre+'</span><span style="text-transform:none;">İnternet Şifre: '+hs.internetSifre+'</span></div>';
-                h += '<div class="ht-card-actions" onclick="event.stopPropagation();">';
-                h += '<button class="btn-warning btn-sm" onclick="htHesapFormAc('+hs.id+')" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);">✏️ Düzenle</button>';
-                h += '<button class="btn-danger btn-sm" onclick="htHesapSil('+hs.id+')" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);">Sil</button>';
+                var sirketEtiketi = hs.id === 1 ? '<span class="ht-sirket-badge">ŞİRKET</span>' : "";
+                var bakiyeTipi = hs.bakiye < 0 ? "negatif" : "pozitif";
+                h += '<div class="ht-kart-3d" onclick="htHesapDetayGoster('+hs.id+')">';
+                h += '<div class="ht-kart-3d-bg" style="background:'+bankaRenk+'"></div>';
+                h += '<div class="ht-kart-3d-chip"></div>';
+                h += '<div class="ht-kart-3d-brand"></div>';
+                h += '<div class="ht-kart-3d-balance"><span class="ht-kart-3d-label">BAKİYE</span><span class="ht-kart-3d-tutar '+bakiyeTipi+'">'+htTl(hs.bakiye)+'</span></div>';
+                h += '<div class="ht-kart-3d-info"><span>'+hs.bankaAdi+'</span><span class="ht-kart-3d-sahibi">'+hs.hesapSahibi+'</span></div>';
+                h += '<div class="ht-kart-3d-iban">'+htIbanGoster(hs.iban)+'</div>';
+                h += '<div class="ht-kart-3d-sifreler"><span>KART: '+hs.kartSifre+'</span><span>NET: '+hs.internetSifre+'</span></div>';
+                h += '<div class="ht-kart-3d-actions">';
+                h += '<button class="ht-kart-btn ht-kart-btn-edit" onclick="event.stopPropagation();htHesapModalAc('+hs.id+')">Düzenle</button>';
+                h += '<button class="ht-kart-btn ht-kart-btn-del" onclick="event.stopPropagation();htHesapSil('+hs.id+')">Sil</button>';
                 h += '</div></div>';
             });
+            h += '</div>';
             konteyner.innerHTML = h;
         }
 
-        function htHesapFormAc(id) {
-            var form = document.getElementById("htHesapForm");
-            if(!form) return;
+        function htHesapModalAc(id) {
+            var modal = document.getElementById("htHesapModal");
+            if(!modal) return;
             var db = htVeriYukle();
             var hs = id ? db.hesaplar.find(function(h){return h.id===id;}) : null;
-            var isEdit = !!hs;
-            var saveFn = isEdit ? "htHesapKaydet("+id+")" : "htHesapKaydet()";
-            form.style.display = "flex";
-            form.innerHTML = '<div style="width:100%; display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end;">' +
-                '<div style="flex:1; min-width:120px;"><label>Banka Adı</label><input type="text" id="htHesapBanka" value="'+(hs?hs.bankaAdi.replace(/"/g,'&quot;'):'')+'" oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase;"></div>' +
-                '<div style="flex:1; min-width:120px;"><label>Hesap Sahibi</label><input type="text" id="htHesapSahibi" value="'+(hs?hs.hesapSahibi.replace(/"/g,'&quot;'):'')+'" oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase;"></div>' +
-                '<div style="flex:1; min-width:140px;"><label>IBAN</label><input type="text" id="htHesapIban" value="'+(hs?htIbanGoster(hs.iban):'')+'" oninput="this.value=this.value.toUpperCase();htIbanInputFormatla(this)" style="text-transform:uppercase;letter-spacing:0.5px;"></div>' +
-                '<div style="flex:0 0 80px;"><label>Kart Şifre</label><input type="text" id="htHesapKart" value="'+(hs?hs.kartSifre.replace(/"/g,'&quot;'):'')+'" oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase;"></div>' +
-                '<div style="flex:0 0 80px;"><label>Net Şifre</label><input type="text" id="htHesapNet" value="'+(hs?hs.internetSifre.replace(/"/g,'&quot;'):'')+'" oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase;"></div>' +
-                '<div style="flex:0 0 100px;"><label>Bakiye (₺)</label><input type="text" id="htHesapBakiye" value="'+(hs?htTl(hs.bakiye):'0,00')+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></div>' +
-                '<div style="display:flex; gap:4px; padding-bottom:1px;">' +
-                '<button class="btn-form btn-form-save" onclick="'+saveFn+'" style="padding:7px 14px; font-size:12px;">💾 '+(isEdit?"Güncelle":"Ekle")+'</button>' +
-                '<button class="btn-form btn-form-cancel" onclick="document.getElementById(\'htHesapForm\').style.display=\'none\'" style="padding:7px 14px; font-size:12px;">✕ İptal</button></div></div>';
+            document.getElementById("htModalId").value = id || "";
+            document.getElementById("htModalBanka").value = hs ? hs.bankaAdi : "";
+            document.getElementById("htModalSahibi").value = hs ? hs.hesapSahibi : "";
+            document.getElementById("htModalIban").value = hs ? htIbanGoster(hs.iban) : "";
+            document.getElementById("htModalKart").value = hs ? hs.kartSifre : "";
+            document.getElementById("htModalNet").value = hs ? hs.internetSifre : "";
+            document.getElementById("htModalBakiye").value = hs ? htTl(hs.bakiye) : "0,00";
+            modal.style.display = "flex";
         }
 
-        function htHesapKaydet(id) {
-            var banka = document.getElementById("htHesapBanka").value.trim();
+        function htHesapModalKapat() {
+            document.getElementById("htHesapModal").style.display = "none";
+        }
+
+        function htHesapModalKaydet() {
+            var id = document.getElementById("htModalId").value;
+            var banka = document.getElementById("htModalBanka").value.trim();
             if(!banka) { tmNotify("Banka adı zorunludur!", "error"); return; }
-            var sahip = document.getElementById("htHesapSahibi").value.trim() || "-";
-            var iban = document.getElementById("htHesapIban").value.trim();
-            var kart = document.getElementById("htHesapKart").value.trim();
-            var net = document.getElementById("htHesapNet").value.trim();
-            var bakiye = tmTutarCoz(document.getElementById("htHesapBakiye").value);
+            var sahip = document.getElementById("htModalSahibi").value.trim() || "-";
+            var iban = document.getElementById("htModalIban").value.trim();
+            var kart = document.getElementById("htModalKart").value.trim();
+            var net = document.getElementById("htModalNet").value.trim();
+            var bakiye = tmTutarCoz(document.getElementById("htModalBakiye").value);
             var db = htVeriYukle();
             if(id) {
+                id = parseInt(id);
                 var idx = db.hesaplar.findIndex(function(h){return h.id===id;});
                 if(idx!==-1) db.hesaplar[idx] = { id:id, bankaAdi:banka, hesapSahibi:sahip, iban:iban, kartSifre:kart, internetSifre:net, bakiye:bakiye };
             } else {
@@ -6058,10 +6064,9 @@ function gorevMailGonder(gorev) {
                 db.hesaplar.push({ id:maxId+1, bankaAdi:banka, hesapSahibi:sahip, iban:iban, kartSifre:kart, internetSifre:net, bakiye:bakiye });
             }
             htVeriKaydet(db);
-            document.getElementById("htHesapForm").style.display = "none";
+            htHesapModalKapat();
             htHesapKartlariGoster();
             htNakitKartGoster();
-            htYeniIslemFormuDoldur();
             htDurumGuncelle();
             tmNotify(id ? "Hesap güncellendi." : "Hesap eklendi.", "success");
             aktiviteEkle((id ? "Hesap güncellendi: " : "Hesap eklendi: ") + banka, "Muhasebe");
@@ -6097,9 +6102,14 @@ function gorevMailGonder(gorev) {
                 grid.appendChild(div);
                 nakitEl = div;
             }
-            nakitEl.innerHTML = '<div class="ht-card" onclick="htHesapDetayGoster(-1)" style="cursor:pointer; padding:22px; background:#4A148C; color:white;">' +
-                '<div class="ht-card-header"><div><div class="ht-banka-adi" style="color:white; font-size:17px;">💵 Nakit Hesabı</div><div class="ht-hesap-sahibi" style="color:rgba(255,255,255,0.9); font-size:13px;">Fiziki Nakit Para — Tıkla işlemleri gör</div></div>' +
-                '<div class="ht-bakiye" style="color:#B2FF59; font-size:26px;">'+htTl(db.nakit)+'</div></div></div>';
+            var bakiyeTipi = db.nakit < 0 ? "negatif" : "pozitif";
+            nakitEl.innerHTML = '<div class="ht-kart-3d ht-kart-3d-nakit" onclick="htHesapDetayGoster(-1)">' +
+                '<div class="ht-kart-3d-bg" style="background:linear-gradient(135deg,#4A148C,#7B1FA2)"></div>' +
+                '<div class="ht-kart-3d-chip"></div><div class="ht-kart-3d-brand">NAKİT</div>' +
+                '<div class="ht-kart-3d-balance"><span class="ht-kart-3d-label">BAKİYE</span><span class="ht-kart-3d-tutar '+bakiyeTipi+'">'+htTl(db.nakit)+'</span></div>' +
+                '<div class="ht-kart-3d-info"><span>Fiziki Nakit</span><span class="ht-kart-3d-sahibi" style="font-size:12px;">Tıkla işlemleri gör</span></div>' +
+                '<div class="ht-kart-3d-iban" style="opacity:0.6;">•••• •••• •••• ••••</div>' +
+                '<div class="ht-kart-3d-sifreler"><span>KART: —</span><span>NET: —</span></div></div>';
         }
 
         function htHesapDetayGoster(hesapId) {
@@ -6150,42 +6160,50 @@ function gorevMailGonder(gorev) {
                 var h = db.hesaplar.find(function(hs){return hs.id===id;});
                 return h ? h.bankaAdi+" - "+h.hesapSahibi : ("ID:"+id);
             }
-            var h = '<table class="app-table"><thead><tr><th>Açıklama</th><th>Hesap</th><th>Tarih</th><th>Tutar</th><th>İşlem</th></tr></thead><tbody>';
+            var h = '<div class="ht-islem-kart-list">';
             islemler.slice().reverse().forEach(function(i) {
                 var gorunenIslem = i.islem;
                 var gorunenYon = hesapAdiBul(i.hesapId) + " → " + (i.hedefId ? hesapAdiBul(i.hedefId) : "🌐 HARİCİ");
+                var ikon = "📤";
                 if(i.islem === "GELEN") {
                     gorunenYon = "🌐 HARİCİ → " + hesapAdiBul(i.hesapId);
+                    ikon = "📥";
                 } else if(i.islem === "GİDEN") {
                     if(i.hedefId && i.hesapId !== HT_AKTIF_DETAY_HESAP) {
                         gorunenIslem = "GELEN";
+                        ikon = "📥";
                     }
                 } else if(i.islem === "TRANSFER") {
                     if(i.hesapId === HT_AKTIF_DETAY_HESAP) {
                         gorunenIslem = "GİDEN";
+                        ikon = "📤";
                     } else {
                         gorunenIslem = "GELEN";
+                        ikon = "📥";
                     }
                 }
-                var cls = gorunenIslem === "GELEN" ? "ht-islem-gelen" : "ht-islem-giden";
-                h += '<tr data-detay-search="'+(i.aciklama||"").toLowerCase()+' '+gorunenYon.toLowerCase()+'">';
-                h += '<td style="font-size:13px;"><b>'+i.aciklama+'</b></td>';
-                h += '<td style="font-size:12px; color:var(--text-light);">'+gorunenYon+'</td>';
-                h += '<td style="font-size:12px;">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</td>';
-                h += '<td style="text-align:right; font-weight:700; font-size:14px;" class="'+cls+'">'+htTl(i.tutar)+'</td>';
-                h += '<td style="font-size:12px; font-weight:600;" class="'+cls+'">'+gorunenIslem+'</td>';
-                h += '</tr>';
+                var cls = gorunenIslem === "GELEN" ? "gelen" : "giden";
+                h += '<div class="ht-islem-kart" data-detay-search="'+(i.aciklama||"").toLowerCase()+' '+gorunenYon.toLowerCase()+'">';
+                h += '<div class="ht-islem-kart-ust">';
+                h += '<span class="ht-islem-kart-aciklama">'+i.aciklama+'</span>';
+                h += '<span class="ht-islem-kart-tutar '+cls+'">'+htTl(i.tutar)+'</span>';
+                h += '</div>';
+                h += '<div class="ht-islem-kart-alt">';
+                h += '<span class="ht-islem-kart-hesap">'+ikon+' '+gorunenYon+'</span>';
+                h += '<span class="ht-islem-kart-tarih">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</span>';
+                h += '<span class="ht-islem-kart-islem '+cls+'">'+gorunenIslem+'</span>';
+                h += '</div></div>';
             });
-            h += '</tbody></table>';
+            h += '</div>';
             konteyner.innerHTML = h;
         }
 
         function htDetayIslemFiltrele() {
             var kelime = document.getElementById("htDetayArama").value.toLowerCase().trim();
-            var tbody = document.querySelector("#htDetayIslemler tbody");
-            if(!tbody) return;
-            tbody.querySelectorAll("tr").forEach(function(s) {
-                s.style.display = (s.getAttribute("data-detay-search")||"").includes(kelime) ? "" : "none";
+            var list = document.getElementById("htDetayIslemler");
+            if(!list) return;
+            list.querySelectorAll(".ht-islem-kart").forEach(function(k) {
+                k.style.display = (k.getAttribute("data-detay-search")||"").includes(kelime) ? "" : "none";
             });
         }
 
@@ -6202,85 +6220,55 @@ function gorevMailGonder(gorev) {
             document.getElementById("htYeniTarih").value = anlikTarihGetir();
         }
 
-        function htYeniIslemEkle() {
-            var aciklama = document.getElementById("htYeniAciklama").value.trim();
-            if(!aciklama) { tmNotify("Açıklama zorunludur!", "error"); return; }
-            var fromId = parseInt(document.getElementById("htYeniNereden").value);
-            var toId = parseInt(document.getElementById("htYeniNereye").value);
-            var secilenTur = document.getElementById("htYeniTur").value;
-            if(fromId === toId) { tmNotify("Gönderen ve alan hesap aynı olamaz!", "error"); return; }
-            if(secilenTur === "TRANSFER") {
-                if(fromId === 0 || toId === 0) { tmNotify("Transfer için her iki hesap da seçilmelidir!", "error"); return; }
-            } else if(secilenTur === "GELEN") {
-                if(fromId !== 0) { tmNotify("GELEN işleminde gönderen HARİCİ olmalıdır!", "error"); return; }
-                if(toId === 0) { tmNotify("GELEN işleminde alıcı hesap seçilmelidir!", "error"); return; }
-            } else if(secilenTur === "GİDEN") {
-                if(fromId === 0) { tmNotify("GİDEN işleminde gönderen hesap seçilmelidir!", "error"); return; }
-                if((fromId === 1 || fromId === -1) && toId !== 0) { /* şirket/nakit → diğer hesaba giden, kayıt amaçlı */ }
-                else if(toId !== 0) { tmNotify("GİDEN işleminde alıcı HARİCİ olmalıdır!", "error"); return; }
-            }
-            var tarih = document.getElementById("htYeniTarih").value;
-            var tutar = tmTutarCoz(document.getElementById("htYeniTutar").value);
-            if(tutar <= 0) { tmNotify("Geçerli bir tutar giriniz!", "error"); return; }
-            var db = htVeriYukle();
-            var maxId = db.islemler.reduce(function(m,i){return Math.max(m,i.id);},0);
-            var yeniId = maxId + 1;
-            if(secilenTur === "TRANSFER") {
-                db.islemler.push({ id:yeniId, hesapId:fromId, hedefId:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"TRANSFER" });
-                htBakiyeGuncelle(db, fromId, tutar, "GİDEN");
-                htBakiyeGuncelle(db, toId, tutar, "GELEN");
-            } else if(secilenTur === "GELEN") {
-                db.islemler.push({ id:yeniId, hesapId:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GELEN" });
-                htBakiyeGuncelle(db, toId, tutar, "GELEN");
-            } else {
-                var gidenKayit = { id:yeniId, hesapId:fromId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GİDEN" };
-                if(toId !== 0) {
-                    gidenKayit.hedefId = toId;
-                    if(toId === 1 || toId === -1) htBakiyeGuncelle(db, toId, tutar, "GELEN");
-                }
-                db.islemler.push(gidenKayit);
-                htBakiyeGuncelle(db, fromId, tutar, "GİDEN");
-            }
-            htVeriKaydet(db);
-            document.getElementById("htYeniAciklama").value = "";
-            document.getElementById("htYeniTutar").value = "0,00";
-            document.getElementById("htYeniTarih").value = anlikTarihGetir();
-            htHesapKartlariGoster();
-            htNakitKartGoster();
-            htIslemleriGoster();
-            if(HT_AKTIF_DETAY_HESAP !== null) htDetayIslemleriGoster();
-            htDurumGuncelle();
-            tmNotify("Hareket eklendi.", "success");
-        }
-
-        function htIslemFormAc(id, hesapId) {
-            var formId = (HT_AKTIF_DETAY_HESAP !== null) ? "htDetayIslemForm" : "htIslemForm";
-            var form = document.getElementById(formId);
-            if(!form) return;
+        function htIslemModalAc(id, hesapId) {
+            var modal = document.getElementById("htIslemModal");
+            if(!modal) return;
             var db = htVeriYukle();
             var islem = id ? db.islemler.find(function(i){return i.id===id;}) : null;
-            var isEdit = !!islem;
-            var seciliHesapId = isEdit ? islem.hesapId : (hesapId || "");
-            var seciliAciklama = isEdit ? islem.aciklama : "";
-            var seciliTarih = isEdit ? islem.tarih : anlikTarihGetir();
-            var seciliTutar = isEdit ? islem.tutar : 0;
-            var seciliIslem = isEdit ? islem.islem : "GELEN";
-            var hesapOps = '<option value="">Seçiniz</option><option value="-1" '+(seciliHesapId===-1?"selected":"")+'>💵 NAKİT</option>';
+            document.getElementById("htModalIslemId").value = id || "";
+            document.getElementById("htModalIslemAciklama").value = islem ? islem.aciklama : "";
+            document.getElementById("htModalTarih").value = islem ? islem.tarih : anlikTarihGetir();
+            document.getElementById("htModalTutar").value = islem ? htTl(islem.tutar) : "0,00";
+            document.getElementById("htModalIslemTur").value = islem ? islem.islem : "GELEN";
+            var selectNereden = document.getElementById("htModalNereden");
+            var selectNereye = document.getElementById("htModalNereye");
+            var opts = '<option value="0">🌐 HARİCİ</option><option value="-1">💵 NAKİT</option>';
             db.hesaplar.forEach(function(h) {
-                var s = h.id === seciliHesapId ? "selected" : "";
-                hesapOps += '<option value="'+h.id+'" '+s+'>'+h.bankaAdi+' - '+h.hesapSahibi+'</option>';
+                opts += '<option value="'+h.id+'">'+h.bankaAdi+' - '+h.hesapSahibi+'</option>';
             });
-            var saveFn = isEdit ? "htIslemKaydet("+id+")" : "htIslemKaydet()";
-            form.style.display = "flex";
-            form.innerHTML = '<div style="width:100%; display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end;">' +
-                '<div style="flex:2; min-width:140px;"><label>Açıklama</label><input type="text" id="htIslemAciklama" value="'+seciliAciklama.replace(/"/g,'&quot;')+'"></div>' +
-                '<div style="flex:1; min-width:130px;"><label>Hesap</label><select id="htIslemHesap">'+hesapOps+'</select></div>' +
-                '<div style="flex:0 0 110px;"><label>Tarih</label><input type="date" id="htIslemTarih" value="'+seciliTarih+'"></div>' +
-                '<div style="flex:0 0 110px;"><label>Tutar (₺)</label><input type="text" id="htIslemTutar" value="'+htTl(seciliTutar)+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></div>' +
-                '<div style="flex:0 0 100px;"><label>İşlem</label><select id="htIslemTur"><option value="GELEN" '+(seciliIslem==="GELEN"?"selected":"")+' style="color:var(--btn-green);">💰 GELEN</option><option value="GİDEN" '+(seciliIslem==="GİDEN"?"selected":"")+' style="color:var(--accent-red);">💸 GİDEN</option><option value="TRANSFER" '+(seciliIslem==="TRANSFER"?"selected":"")+'>🔄 HESAPLAR ARASI TRANSFER</option></select></div>' +
-                '<div style="display:flex; gap:4px; padding-bottom:1px;">' +
-                '<button class="btn-form btn-form-save" onclick="'+saveFn+'" style="padding:7px 14px; font-size:12px;">💾 '+(isEdit?"Güncelle":"Ekle")+'</button>' +
-                '<button class="btn-form btn-form-cancel" onclick="this.closest(\'.inline-form\').style.display=\'none\'" style="padding:7px 14px; font-size:12px;">✕ İptal</button></div></div>';
+            selectNereden.innerHTML = opts;
+            selectNereye.innerHTML = opts;
+            if(islem) {
+                selectNereden.value = islem.hesapId;
+                selectNereye.value = islem.hedefId || "0";
+            } else {
+                selectNereden.value = (hesapId || "0");
+                selectNereye.value = "0";
+            }
+            htIslemModalTurDegisti();
+            modal.style.display = "flex";
+        }
+
+        function htIslemModalKapat() {
+            document.getElementById("htIslemModal").style.display = "none";
+        }
+
+        function htIslemModalTurDegisti() {
+            var tur = document.getElementById("htModalIslemTur").value;
+            var neredenDiv = document.getElementById("htModalNereden").closest("div");
+            var nereyeDiv = document.getElementById("htModalNereye").closest("div");
+            if(tur === "GELEN") {
+                document.getElementById("htModalNereden").value = "0";
+                neredenDiv.style.display = "none";
+                nereyeDiv.style.display = "";
+            } else if(tur === "GİDEN") {
+                document.getElementById("htModalNereye").value = "0";
+                neredenDiv.style.display = "";
+                nereyeDiv.style.display = "none";
+            } else {
+                neredenDiv.style.display = "";
+                nereyeDiv.style.display = "";
+            }
         }
 
         function htIslemTersineCevir(db, islem) {
@@ -6292,28 +6280,52 @@ function gorevMailGonder(gorev) {
             }
         }
 
-        function htIslemKaydet(id) {
-            var aciklama = document.getElementById("htIslemAciklama").value.trim();
+        function htIslemModalKaydet() {
+            var id = document.getElementById("htModalIslemId").value;
+            var aciklama = document.getElementById("htModalIslemAciklama").value.trim();
             if(!aciklama) { tmNotify("Açıklama zorunludur!", "error"); return; }
-            var hesapId = parseInt(document.getElementById("htIslemHesap").value);
-            if(isNaN(hesapId)) { tmNotify("Hesap seçiniz!", "error"); return; }
-            var tarih = document.getElementById("htIslemTarih").value;
-            var tutar = tmTutarCoz(document.getElementById("htIslemTutar").value);
+            var tur = document.getElementById("htModalIslemTur").value;
+            var fromId = parseInt(document.getElementById("htModalNereden").value);
+            var toId = parseInt(document.getElementById("htModalNereye").value);
+            if(tur === "TRANSFER") {
+                if(fromId === toId || fromId === 0 || toId === 0) { tmNotify("Transfer için geçerli iki hesap seçin!", "error"); return; }
+            } else if(tur === "GELEN") {
+                if(toId === 0) { tmNotify("GELEN işleminde alıcı hesap seçilmelidir!", "error"); return; }
+            } else {
+                if(fromId === 0) { tmNotify("GİDEN işleminde gönderen hesap seçilmelidir!", "error"); return; }
+            }
+            var tarih = document.getElementById("htModalTarih").value;
+            var tutar = tmTutarCoz(document.getElementById("htModalTutar").value);
             if(tutar <= 0) { tmNotify("Geçerli bir tutar giriniz!", "error"); return; }
-            var islem = document.getElementById("htIslemTur").value;
             var db = htVeriYukle();
             if(id) {
+                id = parseInt(id);
                 var eski = db.islemler.find(function(i){return i.id===id;});
                 if(eski) htIslemTersineCevir(db, eski);
                 var idx = db.islemler.findIndex(function(i){return i.id===id;});
-                if(idx!==-1) db.islemler[idx] = { id:id, hesapId:hesapId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:islem };
+                if(idx!==-1) db.islemler[idx] = { id:id, hesapId:fromId, hedefId:tur==="GELEN"?null:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:tur };
             } else {
                 var maxId = db.islemler.reduce(function(m,i){return Math.max(m,i.id);},0);
-                db.islemler.push({ id:maxId+1, hesapId:hesapId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:islem });
+                var yeniId = maxId + 1;
+                if(tur === "TRANSFER") {
+                    db.islemler.push({ id:yeniId, hesapId:fromId, hedefId:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"TRANSFER" });
+                    htBakiyeGuncelle(db, fromId, tutar, "GİDEN");
+                    htBakiyeGuncelle(db, toId, tutar, "GELEN");
+                } else if(tur === "GELEN") {
+                    db.islemler.push({ id:yeniId, hesapId:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GELEN" });
+                    htBakiyeGuncelle(db, toId, tutar, "GELEN");
+                } else {
+                    var gidenKayit = { id:yeniId, hesapId:fromId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GİDEN" };
+                    if(toId !== 0) {
+                        gidenKayit.hedefId = toId;
+                        if(toId === 1 || toId === -1) htBakiyeGuncelle(db, toId, tutar, "GELEN");
+                    }
+                    db.islemler.push(gidenKayit);
+                    htBakiyeGuncelle(db, fromId, tutar, "GİDEN");
+                }
             }
-            htBakiyeGuncelle(db, hesapId, tutar, islem);
             htVeriKaydet(db);
-            if(document.getElementById("htIslemForm")) document.getElementById("htIslemForm").style.display = "none";
+            htIslemModalKapat();
             htHesapKartlariGoster();
             htNakitKartGoster();
             htIslemleriGoster();
@@ -6355,7 +6367,7 @@ function gorevMailGonder(gorev) {
         var HT_SIRALAMA = { anahtar: "id", yon: -1 };
 
         function htIslemleriGoster() {
-            var konteyner = document.getElementById("htIslemTablosu");
+            var konteyner = document.getElementById("htIslemListesi");
             if(!konteyner) return;
             var db = htVeriYukle();
             if(!db.islemler || db.islemler.length === 0) {
@@ -6381,35 +6393,36 @@ function gorevMailGonder(gorev) {
                 if(va > vb) return 1 * HT_SIRALAMA.yon;
                 return 0;
             });
-            function ok(anahtar, etiket) {
-                var aktif = HT_SIRALAMA.anahtar === anahtar;
-                var okYon = aktif ? (HT_SIRALAMA.yon === 1 ? " ▲" : " ▼") : "";
-                return '<th onclick="htSiralamaDegistir(\''+anahtar+'\')" style="cursor:pointer; user-select:none;">'+etiket+okYon+'</th>';
-            }
-            var h = '<table class="app-table"><thead><tr>' +
-                ok("aciklama", "Açıklama") + ok("hesap", "Hesap") + ok("tarih", "Tarih") +
-                ok("tutar", "Tutar") + ok("islem", "İşlem") +
-                '<th></th></tr></thead><tbody>';
+            var h = '<div class="ht-islem-kart-list">';
             sirali.forEach(function(i) {
-                var cls = i.islem === "GELEN" ? "ht-islem-gelen" : (i.islem === "GİDEN" ? "ht-islem-giden" : "ht-islem-transfer");
-                var hAd;
+                var cls = i.islem === "GELEN" ? "gelen" : (i.islem === "GİDEN" ? "giden" : "transfer");
+                var hAd, ikon;
                 if(i.islem === "TRANSFER") {
                     hAd = hesapAdiBul(i.hesapId) + " → " + hesapAdiBul(i.hedefId);
+                    ikon = "🔄";
                 } else if(i.islem === "GELEN") {
-                    hAd = "🌐 HARİCİ → " + hesapAdiBul(i.hesapId);
+                    hAd = hesapAdiBul(i.hesapId);
+                    ikon = "📥";
                 } else {
-                    hAd = hesapAdiBul(i.hesapId) + " → " + (i.hedefId ? hesapAdiBul(i.hedefId) : "🌐 HARİCİ");
+                    hAd = (i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : "🌐 HARİCİ");
+                    ikon = "📤";
                 }
-                h += '<tr data-search="'+(i.aciklama||"").toLowerCase()+' '+hAd.toLowerCase()+'">';
-                h += '<td style="font-size:13px;"><b>'+i.aciklama+'</b></td>';
-                h += '<td style="font-size:12px; color:var(--text-light);">'+hAd+'</td>';
-                h += '<td style="font-size:12px;">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</td>';
-                h += '<td style="text-align:right; font-weight:700; font-size:14px;" class="'+cls+'">'+htTl(i.tutar)+'</td>';
-                h += '<td style="font-size:12px; font-weight:600;" class="'+cls+'">'+i.islem+'</td>';
-                h += '<td style="white-space:nowrap;"><button class="btn-warning" onclick="htIslemFormAc('+i.id+')" style="font-size:11px; padding:3px 7px;">✏️</button> <button class="btn-danger" onclick="htIslemSil('+i.id+')" style="font-size:11px; padding:3px 7px;">🗑️</button></td>';
-                h += '</tr>';
+                h += '<div class="ht-islem-kart" data-search="'+(i.aciklama||"").toLowerCase()+' '+hAd.toLowerCase()+'">';
+                h += '<div class="ht-islem-kart-ust">';
+                h += '<span class="ht-islem-kart-aciklama">'+i.aciklama+'</span>';
+                h += '<span class="ht-islem-kart-tutar '+cls+'">'+htTl(i.tutar)+'</span>';
+                h += '</div>';
+                h += '<div class="ht-islem-kart-alt">';
+                h += '<span class="ht-islem-kart-hesap">'+ikon+' '+hAd+'</span>';
+                h += '<span class="ht-islem-kart-tarih">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</span>';
+                h += '<span class="ht-islem-kart-islem '+cls+'">'+i.islem+'</span>';
+                h += '</div>';
+                h += '<div class="ht-islem-kart-aksiyon">';
+                h += '<button class="ht-islem-btn ht-islem-btn-edit" onclick="htIslemModalAc('+i.id+')">Düzenle</button>';
+                h += '<button class="ht-islem-btn ht-islem-btn-del" onclick="htIslemSil('+i.id+')">Sil</button>';
+                h += '</div></div>';
             });
-            h += '</tbody></table>';
+            h += '</div>';
             konteyner.innerHTML = h;
         }
 
@@ -6420,16 +6433,19 @@ function gorevMailGonder(gorev) {
                 HT_SIRALAMA.anahtar = anahtar;
                 HT_SIRALAMA.yon = -1;
             }
+            document.querySelectorAll("#htSiralama .ht-sirala-btn").forEach(function(b) {
+                b.classList.toggle("active", b.getAttribute("data-key") === HT_SIRALAMA.anahtar);
+            });
             htIslemleriGoster();
             htIslemFiltrele();
         }
 
         function htIslemFiltrele() {
             var kelime = document.getElementById("htArama").value.toLowerCase().trim();
-            var tbody = document.querySelector("#htIslemTablosu tbody");
-            if(!tbody) return;
-            tbody.querySelectorAll("tr").forEach(function(s) {
-                s.style.display = (s.getAttribute("data-search")||"").includes(kelime) ? "" : "none";
+            var list = document.getElementById("htIslemListesi");
+            if(!list) return;
+            list.querySelectorAll(".ht-islem-kart").forEach(function(k) {
+                k.style.display = (k.getAttribute("data-search")||"").includes(kelime) ? "" : "none";
             });
         }
 
