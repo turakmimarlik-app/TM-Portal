@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.02.8';
+        var APP_VERSION = 'V1.02.9';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6617,13 +6617,14 @@ function gorevMailGonder(gorev) {
             tmPrompt("Yeni sayfa adı:", function(name) {
                 if (!name || name.trim() === "") return;
                 name = name.trim();
-                const pages = tmfSayfalarYukle();
-                const maxId = pages.reduce((m, p) => Math.max(m, p.id), 0);
-                const yeniId = maxId + 1;
+                var pages = tmfSayfalarYukle();
+                var maxId = 0;
+                pages.forEach(function(p){ if(p.id > maxId) maxId = p.id; });
+                var yeniId = maxId + 1;
                 pages.push({ id: yeniId, name: name });
                 tmfSayfalarKaydet(pages);
                 var obj = { grid: [["","",""],["","",""],["","",""],["","",""],["","",""]], colWidths: [120,180,180], rowHeights: [] };
-                localStorage.setItem(TMF_DATA_PREFIX + yeniId, JSON.stringify(obj));
+                origSetItem(TMF_DATA_PREFIX + yeniId, JSON.stringify(obj));
                 tmfAktifId = yeniId;
                 tmfSayfayiYukle();
                 tmNotify("Yeni sayfa eklendi: " + name, "success");
@@ -6632,14 +6633,16 @@ function gorevMailGonder(gorev) {
 
         function tmfSayfaSil(id) {
             if (tmfEditing) { tmNotify("Önce değişiklikleri kaydedin veya iptal edin.", "error"); return; }
-            const pages = tmfSayfalarYukle();
-            const p = pages.find(x => x.id === id);
-            if (!p) return;
+            var pages = tmfSayfalarYukle();
+            var p = null;
+            pages.forEach(function(x){ if(x.id === id) p = x; });
+            if (!p) { tmNotify("Sayfa bulunamadı.", "error"); return; }
             tmConfirm('"' + p.name + '" sayfasını silmek istediğinize emin misiniz?', function() {
-                const yeniPages = pages.filter(x => x.id !== id);
+                var yeniPages = [];
+                pages.forEach(function(x){ if(x.id !== id) yeniPages.push(x); });
                 tmfSayfalarKaydet(yeniPages);
                 localStorage.removeItem(TMF_DATA_PREFIX + id);
-                if (tmfAktifId === id) tmfAktifId = yeniPages.length > 0 ? yeniPages[0].id : null;
+                if (tmfAktifId === id) { tmfAktifId = yeniPages.length > 0 ? yeniPages[0].id : null; }
                 tmfSayfayiYukle();
                 tmNotify("Sayfa silindi.", "success");
             });
@@ -6723,7 +6726,7 @@ function gorevMailGonder(gorev) {
                     if (tmfEditing) {
                         var o = tmfHucreObj(val);
                         h += '<td style="width:' + colWidths[c] + 'px;min-width:' + colWidths[c] + 'px;' + (o.bg ? 'background-color:' + o.bg + ';' : '') + '">';
-                        h += '<textarea class="tmf-ex-input tmf-ex-ta" data-r="' + r + '" data-c="' + c + '" style="font-size:' + o.s + 'px;color:' + o.c + ';' + (o.b ? 'font-weight:700;' : '') + (o.bg ? 'background-color:' + o.bg + ';' : '') + '" oninput="tmfTaGrow(this)" onfocus="tmfTaFocus(this)">' + esc(o.t) + '</textarea>';
+                        h += '<textarea class="tmf-ex-input tmf-ex-ta" data-r="' + r + '" data-c="' + c + '" style="font-size:' + o.s + 'px;color:' + o.c + ';' + (o.b ? 'font-weight:700;' : '') + (o.bg ? 'background-color:' + o.bg + ';' : '') + '" oninput="tmfTaGrow(this)" onfocus="tmfTaFocus(this)" onblur="tmfTaBlur(this)">' + esc(o.t) + '</textarea>';
                         h += '</td>';
                     } else {
                         h += '<td style="width:' + colWidths[c] + 'px;min-width:' + colWidths[c] + 'px;overflow:hidden;' + (tmfHucreObj(val).bg ? 'background-color:' + tmfHucreObj(val).bg + ';' : '') + '"><div class="tmf-ex-view" style="max-height:' + (rh - 8) + 'px;">' + tmfHucreHtml(val) + '</div></td>';
@@ -6757,10 +6760,6 @@ function gorevMailGonder(gorev) {
 
         function tmfDuzenleKaydet(id) {
             var data = tmfVeriYukle(id);
-            var fmtColor = document.getElementById("tmfFmtColor");
-            var fmtBg = document.getElementById("tmfFmtBg");
-            var varsayilanRenk = fmtColor ? fmtColor.value : "#000000";
-            var varsayilanBg = fmtBg ? fmtBg.value : "";
             var textareas = document.querySelectorAll("#tmfExcel_" + id + " .tmf-ex-ta");
             textareas.forEach(function(ta) {
                 var r = parseInt(ta.dataset.r);
@@ -6769,19 +6768,21 @@ function gorevMailGonder(gorev) {
                 o.t = ta.value;
                 o.s = parseInt(ta.style.fontSize) || 13;
                 o.b = ta.style.fontWeight === "700" || ta.style.fontWeight === "bold";
-                o.c = ta.style.color || varsayilanRenk;
-                o.bg = ta.style.backgroundColor || varsayilanBg;
+                o.c = ta.style.color || o.c;
+                o.bg = ta.style.backgroundColor || o.bg;
                 if (!data.grid[r]) data.grid[r] = [];
                 data.grid[r][c] = o;
             });
             tmfVeriKaydet(id, data);
             tmfEditing = false;
+            tmfFocusedCell = null;
             tmfExcelGoster(id);
             tmNotify("Değişiklikler kaydedildi.", "success");
         }
 
         function tmfDuzenleIptal(id) {
             tmfEditing = false;
+            tmfFocusedCell = null;
             tmfExcelGoster(id);
         }
 
@@ -6792,6 +6793,16 @@ function gorevMailGonder(gorev) {
 
         var tmfFocusedCell = null;
 
+        function tmfRenkToHex(renk) {
+            if (!renk || renk === "transparent" || renk === "rgba(0, 0, 0, 0)") return "";
+            if (renk.charAt(0) === "#") return renk;
+            var ctx = document.createElement("canvas").getContext("2d");
+            ctx.fillStyle = renk;
+            var hex = ctx.fillStyle;
+            if (hex && hex.charAt(0) === "#") return hex;
+            return "#000000";
+        }
+
         function tmfTaFocus(ta) {
             tmfFocusedCell = ta;
             var o = tmfHucreObj({ t: ta.value, b: ta.style.fontWeight === "700", c: ta.style.color || "#000000", s: parseInt(ta.style.fontSize) || 13, bg: ta.style.backgroundColor || "" });
@@ -6800,9 +6811,13 @@ function gorevMailGonder(gorev) {
             var sizeEl = document.getElementById("tmfFmtSize");
             if (sizeEl) sizeEl.value = String(o.s);
             var colorEl = document.getElementById("tmfFmtColor");
-            if (colorEl) colorEl.value = o.c;
+            if (colorEl) colorEl.value = tmfRenkToHex(o.c);
             var bgEl = document.getElementById("tmfFmtBg");
-            if (bgEl) bgEl.value = o.bg || "#ffffff";
+            if (bgEl) bgEl.value = tmfRenkToHex(o.bg) || "#ffffff";
+        }
+
+        function tmfTaBlur(ta) {
+            if (tmfFocusedCell === ta) tmfFocusedCell = null;
         }
 
         function tmfFmtBold() {
@@ -6833,7 +6848,7 @@ function gorevMailGonder(gorev) {
         }
 
         function tmfSatirEkle(id) {
-            if (!tmfEditing) return;
+            tmfEditing = true;
             var data = tmfVeriYukle(id);
             var cols = data.colWidths.length;
             var yeniSatir = [];
@@ -6845,7 +6860,7 @@ function gorevMailGonder(gorev) {
         }
 
         function tmfSatirSil(id, r) {
-            if (!tmfEditing) return;
+            tmfEditing = true;
             tmConfirm((r + 1) + ". satırı silmek istediğinize emin misiniz?", function() {
                 var data = tmfVeriYukle(id);
                 data.grid.splice(r, 1);
@@ -6861,7 +6876,7 @@ function gorevMailGonder(gorev) {
         }
 
         function tmfSutunEkle(id) {
-            if (!tmfEditing) return;
+            tmfEditing = true;
             var data = tmfVeriYukle(id);
             data.colWidths.push(120);
             for (var r = 0; r < data.grid.length; r++) data.grid[r].push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
@@ -6870,7 +6885,7 @@ function gorevMailGonder(gorev) {
         }
 
         function tmfSutunSil(id, c) {
-            if (!tmfEditing) return;
+            tmfEditing = true;
             tmConfirm(tmfSutunHarfi(c) + " sütununu silmek istediğinize emin misiniz?", function() {
                 var data = tmfVeriYukle(id);
                 data.colWidths.splice(c, 1);
