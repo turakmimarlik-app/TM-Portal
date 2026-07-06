@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.06.0';
+        var APP_VERSION = 'V1.06.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -4976,9 +4976,9 @@ function gorevMailGonder(gorev) {
         function ybSekmeGoster(sekme) {
             ybAktifSekme = sekme;
             if(ybGosterilenYil !== null) { ybCariYilaDon(); return; }
-            document.querySelectorAll(".yb-action-btn").forEach(function(el){el.classList.remove("yb-action-aktif");});
-            var actionBtn = document.querySelector('.yb-action-btn[data-view="'+sekme+'"]');
-            if(actionBtn) actionBtn.classList.add("yb-action-aktif");
+            document.querySelectorAll(".yb-view-pill").forEach(function(el){el.classList.remove("yb-view-aktif");});
+            var pillBtn = document.querySelector('.yb-view-pill[data-view="'+sekme+'"]');
+            if(pillBtn) pillBtn.classList.add("yb-view-aktif");
             document.querySelectorAll(".yb-month-card").forEach(function(el){el.classList.remove("active");});
             var monthCard = document.querySelector('.yb-month-card[data-ay="'+sekme+'"]');
             if(monthCard) monthCard.classList.add("active");
@@ -5020,9 +5020,9 @@ function gorevMailGonder(gorev) {
                     items.forEach(function(k){
                         h += '<tr data-id="'+k.id+'">'+
                             '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
-                            '<td style="width:40%;">'+
+                            '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
-                                ' <span style="font-size:11px;color:var(--yb-text-light);">₺</span></td>'+
+                                ' <span class="acc-tl-simge">₺</span></div></td>'+
                             '<td style="width:15%;"><button class="acc-btn-sil" onclick="ybKalemSil('+k.id+','+ayIdx+')" title="Sil">✕</button></td>'+
                         '</tr>';
                     });
@@ -5050,9 +5050,9 @@ function gorevMailGonder(gorev) {
                     items.forEach(function(k){
                         h += '<tr data-id="'+k.id+'">'+
                             '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
-                            '<td style="width:40%;">'+
+                            '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
-                                ' <span style="font-size:11px;color:var(--yb-text-light);">₺</span></td>'+
+                                ' <span class="acc-tl-simge">₺</span></div></td>'+
                             '<td style="width:15%;"><button class="acc-btn-sil" onclick="ybKalemSil('+k.id+','+ayIdx+')" title="Sil">✕</button></td>'+
                         '</tr>';
                     });
@@ -5092,38 +5092,38 @@ function gorevMailGonder(gorev) {
                 '<div class="yb-ozet-card"><span class="oz-label">Şirket Bakiyesi</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div></div>';
 
             h += '<h4 style="color:var(--yb-gelir);margin:0 0 6px 0;">📈 Gelir Dağılımı</h4>'+
-                '<table class="yb-dagilim-tablo"><thead><tr><th style="padding:6px 4px;">Kategori</th>';
-            YB_AY_KISA.forEach(function(a){h+='<th style="padding:6px 2px;font-size:10px;">'+a+'</th>';});
-            h += '<th style="padding:6px 4px;">Toplam</th></tr></thead><tbody>';
+                '<table class="yb-dagilim-tablo"><thead><tr><th style="padding:6px 4px;text-align:left;">Kategori</th>';
+            YB_AY_KISA.forEach(function(a){h+='<th style="padding:6px 2px;font-size:10px;text-align:center;">'+a+'</th>';});
+            h += '<th style="padding:6px 4px;text-align:center;">Toplam</th></tr></thead><tbody>';
             kayit.gelirKategorileri.forEach(function(ktg){
-                let katTop=0; h+='<tr><td style="padding:4px;font-weight:600;">'+ybTrUpper(ktg)+'</td>';
+                let katTop=0; h+='<tr><td style="padding:4px;font-weight:600;text-align:left;">'+ybTrUpper(ktg)+'</td>';
                 for(let i=0;i<12;i++) {
                     const ay = kayit.aylar[i];
                     const val = ay ? (ay.gelirler[ktg]||[]).reduce(function(s,k){return s+(k.tutar||0);},0) : 0;
-                    katTop+=val; h+='<td style="padding:4px;text-align:right;">'+val.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
+                    katTop+=val; h+='<td style="padding:4px;text-align:center;">'+val.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
                 }
-                h+='<td style="padding:4px;text-align:right;font-weight:700;color:var(--yb-gelir);">'+katTop.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
+                h+='<td style="padding:4px;text-align:center;font-weight:700;color:var(--yb-gelir);">'+katTop.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
             });
-            h+='<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td style="padding:4px;color:var(--yb-text);">TOPLAM GELİR</td>';
-            for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:right;">'+aylikGelir[i].toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
-            h+='<td style="padding:4px;text-align:right;font-weight:800;font-size:12px;color:var(--yb-gelir);">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr></tbody></table>';
+            h+='<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td style="padding:4px;color:var(--yb-text);text-align:left;">TOPLAM GELİR</td>';
+            for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:center;">'+aylikGelir[i].toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
+            h+='<td style="padding:4px;text-align:center;font-weight:800;font-size:12px;color:var(--yb-gelir);">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr></tbody></table>';
 
             h += '<h4 style="color:var(--yb-gider);margin:0 0 6px 0;">📉 Gider Dağılımı</h4>'+
-                '<table class="yb-dagilim-tablo"><thead><tr><th style="padding:6px 4px;">Kategori</th>';
-            YB_AY_KISA.forEach(function(a){h+='<th style="padding:6px 2px;font-size:10px;">'+a+'</th>';});
-            h += '<th style="padding:6px 4px;">Toplam</th></tr></thead><tbody>';
+                '<table class="yb-dagilim-tablo"><thead><tr><th style="padding:6px 4px;text-align:left;">Kategori</th>';
+            YB_AY_KISA.forEach(function(a){h+='<th style="padding:6px 2px;font-size:10px;text-align:center;">'+a+'</th>';});
+            h += '<th style="padding:6px 4px;text-align:center;">Toplam</th></tr></thead><tbody>';
             kayit.giderKategorileri.forEach(function(ktg){
-                let katTop=0; h+='<tr><td style="padding:4px;font-weight:600;">'+ybTrUpper(ktg)+'</td>';
+                let katTop=0; h+='<tr><td style="padding:4px;font-weight:600;text-align:left;">'+ybTrUpper(ktg)+'</td>';
                 for(let i=0;i<12;i++) {
                     const ay = kayit.aylar[i];
                     const val = ay ? (ay.giderler[ktg]||[]).reduce(function(s,k){return s+(k.tutar||0);},0) : 0;
-                    katTop+=val; h+='<td style="padding:4px;text-align:right;">'+val.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
+                    katTop+=val; h+='<td style="padding:4px;text-align:center;">'+val.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
                 }
-                h+='<td style="padding:4px;text-align:right;font-weight:700;color:var(--yb-gider);">'+katTop.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
+                h+='<td style="padding:4px;text-align:center;font-weight:700;color:var(--yb-gider);">'+katTop.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
             });
-            h+='<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td style="padding:4px;color:var(--yb-text);">TOPLAM GİDER</td>';
-            for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:right;">'+aylikGider[i].toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
-            h+='<td style="padding:4px;text-align:right;font-weight:800;font-size:12px;color:var(--yb-gider);">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr></tbody></table>';
+            h+='<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td style="padding:4px;color:var(--yb-text);text-align:left;">TOPLAM GİDER</td>';
+            for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:center;">'+aylikGider[i].toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
+            h+='<td style="padding:4px;text-align:center;font-weight:800;font-size:12px;color:var(--yb-gider);">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr></tbody></table>';
             icerik.innerHTML = h;
             setTimeout(function(){ybGrafikleriCiz(kayit, aylikGelir, aylikGider, toplamGelir, toplamGider);}, 50);
         }
@@ -5295,9 +5295,9 @@ function gorevMailGonder(gorev) {
         function ybDomSatirOlustur(item, ayIdx) {
             return '<tr data-id="'+item.id+'">'+
                 '<td style="width:45%;"><input class="acc-input" type="text" value="'+item.aciklama+'" onchange="ybKalemGuncelle('+item.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
-                '<td style="width:40%;">'+
+                '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                     '<input class="acc-tutar-input" type="text" value="'+(item.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+item.id+',\'tutar\',this.value)">'+
-                    ' <span style="font-size:11px;color:var(--yb-text-light);">₺</span></td>'+
+                    ' <span class="acc-tl-simge">₺</span></div></td>'+
                 '<td style="width:15%;"><button class="acc-btn-sil" onclick="ybKalemSil('+item.id+','+ayIdx+')" title="Sil">✕</button></td>'+
             '</tr>';
         }
@@ -5316,8 +5316,8 @@ function gorevMailGonder(gorev) {
         function ybDomOzetGuncelle(ayIdx) {
             var icerik = document.getElementById("ybSekmeIcerik");
             if(!icerik) return;
-            var gelirRows = icerik.querySelectorAll('.acc-gelir + .yb-acc-item .acc-tutar');
-            var giderRows = icerik.querySelectorAll('.acc-gider + .yb-acc-item .acc-tutar');
+            var gelirRows = icerik.querySelectorAll('.acc-gelir ~ .yb-acc-item .acc-tutar');
+            var giderRows = icerik.querySelectorAll('.acc-gider ~ .yb-acc-item .acc-tutar');
             var aylikGelir=0, aylikGider=0;
             gelirRows.forEach(function(el){ aylikGelir += tmTutarCoz(el.textContent.replace(/[^0-9.,-]/g,'').trim()); });
             giderRows.forEach(function(el){ aylikGider += tmTutarCoz(el.textContent.replace(/[^0-9.,-]/g,'').trim()); });
@@ -5454,9 +5454,11 @@ function gorevMailGonder(gorev) {
             document.getElementById("mkTutar").value = "";
             document.querySelectorAll(".mk-tip-btn").forEach(function(el){el.classList.remove("active");});
             document.querySelector('.mk-tip-btn[data-tip="'+tip+'"]').classList.add("active");
+            document.getElementById("mkTipSecimi").style.display = "none";
             var kayit = ybYilVerisi();
             var kategoriler = tip==="gelir" ? kayit.gelirKategorileri : kayit.giderKategorileri;
-            document.getElementById("mkKategori").innerHTML = kategoriler.map(function(k){return '<option value="'+k+'" '+(k===kategori?'selected':'')+'>'+ybTrUpper(k)+'</option>';}).join("");
+            document.getElementById("mkKategori").innerHTML = kategoriler.map(function(k){return '<option value="'+k+'" selected>'+ybTrUpper(k)+'</option>';}).join("");
+            document.getElementById("mkKategori").disabled = true;
         }
         function ybModalKalemTip(tip) {
             ybModalTip = tip;
@@ -5466,7 +5468,7 @@ function gorevMailGonder(gorev) {
             var kategoriler = tip==="gelir" ? kayit.gelirKategorileri : kayit.giderKategorileri;
             document.getElementById("mkKategori").innerHTML = kategoriler.map(function(k){return '<option value="'+k+'">'+ybTrUpper(k)+'</option>';}).join("");
         }
-        function ybModalKalemKapat() { document.getElementById("ybModalKalem").style.display = "none"; }
+        function ybModalKalemKapat() { document.getElementById("ybModalKalem").style.display = "none"; document.getElementById("mkTipSecimi").style.display = "flex"; document.getElementById("mkKategori").disabled = false; }
         function ybModalKalemKaydet() {
             var tip = ybModalTip;
             var kategori = document.getElementById("mkKategori").value;

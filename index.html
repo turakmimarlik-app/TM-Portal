@@ -609,11 +609,12 @@
                 <div class="yb-fixed-top">
                     <div class="yb-header-row">
                         <h2>📊 Yıllık Bütçe Takibi</h2>
-                        <div class="yb-yil-gosterge">Yıl: <strong id="ybAktifYilLabel"></strong></div>
-                    </div>
-                    <div class="yb-actions-row">
-                        <button class="yb-action-btn yb-action-aktif" data-view="rapor" onclick="ybSekmeGoster('rapor')">📋 Rapor</button>
-                        <button class="yb-action-btn" data-view="karsilastir" onclick="ybSekmeGoster('karsilastir')">🔁 Karşılaştır</button>
+                        <div class="yb-yil-gosterge">Yıl: <strong id="ybAktifYilLabel"></strong>
+                            <span class="yb-view-pills">
+                                <button class="yb-view-pill yb-view-aktif" data-view="rapor" onclick="ybSekmeGoster('rapor')">📋 Rapor</button>
+                                <button class="yb-view-pill" data-view="karsilastir" onclick="ybSekmeGoster('karsilastir')">🔁 Karşılaştır</button>
+                            </span>
+                        </div>
                     </div>
                     <div class="yb-month-grid" id="ybMonthGrid"></div>
                 </div>
@@ -1327,7 +1328,7 @@
                     <div class="modal-header"><h3>➕ Yeni Kalem Ekle</h3></div>
                     <div class="modal-body">
                         <label>Tür</label>
-                        <div class="mk-tip-secimi">
+                        <div class="mk-tip-secimi" id="mkTipSecimi">
                             <button class="mk-tip-btn mk-gelir active" data-tip="gelir" onclick="ybModalKalemTip('gelir')">📈 Gelir</button>
                             <button class="mk-tip-btn mk-gider" data-tip="gider" onclick="ybModalKalemTip('gider')">📉 Gider</button>
                         </div>
