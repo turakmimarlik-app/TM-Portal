@@ -40,7 +40,8 @@
             .login-logo-left { position:static; transform:none; text-align:center; }
             .login-logo-left img { max-width:90vw; }
             .login-card { padding:25px; }
-            .yb-header-row { flex-direction:column; align-items:flex-start; }
+            .yb-header-row { flex-direction:column; align-items:flex-start; gap:4px; }
+            .yb-view-pills { margin-left:0; }
             .search-box { max-width:100%; }
             .bank-input-row { flex-direction:column; }
             .sidebar.collapsed .btn-logout span { display:inline; }
@@ -83,6 +84,14 @@
             #ybSekmeIcerik .yb-graph-grid .yb-graph-box { height:220px; }
             #ybSekmeIcerik .yb-kars-grid { grid-template-columns:1fr; gap:8px; }
             #ybSekmeIcerik .yb-dagilim-tablo { font-size:10px; }
+            .yb-yil-tablo { font-size:11px; }
+            .yb-yil-tablo th, .yb-yil-tablo td { padding:6px 6px; }
+            .yb-yil-tablo .t-islem button { padding:3px 8px; font-size:9px; }
+        }
+        @media (max-width:600px) {
+            .yb-yil-tablo th, .yb-yil-tablo td { padding:5px 4px; font-size:10px; }
+            .yb-yil-tablo .t-islem { display:flex; gap:3px; }
+            .yb-yil-tablo .t-islem button { padding:3px 6px; font-size:8px; margin-left:0; }
         }
         @media (max-width:480px) {
             .dash-stat-row { grid-template-columns:repeat(2,1fr); }
