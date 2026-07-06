@@ -40,7 +40,7 @@
             .login-logo-left { position:static; transform:none; text-align:center; }
             .login-logo-left img { max-width:90vw; }
             .login-card { padding:25px; }
-            .yb-top-bar { flex-direction:column; }
+            .yb-header-row { flex-direction:column; align-items:flex-start; }
             .search-box { max-width:100%; }
             .bank-input-row { flex-direction:column; }
             .sidebar.collapsed .btn-logout span { display:inline; }
@@ -61,25 +61,28 @@
             .dash-fin-val { font-size:20px; }
             .dash-widget-head { padding:8px 10px; }
             .dash-widget-body { padding:8px 10px; }
-            /* ========== YILLIK BÜTÇE MOBİL KOMPAKT ========== */
-            .yb-ay-detay > div[style*="margin-bottom:14px"] { padding:8px !important; margin-bottom:8px !important; }
-            .yb-ay-detay > div[style*="margin-bottom:14px"] > div[style*="margin-bottom:10px"] { margin-bottom:4px !important; }
-            .yb-ay-detay > div[style*="margin-bottom:14px"] > div[style*="margin-bottom:10px"] strong { font-size:11px !important; }
-            .yb-ay-detay > div[style*="margin-bottom:14px"] > div[style*="margin-bottom:10px"] span { font-size:12px !important; }
-            .yb-ay-detay table input[type="text"] { padding:4px 6px !important; font-size:11px !important; }
-            .yb-ay-detay table td { padding:3px 4px !important; }
-            .yb-ay-detay .btn-danger { padding:4px 6px !important; font-size:9px !important; }
-            .yb-ay-detay .btn-primary { padding:4px 10px !important; font-size:10px !important; }
-            .yb-ay-detay .btn-form { padding:5px 10px !important; font-size:10px !important; }
-            .yb-ay-detay > div[style*="margin-bottom:14px"] input { font-size:11px !important; padding:4px 6px !important; }
-            .yb-ay-detay > h3 { font-size:14px !important; }
-            /* Summary bar compact */
-            .yb-ay-detay > div[style*="linear-gradient"] { padding:10px 12px !important; gap:8px !important; }
-            .yb-ay-detay > div[style*="linear-gradient"] small { font-size:7px !important; }
-            .yb-ay-detay > div[style*="linear-gradient"] span { font-size:14px !important; }
-            .yb-ay-detay > div[style*="linear-gradient"] span[style*="font-size:24px"] { font-size:16px !important; }
-            .yb-ay-detay h4 { font-size:13px !important; margin-bottom:6px !important; }
-            .yb-ay-detay > div[style*="border-top:3px dashed"] { margin:12px 0 !important; }
+            /* ========== YILLIK BÜTÇE MOBİL ========== */
+            .yb-month-grid { grid-template-columns:repeat(4,1fr); gap:4px; }
+            .yb-month-card { padding:8px 4px; }
+            .yb-month-card .mc-ay { font-size:11px; }
+            .yb-month-card .mc-gelir, .yb-month-card .mc-gider, .yb-month-card .mc-bos { font-size:9px; }
+            .yb-sum-row { grid-template-columns:1fr; gap:8px; }
+            .yb-sum-card { padding:12px 10px; }
+            .yb-sum-card .sc-value { font-size:20px; }
+            .yb-acc-header { padding:9px 10px; }
+            .yb-acc-header .acc-kat { font-size:12px; }
+            .yb-acc-header .acc-tutar { font-size:13px; }
+            .yb-acc-body { padding:0 10px 8px 10px; }
+            .yb-acc-body table { font-size:11px; }
+            .yb-acc-body table td { padding:4px 3px; }
+            .yb-acc-body .acc-input, .yb-acc-body .acc-tutar-input { font-size:11px; padding:4px 6px; }
+            .yb-fixed-top { padding:12px; }
+            .yb-content-area { padding:14px; }
+            #ybSekmeIcerik .yb-ozet-row { grid-template-columns:repeat(2,1fr); gap:8px; }
+            #ybSekmeIcerik .yb-graph-grid { grid-template-columns:1fr; }
+            #ybSekmeIcerik .yb-graph-grid .yb-graph-box { height:220px; }
+            #ybSekmeIcerik .yb-kars-grid { grid-template-columns:1fr; gap:8px; }
+            #ybSekmeIcerik .yb-dagilim-tablo { font-size:10px; }
         }
         @media (max-width:480px) {
             .dash-stat-row { grid-template-columns:repeat(2,1fr); }

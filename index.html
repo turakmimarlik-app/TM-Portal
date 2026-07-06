@@ -130,7 +130,7 @@
                 </div>
             </div>
             <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.04.0</div>
+                <div class="version-tag">V1.05.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -605,37 +605,25 @@
             </div>
             <div id="yillik-butce-page" class="page">
                 <div id="lock-yillik-butce" class="page-lock-overlay"></div>
-                <h2>📊 Yıllık Bütçe Takibi</h2>
 
-                <div class="yb-top-bar">
-                    <div class="yb-yil-gosterge">Yıl: <strong id="ybAktifYilLabel"></strong></div>
+                <div class="yb-fixed-top">
+                    <div class="yb-header-row">
+                        <h2>📊 Yıllık Bütçe Takibi</h2>
+                        <div class="yb-yil-gosterge">Yıl: <strong id="ybAktifYilLabel"></strong></div>
+                    </div>
+                    <div class="yb-actions-row">
+                        <button class="yb-action-btn yb-action-aktif" data-view="rapor" onclick="ybSekmeGoster('rapor')">📋 Rapor</button>
+                        <button class="yb-action-btn" data-view="karsilastir" onclick="ybSekmeGoster('karsilastir')">🔁 Karşılaştır</button>
+                    </div>
+                    <div class="yb-month-grid" id="ybMonthGrid"></div>
                 </div>
 
-    <div class="yb-sekme-bar" id="ybSekmeBar">
-        <div class="yb-sekme yb-sekme-aktif" data-sekme="rapor" onclick="ybSekmeGoster('rapor')">📋 Rapor</div>
-        <div class="yb-sekme" data-sekme="karsilastir" onclick="ybSekmeGoster('karsilastir')">🔁 Karşılaştır</div>
-        <div class="yb-sekme" data-sekme="0" onclick="ybSekmeGoster('0')">Ocak</div>
-        <div class="yb-sekme" data-sekme="1" onclick="ybSekmeGoster('1')">Şubat</div>
-        <div class="yb-sekme" data-sekme="2" onclick="ybSekmeGoster('2')">Mart</div>
-        <div class="yb-sekme" data-sekme="3" onclick="ybSekmeGoster('3')">Nisan</div>
-        <div class="yb-sekme" data-sekme="4" onclick="ybSekmeGoster('4')">Mayıs</div>
-        <div class="yb-sekme" data-sekme="5" onclick="ybSekmeGoster('5')">Haziran</div>
-        <div class="yb-sekme" data-sekme="6" onclick="ybSekmeGoster('6')">Temmuz</div>
-        <div class="yb-sekme" data-sekme="7" onclick="ybSekmeGoster('7')">Ağustos</div>
-        <div class="yb-sekme" data-sekme="8" onclick="ybSekmeGoster('8')">Eylül</div>
-        <div class="yb-sekme" data-sekme="9" onclick="ybSekmeGoster('9')">Ekim</div>
-        <div class="yb-sekme" data-sekme="10" onclick="ybSekmeGoster('10')">Kasım</div>
-        <div class="yb-sekme" data-sekme="11" onclick="ybSekmeGoster('11')">Aralık</div>
-    </div>
-
-                <div id="ybSekmeIcerik"></div>
-
-                <div style="margin-top:40px;">
-                    <h3>📦 Tamamlanan Yıllar</h3>
-                    <table class="app-table">
-                        <thead><tr><th>Yıl</th><th>Baş. Bakiye</th><th>Top. Gelir</th><th>Top. Gider</th><th>Net Bakiye</th><th>İşlem</th></tr></thead>
-                        <tbody id="ybTamamlananGovde"></tbody>
-                    </table>
+                <div class="yb-content-area">
+                    <div id="ybSekmeIcerik"></div>
+                    <div class="yb-tamamlanan-section">
+                        <h3>📦 Tamamlanan Yıllar</h3>
+                        <div class="yb-timeline-wrap" id="ybTimelineWrap"></div>
+                    </div>
                 </div>
             </div>
 
@@ -1330,6 +1318,29 @@
                     <div class="modal-body" id="ybKategoriModalBody"></div>
                     <div class="modal-actions">
                         <button class="btn btn-clear-gray" onclick="ybKategoriModalKapat()" style="padding:8px 20px;">Kapat</button>
+                    </div>
+                </div>
+            </div>
+            <!-- YILLIK BÜTÇE KALEM EKLEME MODAL -->
+            <div id="ybModalKalem" class="modal-overlay" style="display:none;" onclick="if(event.target===this)ybModalKalemKapat()">
+                <div class="modal-box">
+                    <div class="modal-header"><h3>➕ Yeni Kalem Ekle</h3></div>
+                    <div class="modal-body">
+                        <label>Tür</label>
+                        <div class="mk-tip-secimi">
+                            <button class="mk-tip-btn mk-gelir active" data-tip="gelir" onclick="ybModalKalemTip('gelir')">📈 Gelir</button>
+                            <button class="mk-tip-btn mk-gider" data-tip="gider" onclick="ybModalKalemTip('gider')">📉 Gider</button>
+                        </div>
+                        <label>Kategori</label>
+                        <select id="mkKategori"></select>
+                        <label>Açıklama</label>
+                        <input type="text" id="mkAciklama" placeholder="Kalem açıklaması giriniz">
+                        <label>Tutar (₺)</label>
+                        <input type="text" id="mkTutar" value="" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)" placeholder="0,00">
+                    </div>
+                    <div class="modal-actions">
+                        <button class="mk-iptal" onclick="ybModalKalemKapat()">İptal</button>
+                        <button class="mk-kaydet" onclick="ybModalKalemKaydet()">Kaydet</button>
                     </div>
                 </div>
             </div>
