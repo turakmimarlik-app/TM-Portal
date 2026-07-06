@@ -6567,12 +6567,15 @@ function gorevMailGonder(gorev) {
 
         function tmfVeriYukle(id) {
             try {
-                let d = JSON.parse(localStorage.getItem(TMF_DATA_PREFIX + id));
-                if (d && d.grid) {
-                    if (!d.rowHeights) d.rowHeights = [];
-                    return d;
+                var raw = localStorage.getItem(TMF_DATA_PREFIX + id);
+                if (raw) {
+                    var d = JSON.parse(raw);
+                    if (d && d.grid && d.colWidths) {
+                        if (!d.rowHeights) d.rowHeights = [];
+                        return d;
+                    }
                 }
-            } catch(e) { console.error("tmfVeriYukle JSON parse hatasi:", e); }
+            } catch(e) { tmAlert("Veri yükleme hatası, yeni tablo oluşturuldu: " + e.message); }
             var obj = { grid: [["","",""],["","",""],["","",""],["","",""],["","",""]], colWidths: [120,180,180], rowHeights: [] };
             origSetItem(TMF_DATA_PREFIX + id, JSON.stringify(obj));
             return obj;
@@ -6756,34 +6759,42 @@ function gorevMailGonder(gorev) {
         function tmfDuzenleBaslat(id) {
             tmfEditing = true;
             tmfExcelGoster(id);
+            setTimeout(function() {
+                var ilkTa = document.querySelector("#tmfTabContent .tmf-ex-ta");
+                if (ilkTa) { ilkTa.focus(); ilkTa.setSelectionRange(ilkTa.value.length, ilkTa.value.length); }
+            }, 50);
         }
 
         function tmfDuzenleKaydet(id) {
-            var data = tmfVeriYukle(id);
-            var textareas = document.querySelectorAll("#tmfExcel_" + id + " .tmf-ex-ta");
-            textareas.forEach(function(ta) {
-                var r = parseInt(ta.dataset.r);
-                var c = parseInt(ta.dataset.c);
-                var o = tmfHucreObj(data.grid[r] ? data.grid[r][c] : "");
-                o.t = ta.value;
-                o.s = parseInt(ta.style.fontSize) || 13;
-                o.b = ta.style.fontWeight === "700" || ta.style.fontWeight === "bold";
-                o.c = ta.style.color || o.c;
-                o.bg = ta.style.backgroundColor || o.bg;
-                if (!data.grid[r]) data.grid[r] = [];
-                data.grid[r][c] = o;
-            });
-            tmfVeriKaydet(id, data);
-            tmfEditing = false;
-            tmfFocusedCell = null;
-            tmfExcelGoster(id);
-            tmNotify("Değişiklikler kaydedildi.", "success");
+            try {
+                var data = tmfVeriYukle(id);
+                var textareas = document.querySelectorAll("#tmfExcel_" + id + " .tmf-ex-ta");
+                if (!textareas.length) { tmAlert("Kaydedilecek hücre bulunamadı."); return; }
+                textareas.forEach(function(ta) {
+                    var r = parseInt(ta.dataset.r);
+                    var c = parseInt(ta.dataset.c);
+                    var o = tmfHucreObj(data.grid[r] ? data.grid[r][c] : "");
+                    o.t = ta.value;
+                    o.s = parseInt(ta.style.fontSize) || 13;
+                    o.b = ta.style.fontWeight === "700" || ta.style.fontWeight === "bold";
+                    o.c = ta.style.color || o.c;
+                    o.bg = ta.style.backgroundColor || o.bg;
+                    if (!data.grid[r]) data.grid[r] = [];
+                    data.grid[r][c] = o;
+                });
+                tmfVeriKaydet(id, data);
+                tmfEditing = false;
+                tmfFocusedCell = null;
+                tmfExcelGoster(id);
+                tmNotify("Değişiklikler kaydedildi.", "success");
+            } catch(e) { tmAlert("Kaydetme hatası: " + e.message); }
         }
 
         function tmfDuzenleIptal(id) {
             tmfEditing = false;
             tmfFocusedCell = null;
             tmfExcelGoster(id);
+            tmNotify("Düzenleme iptal edildi.", "info");
         }
 
         function tmfTaGrow(ta) {
@@ -6848,55 +6859,67 @@ function gorevMailGonder(gorev) {
         }
 
         function tmfSatirEkle(id) {
-            tmfEditing = true;
-            var data = tmfVeriYukle(id);
-            var cols = data.colWidths.length;
-            var yeniSatir = [];
-            for (var i = 0; i < cols; i++) yeniSatir.push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
-            data.grid.push(yeniSatir);
-            if (data.rowHeights) data.rowHeights.push(32);
-            tmfVeriKaydet(id, data);
-            tmfExcelGoster(id);
+            try {
+                var data = tmfVeriYukle(id);
+                var cols = data.colWidths.length;
+                var yeniSatir = [];
+                for (var i = 0; i < cols; i++) yeniSatir.push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
+                data.grid.push(yeniSatir);
+                if (data.rowHeights) data.rowHeights.push(32);
+                tmfVeriKaydet(id, data);
+                tmfExcelGoster(id);
+                tmNotify("Yeni satır eklendi.", "success");
+            } catch(e) { tmAlert("Satır ekleme hatası: " + e.message); }
         }
 
         function tmfSatirSil(id, r) {
-            tmfEditing = true;
-            tmConfirm((r + 1) + ". satırı silmek istediğinize emin misiniz?", function() {
-                var data = tmfVeriYukle(id);
-                data.grid.splice(r, 1);
-                if (data.rowHeights) data.rowHeights.splice(r, 1);
-                if (data.grid.length === 0) {
-                    var bosSatir = [];
-                    for (var i = 0; i < data.colWidths.length; i++) bosSatir.push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
-                    data.grid.push(bosSatir);
-                }
-                tmfVeriKaydet(id, data);
-                tmfExcelGoster(id);
-            });
+            try {
+                tmConfirm((r + 1) + ". satırı silmek istediğinize emin misiniz?", function() {
+                    try {
+                        var data = tmfVeriYukle(id);
+                        data.grid.splice(r, 1);
+                        if (data.rowHeights) data.rowHeights.splice(r, 1);
+                        if (data.grid.length === 0) {
+                            var bosSatir = [];
+                            for (var i = 0; i < data.colWidths.length; i++) bosSatir.push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
+                            data.grid.push(bosSatir);
+                        }
+                        tmfVeriKaydet(id, data);
+                        tmfExcelGoster(id);
+                        tmNotify("Satır silindi.", "success");
+                    } catch(e) { tmAlert("Satır silme hatası: " + e.message); }
+                });
+            } catch(e) { tmAlert("Satır silme hatası: " + e.message); }
         }
 
         function tmfSutunEkle(id) {
-            tmfEditing = true;
-            var data = tmfVeriYukle(id);
-            data.colWidths.push(120);
-            for (var r = 0; r < data.grid.length; r++) data.grid[r].push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
-            tmfVeriKaydet(id, data);
-            tmfExcelGoster(id);
+            try {
+                var data = tmfVeriYukle(id);
+                data.colWidths.push(120);
+                for (var r = 0; r < data.grid.length; r++) data.grid[r].push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
+                tmfVeriKaydet(id, data);
+                tmfExcelGoster(id);
+                tmNotify("Yeni sütun eklendi.", "success");
+            } catch(e) { tmAlert("Sütun ekleme hatası: " + e.message); }
         }
 
         function tmfSutunSil(id, c) {
-            tmfEditing = true;
-            tmConfirm(tmfSutunHarfi(c) + " sütununu silmek istediğinize emin misiniz?", function() {
-                var data = tmfVeriYukle(id);
-                data.colWidths.splice(c, 1);
-                for (var r = 0; r < data.grid.length; r++) data.grid[r].splice(c, 1);
-                if (data.colWidths.length === 0) {
-                    data.colWidths.push(120);
-                    for (var r = 0; r < data.grid.length; r++) data.grid[r].push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
-                }
-                tmfVeriKaydet(id, data);
-                tmfExcelGoster(id);
-            });
+            try {
+                tmConfirm(tmfSutunHarfi(c) + " sütununu silmek istediğinize emin misiniz?", function() {
+                    try {
+                        var data = tmfVeriYukle(id);
+                        data.colWidths.splice(c, 1);
+                        for (var r = 0; r < data.grid.length; r++) data.grid[r].splice(c, 1);
+                        if (data.colWidths.length === 0) {
+                            data.colWidths.push(120);
+                            for (var r = 0; r < data.grid.length; r++) data.grid[r].push({ t: "", b: false, c: "#000000", s: 13, bg: "" });
+                        }
+                        tmfVeriKaydet(id, data);
+                        tmfExcelGoster(id);
+                        tmNotify("Sütun silindi.", "success");
+                    } catch(e) { tmAlert("Sütun silme hatası: " + e.message); }
+                });
+            } catch(e) { tmAlert("Sütun silme hatası: " + e.message); }
         }
 
         function tmfColResizeB(e, id, colIdx) {
