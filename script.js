@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.05.0';
+        var APP_VERSION = 'V1.06.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -421,6 +421,9 @@ function gorevMailGonder(gorev) {
             document.addEventListener("click", function(e) {
                 if (!e.target.classList.contains("tm-autocomplete-item") && e.target.tagName !== "INPUT") {
                     document.querySelectorAll(".tm-autocomplete-box").forEach(box => box.style.display = "none");
+                }
+                if (!e.target.closest('.yb-tl-popup') && !e.target.closest('.yb-tl-dot')) {
+                    document.querySelectorAll(".yb-tl-popup.show").forEach(function(p){p.classList.remove("show");});
                 }
             });
 
@@ -1335,7 +1338,7 @@ function gorevMailGonder(gorev) {
                 else if (id === 'isortaklari-page') { isOrtaklariKartlariniYenile(); }
                 else if (id === 'hesap-takip-page') { htSayfayiYukle(); }
                 else if (id === 'fatura-takip-page') { faturaSayfayiYukle(); }
-                else if (id === 'yillik-butce-page') { ybSayfayiYukle(); }
+                else if (id === 'yillik-butce-page') { ybVeriYukle(); ybMonthGridRender(); ybTamamlananlariGoster(); if(ybGosterilenYil===null) ybSekmeGoster(ybAktifSekme); }
                 else if (id === 'dilekce-page') { dlkListele(); dlkIdGuncelle(); }
                 else if (id === 'tm-fiyatlar-page') { if (!tmfEditing) tmfSayfayiYukle(); }
                 else if (id === 'istakibi-page') { itGoster(); }
@@ -4742,6 +4745,8 @@ function gorevMailGonder(gorev) {
         const YB_GELIR_VARSAYILAN = ["projeler","komisyonlar","faizler","kiralar","satışlar"];
         const YB_GIDER_VARSAYILAN = ["projeler","faturalar","vergi","komisyon","maaş","sigorta"];
         let ybChartAylik = null, ybChartGelir = null, ybChartGider = null, ybChartNet = null;
+        let ybAktifSekme = "rapor";
+        function ybTrUpper(s) { return (s||'').replace(/[iİ]/g,'İ').replace(/[ı]/g,'I').toLocaleUpperCase('tr-TR'); }
 
         function ybVeriYukle() {
             var db;
@@ -4903,13 +4908,13 @@ function gorevMailGonder(gorev) {
                 const aG = ybAylikToplam(kayit,"gelir",i);
                 const aGi = ybAylikToplam(kayit,"gider",i);
                 if(aG===0 && aGi===0) continue;
-                h += '<h4 style="margin:15px 0 6px 0;font-size:13px;color:var(--yb-text);border-left:4px solid var(--yb-accent);padding-left:10px;">'+YB_AY_ADI[i].toUpperCase()+'</h4>'+
+                h += '<h4 style="margin:15px 0 6px 0;font-size:13px;color:var(--yb-text);border-left:4px solid var(--yb-accent);padding-left:10px;">'+ybTrUpper(YB_AY_ADI[i])+'</h4>'+
                     '<table class="yb-dagilim-tablo"><thead><tr><th>Kategori</th><th>Tür</th><th>Açıklama</th><th style="text-align:right;">Tutar</th></tr></thead><tbody>';
                 Object.entries(ay.gelirler||{}).forEach(([ktg,items]) => items.forEach(k => {
-                    h += '<tr><td style="font-weight:600;">'+ktg.toUpperCase()+'</td><td style="color:var(--yb-gelir);font-weight:600;">GELİR</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
+                    h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gelir);font-weight:600;">GELİR</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
                 }));
                 Object.entries(ay.giderler||{}).forEach(([ktg,items]) => items.forEach(k => {
-                    h += '<tr><td style="font-weight:600;">'+ktg.toUpperCase()+'</td><td style="color:var(--yb-gider);font-weight:600;">GİDER</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
+                    h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gider);font-weight:600;">GİDER</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
                 }));
                 h += '<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-text-light);">Aylık Toplam</td><td style="text-align:right;color:'+((aG-aGi)>=0?'var(--yb-gelir)':'var(--yb-gider)')+';">'+(aG-aGi).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
                 h += '</tbody></table>';
@@ -4931,7 +4936,7 @@ function gorevMailGonder(gorev) {
                 const tG = ybYilToplam(y,"gelir"), tGi = ybYilToplam(y,"gider");
                 const net = (y.baslangicBakiye||0)+tG-tGi;
                 h += '<div class="yb-tl-item">'+
-                    '<div class="yb-tl-dot has-data" onmouseenter="ybTlPopupShow(this,'+y.yil+','+(y.baslangicBakiye||0)+','+tG+','+tGi+','+net+')" onmouseleave="ybTlPopupHide(this)" onclick="ybGecmisYilGoster('+y.yil+')"></div>'+
+                    '<div class="yb-tl-dot has-data" onmouseenter="ybTlPopupShow(this,'+y.yil+','+(y.baslangicBakiye||0)+','+tG+','+tGi+','+net+')" onmouseleave="ybTlPopupHide(this)" onclick="event.stopPropagation();ybTlPopupToggle('+y.yil+')"></div>'+
                     '<div class="yb-tl-popup" id="tlPopup_'+y.yil+'">'+
                     '<div class="tlp-row"><span class="tlp-label">Baş. Bakiye</span><span class="tlp-val">'+(y.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
                     '<div class="tlp-row"><span class="tlp-label">Toplam Gelir</span><span class="tlp-val" style="color:var(--yb-gelir);">'+tG.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
@@ -4943,18 +4948,33 @@ function gorevMailGonder(gorev) {
                 if(idx < sorted.length-1) h += '<div class="yb-tl-line"></div>';
             });
             h += '</div>';
+            h += '<div style="display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap;">';
+            [...sorted].reverse().forEach(function(y){
+                h += '<button class="tlp-goruntule" onclick="ybGecmisYilGoster('+y.yil+')" style="padding:5px 12px;border-radius:5px;border:none;font-size:10px;font-weight:700;cursor:pointer;background:var(--yb-accent);color:#0c1520;">📂 '+y.yil+' Görüntüle</button>'+
+                     '<button class="tlp-pdf" onclick="ybPdfIndir('+y.yil+')" style="padding:5px 12px;border-radius:5px;border:none;font-size:10px;font-weight:700;cursor:pointer;background:rgba(231,76,60,0.2);color:var(--yb-gider);">📄 '+y.yil+' PDF</button>';
+            });
+            h += '</div>';
             wrap.innerHTML = h;
         }
 
         function ybTlPopupShow(el, yil, bb, tg, tgi, net) {
+            document.querySelectorAll(".yb-tl-popup.show").forEach(function(p){p.classList.remove("show");});
             var popup = document.getElementById("tlPopup_"+yil);
             if(popup) popup.classList.add("show");
         }
         function ybTlPopupHide(el) {
             setTimeout(function(){ document.querySelectorAll(".yb-tl-popup.show").forEach(function(p){p.classList.remove("show");}); }, 200);
         }
+        function ybTlPopupToggle(yil) {
+            var popup = document.getElementById("tlPopup_"+yil);
+            if(!popup) return;
+            var isShow = popup.classList.contains("show");
+            document.querySelectorAll(".yb-tl-popup.show").forEach(function(p){p.classList.remove("show");});
+            if(!isShow) popup.classList.add("show");
+        }
 
         function ybSekmeGoster(sekme) {
+            ybAktifSekme = sekme;
             if(ybGosterilenYil !== null) { ybCariYilaDon(); return; }
             document.querySelectorAll(".yb-action-btn").forEach(function(el){el.classList.remove("yb-action-aktif");});
             var actionBtn = document.querySelector('.yb-action-btn[data-view="'+sekme+'"]');
@@ -4991,14 +5011,14 @@ function gorevMailGonder(gorev) {
                 const itemId = "accG_"+ktg.replace(/[^a-z0-9]/gi,'_')+"_"+ayIdx;
                 h += '<div class="yb-acc-item">'+
                     '<div class="yb-acc-header" onclick="document.getElementById(\''+itemId+'\').classList.toggle(\'open\');this.classList.toggle(\'open\');">'+
-                    '<span class="acc-kat">'+ktg.toUpperCase()+'</span>'+
+                    '<span class="acc-kat">'+ybTrUpper(ktg)+'</span>'+
                     '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span>'+
                     '<span class="acc-ok">▼</span></div>'+
                     '<div class="yb-acc-body" id="'+itemId+'">';
                 if(items.length>0) {
                     h += '<table><tbody>';
                     items.forEach(function(k){
-                        h += '<tr>'+
+                        h += '<tr data-id="'+k.id+'">'+
                             '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
                             '<td style="width:40%;">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
@@ -5021,14 +5041,14 @@ function gorevMailGonder(gorev) {
                 const itemId = "accD_"+ktg.replace(/[^a-z0-9]/gi,'_')+"_"+ayIdx;
                 h += '<div class="yb-acc-item">'+
                     '<div class="yb-acc-header" onclick="document.getElementById(\''+itemId+'\').classList.toggle(\'open\');this.classList.toggle(\'open\');">'+
-                    '<span class="acc-kat">'+ktg.toUpperCase()+'</span>'+
+                    '<span class="acc-kat">'+ybTrUpper(ktg)+'</span>'+
                     '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span>'+
                     '<span class="acc-ok">▼</span></div>'+
                     '<div class="yb-acc-body" id="'+itemId+'">';
                 if(items.length>0) {
                     h += '<table><tbody>';
                     items.forEach(function(k){
-                        h += '<tr>'+
+                        h += '<tr data-id="'+k.id+'">'+
                             '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
                             '<td style="width:40%;">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
@@ -5076,7 +5096,7 @@ function gorevMailGonder(gorev) {
             YB_AY_KISA.forEach(function(a){h+='<th style="padding:6px 2px;font-size:10px;">'+a+'</th>';});
             h += '<th style="padding:6px 4px;">Toplam</th></tr></thead><tbody>';
             kayit.gelirKategorileri.forEach(function(ktg){
-                let katTop=0; h+='<tr><td style="padding:4px;font-weight:600;">'+ktg.toUpperCase()+'</td>';
+                let katTop=0; h+='<tr><td style="padding:4px;font-weight:600;">'+ybTrUpper(ktg)+'</td>';
                 for(let i=0;i<12;i++) {
                     const ay = kayit.aylar[i];
                     const val = ay ? (ay.gelirler[ktg]||[]).reduce(function(s,k){return s+(k.tutar||0);},0) : 0;
@@ -5093,7 +5113,7 @@ function gorevMailGonder(gorev) {
             YB_AY_KISA.forEach(function(a){h+='<th style="padding:6px 2px;font-size:10px;">'+a+'</th>';});
             h += '<th style="padding:6px 4px;">Toplam</th></tr></thead><tbody>';
             kayit.giderKategorileri.forEach(function(ktg){
-                let katTop=0; h+='<tr><td style="padding:4px;font-weight:600;">'+ktg.toUpperCase()+'</td>';
+                let katTop=0; h+='<tr><td style="padding:4px;font-weight:600;">'+ybTrUpper(ktg)+'</td>';
                 for(let i=0;i<12;i++) {
                     const ay = kayit.aylar[i];
                     const val = ay ? (ay.giderler[ktg]||[]).reduce(function(s,k){return s+(k.tutar||0);},0) : 0;
@@ -5272,15 +5292,71 @@ function gorevMailGonder(gorev) {
 
         /* Kalem ekleme now uses modal - ybModalKalemAc/Kaydet/Kapat */
 
+        function ybDomSatirOlustur(item, ayIdx) {
+            return '<tr data-id="'+item.id+'">'+
+                '<td style="width:45%;"><input class="acc-input" type="text" value="'+item.aciklama+'" onchange="ybKalemGuncelle('+item.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
+                '<td style="width:40%;">'+
+                    '<input class="acc-tutar-input" type="text" value="'+(item.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+item.id+',\'tutar\',this.value)">'+
+                    ' <span style="font-size:11px;color:var(--yb-text-light);">₺</span></td>'+
+                '<td style="width:15%;"><button class="acc-btn-sil" onclick="ybKalemSil('+item.id+','+ayIdx+')" title="Sil">✕</button></td>'+
+            '</tr>';
+        }
+        function ybDomKategoriTotalGuncelle(accBodyId) {
+            var body = document.getElementById(accBodyId);
+            if(!body) return;
+            var table = body.querySelector('table');
+            var total = 0;
+            if(table) table.querySelectorAll('tr[data-id]').forEach(function(tr){
+                var inp = tr.querySelector('.acc-tutar-input');
+                if(inp) total += tmTutarCoz(inp.value||'0');
+            });
+            var hdr = body.parentElement.querySelector('.yb-acc-header');
+            if(hdr) hdr.querySelector('.acc-tutar').textContent = total.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺';
+        }
+        function ybDomOzetGuncelle(ayIdx) {
+            var icerik = document.getElementById("ybSekmeIcerik");
+            if(!icerik) return;
+            var gelirRows = icerik.querySelectorAll('.acc-gelir + .yb-acc-item .acc-tutar');
+            var giderRows = icerik.querySelectorAll('.acc-gider + .yb-acc-item .acc-tutar');
+            var aylikGelir=0, aylikGider=0;
+            gelirRows.forEach(function(el){ aylikGelir += tmTutarCoz(el.textContent.replace(/[^0-9.,-]/g,'').trim()); });
+            giderRows.forEach(function(el){ aylikGider += tmTutarCoz(el.textContent.replace(/[^0-9.,-]/g,'').trim()); });
+            var sumCards = icerik.querySelectorAll('.yb-sum-card .sc-value');
+            if(sumCards.length>=3) {
+                sumCards[0].textContent = aylikGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺';
+                sumCards[1].textContent = aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺';
+                var fark = aylikGelir - aylikGider;
+                sumCards[2].textContent = fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺';
+            }
+        }
+
         function ybKalemSil(id, ayIdx) {
             tmConfirm("Bu kalemi silmek istediğinize emin misiniz?", function() {
                 const kayit = ybYilVerisi();
                 const ay = ybAyVerisi(ayIdx, kayit);
-                for(const d of [ay.gelirler, ay.giderler]) {
+                let bulunanKtg = null, bulunanTip = null;
+                for(const tip of ['gelirler','giderler']) {
+                    const d = ay[tip];
                     for(const ktg of Object.keys(d)) {
                         const idx = d[ktg].findIndex(k => k.id===id);
-                        if(idx>-1) { d[ktg].splice(idx,1); const db=ybVeriYukle(); db.yillar[db.aktifYil]=kayit; ybVeriKaydet(db); ybSekmeGoster(String(ayIdx)); return; }
+                        if(idx>-1) { d[ktg].splice(idx,1); bulunanKtg=ktg; bulunanTip=tip; break; }
                     }
+                    if(bulunanKtg) break;
+                }
+                if(bulunanKtg) {
+                    const db=ybVeriYukle(); db.yillar[db.aktifYil]=kayit; ybVeriKaydet(db);
+                    var tr = document.querySelector('#ybSekmeIcerik tr[data-id="'+id+'"]');
+                    if(tr) {
+                        var tbody = tr.parentElement;
+                        tr.remove();
+                        if(tbody && tbody.querySelectorAll('tr[data-id]').length===0) {
+                            var table = tbody.parentElement;
+                            if(table && table.tagName==='TABLE') table.remove();
+                        }
+                    }
+                    var tipPrefix = bulunanTip==='gelirler' ? 'accG' : 'accD';
+                    ybDomKategoriTotalGuncelle(tipPrefix+'_'+bulunanKtg.replace(/[^a-z0-9]/gi,'_')+'_'+ayIdx);
+                    ybDomOzetGuncelle(ayIdx);
                 }
             });
         }
@@ -5297,6 +5373,9 @@ function gorevMailGonder(gorev) {
                             if(alan==="tutar") item.tutar = tmTutarCoz(deger);
                             else item.aciklama = deger;
                             const db = ybVeriYukle(); db.yillar[db.aktifYil] = kayit; ybVeriKaydet(db);
+                            var tipPrefix = d===ay.gelirler ? 'accG' : 'accD';
+                            ybDomKategoriTotalGuncelle(tipPrefix+'_'+ktg.replace(/[^a-z0-9]/gi,'_')+'_'+i);
+                            ybDomOzetGuncelle(i);
                             return;
                         }
                     }
@@ -5377,7 +5456,7 @@ function gorevMailGonder(gorev) {
             document.querySelector('.mk-tip-btn[data-tip="'+tip+'"]').classList.add("active");
             var kayit = ybYilVerisi();
             var kategoriler = tip==="gelir" ? kayit.gelirKategorileri : kayit.giderKategorileri;
-            document.getElementById("mkKategori").innerHTML = kategoriler.map(function(k){return '<option value="'+k+'" '+(k===kategori?'selected':'')+'>'+k.toUpperCase()+'</option>';}).join("");
+            document.getElementById("mkKategori").innerHTML = kategoriler.map(function(k){return '<option value="'+k+'" '+(k===kategori?'selected':'')+'>'+ybTrUpper(k)+'</option>';}).join("");
         }
         function ybModalKalemTip(tip) {
             ybModalTip = tip;
@@ -5385,7 +5464,7 @@ function gorevMailGonder(gorev) {
             document.querySelector('.mk-tip-btn[data-tip="'+tip+'"]').classList.add("active");
             var kayit = ybYilVerisi();
             var kategoriler = tip==="gelir" ? kayit.gelirKategorileri : kayit.giderKategorileri;
-            document.getElementById("mkKategori").innerHTML = kategoriler.map(function(k){return '<option value="'+k+'">'+k.toUpperCase()+'</option>';}).join("");
+            document.getElementById("mkKategori").innerHTML = kategoriler.map(function(k){return '<option value="'+k+'">'+ybTrUpper(k)+'</option>';}).join("");
         }
         function ybModalKalemKapat() { document.getElementById("ybModalKalem").style.display = "none"; }
         function ybModalKalemKaydet() {
@@ -5397,11 +5476,31 @@ function gorevMailGonder(gorev) {
             if(isNaN(tutar)||tutar<=0) { tmNotify("Geçerli bir tutar giriniz!","error"); return; }
             var kayit = ybYilVerisi();
             var ay = ybAyVerisi(ybModalAyIdx, kayit);
-            (tip==="gelir"?ay.gelirler:ay.giderler)[kategori].push({id:Date.now(),aciklama:aciklama,tutar:tutar});
+            var yeniItem = {id:Date.now(),aciklama:aciklama,tutar:tutar};
+            (tip==="gelir"?ay.gelirler:ay.giderler)[kategori].push(yeniItem);
             var db = ybVeriYukle(); db.yillar[db.aktifYil]=kayit; ybVeriKaydet(db);
             ybModalKalemKapat();
             tmNotify("Kalem başarıyla eklendi.","success");
-            ybSekmeGoster(String(ybModalAyIdx));
+            // DOM'a yeni satırı ekle (tam re-render yapma)
+            var tipPrefix = tip==='gelir' ? 'accG' : 'accD';
+            var accBodyId = tipPrefix+'_'+kategori.replace(/[^a-z0-9]/gi,'_')+'_'+ybModalAyIdx;
+            var body = document.getElementById(accBodyId);
+            if(body) {
+                var table = body.querySelector('table');
+                if(!table) {
+                    // İlk kalem, tabloyu oluştur
+                    table = document.createElement('table');
+                    var tbody = document.createElement('tbody');
+                    table.appendChild(tbody);
+                    body.insertBefore(table, body.querySelector('.acc-btn-ekle'));
+                }
+                var tbody = table.querySelector('tbody') || table;
+                tbody.insertAdjacentHTML('beforeend', ybDomSatirOlustur(yeniItem, ybModalAyIdx));
+                ybDomKategoriTotalGuncelle(accBodyId);
+                ybDomOzetGuncelle(ybModalAyIdx);
+            } else {
+                ybSekmeGoster(String(ybModalAyIdx));
+            }
         }
 
         // ===== PDF Yardımcı =====
