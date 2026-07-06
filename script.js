@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.10.0';
+        var APP_VERSION = 'V1.10.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6035,19 +6035,31 @@ function gorevMailGonder(gorev) {
                 var netSifre = hs.internetSifre || "—";
                 h += '<div class="ht-kart-3d" style="--ht-kart-renk:'+bankaRenk+'" onclick="htHesapDetayGoster('+hs.id+')">';
                 h += '<div class="kart-yuz">';
-                h += '<div class="kart-banka">'+hs.bankaAdi+'</div>';
-                h += '<div class="kart-bakiye '+bakiyeTipi+'">'+htTl(hs.bakiye)+'</div>';
-                h += '<div class="kart-sahip">'+hs.hesapSahibi+'</div>';
-                h += '<div class="kart-iban">'+ibanStr+'</div>';
-                h += '<div class="kart-sifreler"><span>KART: '+kartSifre+'</span><span>NET: '+netSifre+'</span></div>';
-                h += '<div class="kart-actions">';
+                h += '<div class="kart-top"><div class="kart-banka">'+hs.bankaAdi+'</div><div class="kart-actions">';
                 h += '<button class="kart-duzenle" onclick="event.stopPropagation();htHesapModalAc('+hs.id+')" title="Düzenle">✎</button>';
                 h += '<button class="kart-sil" onclick="event.stopPropagation();htHesapSil('+hs.id+')" title="Sil">✕</button>';
                 h += '</div></div>';
+                h += '<div class="kart-bakiye '+bakiyeTipi+'">'+htTl(hs.bakiye)+'</div>';
+                h += '<div class="kart-iban">'+ibanStr+'</div>';
+                h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">'+hs.hesapSahibi+'</div></div>';
+                h += '<div class="kart-alt-sag"><div class="kart-sifreler"><span>KART: '+kartSifre+'</span><span>NET: '+netSifre+'</span></div></div></div>';
+                h += '</div>';
                 h += '<div class="kart-chip"></div>';
                 h += '<div class="kart-logo">TM</div>';
                 h += '</div>';
             });
+            /* Nakit kart - her zaman son sırada */
+            var nakitBakiyeTipi = db.nakit < 0 ? "negatif" : "pozitif";
+            h += '<div class="ht-kart-3d ht-kart-nakit" onclick="htHesapDetayGoster(-1)">';
+            h += '<div class="kart-yuz">';
+            h += '<div class="kart-top"><div class="kart-banka">NAKİT HESABI</div><div class="kart-actions"></div></div>';
+            h += '<div class="kart-bakiye '+nakitBakiyeTipi+'">'+htTl(db.nakit)+'</div>';
+            h += '<div class="kart-iban">•••• •••• •••• ••••</div>';
+            h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">Fiziki Nakit Para</div></div>';
+            h += '<div class="kart-alt-sag"><div class="kart-sifreler"><span>KART: —</span><span>NET: —</span></div></div></div>';
+            h += '</div>';
+            h += '<div class="kart-chip"></div><div class="kart-logo">NAKİT</div>';
+            h += '</div>';
             h += '</div>';
             konteyner.innerHTML = h;
         }
@@ -6130,25 +6142,7 @@ function gorevMailGonder(gorev) {
         }
 
         function htNakitKartGoster() {
-            var grid = document.getElementById("htHesapKartlar");
-            if(!grid) return;
-            var db = htVeriYukle();
-            var nakitEl = grid.querySelector(".ht-nakit-row");
-            if(!nakitEl) {
-                var div = document.createElement("div");
-                div.className = "ht-nakit-row";
-                div.style.cssText = "grid-column:1 / -1;";
-                grid.appendChild(div);
-                nakitEl = div;
-            }
-            var bakiyeTipi = db.nakit < 0 ? "negatif" : "pozitif";
-            nakitEl.innerHTML = '<div class="ht-kart-3d ht-kart-nakit" style="--ht-kart-renk:#2d1b4e" onclick="htHesapDetayGoster(-1)">' +
-                '<div class="kart-yuz"><div class="kart-banka">NAKİT HESABI</div>' +
-                '<div class="kart-bakiye '+bakiyeTipi+'">'+htTl(db.nakit)+'</div>' +
-                '<div class="kart-sahip">Fiziki Nakit Para</div>' +
-                '<div class="kart-iban">•••• •••• •••• ••••</div>' +
-                '<div class="kart-sifreler"><span>KART: —</span><span>NET: —</span></div></div>' +
-                '<div class="kart-chip"></div><div class="kart-logo">NAKİT</div></div>';
+            htHesapKartlariGoster();
         }
 
         function htHesapDetayGoster(hesapId) {
