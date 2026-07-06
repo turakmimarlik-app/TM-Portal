@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.03.0';
+        var APP_VERSION = 'V1.04.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -5082,7 +5082,7 @@ function gorevMailGonder(gorev) {
             });
             h += `<button class="btn btn-primary" onclick="ybKategoriYonet('gider')" style="padding:7px 16px;font-size:12px;border-radius:5px;">📂 Kategorileri Yönet</button></div>`;
 
-            icerik.innerHTML = h;
+            icerik.innerHTML = '<div class="yb-ay-detay">'+h+'</div>';
         }
 
         function ybRaporGoster() {
