@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.09.0';
+        var APP_VERSION = 'V1.10.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -1332,7 +1332,7 @@ function gorevMailGonder(gorev) {
                 else if (id === 'nakit-dekont-page') { nakitDekontListesiniYenile(); var nd=document.getElementById("ndIslemTuru"); if(nd)nakitDekontIslemTuruRenk(nd); }
                 else if (id === 'musteriler-page') { musteriKartlariniYenile(); }
                 else if (id === 'isortaklari-page') { isOrtaklariKartlariniYenile(); }
-                else if (id === 'hesap-takip-page') { htSayfayiYukle(); }
+                else if (id === 'hesap-takip-page') { if(HT_AKTIF_DETAY_HESAP!==null&&HT_AKTIF_DETAY_HESAP!==undefined){htHesapKartlariGoster();htNakitKartGoster();htDurumGuncelle();}else{htSayfayiYukle();} }
                 else if (id === 'fatura-takip-page') { faturaSayfayiYukle(); }
                 else if (id === 'yillik-butce-page') { ybVeriYukle(); ybMonthGridRender(); ybTamamlananlariGoster(); if(ybGosterilenYil===null) { var sakli=ybAccStateKaydet(); ybSekmeGoster(ybAktifSekme); ybAccStateGeriYukle(sakli); } }
                 else if (id === 'dilekce-page') { dlkListele(); dlkIdGuncelle(); }
@@ -1389,6 +1389,15 @@ function gorevMailGonder(gorev) {
             if (u) tmOnlineCikisYap(u);
         });
         window.addEventListener("popstate", function(e) {
+            if (e.state && e.state.htDetay) {
+                if(document.getElementById("htHesapDetayAlan").style.display==="block"){htHesapDetayKapat(true);return;}
+                htHesapDetayGoster(e.state.htDetay);
+                return;
+            }
+            if (HT_AKTIF_DETAY_HESAP !== null && document.getElementById("htHesapDetayAlan") && document.getElementById("htHesapDetayAlan").style.display === "block") {
+                htHesapDetayKapat(true);
+                if (e.state && e.state.pageId === 'hesap-takip-page') return;
+            }
             if (e.state && e.state.pageId) {
                 tmFormDirty = false;
                 sayfaDegistir(e.state.pageId, null);
@@ -5949,16 +5958,29 @@ function gorevMailGonder(gorev) {
         }
 
         function htBankaRenk(ad) {
-            var a = ad.toUpperCase();
-            if(a.indexOf("İŞ") !== -1 && a.indexOf("BANK") !== -1) return "#003399";
-            if(a.indexOf("ZİRAAT") !== -1 || a.indexOf("ZIRAAT") !== -1) return "#C62828";
-            if(a.indexOf("DENİZBANK") !== -1 || a.indexOf("DENIZBANK") !== -1) return "#00AEEF";
-            if(a.indexOf("AKBANK") !== -1) return "#d32f2f";
-            if(a.indexOf("GARANTİ") !== -1 || a.indexOf("GARANTI") !== -1) return "#00695C";
+            var a = ad.toUpperCase().replace(/[İI]/g, "I");
+            if(a.indexOf("ZIRAAT") !== -1) return "#C62828";
+            if(a.indexOf("IS") !== -1 && a.indexOf("BANK") !== -1) return "#003399";
+            if(a.indexOf("AKBANK") !== -1) return "#D32F2F";
+            if(a.indexOf("GARANTI") !== -1) return "#00695C";
             if(a.indexOf("YAPI") !== -1 || a.indexOf("YKB") !== -1) return "#003399";
-            if(a.indexOf("VAKIF") !== -1) return "#003399";
+            if(a.indexOf("VAKIF") !== -1) return "#005BAA";
             if(a.indexOf("HALK") !== -1) return "#003399";
-            return "var(--text-dark)";
+            if(a.indexOf("DENIZ") !== -1) return "#00AEEF";
+            if(a.indexOf("QNB") !== -1 || a.indexOf("FINANS") !== -1) return "#8F1B1B";
+            if(a.indexOf("TEB") !== -1) return "#003B7B";
+            if(a.indexOf("ING") !== -1) return "#FF6600";
+            if(a.indexOf("HSBC") !== -1) return "#DB0011";
+            if(a.indexOf("ALTERNATIF") !== -1) return "#E51836";
+            if(a.indexOf("SEKER") !== -1) return "#006B3F";
+            if(a.indexOf("ANADOLU") !== -1) return "#004B87";
+            if(a.indexOf("FIBA") !== -1) return "#005CA0";
+            if(a.indexOf("BURGAN") !== -1) return "#003D7A";
+            if(a.indexOf("ODEA") !== -1) return "#00843D";
+            if(a.indexOf("TURKISH BANK") !== -1) return "#003366";
+            if(a.indexOf("ICBC") !== -1) return "#C41928";
+            if(a.indexOf("BANK OF CHINA") !== -1) return "#C8102E";
+            return "#1a2a3a";
         }
         function htVeriYukle() {
             try { if(localStorage.getItem("tm_ht_clean") !== "v1.20.0") {
@@ -6007,24 +6029,36 @@ function gorevMailGonder(gorev) {
             var h = '<div class="ht-kart-grid">';
             db.hesaplar.forEach(function(hs) {
                 var bankaRenk = htBankaRenk(hs.bankaAdi);
-                var sirketEtiketi = hs.id === 1 ? '<span class="ht-sirket-badge">ŞİRKET</span>' : "";
                 var bakiyeTipi = hs.bakiye < 0 ? "negatif" : "pozitif";
-                h += '<div class="ht-kart-3d" onclick="htHesapDetayGoster('+hs.id+')">';
-                h += '<div class="ht-kart-3d-bg" style="background:'+bankaRenk+'"></div>';
-                h += '<div class="ht-kart-3d-chip"></div>';
-                h += '<div class="ht-kart-3d-brand"></div>';
-                h += '<div class="ht-kart-3d-balance"><span class="ht-kart-3d-label">BAKİYE</span><span class="ht-kart-3d-tutar '+bakiyeTipi+'">'+htTl(hs.bakiye)+'</span></div>';
-                h += '<div class="ht-kart-3d-info"><span>'+hs.bankaAdi+'</span><span class="ht-kart-3d-sahibi">'+hs.hesapSahibi+'</span></div>';
-                h += '<div class="ht-kart-3d-iban">'+htIbanGoster(hs.iban)+'</div>';
-                h += '<div class="ht-kart-3d-sifreler"><span>KART: '+hs.kartSifre+'</span><span>NET: '+hs.internetSifre+'</span></div>';
-                h += '<div class="ht-kart-3d-actions">';
-                h += '<button class="ht-kart-btn ht-kart-btn-edit" onclick="event.stopPropagation();htHesapModalAc('+hs.id+')">Düzenle</button>';
-                h += '<button class="ht-kart-btn ht-kart-btn-del" onclick="event.stopPropagation();htHesapSil('+hs.id+')">Sil</button>';
+                var ibanStr = hs.iban ? htIbanGoster(hs.iban) : "";
+                var kartSifre = hs.kartSifre || "—";
+                var netSifre = hs.internetSifre || "—";
+                h += '<div class="ht-kart-3d" style="--ht-kart-renk:'+bankaRenk+'" onclick="htHesapDetayGoster('+hs.id+')">';
+                h += '<div class="kart-yuz">';
+                h += '<div class="kart-banka">'+hs.bankaAdi+'</div>';
+                h += '<div class="kart-bakiye '+bakiyeTipi+'">'+htTl(hs.bakiye)+'</div>';
+                h += '<div class="kart-sahip">'+hs.hesapSahibi+'</div>';
+                h += '<div class="kart-iban">'+ibanStr+'</div>';
+                h += '<div class="kart-sifreler"><span>KART: '+kartSifre+'</span><span>NET: '+netSifre+'</span></div>';
+                h += '<div class="kart-actions">';
+                h += '<button class="kart-duzenle" onclick="event.stopPropagation();htHesapModalAc('+hs.id+')" title="Düzenle">✎</button>';
+                h += '<button class="kart-sil" onclick="event.stopPropagation();htHesapSil('+hs.id+')" title="Sil">✕</button>';
                 h += '</div></div>';
+                h += '<div class="kart-chip"></div>';
+                h += '<div class="kart-logo">TM</div>';
+                h += '</div>';
             });
             h += '</div>';
             konteyner.innerHTML = h;
         }
+
+        var HT_BANKALAR = [
+            "AKBANK", "ALTERNATİF BANK", "ANADOLUBANK", "BANK OF CHINA TURKEY",
+            "BURGAN BANK", "DENİZBANK", "FİBABANKA", "GARANTİ BBVA",
+            "HALKBANK", "HSBC", "ICBC TURKEY", "ING BANK",
+            "İŞ BANKASI", "ODEA BANK", "QNB FİNANSBANK", "ŞEKERBANK",
+            "TEB", "TURKISH BANK", "VAKIFBANK", "YAPI KREDİ", "ZİRAAT BANKASI"
+        ];
 
         function htHesapModalAc(id) {
             var modal = document.getElementById("htHesapModal");
@@ -6032,7 +6066,12 @@ function gorevMailGonder(gorev) {
             var db = htVeriYukle();
             var hs = id ? db.hesaplar.find(function(h){return h.id===id;}) : null;
             document.getElementById("htModalId").value = id || "";
-            document.getElementById("htModalBanka").value = hs ? hs.bankaAdi : "";
+            var sec = document.getElementById("htModalBanka");
+            var seciliDeger = hs ? hs.bankaAdi : "";
+            sec.innerHTML = '<option value="">— Seçiniz —</option>';
+            HT_BANKALAR.forEach(function(b) {
+                sec.innerHTML += '<option value="'+b+'" '+(b===seciliDeger?'selected':'')+'>'+b+'</option>';
+            });
             document.getElementById("htModalSahibi").value = hs ? hs.hesapSahibi : "";
             document.getElementById("htModalIban").value = hs ? htIbanGoster(hs.iban) : "";
             document.getElementById("htModalKart").value = hs ? hs.kartSifre : "";
@@ -6103,13 +6142,13 @@ function gorevMailGonder(gorev) {
                 nakitEl = div;
             }
             var bakiyeTipi = db.nakit < 0 ? "negatif" : "pozitif";
-            nakitEl.innerHTML = '<div class="ht-kart-3d ht-kart-3d-nakit" onclick="htHesapDetayGoster(-1)">' +
-                '<div class="ht-kart-3d-bg" style="background:linear-gradient(135deg,#4A148C,#7B1FA2)"></div>' +
-                '<div class="ht-kart-3d-chip"></div><div class="ht-kart-3d-brand">NAKİT</div>' +
-                '<div class="ht-kart-3d-balance"><span class="ht-kart-3d-label">BAKİYE</span><span class="ht-kart-3d-tutar '+bakiyeTipi+'">'+htTl(db.nakit)+'</span></div>' +
-                '<div class="ht-kart-3d-info"><span>Fiziki Nakit</span><span class="ht-kart-3d-sahibi" style="font-size:12px;">Tıkla işlemleri gör</span></div>' +
-                '<div class="ht-kart-3d-iban" style="opacity:0.6;">•••• •••• •••• ••••</div>' +
-                '<div class="ht-kart-3d-sifreler"><span>KART: —</span><span>NET: —</span></div></div>';
+            nakitEl.innerHTML = '<div class="ht-kart-3d ht-kart-nakit" style="--ht-kart-renk:#2d1b4e" onclick="htHesapDetayGoster(-1)">' +
+                '<div class="kart-yuz"><div class="kart-banka">NAKİT HESABI</div>' +
+                '<div class="kart-bakiye '+bakiyeTipi+'">'+htTl(db.nakit)+'</div>' +
+                '<div class="kart-sahip">Fiziki Nakit Para</div>' +
+                '<div class="kart-iban">•••• •••• •••• ••••</div>' +
+                '<div class="kart-sifreler"><span>KART: —</span><span>NET: —</span></div></div>' +
+                '<div class="kart-chip"></div><div class="kart-logo">NAKİT</div></div>';
         }
 
         function htHesapDetayGoster(hesapId) {
@@ -6130,9 +6169,10 @@ function gorevMailGonder(gorev) {
             document.getElementById("htDetayBilgi").innerHTML = detayBilgi;
             document.getElementById("htHesapDetayAlan").style.display = "block";
             htDetayIslemleriGoster();
+            history.pushState({ pageId:'hesap-takip-page', htDetay:hesapId }, "", "#hesap-takip-page");
         }
 
-        function htHesapDetayKapat() {
+        function htHesapDetayKapat(skipHistory) {
             HT_AKTIF_DETAY_HESAP = null;
             document.getElementById("htHesapDetayAlan").style.display = "none";
             document.getElementById("htAnaSayfa").style.display = "";
@@ -6140,6 +6180,9 @@ function gorevMailGonder(gorev) {
             htNakitKartGoster();
             htIslemleriGoster();
             htDurumGuncelle();
+            if(!skipHistory && history.state && history.state.htDetay) {
+                history.back();
+            }
         }
 
         function htDetayIslemleriGoster() {
