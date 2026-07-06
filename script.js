@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.07.0';
+        var APP_VERSION = 'V1.08.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -1334,7 +1334,7 @@ function gorevMailGonder(gorev) {
                 else if (id === 'isortaklari-page') { isOrtaklariKartlariniYenile(); }
                 else if (id === 'hesap-takip-page') { htSayfayiYukle(); }
                 else if (id === 'fatura-takip-page') { faturaSayfayiYukle(); }
-                else if (id === 'yillik-butce-page') { ybVeriYukle(); ybMonthGridRender(); ybTamamlananlariGoster(); if(ybGosterilenYil===null) ybSekmeGoster(ybAktifSekme); }
+                else if (id === 'yillik-butce-page') { ybVeriYukle(); ybMonthGridRender(); ybTamamlananlariGoster(); if(ybGosterilenYil===null) { var sakli=ybAccStateKaydet(); ybSekmeGoster(ybAktifSekme); ybAccStateGeriYukle(sakli); } }
                 else if (id === 'dilekce-page') { dlkListele(); dlkIdGuncelle(); }
                 else if (id === 'tm-fiyatlar-page') { if (!tmfEditing) tmfSayfayiYukle(); }
                 else if (id === 'istakibi-page') { itGoster(); }
@@ -4909,10 +4909,12 @@ function gorevMailGonder(gorev) {
                 Object.entries(ay.gelirler||{}).forEach(([ktg,items]) => items.forEach(k => {
                     h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gelir);font-weight:600;">GELİR</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
                 }));
+                if(aG>0) h += '<tr style="background:rgba(46,204,113,0.08);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-gelir);">Gelir Toplamı</td><td style="text-align:right;color:var(--yb-gelir);">+'+aG.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
                 Object.entries(ay.giderler||{}).forEach(([ktg,items]) => items.forEach(k => {
                     h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gider);font-weight:600;">GİDER</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
                 }));
-                h += '<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-text-light);">Aylık Toplam</td><td style="text-align:right;color:'+((aG-aGi)>=0?'var(--yb-gelir)':'var(--yb-gider)')+';">'+(aG-aGi).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
+                if(aGi>0) h += '<tr style="background:rgba(231,76,60,0.08);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-gider);">Gider Toplamı</td><td style="text-align:right;color:var(--yb-gider);">-'+aGi.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
+                h += '<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-text-light);">Net Toplam</td><td style="text-align:right;color:'+((aG-aGi)>=0?'var(--yb-gelir)':'var(--yb-gider)')+';">'+(aG-aGi).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr>';
                 h += '</tbody></table>';
             }
             h += '</div>';
@@ -4947,6 +4949,9 @@ function gorevMailGonder(gorev) {
             h += '</tbody></table>';
             wrap.innerHTML = h;
         }
+
+        function ybAccStateKaydet() { var a=[]; document.querySelectorAll(".yb-acc-body.open").forEach(function(e){a.push(e.id);}); return a; }
+        function ybAccStateGeriYukle(liste) { liste.forEach(function(id){var e=document.getElementById(id);if(e){e.classList.add('open');e.parentElement.querySelector('.yb-acc-header').classList.add('open');}}); }
 
         function ybSekmeGoster(sekme) {
             ybAktifSekme = sekme;
@@ -5434,32 +5439,21 @@ function gorevMailGonder(gorev) {
         }
 
         // ===== BÜTÇE KALEM EKLEME MODAL =====
-        var ybModalAyIdx = 0, ybModalTip = "gelir";
+        var ybModalAyIdx = 0, ybModalTip = "gelir", ybModalKategori = "";
         function ybModalKalemAc(tip, kategori, ayIdx) {
-            ybModalAyIdx = ayIdx; ybModalTip = tip;
+            ybModalAyIdx = ayIdx; ybModalTip = tip; ybModalKategori = kategori;
             document.getElementById("ybModalKalem").style.display = "flex";
             document.getElementById("mkAciklama").value = "";
             document.getElementById("mkTutar").value = "";
-            document.querySelectorAll(".mk-tip-btn").forEach(function(el){el.classList.remove("active");});
-            document.querySelector('.mk-tip-btn[data-tip="'+tip+'"]').classList.add("active");
             document.getElementById("mkTipSecimi").style.display = "none";
-            var kayit = ybYilVerisi();
-            var kategoriler = tip==="gelir" ? kayit.gelirKategorileri : kayit.giderKategorileri;
-            document.getElementById("mkKategori").innerHTML = kategoriler.map(function(k){return '<option value="'+k+'" selected>'+ybTrUpper(k)+'</option>';}).join("");
-            document.getElementById("mkKategori").disabled = true;
+            document.getElementById("mkKatLabel").style.display = "none";
+            document.getElementById("mkKatSatir").style.display = "none";
         }
-        function ybModalKalemTip(tip) {
-            ybModalTip = tip;
-            document.querySelectorAll(".mk-tip-btn").forEach(function(el){el.classList.remove("active");});
-            document.querySelector('.mk-tip-btn[data-tip="'+tip+'"]').classList.add("active");
-            var kayit = ybYilVerisi();
-            var kategoriler = tip==="gelir" ? kayit.gelirKategorileri : kayit.giderKategorileri;
-            document.getElementById("mkKategori").innerHTML = kategoriler.map(function(k){return '<option value="'+k+'">'+ybTrUpper(k)+'</option>';}).join("");
-        }
-        function ybModalKalemKapat() { document.getElementById("ybModalKalem").style.display = "none"; document.getElementById("mkTipSecimi").style.display = "flex"; document.getElementById("mkKategori").disabled = false; }
+        function ybModalKalemTip(tip) { /* not used when hidden */ }
+        function ybModalKalemKapat() { document.getElementById("ybModalKalem").style.display = "none"; document.getElementById("mkTipSecimi").style.display = "flex"; document.getElementById("mkKatLabel").style.display = "block"; document.getElementById("mkKatSatir").style.display = "block"; }
         function ybModalKalemKaydet() {
             var tip = ybModalTip;
-            var kategori = document.getElementById("mkKategori").value;
+            var kategori = ybModalKategori;
             var aciklama = document.getElementById("mkAciklama").value.trim();
             var tutar = tmTutarCoz(document.getElementById("mkTutar").value);
             if(!aciklama) { tmNotify("Açıklama zorunludur!","error"); return; }
