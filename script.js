@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.14.1';
+        var APP_VERSION = 'V1.15.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -3272,7 +3272,7 @@ function gorevMailGonder(gorev) {
                         <td class="search-target-h">${t.hazirlayan}</td>
                         <td style="color:var(--accent-red); font-weight:700;">${t.genelTutar}</td>
                         <td>
-                            <button class="btn-warning" onclick="event.stopPropagation(); eskiTeklifPdfUretDbId(${t.id})">📄 PDF</button> 
+                            <button class="btn btn-pdf-red btn-sm" onclick="event.stopPropagation(); eskiTeklifPdfUretDbId(${t.id})">📄 PDF</button> 
                             <button class="btn-danger" onclick="event.stopPropagation(); teklifSilDbId(${t.id})">Sil</button>
                         </td>
                     </tr>
@@ -6528,7 +6528,7 @@ function gorevMailGonder(gorev) {
                     <td><input type="text" class="tf-avni" value="${k.avniBirimFiyat.toLocaleString('tr-TR', {minimumFractionDigits:2})}" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)" style="width:90%; text-align:right; padding:6px;"></td>
                     <td><input type="date" class="tf-tarih" value="${k.tarih || ''}" style="width:100%; padding:6px;"></td>
                     <td style="white-space:nowrap;">
-                        <button class="btn-warning" onclick="tmFiyatSatirKaydet(this, ${k.id})" style="padding:4px 8px; font-size:11px;">💾 Kaydet</button>
+                        <button class="btn-save-green" onclick="tmFiyatSatirKaydet(this, ${k.id})" style="padding:4px 8px; font-size:11px;">💾 Kaydet</button>
                         <button class="btn-danger" onclick="tmFiyatSatirSil(${k.id})" style="padding:4px 8px; font-size:11px;">Sil</button>
                     </td>
                 </tr>`;

@@ -130,7 +130,7 @@
                 </div>
             </div>
             <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.05.0</div>
+                <div class="version-tag">V1.15.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1183,7 +1183,7 @@
                         <label>Erişebileceği Sayfalar (Yetkiler):</label>
                         <div id="yetkiCheckboxContainer"></div>
                     </div>
-                    <button id="btnSave" class="btn btn-red" onclick="kullaniciKaydet()">Kullanıcıyı Kaydet</button>
+                    <button id="btnSave" class="btn btn-save-green" onclick="kullaniciKaydet()">Kullanıcıyı Kaydet</button>
                     <button id="btnCancel" class="btn btn-clear-gray" onclick="formSifirla()" style="display:none; margin-left: 10px;">Vazgeç</button>
                 </div>
 
@@ -1235,7 +1235,7 @@
                         <div class="col-full"><label>Adres</label><textarea id="ciAdres" rows="2">KIRKLARELİ / DEMİRKÖY / İĞNEADA</textarea></div>
                         <div class="col-full"><label>Dilekçe Alt Bilgi (sayfa altı)</label><textarea id="ciDilekceAltBilgi" rows="2" placeholder="Boş bırakılırsa adres/telefon/e-posta kullanılır"></textarea></div>
                     </div>
-                    <button class="btn btn-red" onclick="sirketBilgileriKaydet()">💾 Bilgileri Kaydet</button>
+                    <button class="btn btn-save-green" onclick="sirketBilgileriKaydet()">💾 Bilgileri Kaydet</button>
                     <span id="ciKayitMsg" style="margin-left:10px; font-size:12px; color:green; display:none;">Kaydedildi ✓</span>
                 </div>
 
@@ -1267,7 +1267,7 @@
                     <h3>💾 Yedek & Geri Yükle</h3>
                     <p style="font-size:13px; color:var(--text-light); margin-bottom:15px;">Tüm verileri JSON dosyası olarak dışa aktarır veya önceden aldığınız yedeği geri yükler.</p>
                     <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                        <button class="btn btn-red" onclick="tmYedekAl()">📥 Yedek Al (Dışa Aktar)</button>
+                        <button class="btn btn-primary" onclick="tmYedekAl()">📥 Yedek Al (Dışa Aktar)</button>
                         <input type="file" id="yedekYukleInput" accept=".json" style="display:none" onchange="tmYedekYukle(event)">
                         <button class="btn btn-primary" onclick="document.getElementById('yedekYukleInput').click()">📂 Yedek Yükle (Geri Yükle)</button>
                     </div>
@@ -1288,7 +1288,7 @@
                     <div class="modal-body"><p id="tmConfirmMsg"></p></div>
                     <div class="modal-actions">
                         <button class="btn btn-primary" id="tmConfirmCancel">Hayır</button>
-                        <button class="btn btn-red" id="tmConfirmOk">Evet</button>
+                        <button class="btn btn-danger" id="tmConfirmOk">Evet</button>
                     </div>
                 </div>
             </div>
@@ -1302,7 +1302,7 @@
                     </div>
                     <div class="modal-actions">
                         <button class="btn btn-primary" id="tmPromptCancel">İptal</button>
-                        <button class="btn btn-red" id="tmPromptOk">Tamam</button>
+                        <button class="btn btn-primary" id="tmPromptOk">Tamam</button>
                     </div>
                 </div>
             </div>
@@ -1312,7 +1312,7 @@
                     <div class="modal-header"><h3 id="tmAlertTitle">BİLGİ</h3></div>
                     <div class="modal-body"><p id="tmAlertMsg"></p></div>
                     <div class="modal-actions">
-                        <button class="btn btn-red" id="tmAlertOk">Tamam</button>
+                        <button class="btn btn-primary" id="tmAlertOk">Tamam</button>
                     </div>
                 </div>
             </div>
