@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.18.0';
+        var APP_VERSION = 'V1.19.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6681,237 +6681,280 @@ function gorevMailGonder(gorev) {
                 try { document.body.removeChild(sayfaEl); } catch(ex) { console.error(ex); }
             });
         }
-        /* ================= YENİ TM FİYAT LİSTESİ MODÜLÜ ================= */
-        const TMF_KAT_KEY = 'tm_kategorili_fiyatlar';
+        /* ================= TM FİYAT LİSTESİ — FİYAT KARTLARI ================= */
+        const TMF_KART_KEY = 'tm_kategorili_fiyatlar';
+        let tmfEditId = null;
 
         function tmfVeriYukle() {
-            let db = JSON.parse(localStorage.getItem(TMF_KAT_KEY));
-            if (!db || !db.kategoriler) {
+            let db = JSON.parse(localStorage.getItem(TMF_KART_KEY));
+            if (!db || !db.kartlar) {
                 db = {
-                    kategoriler: [
-                        { id: 1, ad: "Uygulama Proje Fiyatlandırma", birim: "m²", sutunlar: [{ id: "col_1", ad: "Birim Fiyat (₺)" }, { id: "col_2", ad: "Söylenen (₺)" }, { id: "col_3", ad: "Ekip (₺)" }], satirlar: [{ id: 1, aralikMin: "0", aralikMax: "100", degerler: { col_1: "1.100,00", col_2: "650,00", col_3: "350,00" } }, { id: 2, aralikMin: "101", aralikMax: "200", degerler: { col_1: "570,00", col_2: "325,00", col_3: "175,00" } }] },
-                        { id: 2, ad: "3B Modelleme ve Tasarım Fiyatlandırma", birim: "m²", sutunlar: [{ id: "col_1", ad: "Birim Fiyat (₺)" }], satirlar: [{ id: 1, aralikMin: "0", aralikMax: "100", degerler: { col_1: "500,00" } }] },
-                        { id: 3, ad: "Şantiye Şefliği Fiyatlandırma", birim: "ay", sutunlar: [{ id: "col_1", ad: "Birim Fiyat (₺)" }], satirlar: [{ id: 1, aralikMin: "0", aralikMax: "999999", degerler: { col_1: "15.000,00" } }] },
-                        { id: 4, ad: "Kat İrtifakı/Mülkiyeti İşi Fiyatlandırma", birim: "adet", sutunlar: [{ id: "col_1", ad: "Birim Fiyat (₺)" }], satirlar: [{ id: 1, aralikMin: "0", aralikMax: "999999", degerler: { col_1: "5.000,00" } }] },
-                        { id: 5, ad: "Danışmanlık Fiyatlandırma", birim: "saat", sutunlar: [{ id: "col_1", ad: "Birim Fiyat (₺)" }], satirlar: [{ id: 1, aralikMin: "0", aralikMax: "999999", degerler: { col_1: "750,00" } }] },
-                        { id: 6, ad: "Rölöve Fiyatlandırma", birim: "m²", sutunlar: [{ id: "col_1", ad: "Birim Fiyat (₺)" }], satirlar: [{ id: 1, aralikMin: "0", aralikMax: "200", degerler: { col_1: "200,00" } }] },
-                        { id: 7, ad: "Keşif Fiyatlandırma", birim: "adet", sutunlar: [{ id: "col_1", ad: "Birim Fiyat (₺)" }], satirlar: [{ id: 1, aralikMin: "0", aralikMax: "999999", degerler: { col_1: "3.000,00" } }] }
+                    kartlar: [
+                        { id: 1, ad: "Uygulama Proje", tip: "kademeli", birim: "m²", not: "Konut projeleri için geçerlidir.", kademeler: [
+                            { min: "0", max: "100", fiyat: "1100" }, { min: "101", max: "200", fiyat: "570" }, { min: "201", max: "250", fiyat: "460" }, { min: "251", max: "500", fiyat: "240" }, { min: "501", max: "750", fiyat: "170" }, { min: "751", max: "1000", fiyat: "155" }, { min: "1001", max: "+", fiyat: "130" }
+                        ] },
+                        { id: 2, ad: "3B Modelleme ve Tasarım", tip: "birim", birim: "m²", not: "", birimFiyat: "500" },
+                        { id: 3, ad: "Şantiye Şefliği", tip: "kademeli", birim: "ay", not: "Toplam inşaat alanına göre aylık ücret.", kademeler: [
+                            { min: "0", max: "500", fiyat: "8000" }, { min: "501", max: "1000", fiyat: "12000" }, { min: "1001", max: "+", fiyat: "15000" }
+                        ] },
+                        { id: 4, ad: "Kat İrtifakı/Mülkiyeti", tip: "birim", birim: "adet", not: "Her bir bağımsız bölüm için.", birimFiyat: "5000" },
+                        { id: 5, ad: "Danışmanlık", tip: "birim", birim: "saat", not: "", birimFiyat: "750" },
+                        { id: 6, ad: "Rölöve", tip: "birim", birim: "m²", not: "", birimFiyat: "200" },
+                        { id: 7, ad: "Keşif", tip: "sabit", birim: "adet", not: "Anahtar teslim keşif bedeli.", sabitFiyat: "3000" }
                     ],
-                    aktifKategoriId: 1,
-                    sonrakiKategoriId: 8,
-                    sonrakiSatirId: 3
+                    sonrakiId: 8
                 };
-                origSetItem(TMF_KAT_KEY, JSON.stringify(db));
+                origSetItem(TMF_KART_KEY, JSON.stringify(db));
             }
             return db;
         }
 
-        function tmfVeriKaydet(db) { localStorage.setItem(TMF_KAT_KEY, JSON.stringify(db)); }
+        function tmfVeriKaydet(db) { localStorage.setItem(TMF_KART_KEY, JSON.stringify(db)); }
+
+        function tmfDegerCoz(s) {
+            if (!s) return 0;
+            var t = String(s).replace(/\./g, '').replace(',', '.').replace(/[^0-9.\-]/g, '');
+            var n = parseFloat(t);
+            return isNaN(n) ? 0 : n;
+        }
+
+        function tmfFmt(n) {
+            return n.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
 
         function tmfSayfayiYukle() {
             const db = tmfVeriYukle();
-            tmfKategoriBarRender(db);
-            tmfKategoriIcerikRender(db);
-        }
-
-        function tmfKategoriBarRender(db) {
-            const bar = document.getElementById("tmfKategoriBar");
-            if (!bar) return;
-            let h = "";
-            db.kategoriler.forEach(k => {
-                const aktif = k.id === db.aktifKategoriId;
-                h += '<div class="tmf-kat-tab' + (aktif ? ' active' : '') + '" onclick="tmfKategoriSec(' + k.id + ')">' +
-                    '<span class="tmf-tab-rename" onclick="event.stopPropagation(); tmfKategoriAdDegistir(' + k.id + ')" title="Yeniden adlandır">✏️</span>' +
-                    '<span>' + esc(k.ad) + '</span>' +
-                    (db.kategoriler.length > 1 ? '<span class="tmf-tab-close" onclick="event.stopPropagation(); tmfKategoriSil(' + k.id + ')" title="Kategoriyi sil">✕</span>' : '') +
-                    '</div>';
-            });
-            bar.innerHTML = h;
-        }
-
-        function tmfKategoriIcerikRender(db) {
-            const icerik = document.getElementById("tmfKategoriIcerik");
-            if (!icerik) return;
-            const kat = db.kategoriler.find(k => k.id === db.aktifKategoriId);
-            if (!kat) {
-                icerik.innerHTML = '<div class="tmf-bos-durum"><div class="tmf-bos-icon">📋</div><div class="tmf-bos-title">Henüz kategori yok</div><div class="tmf-bos-desc">Yeni bir kategori ekleyerek başlayın.</div></div>';
+            const grid = document.getElementById("tmfKartGrid");
+            if (!grid) return;
+            if (db.kartlar.length === 0) {
+                grid.innerHTML = '<div class="tmf-bos-durum"><div class="tmf-bos-icon">📇</div><div class="tmf-bos-title">Henüz fiyat kartı yok</div><div class="tmf-bos-desc">"Yeni Kart" butonuna tıklayarak ilk fiyatlandırma kartınızı oluşturun.</div></div>';
                 return;
             }
-            let h = '';
-            h += '<div class="tmf-ust-kisim">';
-            h += '<div><label>Kategori Adı</label><input type="text" id="tmfKatAd" value="' + esc(kat.ad) + '" onchange="tmfKatAdGuncelle(' + kat.id + ', this.value)" style="width:220px;"></div>';
-            h += '<div><label>Birim Türü</label><input type="text" id="tmfKatBirim" value="' + esc(kat.birim) + '" onchange="tmfKatBirimGuncelle(' + kat.id + ', this.value)" style="width:80px;" placeholder="m², adet, ay..."></div>';
-            h += '</div>';
-            if (kat.satirlar.length === 0) {
-                h += '<div class="tmf-bos-durum" style="margin-bottom:14px;"><div class="tmf-bos-icon">📄</div><div class="tmf-bos-title">Henüz fiyat satırı yok</div><div class="tmf-bos-desc">"Satır Ekle" butonuna tıklayarak fiyat aralığı ekleyin.</div></div>';
-            } else {
-                h += '<div class="tmf-table-wrap"><table class="tmf-tablo">';
-                h += '<thead><tr>';
-                h += '<th style="width:50px;">Min</th>';
-                h += '<th style="width:50px;">Max</th>';
-                kat.sutunlar.forEach(col => {
-                    h += '<th>' + esc(col.ad) + '<span class="tmf-col-del" onclick="tmfSutunSil(\'' + col.id + '\')" title="Sütunu sil">✕</span></th>';
-                });
-                h += '<th style="width:55px;">İşlem</th>';
-                h += '</tr></thead><tbody>';
-                kat.satirlar.forEach(satir => {
-                    h += '<tr>';
-                    h += '<td><input class="tmf-input-min" type="text" value="' + esc(satir.aralikMin) + '" onchange="tmfSatirGuncelle(' + satir.id + ',\'aralikMin\',this.value)"></td>';
-                    h += '<td><input class="tmf-input-max" type="text" value="' + esc(satir.aralikMax) + '" onchange="tmfSatirGuncelle(' + satir.id + ',\'aralikMax\',this.value)"></td>';
-                    kat.sutunlar.forEach(col => {
-                        const val = satir.degerler[col.id] || "";
-                        h += '<td><input type="text" value="' + esc(val) + '" onchange="tmfSatirDegerGuncelle(' + satir.id + ',\'' + col.id + '\',this.value)"></td>';
+            let h = "";
+            db.kartlar.forEach(k => {
+                const tipEtiket = k.tip === "sabit" ? "Sabit" : k.tip === "birim" ? "Birim" : "Kademeli";
+                const tipIcon = k.tip === "sabit" ? "💰" : k.tip === "birim" ? "📏" : "📐";
+                h += '<div class="tmf-kart">';
+                h += '<div class="tmf-kart-header"><h3>' + esc(k.ad) + '</h3><div class="tmf-kart-badges">';
+                h += '<span class="tmf-badge tmf-badge-' + k.tip + '">' + tipIcon + ' ' + tipEtiket + '</span>';
+                h += '<span class="tmf-badge tmf-badge-unit">' + esc(k.birim || "—") + '</span>';
+                h += '</div></div>';
+                h += '<div class="tmf-kart-body">';
+                if (k.tip === "sabit") {
+                    h += '<div class="tmf-sabit-goster"><div class="tmf-fiyat-buyuk">' + tmfFmt(tmfDegerCoz(k.sabitFiyat)) + ' ₺</div></div>';
+                } else if (k.tip === "birim") {
+                    h += '<div class="tmf-birim-goster"><div class="tmf-fiyat-orta">' + tmfFmt(tmfDegerCoz(k.birimFiyat)) + ' ₺</div>';
+                    h += '<div class="tmf-unit-label">/ ' + esc(k.birim) + '</div></div>';
+                } else if (k.tip === "kademeli" && k.kademeler) {
+                    h += '<table class="tmf-kademeli-tablo">';
+                    k.kademeler.forEach(kd => {
+                        const aralik = kd.max === "+" ? kd.min + ' ' + esc(k.birim) + ' ve üzeri' : kd.min + ' - ' + kd.max + ' ' + esc(k.birim);
+                        h += '<tr><td class="tmf-range">' + aralik + '</td><td class="tmf-price">' + tmfFmt(tmfDegerCoz(kd.fiyat)) + ' ₺</td></tr>';
                     });
-                    h += '<td><button class="tmf-btn-sm tmf-btn-danger" onclick="tmfSatirSil(' + satir.id + ')">🗑️</button></td>';
-                    h += '</tr>';
-                });
-                h += '</tbody></table></div>';
+                    h += '</table>';
+                }
+                h += '</div>';
+                h += '<div class="tmf-kart-hesapla">';
+                h += '<div class="tmf-hesap-row"><input type="text" class="tmf-hesap-input" id="tmfHesapInput_' + k.id + '" oninput="tmfKartHesapla(' + k.id + ')" placeholder="Miktar girin..." value=""><span class="tmf-hesap-unit">' + esc(k.birim) + '</span></div>';
+                h += '<div class="tmf-hesap-islem" id="tmfHesapIslem_' + k.id + '"></div>';
+                h += '<div class="tmf-hesap-sonuc"><span class="tmf-hesap-label">Toplam</span><span id="tmfHesapSonuc_' + k.id + '">—</span></div>';
+                h += '</div>';
+                if (k.not) { h += '<div class="tmf-kart-not">📌 ' + esc(k.not) + '</div>'; }
+                h += '<div class="tmf-kart-actions">';
+                h += '<button class="tmf-btn-edit" onclick="tmfKartDuzenle(' + k.id + ')">✏️ Düzenle</button>';
+                h += '<button class="tmf-btn-del" onclick="tmfKartSil(' + k.id + ')">🗑️</button>';
+                h += '</div></div>';
+            });
+            grid.innerHTML = h;
+        }
+
+        function tmfKartHesapla(id) {
+            const db = tmfVeriYukle();
+            const kart = db.kartlar.find(k => k.id === id);
+            if (!kart) return;
+            const input = document.getElementById("tmfHesapInput_" + id);
+            if (!input) return;
+            const miktarStr = input.value.trim();
+            if (!miktarStr) {
+                const sEl = document.getElementById("tmfHesapSonuc_" + id);
+                const iEl = document.getElementById("tmfHesapIslem_" + id);
+                if (sEl) sEl.textContent = "—";
+                if (iEl) iEl.textContent = "";
+                return;
             }
-            h += '<div class="tmf-alt-butonlar">';
-            h += '<button class="tmf-btn-sm tmf-btn-save" onclick="tmfSatirEkle()">+ Satır Ekle</button>';
-            h += '<button class="tmf-btn-sm tmf-btn-addcol" onclick="tmfSutunEkle()">+ Sütun Ekle</button>';
-            h += '</div>';
-            h += '<div class="tmf-alt-bilgi">Değerleri tabloda doğrudan düzenleyin, otomatik kaydedilir.</div>';
-            icerik.innerHTML = h;
+            const miktar = tmfDegerCoz(miktarStr);
+            if (miktar <= 0) {
+                const sEl = document.getElementById("tmfHesapSonuc_" + id);
+                const iEl = document.getElementById("tmfHesapIslem_" + id);
+                if (sEl) sEl.textContent = "0,00 ₺";
+                if (iEl) iEl.textContent = "";
+                return;
+            }
+            const sEl = document.getElementById("tmfHesapSonuc_" + id);
+            const iEl = document.getElementById("tmfHesapIslem_" + id);
+            if (kart.tip === "sabit") {
+                const f = tmfDegerCoz(kart.sabitFiyat);
+                if (sEl) sEl.textContent = tmfFmt(f) + ' ₺';
+                if (iEl) iEl.textContent = "Sabit fiyat × 1";
+            } else if (kart.tip === "birim") {
+                const bf = tmfDegerCoz(kart.birimFiyat);
+                const t = miktar * bf;
+                if (sEl) sEl.textContent = tmfFmt(t) + ' ₺';
+                if (iEl) iEl.textContent = tmfFmt(bf) + ' ₺ × ' + tmfFmt(miktar) + ' ' + kart.birim;
+            } else if (kart.tip === "kademeli" && kart.kademeler) {
+                let eslesen = null;
+                for (let i = 0; i < kart.kademeler.length; i++) {
+                    const kd = kart.kademeler[i];
+                    const min = tmfDegerCoz(kd.min);
+                    const max = kd.max === "+" ? Infinity : tmfDegerCoz(kd.max);
+                    if (miktar >= min && miktar <= max) { eslesen = kd; break; }
+                }
+                if (eslesen) {
+                    const bf = tmfDegerCoz(eslesen.fiyat);
+                    const t = miktar * bf;
+                    if (sEl) sEl.textContent = tmfFmt(t) + ' ₺';
+                    if (iEl) iEl.textContent = tmfFmt(bf) + ' ₺ × ' + tmfFmt(miktar) + ' ' + kart.birim;
+                } else {
+                    if (sEl) sEl.textContent = '⚠️ Aralık dışı';
+                    if (iEl) iEl.textContent = "";
+                }
+            }
         }
 
-        function tmfKategoriSec(id) {
+        function tmfKartEkle() {
             const db = tmfVeriYukle();
-            db.aktifKategoriId = id;
-            tmfVeriKaydet(db);
-            tmfSayfayiYukle();
-        }
-
-        function tmfKategoriEkle() {
-            const db = tmfVeriYukle();
-            tmPrompt("Yeni kategori adı:", function(ad) {
+            tmPrompt("Kart adı:", function(ad) {
                 if (!ad || ad.trim() === "") return;
                 ad = ad.trim();
-                const yeniId = db.sonrakiKategoriId++;
-                db.kategoriler.push({
-                    id: yeniId, ad: ad, birim: "m²",
-                    sutunlar: [{ id: "col_1", ad: "Birim Fiyat (₺)" }, { id: "col_2", ad: "Söylenen (₺)" }],
-                    satirlar: [{ id: db.sonrakiSatirId++, aralikMin: "0", aralikMax: "100", degerler: { col_1: "", col_2: "" } }]
+                const yeniId = db.sonrakiId++;
+                db.kartlar.push({ id: yeniId, ad: ad, tip: "birim", birim: "m²", not: "", birimFiyat: "" });
+                tmfVeriKaydet(db);
+                tmfSayfayiYukle();
+                tmNotify("Kart eklendi: " + ad, "success");
+            });
+        }
+
+        function tmfKartSil(id) {
+            const db = tmfVeriYukle();
+            const kart = db.kartlar.find(k => k.id === id);
+            if (!kart) return;
+            tmConfirm('"' + kart.ad + '" kartını silmek istediğinize emin misiniz?', function() {
+                db.kartlar = db.kartlar.filter(k => k.id !== id);
+                tmfVeriKaydet(db);
+                tmfSayfayiYukle();
+                tmNotify("Kart silindi.", "success");
+            });
+        }
+
+        function tmfKartDuzenle(id) {
+            tmfEditId = id;
+            const db = tmfVeriYukle();
+            const kart = db.kartlar.find(k => k.id === id);
+            if (!kart) return;
+            const modal = document.getElementById("tmfKartModal");
+            const icerik = document.getElementById("tmfKartModalIcerik");
+            if (!modal || !icerik) return;
+            let h = '<div class="tmf-modal-header"><h3>✏️ Kart Düzenle</h3><button class="tmf-modal-close" onclick="tmfKartModalKapat()">✕</button></div>';
+            h += '<div class="tmf-modal-body">';
+            h += '<div class="tmf-modal-field"><label>Kart Adı</label><input type="text" id="tmfModalAd" value="' + esc(kart.ad) + '"></div>';
+            h += '<div class="tmf-modal-field"><label>Fiyat Türü</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="sabit"' + (kart.tip==="sabit"?' selected':'') + '>💰 Sabit Fiyat</option><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>📏 Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '>📐 Kademeli Fiyat</option></select></div>';
+            h += '<div class="tmf-modal-field"><label>Birim Türü</label><input type="text" id="tmfModalBirim" value="' + esc(kart.birim) + '" placeholder="m², adet, ay, saat..."></div>';
+            h += '<div id="tmfModalDinamikAlan"></div>';
+            h += '<div class="tmf-modal-field"><label>Not (isteğe bağlı)</label><textarea id="tmfModalNot" placeholder="Bu kartla ilgili notlar...">' + esc(kart.not || "") + '</textarea></div>';
+            h += '</div>';
+            h += '<div class="tmf-modal-actions"><button class="tmf-modal-btn tmf-modal-btn-save" onclick="tmfKartModalKaydet()">💾 Kaydet</button><button class="tmf-modal-btn tmf-modal-btn-cancel" onclick="tmfKartModalKapat()">İptal</button></div>';
+            icerik.innerHTML = h;
+            modal.style.display = "flex";
+            tmfModalTipDegisti();
+        }
+
+        function tmfModalTipDegisti() {
+            const tip = document.getElementById("tmfModalTip").value;
+            const alan = document.getElementById("tmfModalDinamikAlan");
+            if (!alan) return;
+            const db = tmfVeriYukle();
+            const kart = db.kartlar.find(k => k.id === tmfEditId);
+            if (!kart) return;
+            let h = "";
+            if (tip === "sabit") {
+                h += '<div class="tmf-modal-field"><label>Sabit Fiyat (₺)</label><input type="text" id="tmfModalSabit" value="' + esc(kart.sabitFiyat || "") + '" placeholder="Örn: 5000"></div>';
+            } else if (tip === "birim") {
+                h += '<div class="tmf-modal-field"><label>Birim Fiyat (₺)</label><input type="text" id="tmfModalBirimFiyat" value="' + esc(kart.birimFiyat || "") + '" placeholder="Örn: 500"></div>';
+            } else if (tip === "kademeli") {
+                const kd = kart.kademeler && kart.kademeler.length > 0 ? kart.kademeler : [{ min: "", max: "", fiyat: "" }];
+                h += '<div class="tmf-modal-kademeler"><label style="font-size:9px; font-weight:700; color:#7a94ad; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; display:block;">Fiyat Kademeleri</label>';
+                h += '<table><thead><tr><th style="width:60px;">Min</th><th style="width:60px;">Max</th><th>Fiyat (₺)</th><th style="width:30px;"></th></tr></thead><tbody id="tmfKademeTbody">';
+                kd.forEach((k, i) => {
+                    h += '<tr>';
+                    h += '<td><input class="tmf-kd-min" type="text" value="' + esc(k.min) + '" placeholder="0"></td>';
+                    h += '<td><input class="tmf-kd-max" type="text" value="' + esc(k.max) + '" placeholder="100"></td>';
+                    h += '<td><input class="tmf-kd-fiyat" type="text" value="' + esc(k.fiyat) + '" placeholder="1100"></td>';
+                    h += '<td>' + (kd.length > 1 ? '<button class="tmf-btn-kd-sil" onclick="this.closest(\'tr\').remove()">✕</button>' : '') + '</td>';
+                    h += '</tr>';
                 });
-                db.aktifKategoriId = yeniId;
-                tmfVeriKaydet(db);
-                tmfSayfayiYukle();
-                tmNotify("Kategori eklendi: " + ad, "success");
-            });
-        }
-
-        function tmfKategoriSil(id) {
-            const db = tmfVeriYukle();
-            const kat = db.kategoriler.find(k => k.id === id);
-            if (!kat) return;
-            tmConfirm('"' + kat.ad + '" kategorisini silmek istediğinize emin misiniz?', function() {
-                db.kategoriler = db.kategoriler.filter(k => k.id !== id);
-                if (db.aktifKategoriId === id) {
-                    db.aktifKategoriId = db.kategoriler.length > 0 ? db.kategoriler[0].id : null;
-                }
-                tmfVeriKaydet(db);
-                tmfSayfayiYukle();
-                tmNotify("Kategori silindi.", "success");
-            });
-        }
-
-        function tmfKategoriAdDegistir(id) {
-            const db = tmfVeriYukle();
-            const kat = db.kategoriler.find(k => k.id === id);
-            if (!kat) return;
-            tmPrompt("Yeni kategori adı:", function(yeniAd) {
-                if (!yeniAd || yeniAd.trim() === "" || yeniAd.trim() === kat.ad) return;
-                kat.ad = yeniAd.trim();
-                tmfVeriKaydet(db);
-                tmfSayfayiYukle();
-                tmNotify("Kategori adı değiştirildi.", "success");
-            });
-        }
-
-        function tmfKatAdGuncelle(id, val) {
-            const db = tmfVeriYukle();
-            const kat = db.kategoriler.find(k => k.id === id);
-            if (kat && val.trim()) {
-                kat.ad = val.trim();
-                tmfVeriKaydet(db);
-                tmfKategoriBarRender(db);
+                h += '</tbody></table>';
+                h += '<button class="tmf-btn-kd-ekle" onclick="tmfKademeEkle()">+ Kademe Ekle</button></div>';
             }
+            alan.innerHTML = h;
         }
 
-        function tmfKatBirimGuncelle(id, val) {
-            const db = tmfVeriYukle();
-            const kat = db.kategoriler.find(k => k.id === id);
-            if (kat) { kat.birim = val.trim(); tmfVeriKaydet(db); }
+        function tmfKademeEkle() {
+            const tbody = document.getElementById("tmfKademeTbody");
+            if (!tbody) return;
+            const tr = document.createElement("tr");
+            tr.innerHTML = '<td><input class="tmf-kd-min" type="text" value="" placeholder="0"></td><td><input class="tmf-kd-max" type="text" value="" placeholder="100"></td><td><input class="tmf-kd-fiyat" type="text" value="" placeholder="1100"></td><td><button class="tmf-btn-kd-sil" onclick="this.closest(\'tr\').remove()">✕</button></td>';
+            tbody.appendChild(tr);
         }
 
-        function tmfSatirEkle() {
+        function tmfKartModalKaydet() {
             const db = tmfVeriYukle();
-            const kat = db.kategoriler.find(k => k.id === db.aktifKategoriId);
-            if (!kat) return;
-            const degerler = {};
-            kat.sutunlar.forEach(col => { degerler[col.id] = ""; });
-            kat.satirlar.push({ id: db.sonrakiSatirId++, aralikMin: "", aralikMax: "", degerler: degerler });
+            const kart = db.kartlar.find(k => k.id === tmfEditId);
+            if (!kart) return;
+            const ad = document.getElementById("tmfModalAd");
+            const tip = document.getElementById("tmfModalTip");
+            const birim = document.getElementById("tmfModalBirim");
+            const notEl = document.getElementById("tmfModalNot");
+            if (!ad || !tip || !birim) return;
+            if (!ad.value.trim()) { tmNotify("Kart adı boş olamaz.", "error"); return; }
+            kart.ad = ad.value.trim();
+            kart.tip = tip.value;
+            kart.birim = birim.value.trim() || "—";
+            kart.not = notEl ? notEl.value : "";
+            if (kart.tip === "sabit") {
+                const s = document.getElementById("tmfModalSabit");
+                kart.sabitFiyat = s ? s.value : "";
+                delete kart.birimFiyat;
+                delete kart.kademeler;
+            } else if (kart.tip === "birim") {
+                const b = document.getElementById("tmfModalBirimFiyat");
+                kart.birimFiyat = b ? b.value : "";
+                delete kart.sabitFiyat;
+                delete kart.kademeler;
+            } else if (kart.tip === "kademeli") {
+                const tbody = document.getElementById("tmfKademeTbody");
+                if (tbody) {
+                    const rows = tbody.querySelectorAll("tr");
+                    kart.kademeler = [];
+                    rows.forEach(function(tr) {
+                        const inputs = tr.querySelectorAll("input");
+                        if (inputs.length >= 3) {
+                            kart.kademeler.push({ min: inputs[0].value, max: inputs[1].value, fiyat: inputs[2].value });
+                        }
+                    });
+                }
+                delete kart.sabitFiyat;
+                delete kart.birimFiyat;
+            }
             tmfVeriKaydet(db);
-            tmfKategoriIcerikRender(db);
+            tmfKartModalKapat();
+            tmfSayfayiYukle();
+            tmNotify("Kart kaydedildi.", "success");
         }
 
-        function tmfSatirSil(id) {
-            const db = tmfVeriYukle();
-            const kat = db.kategoriler.find(k => k.id === db.aktifKategoriId);
-            if (!kat) return;
-            kat.satirlar = kat.satirlar.filter(s => s.id !== id);
-            tmfVeriKaydet(db);
-            tmfKategoriIcerikRender(db);
-        }
-
-        function tmfSatirGuncelle(satirId, alan, val) {
-            const db = tmfVeriYukle();
-            const kat = db.kategoriler.find(k => k.id === db.aktifKategoriId);
-            if (!kat) return;
-            const satir = kat.satirlar.find(s => s.id === satirId);
-            if (satir) { satir[alan] = val; tmfVeriKaydet(db); }
-        }
-
-        function tmfSatirDegerGuncelle(satirId, colId, val) {
-            const db = tmfVeriYukle();
-            const kat = db.kategoriler.find(k => k.id === db.aktifKategoriId);
-            if (!kat) return;
-            const satir = kat.satirlar.find(s => s.id === satirId);
-            if (satir) { satir.degerler[colId] = val; tmfVeriKaydet(db); }
-        }
-
-        function tmfSutunEkle() {
-            const db = tmfVeriYukle();
-            const kat = db.kategoriler.find(k => k.id === db.aktifKategoriId);
-            if (!kat) return;
-            let maxColNum = 0;
-            kat.sutunlar.forEach(col => { const n = parseInt(col.id.replace('col_','')); if (n > maxColNum) maxColNum = n; });
-            const yeniColId = "col_" + (maxColNum + 1);
-            const _yeniColId = yeniColId;
-            tmPrompt("Sütun adı:", function(ad) {
-                if (!ad || ad.trim() === "") return;
-                kat.sutunlar.push({ id: _yeniColId, ad: ad.trim() });
-                kat.satirlar.forEach(satir => { satir.degerler[_yeniColId] = ""; });
-                tmfVeriKaydet(db);
-                tmfKategoriIcerikRender(db);
-                tmNotify("Sütun eklendi: " + ad.trim(), "success");
-            });
-        }
-
-        function tmfSutunSil(colId) {
-            const db = tmfVeriYukle();
-            const kat = db.kategoriler.find(k => k.id === db.aktifKategoriId);
-            if (!kat) return;
-            if (kat.sutunlar.length <= 1) { tmNotify("En az bir sütun olmalıdır.", "error"); return; }
-            const col = kat.sutunlar.find(c => c.id === colId);
-            if (!col) return;
-            tmConfirm('"' + col.ad + '" sütununu silmek istediğinize emin misiniz?', function() {
-                kat.sutunlar = kat.sutunlar.filter(c => c.id !== colId);
-                kat.satirlar.forEach(satir => { delete satir.degerler[colId]; });
-                tmfVeriKaydet(db);
-                tmfKategoriIcerikRender(db);
-                tmNotify("Sütun silindi.", "success");
-            });
+        function tmfKartModalKapat() {
+            const modal = document.getElementById("tmfKartModal");
+            if (modal) modal.style.display = "none";
+            tmfEditId = null;
         }
 
         /* ==================== FATURA TAKİP SİSTEMİ ==================== */
