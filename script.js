@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.11.0';
+        var APP_VERSION = 'V1.12.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6042,7 +6042,6 @@ function gorevMailGonder(gorev) {
                     h += '<div class="kart-alt-sag"><div class="kart-sifreler"><span>KART: '+kartSifre+'</span><span>NET: '+netSifre+'</span></div></div></div>';
                     h += '</div>';
                     h += '<div class="kart-chip"></div>';
-                    h += '<div class="kart-logo">TM</div>';
                     h += '</div>';
                 });
             }
@@ -6056,7 +6055,7 @@ function gorevMailGonder(gorev) {
             h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">Fiziki Nakit Para</div></div>';
             h += '<div class="kart-alt-sag"><div class="kart-sifreler"><span>KART: —</span><span>NET: —</span></div></div></div>';
             h += '</div>';
-            h += '<div class="kart-chip"></div><div class="kart-logo">NAKİT</div>';
+            h += '<div class="kart-chip"></div>';
             h += '</div>';
             konteyner.innerHTML = h;
         }
