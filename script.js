@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.19.1';
+        var APP_VERSION = 'V1.19.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6734,7 +6734,7 @@ function gorevMailGonder(gorev) {
             db.kartlar.forEach(k => {
                 const tipEtiket = k.tip === "sabit" ? "Sabit" : k.tip === "birim" ? "Birim" : "Kademeli";
                 const tipIcon = k.tip === "sabit" ? "💰" : k.tip === "birim" ? "📏" : "📐";
-                h += '<div class="tmf-kart">';
+                h += '<div class="tmf-kart" draggable="true" data-id="' + k.id + '">';
                 h += '<div class="tmf-kart-header"><h3>' + esc(k.ad) + '</h3><div class="tmf-kart-badges">';
                 h += '<span class="tmf-badge tmf-badge-' + k.tip + '">' + tipIcon + ' ' + tipEtiket + '</span>';
                 h += '<span class="tmf-badge tmf-badge-unit">' + esc(k.birim || "—") + '</span>';
@@ -6761,11 +6761,40 @@ function gorevMailGonder(gorev) {
                 h += '</div>';
                 if (k.not) { h += '<div class="tmf-kart-not">📌 ' + esc(k.not) + '</div>'; }
                 h += '<div class="tmf-kart-actions">';
-                h += '<button class="tmf-btn-edit" onclick="tmfKartDuzenle(' + k.id + ')">✏️ Düzenle</button>';
-                h += '<button class="tmf-btn-del" onclick="tmfKartSil(' + k.id + ')">🗑️</button>';
+                h += '<button class="tmf-btn-edit" onclick="tmfKartDuzenle(' + k.id + ')">D\u00fczenle</button>';
+                h += '<button class="tmf-btn-del" onclick="tmfKartSil(' + k.id + ')">Sil</button>';
                 h += '</div></div>';
             });
             grid.innerHTML = h;
+            // Drag-drop reorder
+            var dragSrcId = null;
+            function dragHandler(ev) {
+                var card = ev.target.closest('.tmf-kart');
+                if (!card) return;
+                var id = parseInt(card.getAttribute('data-id'));
+                if (ev.type === 'dragstart') { dragSrcId = id; card.classList.add('tmf-dragging'); ev.dataTransfer.effectAllowed = 'move'; }
+                if (ev.type === 'dragend') { card.classList.remove('tmf-dragging'); document.querySelectorAll('.tmf-drag-over').forEach(function(e) { e.classList.remove('tmf-drag-over'); }); dragSrcId = null; }
+                if (ev.type === 'dragenter') { ev.preventDefault(); if (id !== dragSrcId) card.classList.add('tmf-drag-over'); }
+                if (ev.type === 'dragleave') { card.classList.remove('tmf-drag-over'); }
+                if (ev.type === 'dragover') { ev.preventDefault(); }
+                if (ev.type === 'drop') {
+                    ev.preventDefault();
+                    card.classList.remove('tmf-drag-over');
+                    if (dragSrcId === null || dragSrcId === id) return;
+                    var db = tmfVeriYukle();
+                    var fromIdx = -1, toIdx = -1;
+                    db.kartlar.forEach(function(k, i) { if (k.id === dragSrcId) fromIdx = i; if (k.id === id) toIdx = i; });
+                    if (fromIdx === -1 || toIdx === -1) return;
+                    var item = db.kartlar.splice(fromIdx, 1)[0];
+                    db.kartlar.splice(toIdx, 0, item);
+                    tmfVeriKaydet(db);
+                    tmfSayfayiYukle();
+                }
+            }
+            if (!grid._tmfDragInit) {
+                grid._tmfDragInit = true;
+                ['dragstart','dragend','dragenter','dragleave','dragover','drop'].forEach(function(et) { grid.addEventListener(et, dragHandler); });
+            }
         }
 
         function tmfKartHesapla(id) {
