@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.19.0';
+        var APP_VERSION = 'V1.19.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
