@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.19.3';
+        var APP_VERSION = 'V1.19.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6748,8 +6748,8 @@ function gorevMailGonder(gorev) {
                 } else if (k.tip === "kademeli" && k.kademeler) {
                     h += '<table class="tmf-kademeli-tablo">';
                     k.kademeler.forEach(kd => {
-                        const aralik = kd.max === "+" ? kd.min + ' ' + esc(k.birim) + ' ve üzeri' : kd.min + ' - ' + kd.max + ' ' + esc(k.birim);
-                        h += '<tr><td class="tmf-range">' + aralik + '</td><td class="tmf-price">' + tmfFmt(tmfDegerCoz(kd.fiyat)) + ' ₺</td></tr>';
+                        const aralik = kd.max === "+" ? kd.min + ' ' + esc(k.birim) + ' ve \u00fczeri' : kd.min + ' - ' + kd.max + ' ' + esc(k.birim);
+                        h += '<tr><td class="tmf-range">' + aralik + '</td><td class="tmf-desc">' + esc(kd.aciklama || "") + '</td><td class="tmf-price">' + tmfFmt(tmfDegerCoz(kd.fiyat)) + ' ₺</td></tr>';
                     });
                     h += '</table>';
                 }
@@ -6912,11 +6912,12 @@ function gorevMailGonder(gorev) {
             } else if (tip === "kademeli") {
                 const kd = kart.kademeler && kart.kademeler.length > 0 ? kart.kademeler : [{ min: "", max: "", fiyat: "" }];
                 h += '<div class="tmf-modal-kademeler"><label style="font-size:9px; font-weight:700; color:#7a94ad; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; display:block;">Fiyat Kademeleri</label>';
-                h += '<table><thead><tr><th style="width:60px;">Min</th><th style="width:60px;">Max</th><th>Fiyat (₺)</th><th style="width:30px;"></th></tr></thead><tbody id="tmfKademeTbody">';
+                h += '<table><thead><tr><th style="width:60px;">Min</th><th style="width:60px;">Max</th><th style="min-width:100px;">A\u00e7\u0131klama</th><th>Fiyat (₺)</th><th style="width:30px;"></th></tr></thead><tbody id="tmfKademeTbody">';
                 kd.forEach((k, i) => {
                     h += '<tr>';
                     h += '<td><input class="tmf-kd-min" type="text" value="' + esc(k.min) + '" placeholder="0"></td>';
                     h += '<td><input class="tmf-kd-max" type="text" value="' + esc(k.max) + '" placeholder="100"></td>';
+                    h += '<td><input class="tmf-kd-aciklama" type="text" value="' + esc(k.aciklama || "") + '" placeholder="A\u00e7\u0131klama"></td>';
                     h += '<td><input class="tmf-kd-fiyat" type="text" value="' + esc(k.fiyat) + '" placeholder="1100"></td>';
                     h += '<td>' + (kd.length > 1 ? '<button class="tmf-btn-kd-sil" onclick="this.closest(\'tr\').remove()">✕</button>' : '') + '</td>';
                     h += '</tr>';
@@ -6931,7 +6932,7 @@ function gorevMailGonder(gorev) {
             const tbody = document.getElementById("tmfKademeTbody");
             if (!tbody) return;
             const tr = document.createElement("tr");
-            tr.innerHTML = '<td><input class="tmf-kd-min" type="text" value="" placeholder="0"></td><td><input class="tmf-kd-max" type="text" value="" placeholder="100"></td><td><input class="tmf-kd-fiyat" type="text" value="" placeholder="1100"></td><td><button class="tmf-btn-kd-sil" onclick="this.closest(\'tr\').remove()">✕</button></td>';
+            tr.innerHTML = '<td><input class="tmf-kd-min" type="text" value="" placeholder="0"></td><td><input class="tmf-kd-max" type="text" value="" placeholder="100"></td><td><input class="tmf-kd-aciklama" type="text" value="" placeholder="A\u00e7\u0131klama"></td><td><input class="tmf-kd-fiyat" type="text" value="" placeholder="1100"></td><td><button class="tmf-btn-kd-sil" onclick="this.closest(\'tr\').remove()">✕</button></td>';
             tbody.appendChild(tr);
         }
 
@@ -6966,8 +6967,8 @@ function gorevMailGonder(gorev) {
                     kart.kademeler = [];
                     rows.forEach(function(tr) {
                         const inputs = tr.querySelectorAll("input");
-                        if (inputs.length >= 3) {
-                            kart.kademeler.push({ min: inputs[0].value, max: inputs[1].value, fiyat: inputs[2].value });
+                        if (inputs.length >= 4) {
+                            kart.kademeler.push({ min: inputs[0].value, max: inputs[1].value, aciklama: inputs[2].value, fiyat: inputs[3].value });
                         }
                     });
                 }

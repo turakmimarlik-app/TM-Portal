@@ -594,9 +594,10 @@
         #tm-fiyatlar-page .tmf-birim-goster .tmf-fiyat-orta { font-size:22px; font-weight:700; color:#27ae60; }
         #tm-fiyatlar-page .tmf-birim-goster .tmf-unit-label { font-size:13px; color:var(--text-light); font-weight:600; }
         #tm-fiyatlar-page .tmf-kademeli-tablo { width:100%; border-collapse:collapse; font-size:12px; }
-        #tm-fiyatlar-page .tmf-kademeli-tablo td { padding:5px 8px; border-bottom:1px solid rgba(0,0,0,0.04); }
+        #tm-fiyatlar-page .tmf-kademeli-tablo td { padding:6px 8px; border-bottom:1px solid rgba(0,0,0,0.04); }
         #tm-fiyatlar-page .tmf-kademeli-tablo tr:last-child td { border-bottom:none; }
-        #tm-fiyatlar-page .tmf-kademeli-tablo .tmf-range { color:var(--text-light); }
+        #tm-fiyatlar-page .tmf-kademeli-tablo .tmf-range { color:var(--text-light); white-space:nowrap; }
+        #tm-fiyatlar-page .tmf-kademeli-tablo .tmf-desc { color:var(--text-dark); font-size:11px; padding:5px 8px; }
         #tm-fiyatlar-page .tmf-kademeli-tablo .tmf-price { text-align:right; font-weight:700; color:#d68910; white-space:nowrap; }
         /* Calculator */
         #tm-fiyatlar-page .tmf-kart-hesapla { padding:10px 16px 14px 16px; border-top:1px solid var(--border-color); background:var(--panel-bg); }
@@ -638,6 +639,7 @@
         #tmfKartModal .tmf-modal-kademeler td input:focus { border-color:var(--accent-red); }
         #tmfKartModal .tmf-modal-kademeler td input.tmf-kd-min { min-width:50px; }
         #tmfKartModal .tmf-modal-kademeler td input.tmf-kd-max { min-width:50px; }
+        #tmfKartModal .tmf-modal-kademeler td input.tmf-kd-aciklama { min-width:90px; }
         #tmfKartModal .tmf-modal-kademeler td input.tmf-kd-fiyat { min-width:70px; }
         #tmfKartModal .tmf-btn-kd-ekle { padding:5px 12px; border-radius:5px; font-size:10px; font-weight:700; cursor:pointer; transition:0.15s; font-family:inherit; background:transparent; border:1px solid var(--border-color); color:var(--text-light); margin-top:6px; }
         #tmfKartModal .tmf-btn-kd-ekle:hover { border-color:var(--accent-red); color:var(--accent-red); }
