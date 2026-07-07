@@ -354,7 +354,7 @@
         .ht-ozet-kart .oz-deger.nakit { color:var(--ht-gold); }
 
         /* 3D Kredi Kartı Görünümü */
-        .ht-kart-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:14px; margin-bottom:15px; }
+        .ht-kart-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-bottom:15px; }
         @media (max-width:700px) { .ht-kart-grid { grid-template-columns:1fr; } }
         .ht-kart-3d { position:relative; border-radius:14px; padding:0; overflow:hidden; cursor:pointer; transition:transform 0.25s ease, box-shadow 0.25s ease; transform:perspective(900px) rotateX(0deg) rotateY(0deg); box-shadow:0 8px 28px rgba(0,0,0,0.35); }
         .ht-kart-3d:hover { transform:perspective(900px) rotateX(2deg) rotateY(-2deg); box-shadow:12px 14px 30px rgba(0,0,0,0.4); }
