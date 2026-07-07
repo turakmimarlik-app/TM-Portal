@@ -337,7 +337,7 @@
         .btn-add-item:hover { border-color: #1e3a5f; color: #1e3a5f; background: rgba(30,58,95,0.04); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,58,95,0.08); }
 
         /* ===== HESAP TAKİBİ MODERN TASARIM ===== */
-        #hesap-takip-page { --ht-bg:#0d1b2a; --ht-card:#162436; --ht-card-hover:#1a2c42; --ht-border:#243b52; --ht-text:#e4eaf2; --ht-text-light:#7a94ad; --ht-accent:#a0b8cc; --ht-gold:#c9a84c; --ht-gelir:#2ecc71; --ht-gider:#e74c3c; background:var(--ht-bg); color:var(--ht-text); padding:20px 5px; }
+        #hesap-takip-page { --ht-bg:#0d1b2a; --ht-card:#162436; --ht-card-hover:#1a2c42; --ht-border:#243b52; --ht-text:#e4eaf2; --ht-text-light:#7a94ad; --ht-accent:#a0b8cc; --ht-gold:#c9a84c; --ht-gelir:#2ecc71; --ht-gider:#e74c3c; background:var(--ht-bg); color:var(--ht-text); }
         #hesap-takip-page h2 { color:var(--ht-text); font-size:18px; border-left:3px solid var(--ht-accent); padding-left:12px; margin:0 0 16px 0; }
         #hesap-takip-page h3 { color:var(--ht-text); font-size:14px; margin:0 0 12px 0; }
 
@@ -356,7 +356,7 @@
         /* 3D Kredi Kartı Görünümü */
         .ht-kart-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:14px; margin-bottom:15px; }
         @media (max-width:700px) { .ht-kart-grid { grid-template-columns:1fr; } }
-        .ht-kart-3d { position:relative; border-radius:14px; padding:0; overflow:hidden; cursor:pointer; transition:transform 0.25s ease, box-shadow 0.25s ease; transform:perspective(900px) rotateX(0deg) rotateY(0deg); box-shadow:0 8px 28px rgba(0,0,0,0.35); }
+        .ht-kart-3d { position:relative; border-radius:14px; padding:0; overflow:hidden; cursor:pointer; transition:transform 0.25s ease, box-shadow 0.25s ease; transform:perspective(900px) rotateX(0deg) rotateY(0deg); box-shadow:0 8px 28px rgba(0,0,0,0.35); width:100%; }
         .ht-kart-3d:hover { transform:perspective(900px) rotateX(2deg) rotateY(-2deg); box-shadow:12px 14px 30px rgba(0,0,0,0.4); }
         .ht-kart-3d .kart-yuz { position:relative; padding:24px 22px 18px 22px; min-height:170px; display:flex; flex-direction:column; justify-content:space-between; background:linear-gradient(145deg, color-mix(in srgb, var(--ht-kart-renk) 90%, #fff) 0%, color-mix(in srgb, var(--ht-kart-renk) 70%, #000) 100%); }
         .ht-kart-3d .kart-yuz::before { content:''; position:absolute; top:10px; right:14px; width:48px; height:36px; border-radius:5px; border:2px solid rgba(255,255,255,0.2); background:linear-gradient(135deg,rgba(255,255,255,0.08) 0%,rgba(255,255,255,0.02) 100%); }
