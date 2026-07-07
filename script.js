@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.20.0';
+﻿        var APP_VERSION = 'V1.20.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6736,13 +6736,13 @@ function gorevMailGonder(gorev) {
             const grid = document.getElementById("tmfKartGrid");
             if (!grid) return;
             if (db.kartlar.length === 0) {
-                grid.innerHTML = '<div class="tmf-bos-durum"><div class="tmf-bos-icon">\U0001f4c7</div><div class="tmf-bos-title">Hen\u00fcz fiyat kart\u0131 yok</div><div class="tmf-bos-desc">"Yeni Kart" butonuna t\u0131klayarak ilk fiyatland\u0131rma kart\u0131n\u0131z\u0131 olu\u015fturun.</div></div>';
+                grid.innerHTML = '<div class="tmf-bos-durum"><div class="tmf-bos-icon">📇</div><div class="tmf-bos-title">Hen\u00fcz fiyat kart\u0131 yok</div><div class="tmf-bos-desc">"Yeni Kart" butonuna t\u0131klayarak ilk fiyatland\u0131rma kart\u0131n\u0131z\u0131 olu\u015fturun.</div></div>';
                 return;
             }
             let h = "";
             db.kartlar.forEach(function(k, idx) {
                 const tipEtiket = k.tip === "sabit" ? "Sabit" : k.tip === "birim" ? "Birim" : "Kademeli";
-                const tipIcon = k.tip === "sabit" ? "\U0001f4b0" : k.tip === "birim" ? "\U0001f4cf" : "\U0001f4d0";
+                const tipIcon = k.tip === "sabit" ? "💰" : k.tip === "birim" ? "📏" : "📐";
                 h += '<div class="tmf-kart">';
                 h += '<div class="tmf-kart-header"><h3>' + esc(k.ad) + '</h3><div class="tmf-kart-badges">';
                 h += '<span class="tmf-badge tmf-badge-' + k.tip + '">' + tipIcon + ' ' + tipEtiket + '</span>';
@@ -6774,13 +6774,13 @@ function gorevMailGonder(gorev) {
                 h += '<div class="tmf-hesap-islem" id="tmfHesapIslem_' + k.id + '"></div>';
                 h += '<div class="tmf-hesap-sonuc"><span class="tmf-hesap-label">Toplam</span><span id="tmfHesapSonuc_' + k.id + '">\u2014</span></div>';
                 h += '</div>';
-                if (k.not) { h += '<div class="tmf-kart-not">\U0001f4cc ' + esc(k.not) + '</div>'; }
+                if (k.not) { h += '<div class="tmf-kart-not">📌 ' + esc(k.not) + '</div>'; }
                 h += '<div class="tmf-kart-actions">';
                 h += '<div class="tmf-btn-spacer"></div>';
-                h += '<button class="tmf-btn-move" onclick="tmfKartTasima(' + k.id + ',-1)"' + (idx === 0 ? ' disabled' : '') + '>\u2191</button>';
-                h += '<button class="tmf-btn-move" onclick="tmfKartTasima(' + k.id + ',1)"' + (idx === db.kartlar.length - 1 ? ' disabled' : '') + '>\u2193</button>';
+                h += '<button class="tmf-btn-move" onclick="tmfKartTasima(' + k.id + ',-1)"' + (idx === 0 ? ' disabled' : '') + ' title="Yukarı taşı">↑</button>';
+                h += '<button class="tmf-btn-move" onclick="tmfKartTasima(' + k.id + ',1)"' + (idx === db.kartlar.length - 1 ? ' disabled' : '') + ' title="Aşağı taşı">↓</button>';
                 h += '<button class="tmf-btn-edit" onclick="tmfKartDuzenle(' + k.id + ')">\u270f\ufe0f</button>';
-                h += '<button class="tmf-btn-del" onclick="tmfKartSil(' + k.id + ')">\U0001f5d1\ufe0f</button>';
+                h += '<button class="tmf-btn-del" onclick="tmfKartSil(' + k.id + ')">🗑\ufe0f</button>';
                 h += '</div></div>';
             });
             grid.innerHTML = h;
@@ -6892,12 +6892,12 @@ function gorevMailGonder(gorev) {
             var h = '<div class="tmf-modal-header"><h3>\u270f\ufe0f Kart D\u00fczenle</h3><button class="tmf-modal-close" onclick="tmfKartModalKapat()">\u2715</button></div>';
             h += '<div class="tmf-modal-body">';
             h += '<div class="tmf-modal-field"><label>Kart Ad\u0131</label><input type="text" id="tmfModalAd" value="' + esc(kart.ad) + '"></div>';
-            h += '<div class="tmf-modal-field"><label>Fiyat T\u00fcr\u00fc</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="sabit"' + (kart.tip==="sabit"?' selected':'') + '>\U0001f4b0 Sabit Fiyat</option><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>\U0001f4cf Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '>\U0001f4d0 Kademeli Fiyat</option></select></div>';
+            h += '<div class="tmf-modal-field"><label>Fiyat T\u00fcr\u00fc</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="sabit"' + (kart.tip==="sabit"?' selected':'') + '>💰 Sabit Fiyat</option><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>📏 Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '>📐 Kademeli Fiyat</option></select></div>';
             h += '<div class="tmf-modal-field"><label>Birim T\u00fcr\u00fc</label><input type="text" id="tmfModalBirim" value="' + esc(kart.birim) + '" placeholder="m\u00b2, adet, ay, saat..."></div>';
             h += '<div id="tmfModalDinamikAlan"></div>';
             h += '<div class="tmf-modal-field"><label>Not</label><textarea id="tmfModalNot" placeholder="Bu kartla ilgili notlar...">' + esc(kart.not || "") + '</textarea></div>';
             h += '</div>';
-            h += '<div class="tmf-modal-actions"><button class="tmf-modal-btn tmf-modal-btn-save" onclick="tmfKartModalKaydet()">\U0001f4be Kaydet</button><button class="tmf-modal-btn tmf-modal-btn-cancel" onclick="tmfKartModalKapat()">\u0130ptal</button></div>';
+            h += '<div class="tmf-modal-actions"><button class="tmf-modal-btn tmf-modal-btn-save" onclick="tmfKartModalKaydet()">💾 Kaydet</button><button class="tmf-modal-btn tmf-modal-btn-cancel" onclick="tmfKartModalKapat()">\u0130ptal</button></div>';
             icerik.innerHTML = h;
             modal.style.display = "flex";
             tmfModalTipDegisti();
@@ -6920,19 +6920,19 @@ function gorevMailGonder(gorev) {
                 var kdList = kart.kademeler && kart.kademeler.length > 0 ? kart.kademeler : [{ min:"", max:"" }];
                 sut.forEach(function(c) { if (c.id !== "min" && c.id !== "max" && kdList[0][c.id] === undefined) { kdList.forEach(function(r) { r[c.id] = ""; }); } });
                 /* Column editor */
-                h += '<div class="tmf-modal-kd-sutunlar"><div class="tmf-kd-sutun-label">\U0001f4cb S\u00fctunlar</div>';
+                h += '<div class="tmf-modal-kd-sutunlar"><div class="tmf-kd-sutun-label">📋 S\u00fctunlar</div>';
                 h += '<table class="tmf-kd-sutun-tbl" id="tmfKdSutunTbl"><thead><tr><th style="width:32px;">Kolon</th><th>Ad\u0131</th><th style="width:50px;">Geni\u015flik</th><th style="width:24px;"></th></tr></thead><tbody>';
                 sut.forEach(function(c) {
                     var sabit = c.id === "min" || c.id === "max";
                     h += '<tr data-colid="' + c.id + '"><td style="font-size:10px;color:var(--text-light);font-weight:700;">' + (sabit ? c.id.toUpperCase() : c.id) + '</td>';
                     h += '<td><input class="tmf-kd-sut-ad" type="text" value="' + esc(c.ad) + '" placeholder="S\u00fctun ad\u0131"></td>';
                     h += '<td><input class="tmf-kd-sut-g" type="text" value="' + (c.g || 100) + '" placeholder="60"></td>';
-                    h += '<td>' + (sabit ? '<span style="color:var(--text-light);font-size:10px;opacity:0.5;">\U0001f512</span>' : '<button class="tmf-btn-sut-sil" onclick="tmfKdSutunSil(this)">\u2715</button>') + '</td></tr>';
+                    h += '<td>' + (sabit ? '<span style="color:var(--text-light);font-size:10px;opacity:0.5;">🔒</span>' : '<button class="tmf-btn-sut-sil" onclick="tmfKdSutunSil(this)">\u2715</button>') + '</td></tr>';
                 });
                 h += '</tbody></table>';
                 h += '<button class="tmf-btn-sut-ekle" onclick="tmfKdSutunEkle()">+ S\u00fctun Ekle</button></div>';
                 /* Rows */
-                h += '<div class="tmf-modal-kademeler"><div class="tmf-kd-label">\U0001f4ca Kademeler</div>';
+                h += '<div class="tmf-modal-kademeler"><div class="tmf-kd-label">📊 Kademeler</div>';
                 h += '<table><thead><tr>';
                 sut.forEach(function(c) { h += '<th style="width:' + (c.g || 100) + 'px;">' + esc(c.ad) + '</th>'; });
                 h += '<th style="width:30px;"></th></tr></thead><tbody id="tmfKademeTbody">';
@@ -9332,4 +9332,7 @@ function itDurumMetni(o) {
         function esc(s) { return (s||"").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
         function tarihStr(d) { try { return new Date(d).toLocaleDateString("tr-TR"); } catch(e) { return d||"-"; } }
         function formatPhone(el) { var v=el.value.replace(/\D/g,'').substring(0,11); if(v.length>0){var p=[];p.push(v.substring(0,4));if(v.length>4)p.push(v.substring(4,7));if(v.length>7)p.push(v.substring(7,9));if(v.length>9)p.push(v.substring(9,11));el.value=p.join(' ');} }
+
+
+
 
