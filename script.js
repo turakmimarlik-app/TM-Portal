@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.19.6';
+        var APP_VERSION = 'V1.19.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6886,7 +6886,7 @@ function gorevMailGonder(gorev) {
             let h = '<div class="tmf-modal-header"><h3>✏️ Kart Düzenle</h3><button class="tmf-modal-close" onclick="tmfKartModalKapat()">✕</button></div>';
             h += '<div class="tmf-modal-body">';
             h += '<div class="tmf-modal-field"><label>Kart Adı</label><input type="text" id="tmfModalAd" value="' + esc(kart.ad) + '"></div>';
-            h += '<div class="tmf-modal-field"><label>Fiyat Türü</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="sabit"' + (kart.tip==="sabit"?' selected':'') + '>💰 Sabit Fiyat</option><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>📏 Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '>📐 Kademeli Fiyat</option></select></div>';
+            h += '<div class="tmf-modal-field"><label>Fiyat Türü</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>📏 Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '>📐 Kademeli Fiyat</option></select></div>';
             h += '<div class="tmf-modal-field"><label>Birim Türü</label><input type="text" id="tmfModalBirim" value="' + esc(kart.birim) + '" placeholder="m², adet, ay, saat..."></div>';
             h += '<div id="tmfModalDinamikAlan"></div>';
             h += '<div class="tmf-modal-field"><label>Not (isteğe bağlı)</label><textarea id="tmfModalNot" placeholder="Bu kartla ilgili notlar...">' + esc(kart.not || "") + '</textarea></div>';
