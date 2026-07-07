@@ -517,9 +517,9 @@
         #is-muhasebe-page .isMuh-status-strip { display:flex !important; gap:16px !important; background:var(--ht-card) !important; padding:16px 20px !important; border-radius:12px !important; border:1px solid var(--ht-border) !important; margin-bottom:18px !important; justify-content:space-around !important; font-weight:600 !important; }
         #is-muhasebe-page .isMuh-status-strip small { font-size:9px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.5px; }
         #is-muhasebe-page .isMuh-status-strip span { font-size:18px; font-weight:800; color:var(--ht-text); }
-        #is-muhasebe-page .portfolio-card { background:var(--ht-card) !important; border:1px solid var(--ht-border) !important; border-top:3px solid var(--ht-accent) !important; border-radius:12px !important; padding:20px 20px 16px 20px !important; box-shadow:0 4px 16px rgba(0,0,0,0.2) !important; transition:0.2s !important; display:flex; flex-direction:column; }
+        #is-muhasebe-page .portfolio-card { background:var(--ht-card) !important; border:1px solid var(--ht-border) !important; border-top:3px solid var(--ht-accent) !important; border-radius:12px !important; padding:20px 0 16px 0 !important; box-shadow:0 4px 16px rgba(0,0,0,0.2) !important; transition:0.2s !important; display:flex; flex-direction:column; }
         #is-muhasebe-page .portfolio-card:hover { transform:translateY(-2px) !important; border-color:var(--ht-accent) !important; box-shadow:0 8px 24px rgba(0,0,0,0.25) !important; }
-        #is-muhasebe-page .portfolio-card .card-main-header { padding-right:0 !important; margin-bottom:10px !important; }
+        #is-muhasebe-page .portfolio-card .card-main-header { padding:0 20px !important; margin-bottom:10px !important; }
         #is-muhasebe-page .portfolio-card h4 { margin:0 0 4px 0; font-size:15px; font-weight:700; color:var(--ht-text); letter-spacing:0.3px; }
         #is-muhasebe-page .portfolio-card .card-actions { margin-top:10px; padding-top:10px; display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--ht-border); }
         /* Inline forms inside cards */
@@ -553,6 +553,11 @@
         #is-muhasebe-page .portfolio-card .p-detail b { color:var(--ht-text-light); font-weight:600; width:80px; display:inline-block; font-size:9px; text-transform:uppercase; }
         /* Page scroll */
         #is-muhasebe-page.page.active { max-height:calc(100vh - 80px); overflow-y:auto; }
+        /* Card inner sections padding */
+        #is-muhasebe-page .portfolio-card .card-actions { padding:10px 20px 0 20px; }
+        #is-muhasebe-page .portfolio-card [id^="isMuhKartContent_"] > * { padding-left:20px; padding-right:20px; }
+        #is-muhasebe-page .portfolio-card [id^="isMuhKartContent_"] .inline-form { margin-left:20px; margin-right:20px; width:auto; }
+        #is-muhasebe-page .portfolio-card [id^="isMuhKartContent_"] table { width:calc(100% + 40px); margin-left:-20px; }
         /* Empty state */
         #is-muhasebe-page .tm-empty-state, #tamamlanan-is-muhasebeleri-page .tm-empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; text-align:center; background:var(--ht-card); border-radius:12px; border:1px dashed var(--ht-border); margin:12px 0; }
         #is-muhasebe-page .tm-empty-state .tm-empty-icon, #tamamlanan-is-muhasebeleri-page .tm-empty-icon { font-size:42px; margin-bottom:10px; opacity:0.8; }
@@ -1273,6 +1278,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .cs-trigger.open:after { content:'▲'; }
         .cs-dropdown { display:none; position:absolute; top:100%; left:0; right:0; z-index:99999; background:var(--panel-bg); border:1px solid var(--border-color); border-radius:0 0 6px 6px; box-shadow:0 4px 16px rgba(0,0,0,0.12); max-height:220px; overflow-y:auto; margin-top:-1px; border-top:0; }
         .cs-dropdown.open { display:block; }
+        .cs-dropdown.open-upward { border-top:1px solid var(--border-color); border-bottom:0; border-radius:6px 6px 0 0; margin-top:0; margin-bottom:-1px; }
         .cs-dropdown::-webkit-scrollbar { width:6px; }
         .cs-dropdown::-webkit-scrollbar-thumb { background:var(--accent-red); border-radius:3px; }
         .cs-dropdown::-webkit-scrollbar-track { background:transparent; }
