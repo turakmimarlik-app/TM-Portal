@@ -389,27 +389,27 @@
 
         /* İşlem Kartları */
         .ht-islem-list { display:flex; flex-direction:column; gap:6px; }
-        .ht-islem-kart { display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--ht-card); border:1px solid var(--ht-border); border-radius:8px; transition:0.15s; }
+        .ht-islem-kart { display:flex; flex-direction:column; gap:8px; padding:14px 18px; background:var(--ht-card); border:1px solid var(--ht-border); border-radius:8px; transition:0.15s; }
         .ht-islem-kart:hover { border-color:var(--ht-text-light); }
-        .ht-islem-kart .ik-ikon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
-        .ht-islem-kart .ik-ikon.gelen { background:rgba(46,204,113,0.15); color:var(--ht-gelir); }
-        .ht-islem-kart .ik-ikon.giden { background:rgba(231,76,60,0.15); color:var(--ht-gider); }
-        .ht-islem-kart .ik-ikon.transfer { background:rgba(160,184,204,0.15); color:var(--ht-accent); }
-        .ht-islem-kart .ik-orta { flex:1; min-width:0; }
-        .ht-islem-kart .ik-aciklama { font-size:12px; font-weight:600; color:var(--ht-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-        .ht-islem-kart .ik-hesap { font-size:10px; color:var(--ht-text-light); margin-top:1px; }
-        .ht-islem-kart .ik-sag { text-align:right; flex-shrink:0; }
-        .ht-islem-kart .ik-tutar { font-size:14px; font-weight:800; }
-        .ht-islem-kart .ik-tutar.gelen { color:var(--ht-gelir); }
-        .ht-islem-kart .ik-tutar.giden { color:var(--ht-gider); }
-        .ht-islem-kart .ik-tutar.transfer { color:var(--ht-accent); }
-        .ht-islem-kart .ik-tarih { font-size:10px; color:var(--ht-text-light); margin-top:1px; }
-        .ht-islem-kart .ik-actions { display:flex; gap:3px; flex-shrink:0; }
-        .ht-islem-kart .ik-actions button { width:24px; height:24px; border-radius:4px; border:none; font-size:10px; cursor:pointer; transition:0.15s; }
-        .ht-islem-kart .ik-actions .ik-duzenle { background:rgba(160,184,204,0.12); color:var(--ht-accent); }
-        .ht-islem-kart .ik-actions .ik-duzenle:hover { background:rgba(160,184,204,0.25); }
-        .ht-islem-kart .ik-actions .ik-sil { background:rgba(231,76,60,0.12); color:var(--ht-gider); }
-        .ht-islem-kart .ik-actions .ik-sil:hover { background:rgba(231,76,60,0.25); }
+        .ht-islem-kart-ust { display:flex; justify-content:space-between; align-items:center; width:100%; }
+        .ht-islem-kart-alt { display:flex; justify-content:space-between; align-items:center; width:100%; gap:16px; }
+        .ht-islem-kart-aksiyon { display:flex; justify-content:flex-end; gap:6px; }
+        .ht-islem-kart-aciklama { font-size:13px; font-weight:600; color:var(--ht-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+        .ht-islem-kart-tutar { font-size:15px; font-weight:800; white-space:nowrap; }
+        .ht-islem-kart-tutar.gelen { color:var(--ht-gelir); }
+        .ht-islem-kart-tutar.giden { color:var(--ht-gider); }
+        .ht-islem-kart-tutar.transfer { color:var(--ht-accent); }
+        .ht-islem-kart-hesap { font-size:11px; color:var(--ht-text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .ht-islem-kart-tarih { font-size:11px; color:var(--ht-text-light); white-space:nowrap; }
+        .ht-islem-kart-islem { font-size:10px; font-weight:700; padding:2px 10px; border-radius:4px; white-space:nowrap; }
+        .ht-islem-kart-islem.gelen { background:rgba(46,204,113,0.15); color:var(--ht-gelir); }
+        .ht-islem-kart-islem.giden { background:rgba(231,76,60,0.15); color:var(--ht-gider); }
+        .ht-islem-kart-islem.transfer { background:rgba(160,184,204,0.15); color:var(--ht-accent); }
+        .ht-islem-btn { padding:4px 10px; border:none; border-radius:4px; font-size:10px; font-weight:600; cursor:pointer; transition:0.15s; }
+        .ht-islem-btn-edit { background:rgba(160,184,204,0.12); color:var(--ht-accent); }
+        .ht-islem-btn-edit:hover { background:rgba(160,184,204,0.25); }
+        .ht-islem-btn-del { background:rgba(231,76,60,0.12); color:var(--ht-gider); }
+        .ht-islem-btn-del:hover { background:rgba(231,76,60,0.25); }
 
         /* Arama */
         .ht-search-wrap { position:relative; margin-bottom:14px; }
