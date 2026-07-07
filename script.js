@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.15.0';
+        var APP_VERSION = 'V1.16.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6102,6 +6102,7 @@ function gorevMailGonder(gorev) {
             var kart = document.getElementById("htModalKart").value.trim();
             var net = document.getElementById("htModalNet").value.trim();
             var bakiye = tmTutarCoz(document.getElementById("htModalBakiye").value);
+            if(bakiye < 0) { tmNotify("Bakiye negatif olamaz! Lütfen geçerli bir bakiye giriniz.", "error"); return; }
             var db = htVeriYukle();
             if(id) {
                 id = parseInt(id);
@@ -6314,6 +6315,20 @@ function gorevMailGonder(gorev) {
             }
         }
 
+        function htEksiBakiyeKontrol(db, hesapId, tutar, islem) {
+            if(islem !== "GİDEN" && islem !== "TRANSFER") return true;
+            if(hesapId === 0) return true;
+            var bakiye = (hesapId === -1) ? (db.nakit||0) : (function(){
+                var h = db.hesaplar.find(function(x){return x.id===hesapId;});
+                return h ? (h.bakiye||0) : 999999;
+            })();
+            if(bakiye < tutar) {
+                tmNotify("Yetersiz bakiye! Hesap bakiyesi: " + htTl(bakiye) + ", çekilmek istenen: " + htTl(tutar), "error");
+                return false;
+            }
+            return true;
+        }
+
         function htIslemModalKaydet() {
             var id = document.getElementById("htModalIslemId").value;
             var aciklama = document.getElementById("htModalIslemAciklama").value.trim();
@@ -6336,12 +6351,18 @@ function gorevMailGonder(gorev) {
                 id = parseInt(id);
                 var eski = db.islemler.find(function(i){return i.id===id;});
                 if(eski) htIslemTersineCevir(db, eski);
+                if(!htEksiBakiyeKontrol(db, tur==="GELEN"?null:fromId, tutar, tur)) {
+                    if(eski) htIslemTersineCevir(db, eski);
+                    return;
+                }
                 var idx = db.islemler.findIndex(function(i){return i.id===id;});
                 if(idx!==-1) db.islemler[idx] = { id:id, hesapId:fromId, hedefId:tur==="GELEN"?null:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:tur };
             } else {
+                if(!htEksiBakiyeKontrol(db, fromId, tutar, tur)) return;
                 var maxId = db.islemler.reduce(function(m,i){return Math.max(m,i.id);},0);
                 var yeniId = maxId + 1;
                 if(tur === "TRANSFER") {
+                    if(!htEksiBakiyeKontrol(db, fromId, tutar, "TRANSFER")) return;
                     db.islemler.push({ id:yeniId, hesapId:fromId, hedefId:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"TRANSFER" });
                     htBakiyeGuncelle(db, fromId, tutar, "GİDEN");
                     htBakiyeGuncelle(db, toId, tutar, "GELEN");
@@ -6483,6 +6504,183 @@ function gorevMailGonder(gorev) {
             });
         }
 
+        /* ================= HESAP TAKİBİ PDF RAPOR SİSTEMİ ================= */
+        function htPdfDonemDegisti() {
+            var donem = document.getElementById("htPdfDonem").value;
+            document.getElementById("htPdfOzelTarih").style.display = donem === "ozel" ? "" : "none";
+        }
+
+        function htPdfModalAc(hesapId) {
+            var modal = document.getElementById("htPdfModal");
+            if(!modal) return;
+            document.getElementById("htPdfHesapId").value = hesapId || "";
+            var sec = document.getElementById("htPdfHesap");
+            var db = htVeriYukle();
+            sec.innerHTML = '<option value="0">🏦 Tüm Hesaplar</option>';
+            db.hesaplar.forEach(function(h) {
+                sec.innerHTML += '<option value="'+h.id+'" '+(hesapId===h.id?'selected':'')+'>🏦 '+h.bankaAdi+' - '+h.hesapSahibi+'</option>';
+            });
+            sec.innerHTML += '<option value="-1" '+(hesapId===-1?'selected':'')+'>💵 NAKİT</option>';
+            document.getElementById("htPdfBaslangic").value = "";
+            document.getElementById("htPdfBitis").value = "";
+            document.getElementById("htPdfDonem").value = "aylik";
+            document.getElementById("htPdfOzelTarih").style.display = "none";
+            modal.style.display = "flex";
+        }
+
+        function htPdfModalKapat() {
+            document.getElementById("htPdfModal").style.display = "none";
+        }
+
+        function htPdfTarihAraligiHesapla() {
+            var donem = document.getElementById("htPdfDonem").value;
+            var bugun = new Date();
+            var bas, bitis = new Date(bugun);
+            if(donem === "haftalik") {
+                bas = new Date(bugun); bas.setDate(bas.getDate() - 7);
+            } else if(donem === "aylik") {
+                bas = new Date(bugun); bas.setMonth(bas.getMonth() - 1);
+            } else if(donem === "yillik") {
+                bas = new Date(bugun); bas.setFullYear(bas.getFullYear() - 1);
+            } else {
+                bas = new Date(document.getElementById("htPdfBaslangic").value);
+                bitis = new Date(document.getElementById("htPdfBitis").value);
+                if(isNaN(bas.getTime()) || isNaN(bitis.getTime())) {
+                    tmNotify("Lütfen geçerli bir tarih aralığı seçin!", "error"); return null;
+                }
+                if(bas > bitis) { tmNotify("Başlangıç tarihi bitiş tarihinden sonra olamaz!", "error"); return null; }
+            }
+            return { bas: bas, bitis: bitis };
+        }
+
+        function htPdfRaporOlustur() {
+            var hesapId = parseInt(document.getElementById("htPdfHesap").value);
+            var gizliId = document.getElementById("htPdfHesapId").value;
+            if(gizliId && parseInt(gizliId) === hesapId && gizliId !== "0") { } 
+            var aralik = htPdfTarihAraligiHesapla();
+            if(!aralik) return;
+            var db = htVeriYukle();
+            var islemler = db.islemler.filter(function(i) {
+                if(!i.tarih) return false;
+                var t = new Date(i.tarih);
+                if(hesapId !== 0 && i.hesapId !== hesapId && i.hedefId !== hesapId) return false;
+                return t >= aralik.bas && t <= aralik.bitis;
+            });
+            islemler.sort(function(a,b){ return (a.tarih||"").localeCompare(b.tarih||""); });
+
+            function hesapAdiBul(id) {
+                if(id === -1) return "NAKİT";
+                if(id === 0) return "HARİCİ";
+                var h = db.hesaplar.find(function(hs){return hs.id===id;});
+                return h ? h.bankaAdi+" - "+h.hesapSahibi : ("ID:"+id);
+            }
+
+            var toplamGelir = 0, toplamGider = 0;
+            islemler.forEach(function(i) {
+                if(i.islem === "GELEN" || (i.islem === "GİDEN" && i.hedefId && (i.hedefId === 1 || i.hedefId === -1))) toplamGelir += i.tutar;
+                else if(i.islem === "GİDEN" || i.islem === "TRANSFER") toplamGider += i.tutar;
+            });
+            var netDegisim = toplamGelir - toplamGider;
+
+            var baslik = "HESAP HAREKET RAPORU";
+            var donemStr = aralik.bas.toLocaleDateString("tr-TR") + " - " + aralik.bitis.toLocaleDateString("tr-TR");
+            var hesapStr = hesapId === 0 ? "TÜM HESAPLAR" : hesapAdiBul(hesapId);
+
+            var satirlar = '';
+            islemler.forEach(function(i) {
+                var ikon = i.islem === "GELEN" ? "📥" : (i.islem === "GİDEN" ? "📤" : "🔄");
+                var hAd = i.islem === "TRANSFER" ? hesapAdiBul(i.hesapId)+" → "+hesapAdiBul(i.hedefId) : (i.islem === "GELEN" ? hesapAdiBul(i.hesapId) : (i.hedefId&&i.hedefId!==0?hesapAdiBul(i.hedefId):"HARİCİ"));
+                var renk = i.islem === "GELEN" ? "#2E7D32" : (i.islem === "GİDEN" ? "#9E2A2B" : "#a0b8cc");
+                satirlar += '<tr>';
+                satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;text-align:center;font-size:9px;">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</td>';
+                satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;font-size:9px;">'+i.aciklama+'</td>';
+                satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;font-size:8px;">'+hAd+'</td>';
+                satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;font-size:9px;font-weight:700;text-align:center;color:'+renk+';">'+i.islem+'</td>';
+                satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;font-size:9px;text-align:right;font-weight:700;color:'+renk+';">'+(i.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
+                satirlar += '</tr>';
+            });
+
+            var logoData = localStorage.getItem("tm_sirket_logo");
+            var logoHtml = (logoData && logoData !== "null" && logoData.length > 100)
+                ? '<img src="'+logoData+'" style="height:12mm;width:auto;vertical-align:middle;" alt="Logo">' : '';
+
+            var fb = (function(){ try{return JSON.parse(localStorage.getItem("tm_sirket_bilgileri"))||{};}catch(e){return {};} })();
+            var firmaAd = fb.ad || "TURAK MİMARLIK";
+
+            var sayfaHtml = `
+                <div style="width:210mm;min-height:297mm;padding:5mm 7mm;box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;background:#fff;color:#222;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:2.5mm;border-bottom:2.5px solid #1a1a2e;margin-bottom:3mm;">
+                        <div>`+logoHtml+`<div style="font-size:16px;font-weight:900;color:#1a1a2e;letter-spacing:2px;">`+firmaAd+`</div></div>
+                        <div style="text-align:right;">
+                            <div style="font-size:18px;font-weight:900;color:#1a3a5c;letter-spacing:1px;">`+baslik+`</div>
+                            <div style="font-size:9px;color:#888;font-weight:600;">`+donemStr+`</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:4mm;margin-bottom:3mm;">
+                        <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;background:#fafafa;text-align:center;">
+                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">RAPORLANAN HESAP</div>
+                            <div style="font-size:12px;font-weight:800;color:#1a1a2e;">`+hesapStr+`</div>
+                        </div>
+                        <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;background:#fafafa;text-align:center;">
+                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM İŞLEM</div>
+                            <div style="font-size:12px;font-weight:800;color:#1a1a2e;">`+islemler.length+` adet</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:4mm;margin-bottom:3mm;">
+                        <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;">
+                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM GELİR</div>
+                            <div style="font-size:16px;font-weight:900;color:#2E7D32;">`+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+` ₺</div>
+                        </div>
+                        <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;">
+                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM GİDER</div>
+                            <div style="font-size:16px;font-weight:900;color:#9E2A2B;">`+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+` ₺</div>
+                        </div>
+                        <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;background:`+(netDegisim>=0?'rgba(46,125,50,0.06)':'rgba(158,42,43,0.06)')+`;">
+                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">NET DEĞİŞİM</div>
+                            <div style="font-size:16px;font-weight:900;color:`+(netDegisim>=0?'#2E7D32':'#9E2A2B')+`;">`+netDegisim.toLocaleString('tr-TR',{minFractionDigits:2})+` ₺</div>
+                        </div>
+                    </div>
+                    <div style="border:1.5px solid #e0e0e0;border-radius:3px;overflow:hidden;">
+                        <table style="width:100%;border-collapse:collapse;font-size:9px;">
+                            <thead>
+                                <tr style="background:#1a1a2e;color:#fff;">
+                                    <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;width:14%;">TARİH</th>
+                                    <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;">AÇIKLAMA</th>
+                                    <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;width:22%;">HESAP</th>
+                                    <th style="padding:2mm 3mm;text-align:center;font-size:8px;letter-spacing:0.5px;width:10%;">TÜR</th>
+                                    <th style="padding:2mm 3mm;text-align:right;font-size:8px;letter-spacing:0.5px;width:18%;">TUTAR</th>
+                                </tr>
+                            </thead>
+                            <tbody>`+satirlar+`</tbody>
+                        </table>
+                    </div>
+                    <div style="border-top:2px solid #1a1a2e;padding-top:1.5mm;margin-top:4mm;text-align:center;">
+                        <div style="font-size:7px;color:#888;line-height:1.5;">TM-Portal Hesap Takip Sistemi · Rapor: `+donemStr+` · `+hesapStr+`</div>
+                    </div>
+                </div>
+            `;
+
+            var sayfaEl = document.createElement("div");
+            sayfaEl.style.cssText = "position:fixed;left:-9999px;top:0;width:210mm;min-height:297mm;overflow:hidden;z-index:99999;";
+            sayfaEl.innerHTML = sayfaHtml;
+            document.body.appendChild(sayfaEl);
+
+            tmLoadingGoster("Rapor oluşturuluyor...");
+            html2canvas(sayfaEl, {scale:4,useCORS:true,logging:false,width:793,height:1122}).then(function(cv){
+                var dt = cv.toDataURL('image/jpeg',0.92);
+                var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
+                doc.addImage(dt,'JPEG',0,0,210,297);
+                doc.save("HESAP_RAPORU_" + hesapStr.replace(/[^a-zA-Z0-9]/g,"_") + ".pdf");
+                document.body.removeChild(sayfaEl);
+                tmLoadingGizle();
+                htPdfModalKapat();
+                tmNotify("Rapor PDF olarak kaydedildi.", "success");
+            }).catch(function(e){
+                tmLoadingGizle();
+                tmNotify("PDF oluşturulurken hata: " + (e.message||e), "error");
+                try { document.body.removeChild(sayfaEl); } catch(ex) { console.error(ex); }
+            });
+        }
         /* ================= TM FİYAT LİSTESİ MODÜLÜ ================= */
         const TM_FIYAT_VARSAYILAN = [
             { aralikMin: 0, aralikMax: 100, birimFiyat: 1100.00, soylenenBirimFiyat: 650.00, ekipBirimFiyat: 350.00, avniBirimFiyat: 150.00, tarih: "2025-10-11" },
