@@ -453,6 +453,116 @@
 
         .ht-bos { text-align:center; padding:30px; color:var(--ht-text-light); font-size:13px; }
 
+        /* ===== NAKİT ÖDEME DEKONTU — HTS KONSEPTİ ===== */
+        #nakit-dekont-page { --ht-bg:#0d1b2a; --ht-card:#162436; --ht-border:#243b52; --ht-text:#e4eaf2; --ht-text-light:#7a94ad; --ht-accent:#a0b8cc; --ht-gelir:#2ecc71; --ht-gider:#e74c3c; background:var(--ht-bg); color:var(--ht-text); }
+        #nakit-dekont-page h2 { color:var(--ht-text); font-size:18px; border-left:3px solid var(--ht-accent); padding-left:12px; margin:0 0 16px 0; }
+        #nakit-dekont-page h3 { color:var(--ht-text); font-size:14px; margin:0 0 12px 0; }
+        #nakit-dekont-page .nd-form-wrap { background:var(--ht-card) !important; border:1px solid var(--ht-border) !important; border-radius:12px !important; padding:20px !important; margin-bottom:30px !important; }
+        #nakit-dekont-page .nd-col-divider { border-right:1px solid var(--ht-border) !important; }
+        #nakit-dekont-page label { display:block; font-size:10px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px; margin-top:0; }
+        #nakit-dekont-page input[type="text"], #nakit-dekont-page input[type="date"], #nakit-dekont-page select, #nakit-dekont-page textarea { width:100%; padding:9px 12px; border:1px solid var(--ht-border); border-radius:6px; background:rgba(255,255,255,0.06); color:var(--ht-text); font-size:13px; box-sizing:border-box; outline:none; }
+        #nakit-dekont-page input:focus, #nakit-dekont-page select:focus, #nakit-dekont-page textarea:focus { border-color:var(--ht-accent); }
+        #nakit-dekont-page select option { background:var(--ht-card); color:var(--ht-text); }
+        #nakit-dekont-page textarea { height:80px; resize:vertical; font-family:inherit; }
+        #nakit-dekont-page .search-box { width:100% !important; max-width:100% !important; padding:9px 14px 9px 36px !important; border:1px solid var(--ht-border) !important; border-radius:8px !important; background:var(--ht-card) !important; color:var(--ht-text) !important; font-size:12px !important; box-sizing:border-box !important; margin-bottom:14px !important; }
+        #nakit-dekont-page .search-box:focus { border-color:var(--ht-accent) !important; }
+        #nakit-dekont-page .app-table { width:100%; border-collapse:collapse; margin:12px 0 20px 0; }
+        #nakit-dekont-page .app-table th { background:#0d1b2a; color:var(--ht-text-light); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; padding:10px 12px; border-bottom:2px solid var(--ht-border); text-align:left; }
+        #nakit-dekont-page .app-table td { padding:10px 12px; border-bottom:1px solid var(--ht-border); font-size:12px; color:var(--ht-text); }
+        #nakit-dekont-page .app-table tr:hover td { background:rgba(255,255,255,0.03); }
+        #nakit-dekont-page .th-sortable { cursor:pointer; user-select:none; }
+        #nakit-dekont-page .th-sortable:hover { color:var(--ht-text) !important; }
+        #nakit-dekont-page .input-group-tl input { padding-right:35px !important; }
+        #nakit-dekont-page .input-tl-addon { color:var(--ht-text-light) !important; }
+        #nakit-dekont-page .tm-autocomplete-box { background:var(--ht-card); border:1px solid var(--ht-border); border-radius:0 0 6px 6px; box-shadow:0 4px 12px rgba(0,0,0,0.4); z-index:999; max-height:200px; overflow-y:auto; display:none; position:absolute; top:100%; left:0; right:0; }
+        #nakit-dekont-page .tm-autocomplete-box div { padding:8px 12px; font-size:12px; color:var(--ht-text); cursor:pointer; transition:0.1s; }
+        #nakit-dekont-page .tm-autocomplete-box div:hover { background:rgba(160,184,204,0.15); }
+        #nakit-dekont-page .btn-save-green { padding:10px 20px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease; display:inline-flex; align-items:center; justify-content:center; gap:6px; letter-spacing:0.3px; font-family:inherit; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #66BB6A; color:#66BB6A; }
+        #nakit-dekont-page .btn-save-green:hover { background:#152d4a; transform:translateY(-1px); }
+        #nakit-dekont-page .btn-pdf-red { padding:10px 20px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease; display:inline-flex; align-items:center; justify-content:center; gap:6px; letter-spacing:0.3px; font-family:inherit; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #E57373; color:#E57373; }
+        #nakit-dekont-page .btn-pdf-red:hover { background:#152d4a; transform:translateY(-1px); }
+        #nakit-dekont-page .btn-clear-gray { padding:10px 20px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease; display:inline-flex; align-items:center; justify-content:center; gap:6px; letter-spacing:0.3px; font-family:inherit; background:transparent; border:1px solid var(--ht-border); color:var(--ht-text-light); }
+        #nakit-dekont-page .btn-clear-gray:hover { border-color:var(--ht-accent); color:var(--ht-text); background:rgba(0,0,0,0.2); transform:translateY(-1px); }
+        #nakit-dekont-page .btn-warning { padding:4px 10px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; background:transparent; border:1px solid #d68910; color:#d68910; }
+        #nakit-dekont-page .btn-warning:hover { background:rgba(214,137,16,0.2); color:#ffd54f; transform:translateY(-1px); }
+        #nakit-dekont-page .btn-danger { padding:4px 10px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; background:transparent; border:1px solid #e74c3c; color:#e74c3c; }
+        #nakit-dekont-page .btn-danger:hover { background:rgba(231,76,60,0.2); color:#ff8a80; transform:translateY(-1px); }
+        #nakit-dekont-page .tm-empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; text-align:center; background:var(--ht-card); border-radius:12px; border:1px dashed var(--ht-border); margin:12px 0; }
+        #nakit-dekont-page .tm-empty-state .tm-empty-icon { font-size:42px; margin-bottom:10px; opacity:0.8; }
+        #nakit-dekont-page .tm-empty-state .tm-empty-title { font-size:15px; font-weight:700; color:var(--ht-text); margin-bottom:4px; }
+        #nakit-dekont-page .tm-empty-state .tm-empty-desc { font-size:12px; color:var(--ht-text-light); max-width:360px; line-height:1.5; }
+
+        /* ===== İŞ MUHASEBESİ OLUŞTUR — HTS KONSEPTİ ===== */
+        #is-muhasebe-olustur-page { --ht-bg:#0d1b2a; --ht-card:#162436; --ht-border:#243b52; --ht-text:#e4eaf2; --ht-text-light:#7a94ad; --ht-accent:#a0b8cc; background:var(--ht-bg); color:var(--ht-text); }
+        #is-muhasebe-olustur-page h2 { color:var(--ht-text); font-size:18px; border-left:3px solid var(--ht-accent); padding-left:12px; margin:0 0 16px 0; }
+        #is-muhasebe-olustur-page h3 { color:var(--ht-text); font-size:14px; margin:0 0 12px 0; }
+        #is-muhasebe-olustur-page .im-form-wrap { background:var(--ht-card) !important; border:1px solid var(--ht-border) !important; border-radius:12px !important; padding:20px !important; margin-bottom:30px !important; }
+        #is-muhasebe-olustur-page label { display:block; font-size:10px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px; }
+        #is-muhasebe-olustur-page input[type="text"], #is-muhasebe-olustur-page input[type="date"] { width:100%; padding:9px 12px; border:1px solid var(--ht-border); border-radius:6px; background:rgba(255,255,255,0.06); color:var(--ht-text); font-size:13px; box-sizing:border-box; outline:none; }
+        #is-muhasebe-olustur-page input:focus { border-color:var(--ht-accent); }
+        #is-muhasebe-olustur-page h4 { color:var(--ht-text); font-size:13px; font-weight:700; margin:16px 0 10px 0; border-bottom:1px solid var(--ht-border); padding-bottom:8px; }
+        #is-muhasebe-olustur-page .btn-save-green { padding:10px 20px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease; display:inline-flex; align-items:center; justify-content:center; gap:6px; letter-spacing:0.3px; font-family:inherit; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #66BB6A; color:#66BB6A; }
+        #is-muhasebe-olustur-page .btn-save-green:hover { background:#152d4a; transform:translateY(-1px); }
+        #is-muhasebe-olustur-page .btn-clear-gray { padding:10px 20px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease; display:inline-flex; align-items:center; justify-content:center; gap:6px; letter-spacing:0.3px; font-family:inherit; background:transparent; border:1px solid var(--ht-border); color:var(--ht-text-light); }
+        #is-muhasebe-olustur-page .btn-clear-gray:hover { border-color:var(--ht-accent); color:var(--ht-text); background:rgba(0,0,0,0.2); transform:translateY(-1px); }
+        #is-muhasebe-olustur-page .tm-autocomplete-box { background:var(--ht-card); border:1px solid var(--ht-border); border-radius:0 0 6px 6px; box-shadow:0 4px 12px rgba(0,0,0,0.4); z-index:999; max-height:200px; overflow-y:auto; display:none; position:absolute; top:100%; left:0; right:0; }
+        #is-muhasebe-olustur-page .tm-autocomplete-box div { padding:8px 12px; font-size:12px; color:var(--ht-text); cursor:pointer; transition:0.1s; }
+        #is-muhasebe-olustur-page .tm-autocomplete-box div:hover { background:rgba(160,184,204,0.15); }
+
+        /* ===== İŞ MUHASEBESİ TAKİBİ — HTS KONSEPTİ ===== */
+        #is-muhasebe-page { --ht-bg:#0d1b2a; --ht-card:#162436; --ht-border:#243b52; --ht-text:#e4eaf2; --ht-text-light:#7a94ad; --ht-accent:#a0b8cc; --ht-gelir:#2ecc71; --ht-gider:#e74c3c; background:var(--ht-bg); color:var(--ht-text); }
+        #is-muhasebe-page h2 { color:var(--ht-text); font-size:18px; border-left:3px solid var(--ht-accent); padding-left:12px; margin:0 0 16px 0; }
+        #is-muhasebe-page .search-box { width:100% !important; max-width:100% !important; padding:9px 14px 9px 36px !important; border:1px solid var(--ht-border) !important; border-radius:8px !important; background:var(--ht-card) !important; color:var(--ht-text) !important; font-size:12px !important; box-sizing:border-box !important; margin-bottom:14px !important; }
+        #is-muhasebe-page .search-box:focus { border-color:var(--ht-accent) !important; }
+        #is-muhasebe-page .isMuh-status-strip { display:flex !important; gap:16px !important; background:var(--ht-card) !important; padding:16px 20px !important; border-radius:12px !important; border:1px solid var(--ht-border) !important; margin-bottom:18px !important; justify-content:space-around !important; font-weight:600 !important; }
+        #is-muhasebe-page .isMuh-status-strip small { font-size:9px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.5px; }
+        #is-muhasebe-page .isMuh-status-strip span { font-size:18px; font-weight:800; color:var(--ht-text); }
+        #is-muhasebe-page .portfolio-card { background:var(--ht-card) !important; border:1px solid var(--ht-border) !important; border-top:3px solid var(--ht-accent) !important; border-radius:12px !important; padding:20px 20px 16px 20px !important; box-shadow:0 4px 16px rgba(0,0,0,0.2) !important; transition:0.2s !important; display:flex; flex-direction:column; }
+        #is-muhasebe-page .portfolio-card:hover { transform:translateY(-2px) !important; border-color:var(--ht-accent) !important; box-shadow:0 8px 24px rgba(0,0,0,0.25) !important; }
+        #is-muhasebe-page .portfolio-card .card-main-header { padding-right:0 !important; margin-bottom:10px !important; }
+        #is-muhasebe-page .portfolio-card h4 { margin:0 0 4px 0; font-size:15px; font-weight:700; color:var(--ht-text); letter-spacing:0.3px; }
+        #is-muhasebe-page .portfolio-card .card-actions { margin-top:10px; padding-top:10px; display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--ht-border); }
+        /* Inline forms inside cards */
+        #is-muhasebe-page .inline-form { display:none; flex-wrap:wrap; gap:8px; padding:12px 14px; background:rgba(0,0,0,0.2); border-radius:8px; border:1px solid var(--ht-border); margin-bottom:8px; align-items:center; }
+        #is-muhasebe-page .inline-form label { font-size:9px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.5px; display:flex; flex-direction:column; gap:3px; flex:1; min-width:80px; }
+        #is-muhasebe-page .inline-form input, #is-muhasebe-page .inline-form select { padding:6px 10px; border:1px solid var(--ht-border); border-radius:5px; font-size:12px; font-family:inherit; background:rgba(255,255,255,0.06); color:var(--ht-text); min-width:80px; flex:1; }
+        #is-muhasebe-page .inline-form input:focus, #is-muhasebe-page .inline-form select:focus { outline:none; border-color:var(--ht-accent); }
+        #is-muhasebe-page .inline-form select option { background:var(--ht-card); color:var(--ht-text); }
+        #is-muhasebe-page .btn-form-save { padding:6px 14px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #66BB6A; color:#66BB6A; }
+        #is-muhasebe-page .btn-form-save:hover { background:#152d4a; transform:translateY(-1px); }
+        #is-muhasebe-page .btn-form-cancel { padding:6px 14px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:4px; background:transparent; border:1px solid var(--ht-border); color:var(--ht-text-light); }
+        #is-muhasebe-page .btn-form-cancel:hover { border-color:var(--ht-accent); color:var(--ht-text); background:rgba(0,0,0,0.2); transform:translateY(-1px); }
+        /* Card buttons */
+        #is-muhasebe-page .btn-primary, #is-muhasebe-page .btn-add { padding:6px 14px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid var(--ht-accent); color:var(--ht-accent); }
+        #is-muhasebe-page .btn-primary:hover, #is-muhasebe-page .btn-add:hover { background:#152d4a; transform:translateY(-1px); }
+        #is-muhasebe-page .btn-save-green { padding:6px 14px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #66BB6A; color:#66BB6A; }
+        #is-muhasebe-page .btn-save-green:hover { background:#152d4a; transform:translateY(-1px); }
+        #is-muhasebe-page .btn-pdf-red { padding:6px 14px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #E57373; color:#E57373; }
+        #is-muhasebe-page .btn-pdf-red:hover { background:#152d4a; transform:translateY(-1px); }
+        #is-muhasebe-page .btn-danger { padding:6px 14px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:4px; background:transparent; border:1px solid #e74c3c; color:#e74c3c; }
+        #is-muhasebe-page .btn-danger:hover { background:rgba(231,76,60,0.2); color:#ff8a80; transform:translateY(-1px); }
+        #is-muhasebe-page .btn-warning { padding:6px 14px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:4px; background:transparent; border:1px solid #d68910; color:#d68910; }
+        #is-muhasebe-page .btn-warning:hover { background:rgba(214,137,16,0.2); color:#ffd54f; transform:translateY(-1px); }
+        /* Tables inside cards */
+        #is-muhasebe-page table { width:100%; border-collapse:collapse; font-size:12px; }
+        #is-muhasebe-page table th { background:#0d1b2a; color:var(--ht-text-light); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:7px 10px; border-bottom:2px solid var(--ht-border); text-align:left; }
+        #is-muhasebe-page table td { padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text); }
+        #is-muhasebe-page table tr:hover td { background:rgba(255,255,255,0.03); }
+        /* Card info text */
+        #is-muhasebe-page .portfolio-card .p-detail { font-size:12px; color:var(--ht-text-light); }
+        #is-muhasebe-page .portfolio-card .p-detail b { color:var(--ht-text-light); font-weight:600; width:80px; display:inline-block; font-size:9px; text-transform:uppercase; }
+        /* Empty state */
+        #is-muhasebe-page .tm-empty-state, #tamamlanan-is-muhasebeleri-page .tm-empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; text-align:center; background:var(--ht-card); border-radius:12px; border:1px dashed var(--ht-border); margin:12px 0; }
+        #is-muhasebe-page .tm-empty-state .tm-empty-icon, #tamamlanan-is-muhasebeleri-page .tm-empty-icon { font-size:42px; margin-bottom:10px; opacity:0.8; }
+        #is-muhasebe-page .tm-empty-state .tm-empty-title, #tamamlanan-is-muhasebeleri-page .tm-empty-title { font-size:15px; font-weight:700; color:var(--ht-text); margin-bottom:4px; }
+        #is-muhasebe-page .tm-empty-state .tm-empty-desc, #tamamlanan-is-muhasebeleri-page .tm-empty-desc { font-size:12px; color:var(--ht-text-light); max-width:360px; line-height:1.5; }
+
+        /* ===== TAMAMLANAN İŞ MUHASEBELERİ — HTS KONSEPTİ ===== */
+        #tamamlanan-is-muhasebeleri-page { --ht-bg:#0d1b2a; --ht-card:#162436; --ht-border:#243b52; --ht-text:#e4eaf2; --ht-text-light:#7a94ad; --ht-accent:#a0b8cc; background:var(--ht-bg); color:var(--ht-text); }
+        #tamamlanan-is-muhasebeleri-page h2 { color:var(--ht-text); font-size:18px; border-left:3px solid var(--ht-accent); padding-left:12px; margin:0 0 16px 0; }
+        #tamamlanan-is-muhasebeleri-page .search-box { width:100% !important; max-width:100% !important; padding:9px 14px 9px 36px !important; border:1px solid var(--ht-border) !important; border-radius:8px !important; background:var(--ht-card) !important; color:var(--ht-text) !important; font-size:12px !important; box-sizing:border-box !important; margin-bottom:14px !important; }
+        #tamamlanan-is-muhasebeleri-page .search-box:focus { border-color:var(--ht-accent) !important; }
+
         .search-box { width: 100%; max-width: 400px; padding: 12px 15px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 20px; background: var(--input-bg); color: var(--text-dark); }
 
         /* ANA SAYFA TASARIM ÖGELERİ */

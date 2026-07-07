@@ -130,7 +130,7 @@
                 </div>
             </div>
             <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.16.0</div>
+                <div class="version-tag">V1.17.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -353,12 +353,12 @@
     </div>
 </div>
 
-            <div id="nakit-dekont-page" class="page uppercase-form">
+            <div id="nakit-dekont-page" class="page">
                 <div id="lock-nakit-dekont" class="page-lock-overlay"></div>
                 <h2>💰 Nakit Ödeme Dekontu Oluştur</h2>
-                <div style="background: var(--bg-main); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border-color);">
+                <div class="nd-form-wrap">
                     <div class="row">
-                        <div class="col" style="border-right:1px solid var(--border-color); padding-right:20px;">
+                        <div class="col nd-col-divider" style="padding-right:20px;">
                             <h3 style="margin-top:0;">👤 Müşteri Bilgileri</h3>
                             <div class="col" style="margin-bottom:12px;">
                                 <label>Adı Soyadı:</label>
@@ -414,19 +414,19 @@
                 <input type="text" id="ndAramaInput" class="search-box" onkeyup="nakitDekontListesiniFiltrele()" placeholder="🔍 Dekontlarda Ara (Müşteri, Firma, İşlem Türü, ID)...">
                 <div id="nakitDekontTablosu"></div>
             </div>
-            <div id="is-muhasebe-olustur-page" class="page uppercase-form">
+            <div id="is-muhasebe-olustur-page" class="page">
                 <div id="lock-is-muhasebe-olustur" class="page-lock-overlay"></div>
                 <h2>📌 İş Muhasebesi Oluştur</h2>
-                <div style="background: var(--bg-main); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border-color);">
-                    <h3 id="isMuhFormTitle">Yeni İş Muhasebesi Kaydı Oluştur</h3>
+                <div class="im-form-wrap">
+                    <h3 id="isMuhFormTitle" style="color:var(--ht-text);font-size:14px;">Yeni İş Muhasebesi Kaydı Oluştur</h3>
                     <input type="hidden" id="isMuhEditId" value="-1">
                     <div class="row">
                         <div class="col" style="max-width:150px;">
                             <label>İş ID:</label>
-                            <input type="text" id="isMuhId" readonly style="background:var(--border-color); font-weight:700; color:var(--accent-red);">
+                            <input type="text" id="isMuhId" readonly style="font-weight:700;">
                         </div>
                     </div>
-                    <h4 style="margin:15px 0 10px 0; color:var(--text-dark); border-bottom:1px solid var(--border-color); padding-bottom:6px;">📋 İş Bilgileri</h4>
+                    <h4>📋 İş Bilgileri</h4>
                     <div class="row">
                         <div class="col">
                             <label>İşin Adı:</label>
@@ -452,7 +452,7 @@
                             <input type="text" id="isMuhParsel">
                         </div>
                     </div>
-                    <h4 style="margin:15px 0 10px 0; color:var(--text-dark); border-bottom:1px solid var(--border-color); padding-bottom:6px;">💰 Anlaşma Detayı</h4>
+                    <h4>💰 Anlaşma Detayı</h4>
                     <div class="row">
                         <div class="col" style="max-width:300px;">
                             <label>Anlaşma Ücreti (₺):</label>
@@ -473,7 +473,7 @@
             <div id="is-muhasebe-page" class="page">
                 <div id="lock-is-muhasebe" class="page-lock-overlay"></div>
                 <h2>🏦 İş Muhasebesi Takibi</h2>
-                <div id="isMuhGenelDurumSeridi" style="display:flex; gap:20px; background:var(--bg-main); padding:15px 20px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px; justify-content:space-around; font-weight:600;"></div>
+                <div id="isMuhGenelDurumSeridi" class="isMuh-status-strip"></div>
                 <input type="text" id="isMuhAramaInput" class="search-box" onkeyup="isMuhasebeListesiniFiltrele()" placeholder="🔍 İş Muhasebesinde Ara (Proje, Müşteri, Referans)...">
                 <div id="isMuhasebeKartKonteyner" style="display:flex; flex-direction:column; gap:20px;"></div>
             </div>
