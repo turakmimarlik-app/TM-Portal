@@ -604,13 +604,13 @@
         #tm-fiyatlar-page .tmf-hesap-input { flex:1; padding:7px 10px; border:1px solid var(--border-color); border-radius:6px; font-size:14px; font-family:inherit; background:var(--input-bg); color:var(--text-dark); outline:none; min-width:0; }
         #tm-fiyatlar-page .tmf-hesap-input:focus { border-color:var(--accent-red); }
         #tm-fiyatlar-page .tmf-hesap-unit { font-size:11px; color:var(--text-light); font-weight:700; white-space:nowrap; }
-        #tm-fiyatlar-page .tmf-hesap-sonuc { font-size:18px; font-weight:800; color:var(--accent-red); text-align:right; padding:4px 0; min-height:26px; }
+        #tm-fiyatlar-page .tmf-hesap-sonuc { font-size:18px; font-weight:800; color:var(--text-dark); text-align:right; padding:4px 0; min-height:26px; }
         #tm-fiyatlar-page .tmf-hesap-sonuc .tmf-hesap-label { font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.5px; display:block; }
         #tm-fiyatlar-page .tmf-hesap-islem { font-size:11px; color:var(--text-light); text-align:right; min-height:16px; padding:2px 0; }
         /* Card Actions */
         #tm-fiyatlar-page .tmf-kart-actions { display:flex; gap:4px; padding:8px 16px; border-top:1px solid var(--border-color); justify-content:flex-end; align-items:center; }
-        #tm-fiyatlar-page .tmf-btn-edit { padding:5px 12px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; font-family:inherit; background:#2980b9; border:1px solid #2980b9; color:#fff; }
-        #tm-fiyatlar-page .tmf-btn-edit:hover { background:#1a5276; transform:translateY(-1px); }
+        #tm-fiyatlar-page .tmf-btn-edit { padding:5px 12px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; font-family:inherit; background:#7F8C8D; border:1px solid #7F8C8D; color:#fff; }
+        #tm-fiyatlar-page .tmf-btn-edit:hover { background:#616A6B; transform:translateY(-1px); }
         #tm-fiyatlar-page .tmf-btn-del { padding:5px 10px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; font-family:inherit; background:#e74c3c; border:1px solid #e74c3c; color:#fff; }
         #tm-fiyatlar-page .tmf-btn-del:hover { background:#c0392b; transform:translateY(-1px); }
         /* Drag & Drop */
