@@ -361,12 +361,12 @@
         .ht-kart-3d .kart-yuz { position:relative; padding:24px 22px 18px 22px; min-height:170px; display:flex; flex-direction:column; justify-content:space-between; background:linear-gradient(145deg, color-mix(in srgb, var(--ht-kart-renk) 90%, #fff) 0%, color-mix(in srgb, var(--ht-kart-renk) 70%, #000) 100%); }
         .ht-kart-3d .kart-yuz::before { content:''; position:absolute; top:10px; right:14px; width:48px; height:36px; border-radius:5px; border:2px solid rgba(255,255,255,0.2); background:linear-gradient(135deg,rgba(255,255,255,0.08) 0%,rgba(255,255,255,0.02) 100%); }
         .ht-kart-3d .kart-yuz::after { content:'● ● ● ●    ● ● ● ●    ● ● ● ●'; position:absolute; top:72px; left:68px; font-size:13px; letter-spacing:3px; color:rgba(255,255,255,0.25); font-weight:700; font-family:monospace; }
-        .ht-kart-3d .kart-banka { font-size:14px; font-weight:700; color:rgba(255,255,255,0.6); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
-        .ht-kart-3d .kart-bakiye { font-size:26px; font-weight:900; color:#fff; letter-spacing:0.5px; text-shadow:0 2px 4px rgba(0,0,0,0.3); position:relative; z-index:1; margin-top:20px; }
+        .ht-kart-3d .kart-banka { font-size:16px; font-weight:700; color:rgba(255,255,255,0.6); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+        .ht-kart-3d .kart-bakiye { font-size:26px; font-weight:900; color:#fff; letter-spacing:0.5px; text-shadow:0 2px 4px rgba(0,0,0,0.3); position:relative; z-index:1; margin-top:28px; }
         .ht-kart-3d .kart-bakiye.pozitif { color:#5ee89b; }
         .ht-kart-3d .kart-bakiye.negatif { color:#f5a097; }
-        .ht-kart-3d .kart-sahip { font-size:13px; font-weight:600; color:rgba(255,255,255,0.6); letter-spacing:0.5px; margin-top:2px; }
-        .ht-kart-3d .kart-iban { font-size:12px; font-weight:500; color:rgba(255,255,255,0.45); letter-spacing:0.3px; font-family:monospace; margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .ht-kart-3d .kart-sahip { font-size:15px; font-weight:600; color:rgba(255,255,255,0.6); letter-spacing:0.5px; margin-top:2px; }
+        .ht-kart-3d .kart-iban { font-size:14px; font-weight:500; color:rgba(255,255,255,0.45); letter-spacing:0.3px; font-family:monospace; margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
         .ht-kart-3d .kart-sifreler { position:absolute; bottom:18px; right:22px; display:flex; gap:12px; font-size:9px; color:rgba(255,255,255,0.3); font-weight:600; }
         .ht-kart-3d .kart-actions { position:absolute; top:10px; right:10px; display:flex; gap:4px; z-index:2; }
         .ht-kart-3d .kart-actions button { width:26px; height:26px; border-radius:50%; border:none; font-size:11px; cursor:pointer; background:rgba(0,0,0,0.25); color:#fff; transition:0.2s; display:flex; align-items:center; justify-content:center; }
