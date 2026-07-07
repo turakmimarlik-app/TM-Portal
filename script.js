@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.13.0';
+        var APP_VERSION = 'V1.14.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6032,10 +6032,11 @@ function gorevMailGonder(gorev) {
                     var netSifre = hs.internetSifre || "—";
                     h += '<div class="ht-kart-3d" style="--ht-kart-renk:'+bankaRenk+'" onclick="htHesapDetayGoster('+hs.id+')">';
                     h += '<div class="kart-yuz">';
-                    h += '<div class="kart-top"><div class="kart-banka">'+hs.bankaAdi+'</div><div class="kart-actions">';
+                    h += '<div class="kart-top"><div class="kart-banka">'+hs.bankaAdi+'</div></div>';
+                    h += '<div class="kart-actions">';
                     h += '<button class="kart-duzenle" onclick="event.stopPropagation();htHesapModalAc('+hs.id+')" title="Düzenle">✎</button>';
                     h += '<button class="kart-sil" onclick="event.stopPropagation();htHesapSil('+hs.id+')" title="Sil">✕</button>';
-                    h += '</div></div>';
+                    h += '</div>';
                     h += '<div class="kart-bakiye '+bakiyeTipi+'">'+htTl(hs.bakiye)+'</div>';
                     h += '<div class="kart-iban">'+ibanStr+'</div>';
                     h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">'+hs.hesapSahibi+'</div></div>';
