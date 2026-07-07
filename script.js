@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.19.5';
+        var APP_VERSION = 'V1.19.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6912,7 +6912,7 @@ function gorevMailGonder(gorev) {
             } else if (tip === "kademeli") {
                 const kd = kart.kademeler && kart.kademeler.length > 0 ? kart.kademeler : [{ min: "", max: "", fiyat: "" }];
                 h += '<div class="tmf-modal-kademeler"><label style="font-size:9px; font-weight:700; color:#7a94ad; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; display:block;">Fiyat Kademeleri</label>';
-                h += '<table><thead><tr><th style="min-width:130px;">A\u00e7\u0131klama</th><th style="width:50px;">Min</th><th style="width:50px;">Max</th><th style="width:45px;">Fiyat</th><th style="width:30px;"></th></tr></thead><tbody id="tmfKademeTbody">';
+                h += '<table><thead><tr><th style="min-width:110px;">A\u00e7\u0131klama</th><th style="width:60px;">Min</th><th style="width:60px;">Max</th><th style="width:55px;">Fiyat</th><th style="width:30px;"></th></tr></thead><tbody id="tmfKademeTbody">';
                 kd.forEach((k, i) => {
                     h += '<tr>';
                     h += '<td><input class="tmf-kd-aciklama" type="text" value="' + esc(k.aciklama || "") + '" placeholder="A\u00e7\u0131klama"></td>';
