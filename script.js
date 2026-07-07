@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.20.1';
+﻿        var APP_VERSION = 'V1.20.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -6934,7 +6934,7 @@ function gorevMailGonder(gorev) {
                 /* Rows */
                 h += '<div class="tmf-modal-kademeler"><div class="tmf-kd-label">📊 Kademeler</div>';
                 h += '<table><thead><tr>';
-                sut.forEach(function(c) { h += '<th style="width:' + (c.g || 100) + 'px;">' + esc(c.ad) + '</th>'; });
+                sut.forEach(function(c) { h += '<th style="width:' + (c.g || 100) + 'px;position:relative;">' + esc(c.ad) + '<div class="tmf-kd-col-resize" data-colid="' + c.id + '"></div></th>'; });
                 h += '<th style="width:30px;"></th></tr></thead><tbody id="tmfKademeTbody">';
                 kdList.forEach(function(kd) {
                     h += '<tr>';
@@ -7061,6 +7061,30 @@ function gorevMailGonder(gorev) {
             if (modal) modal.style.display = "none";
             tmfEditId = null;
         }
+
+        /* Column resize via drag */
+        document.addEventListener('mousedown', function(e) {
+            var handle = e.target.closest ? e.target.closest('.tmf-kd-col-resize') : null;
+            if (!handle) return;
+            e.preventDefault();
+            var th = handle.parentElement;
+            var colid = handle.getAttribute('data-colid');
+            var startX = e.clientX;
+            var startW = th.offsetWidth;
+            function onMove(ev) {
+                var diff = ev.clientX - startX;
+                var newW = Math.max(40, startW + diff);
+                th.style.width = newW + 'px';
+                var inp = document.querySelector('#tmfKdSutunTbl tr[data-colid="' + colid + '"] .tmf-kd-sut-g');
+                if (inp) inp.value = Math.round(newW);
+            }
+            function onUp() {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            }
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
         const FT_DB_KEY = "tm_fatura_takip_db";
 
         function ftDbYukle() {
