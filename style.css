@@ -648,14 +648,11 @@
         /* Kademeler */
         #tmfKartModal .tmf-modal-kademeler { margin-bottom:14px; }
         #tmfKartModal .tmf-modal-kademeler .tmf-kd-label { font-size:9px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; display:block; }
-        #tmfKartModal .tmf-modal-kademeler table { width:100%; border-collapse:collapse; font-size:12px; table-layout:fixed; }
-        #tmfKartModal .tmf-modal-kademeler th { color:var(--text-light); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:4px 6px; border-bottom:1px solid var(--border-color); text-align:left; overflow:hidden; }
+        #tmfKartModal .tmf-modal-kademeler table { width:100%; border-collapse:collapse; font-size:12px; }
+        #tmfKartModal .tmf-modal-kademeler th { color:var(--text-light); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:4px 6px; border-bottom:1px solid var(--border-color); text-align:left; }
         #tmfKartModal .tmf-modal-kademeler td { padding:3px 4px; }
         #tmfKartModal .tmf-modal-kademeler td input { width:100%; padding:5px 6px; border:1px solid var(--border-color); border-radius:4px; font-size:12px; font-family:inherit; background:var(--input-bg); color:var(--text-dark); outline:none; box-sizing:border-box; }
         #tmfKartModal .tmf-modal-kademeler td input:focus { border-color:var(--accent-red); }
-        /* Column resize handle */
-        #tmfKartModal .tmf-kd-col-resize { position:absolute; top:0; right:0; bottom:0; width:6px; cursor:col-resize; background:transparent; z-index:5; }
-        #tmfKartModal .tmf-kd-col-resize:hover { background:var(--accent-red); opacity:0.25; }
         #tmfKartModal .tmf-btn-kd-ekle { padding:5px 12px; border-radius:5px; font-size:10px; font-weight:700; cursor:pointer; transition:0.15s; font-family:inherit; background:transparent; border:1px solid var(--border-color); color:var(--text-light); margin-top:6px; }
         #tmfKartModal .tmf-btn-kd-ekle:hover { border-color:var(--accent-red); color:var(--accent-red); }
         #tmfKartModal .tmf-btn-kd-sil { background:none; border:none; color:#e74c3c; cursor:pointer; font-size:14px; padding:2px 4px; opacity:0.6; }
