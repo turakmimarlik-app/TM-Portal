@@ -563,89 +563,106 @@
         #tamamlanan-is-muhasebeleri-page .search-box { width:100% !important; max-width:100% !important; padding:9px 14px 9px 36px !important; border:1px solid var(--ht-border) !important; border-radius:8px !important; background:var(--ht-card) !important; color:var(--ht-text) !important; font-size:12px !important; box-sizing:border-box !important; margin-bottom:14px !important; }
         #tamamlanan-is-muhasebeleri-page .search-box:focus { border-color:var(--ht-accent) !important; }
 
-        /* ===== TM FİYAT LİSTESİ — FİYAT KARTLARI ===== */
-        #tm-fiyatlar-page { --ht-bg:#0d1b2a; --ht-card:#162436; --ht-border:#243b52; --ht-text:#e4eaf2; --ht-text-light:#7a94ad; --ht-accent:#a0b8cc; background:var(--ht-bg); color:var(--ht-text); }
-        #tm-fiyatlar-page h2 { color:var(--ht-text); font-size:18px; border-left:3px solid var(--ht-accent); padding-left:12px; margin:0; }
+        /* ===== TM FİYAT LİSTESİ — FİYAT KARTLARI (PİYASA TEMASI) ===== */
+        #tm-fiyatlar-page { }
+        #tm-fiyatlar-page h2 { font-size:18px; border-left:3px solid var(--accent-red); padding-left:12px; margin:0; }
         #tm-fiyatlar-page .tmf-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
-        #tm-fiyatlar-page .tmf-btn-add { padding:8px 18px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:inherit; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #66BB6A; color:#66BB6A; }
-        #tm-fiyatlar-page .tmf-btn-add:hover { background:#152d4a; transform:translateY(-1px); }
-        #tm-fiyatlar-page .tmf-bos-durum { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center; background:var(--ht-card); border-radius:12px; border:1px dashed var(--ht-border); margin-top:20px; }
+        #tm-fiyatlar-page .tmf-btn-add { padding:8px 18px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s ease; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:inherit; background:var(--panel-bg); border:1px solid var(--btn-green); color:var(--btn-green); }
+        #tm-fiyatlar-page .tmf-btn-add:hover { background:var(--bg-main); transform:translateY(-1px); }
+        #tm-fiyatlar-page .tmf-bos-durum { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center; background:var(--panel-bg); border-radius:12px; border:1px dashed var(--border-color); margin-top:20px; }
         #tm-fiyatlar-page .tmf-bos-durum .tmf-bos-icon { font-size:48px; margin-bottom:12px; opacity:0.6; }
-        #tm-fiyatlar-page .tmf-bos-durum .tmf-bos-title { font-size:16px; font-weight:700; color:var(--ht-text); margin-bottom:6px; }
-        #tm-fiyatlar-page .tmf-bos-durum .tmf-bos-desc { font-size:12px; color:var(--ht-text-light); max-width:360px; line-height:1.5; }
+        #tm-fiyatlar-page .tmf-bos-durum .tmf-bos-title { font-size:16px; font-weight:700; color:var(--text-dark); margin-bottom:6px; }
+        #tm-fiyatlar-page .tmf-bos-durum .tmf-bos-desc { font-size:12px; color:var(--text-light); max-width:360px; line-height:1.5; }
         /* Grid */
         #tm-fiyatlar-page .tmf-kart-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:16px; }
         /* Card */
-        #tm-fiyatlar-page .tmf-kart { background:var(--ht-card); border:1px solid var(--ht-border); border-radius:12px; overflow:hidden; transition:0.2s; display:flex; flex-direction:column; }
-        #tm-fiyatlar-page .tmf-kart:hover { border-color:var(--ht-accent); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.25); }
-        #tm-fiyatlar-page .tmf-kart-header { padding:14px 16px 10px 16px; border-bottom:1px solid var(--ht-border); display:flex; justify-content:space-between; align-items:start; gap:8px; }
-        #tm-fiyatlar-page .tmf-kart-header h3 { margin:0; font-size:14px; font-weight:700; color:var(--ht-text); line-height:1.3; }
+        #tm-fiyatlar-page .tmf-kart { background:var(--panel-bg); border:1px solid var(--border-color); border-radius:12px; overflow:hidden; transition:0.2s; display:flex; flex-direction:column; }
+        #tm-fiyatlar-page .tmf-kart:hover { border-color:var(--accent-red); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.08); }
+        #tm-fiyatlar-page .tmf-kart-header { padding:14px 16px 10px 16px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:start; gap:8px; }
+        #tm-fiyatlar-page .tmf-kart-header h3 { margin:0; font-size:14px; font-weight:700; color:var(--text-dark); line-height:1.3; }
         #tm-fiyatlar-page .tmf-kart-badges { display:flex; gap:5px; flex-wrap:wrap; flex-shrink:0; }
         #tm-fiyatlar-page .tmf-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
-        #tm-fiyatlar-page .tmf-badge-sabit { background:rgba(52,152,219,0.2); color:#5dade2; border:1px solid rgba(52,152,219,0.3); }
-        #tm-fiyatlar-page .tmf-badge-birim { background:rgba(46,204,113,0.2); color:#58d68d; border:1px solid rgba(46,204,113,0.3); }
-        #tm-fiyatlar-page .tmf-badge-kademeli { background:rgba(243,156,18,0.2); color:#f4d03f; border:1px solid rgba(243,156,18,0.3); }
-        #tm-fiyatlar-page .tmf-badge-unit { background:rgba(160,184,204,0.12); color:var(--ht-accent); border:1px solid rgba(160,184,204,0.2); }
+        #tm-fiyatlar-page .tmf-badge-sabit { background:rgba(52,152,219,0.12); color:#2980b9; border:1px solid rgba(52,152,219,0.3); }
+        #tm-fiyatlar-page .tmf-badge-birim { background:rgba(46,204,113,0.12); color:#27ae60; border:1px solid rgba(46,204,113,0.3); }
+        #tm-fiyatlar-page .tmf-badge-kademeli { background:rgba(243,156,18,0.12); color:#d68910; border:1px solid rgba(243,156,18,0.3); }
+        #tm-fiyatlar-page .tmf-badge-unit { background:var(--bg-main); color:var(--text-light); border:1px solid var(--border-color); }
         /* Card Body */
         #tm-fiyatlar-page .tmf-kart-body { padding:12px 16px; flex:1; }
         #tm-fiyatlar-page .tmf-sabit-goster { text-align:center; padding:16px 0; }
-        #tm-fiyatlar-page .tmf-sabit-goster .tmf-fiyat-buyuk { font-size:28px; font-weight:800; color:#5dade2; letter-spacing:-0.5px; }
+        #tm-fiyatlar-page .tmf-sabit-goster .tmf-fiyat-buyuk { font-size:28px; font-weight:800; color:#2980b9; letter-spacing:-0.5px; }
         #tm-fiyatlar-page .tmf-birim-goster { text-align:center; padding:12px 0; }
-        #tm-fiyatlar-page .tmf-birim-goster .tmf-fiyat-orta { font-size:22px; font-weight:700; color:#58d68d; }
-        #tm-fiyatlar-page .tmf-birim-goster .tmf-unit-label { font-size:13px; color:var(--ht-text-light); font-weight:600; }
+        #tm-fiyatlar-page .tmf-birim-goster .tmf-fiyat-orta { font-size:22px; font-weight:700; color:#27ae60; }
+        #tm-fiyatlar-page .tmf-birim-goster .tmf-unit-label { font-size:13px; color:var(--text-light); font-weight:600; }
         #tm-fiyatlar-page .tmf-kademeli-tablo { width:100%; border-collapse:collapse; font-size:12px; }
-        #tm-fiyatlar-page .tmf-kademeli-tablo td { padding:5px 8px; border-bottom:1px solid rgba(255,255,255,0.05); }
+        #tm-fiyatlar-page .tmf-kademeli-tablo td { padding:5px 8px; border-bottom:1px solid var(--border-color); }
         #tm-fiyatlar-page .tmf-kademeli-tablo tr:last-child td { border-bottom:none; }
-        #tm-fiyatlar-page .tmf-kademeli-tablo .tmf-range { color:var(--ht-text-light); }
-        #tm-fiyatlar-page .tmf-kademeli-tablo .tmf-price { text-align:right; font-weight:700; color:#f4d03f; white-space:nowrap; }
+        #tm-fiyatlar-page .tmf-kademeli-tablo .tmf-range { color:var(--text-light); }
+        #tm-fiyatlar-page .tmf-kademeli-tablo .tmf-price { text-align:right; font-weight:700; color:#d68910; white-space:nowrap; }
         /* Calculator */
-        #tm-fiyatlar-page .tmf-kart-hesapla { padding:10px 16px 14px 16px; border-top:1px solid var(--ht-border); background:rgba(0,0,0,0.1); }
+        #tm-fiyatlar-page .tmf-kart-hesapla { padding:10px 16px 14px 16px; border-top:1px solid var(--border-color); background:var(--bg-main); }
         #tm-fiyatlar-page .tmf-hesap-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
-        #tm-fiyatlar-page .tmf-hesap-input { flex:1; padding:7px 10px; border:1px solid var(--ht-border); border-radius:6px; font-size:14px; font-family:inherit; background:rgba(255,255,255,0.06); color:var(--ht-text); outline:none; min-width:0; }
-        #tm-fiyatlar-page .tmf-hesap-input:focus { border-color:var(--ht-accent); }
-        #tm-fiyatlar-page .tmf-hesap-unit { font-size:11px; color:var(--ht-text-light); font-weight:700; white-space:nowrap; }
-        #tm-fiyatlar-page .tmf-hesap-sonuc { font-size:18px; font-weight:800; color:var(--ht-accent); text-align:right; padding:4px 0; min-height:26px; }
-        #tm-fiyatlar-page .tmf-hesap-sonuc .tmf-hesap-label { font-size:10px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.5px; display:block; }
-        #tm-fiyatlar-page .tmf-hesap-islem { font-size:11px; color:var(--ht-text-light); text-align:right; min-height:16px; padding:2px 0; }
+        #tm-fiyatlar-page .tmf-hesap-input { flex:1; padding:7px 10px; border:1px solid var(--border-color); border-radius:6px; font-size:14px; font-family:inherit; background:var(--input-bg); color:var(--text-dark); outline:none; min-width:0; }
+        #tm-fiyatlar-page .tmf-hesap-input:focus { border-color:var(--accent-red); }
+        #tm-fiyatlar-page .tmf-hesap-unit { font-size:11px; color:var(--text-light); font-weight:700; white-space:nowrap; }
+        #tm-fiyatlar-page .tmf-hesap-sonuc { font-size:18px; font-weight:800; color:var(--accent-red); text-align:right; padding:4px 0; min-height:26px; }
+        #tm-fiyatlar-page .tmf-hesap-sonuc .tmf-hesap-label { font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.5px; display:block; }
+        #tm-fiyatlar-page .tmf-hesap-islem { font-size:11px; color:var(--text-light); text-align:right; min-height:16px; padding:2px 0; }
         /* Card Actions */
-        #tm-fiyatlar-page .tmf-kart-actions { display:flex; gap:6px; padding:8px 16px; border-top:1px solid var(--ht-border); justify-content:flex-end; }
-        #tm-fiyatlar-page .tmf-btn-edit { padding:5px 12px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; font-family:inherit; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid var(--ht-accent); color:var(--ht-accent); }
-        #tm-fiyatlar-page .tmf-btn-edit:hover { background:#152d4a; transform:translateY(-1px); }
+        #tm-fiyatlar-page .tmf-kart-actions { display:flex; gap:4px; padding:8px 16px; border-top:1px solid var(--border-color); justify-content:flex-end; align-items:center; }
+        #tm-fiyatlar-page .tmf-btn-move { padding:4px 8px; border-radius:5px; font-size:12px; font-weight:700; cursor:pointer; transition:0.15s; font-family:inherit; background:transparent; border:1px solid var(--border-color); color:var(--text-light); line-height:1; }
+        #tm-fiyatlar-page .tmf-btn-move:hover { border-color:var(--accent-red); color:var(--accent-red); }
+        #tm-fiyatlar-page .tmf-btn-move[disabled] { opacity:0.3; cursor:default; pointer-events:none; }
+        #tm-fiyatlar-page .tmf-btn-edit { padding:5px 12px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; font-family:inherit; background:var(--panel-bg); border:1px solid var(--border-color); color:var(--text-dark); }
+        #tm-fiyatlar-page .tmf-btn-edit:hover { border-color:var(--accent-red); color:var(--accent-red); background:var(--bg-main); transform:translateY(-1px); }
         #tm-fiyatlar-page .tmf-btn-del { padding:5px 10px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; font-family:inherit; background:transparent; border:1px solid #e74c3c; color:#e74c3c; }
-        #tm-fiyatlar-page .tmf-btn-del:hover { background:rgba(231,76,60,0.2); color:#ff8a80; transform:translateY(-1px); }
+        #tm-fiyatlar-page .tmf-btn-del:hover { background:rgba(231,76,60,0.08); color:#c0392b; transform:translateY(-1px); }
+        #tm-fiyatlar-page .tmf-btn-spacer { flex:1; }
         /* Kart Notu */
-        #tm-fiyatlar-page .tmf-kart-not { font-size:10px; color:var(--ht-text-light); padding:0 16px 4px 16px; font-style:italic; }
+        #tm-fiyatlar-page .tmf-kart-not { font-size:10px; color:var(--text-light); padding:0 16px 4px 16px; font-style:italic; }
         /* Modal Editor */
         #tmfKartModal .tmf-modal-header { padding:16px 20px 0 20px; display:flex; justify-content:space-between; align-items:center; }
-        #tmfKartModal .tmf-modal-header h3 { margin:0; font-size:16px; color:#e4eaf2; font-weight:700; }
-        #tmfKartModal .tmf-modal-close { background:none; border:none; color:#7a94ad; font-size:18px; cursor:pointer; padding:4px; }
-        #tmfKartModal .tmf-modal-close:hover { color:#e4eaf2; }
+        #tmfKartModal .tmf-modal-header h3 { margin:0; font-size:16px; color:var(--text-dark); font-weight:700; }
+        #tmfKartModal .tmf-modal-close { background:none; border:none; color:var(--text-light); font-size:18px; cursor:pointer; padding:4px; }
+        #tmfKartModal .tmf-modal-close:hover { color:var(--text-dark); }
         #tmfKartModal .tmf-modal-body { padding:16px 20px; }
         #tmfKartModal .tmf-modal-field { margin-bottom:14px; }
-        #tmfKartModal .tmf-modal-field label { display:block; font-size:9px; font-weight:700; color:#7a94ad; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
-        #tmfKartModal .tmf-modal-field input[type="text"], #tmfKartModal .tmf-modal-field select, #tmfKartModal .tmf-modal-field textarea { width:100%; padding:8px 10px; border:1px solid #243b52; border-radius:6px; font-size:13px; font-family:inherit; background:rgba(255,255,255,0.06); color:#e4eaf2; outline:none; box-sizing:border-box; }
-        #tmfKartModal .tmf-modal-field input:focus, #tmfKartModal .tmf-modal-field select:focus, #tmfKartModal .tmf-modal-field textarea:focus { border-color:#a0b8cc; }
-        #tmfKartModal .tmf-modal-field select option { background:#162436; color:#e4eaf2; }
+        #tmfKartModal .tmf-modal-field label { display:block; font-size:9px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+        #tmfKartModal .tmf-modal-field input[type="text"], #tmfKartModal .tmf-modal-field select, #tmfKartModal .tmf-modal-field textarea { width:100%; padding:8px 10px; border:1px solid var(--border-color); border-radius:6px; font-size:13px; font-family:inherit; background:var(--input-bg); color:var(--text-dark); outline:none; box-sizing:border-box; }
+        #tmfKartModal .tmf-modal-field input:focus, #tmfKartModal .tmf-modal-field select:focus, #tmfKartModal .tmf-modal-field textarea:focus { border-color:var(--accent-red); }
+        #tmfKartModal .tmf-modal-field select option { background:var(--panel-bg); color:var(--text-dark); }
         #tmfKartModal .tmf-modal-field textarea { height:60px; resize:vertical; }
+        /* Kademeli column editor */
+        #tmfKartModal .tmf-modal-kd-sutunlar { margin-bottom:14px; border:1px solid var(--border-color); border-radius:8px; padding:10px 12px; background:var(--bg-main); }
+        #tmfKartModal .tmf-modal-kd-sutunlar .tmf-kd-sutun-label { font-size:9px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+        #tmfKartModal .tmf-kd-sutun-tbl { width:100%; border-collapse:collapse; font-size:11px; }
+        #tmfKartModal .tmf-kd-sutun-tbl th { color:var(--text-light); font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:3px 4px; border-bottom:1px solid var(--border-color); text-align:left; }
+        #tmfKartModal .tmf-kd-sutun-tbl td { padding:2px 3px; }
+        #tmfKartModal .tmf-kd-sutun-tbl td input { width:100%; padding:4px 5px; border:1px solid var(--border-color); border-radius:4px; font-size:11px; font-family:inherit; background:var(--input-bg); color:var(--text-dark); outline:none; box-sizing:border-box; }
+        #tmfKartModal .tmf-kd-sutun-tbl td input:focus { border-color:var(--accent-red); }
+        #tmfKartModal .tmf-kd-sutun-tbl td input.tmf-kd-sut-ad { min-width:80px; }
+        #tmfKartModal .tmf-kd-sutun-tbl td input.tmf-kd-sut-g { min-width:40px; }
+        #tmfKartModal .tmf-btn-sut-ekle { padding:4px 10px; border-radius:4px; font-size:9px; font-weight:700; cursor:pointer; transition:0.15s; font-family:inherit; background:transparent; border:1px solid var(--border-color); color:var(--text-light); margin-top:4px; }
+        #tmfKartModal .tmf-btn-sut-ekle:hover { border-color:var(--accent-red); color:var(--accent-red); }
+        #tmfKartModal .tmf-btn-sut-sil { background:none; border:none; cursor:pointer; font-size:11px; padding:2px 3px; opacity:0.5; color:var(--text-light); }
+        #tmfKartModal .tmf-btn-sut-sil:hover { opacity:1; color:#e74c3c; }
+        /* Kademeler */
         #tmfKartModal .tmf-modal-kademeler { margin-bottom:14px; }
+        #tmfKartModal .tmf-modal-kademeler .tmf-kd-label { font-size:9px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; display:block; }
         #tmfKartModal .tmf-modal-kademeler table { width:100%; border-collapse:collapse; font-size:12px; }
-        #tmfKartModal .tmf-modal-kademeler th { color:#7a94ad; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:4px 6px; border-bottom:1px solid #243b52; text-align:left; }
-        #tmfKartModal .tmf-modal-kademeler td { padding:3px 4px; border-bottom:1px solid rgba(255,255,255,0.05); }
-        #tmfKartModal .tmf-modal-kademeler td input { width:100%; padding:5px 6px; border:1px solid #243b52; border-radius:4px; font-size:12px; font-family:inherit; background:rgba(255,255,255,0.06); color:#e4eaf2; outline:none; box-sizing:border-box; }
-        #tmfKartModal .tmf-modal-kademeler td input:focus { border-color:#a0b8cc; }
-        #tmfKartModal .tmf-modal-kademeler td input.tmf-kd-min { min-width:50px; }
-        #tmfKartModal .tmf-modal-kademeler td input.tmf-kd-max { min-width:50px; }
-        #tmfKartModal .tmf-modal-kademeler td input.tmf-kd-fiyat { min-width:70px; }
-        #tmfKartModal .tmf-btn-kd-ekle { padding:5px 12px; border-radius:5px; font-size:10px; font-weight:700; cursor:pointer; transition:0.15s; font-family:inherit; background:transparent; border:1px solid #243b52; color:#7a94ad; margin-top:6px; }
-        #tmfKartModal .tmf-btn-kd-ekle:hover { border-color:#a0b8cc; color:#e4eaf2; }
+        #tmfKartModal .tmf-modal-kademeler th { color:var(--text-light); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:4px 6px; border-bottom:1px solid var(--border-color); text-align:left; }
+        #tmfKartModal .tmf-modal-kademeler td { padding:3px 4px; }
+        #tmfKartModal .tmf-modal-kademeler td input { width:100%; padding:5px 6px; border:1px solid var(--border-color); border-radius:4px; font-size:12px; font-family:inherit; background:var(--input-bg); color:var(--text-dark); outline:none; box-sizing:border-box; }
+        #tmfKartModal .tmf-modal-kademeler td input:focus { border-color:var(--accent-red); }
+        #tmfKartModal .tmf-btn-kd-ekle { padding:5px 12px; border-radius:5px; font-size:10px; font-weight:700; cursor:pointer; transition:0.15s; font-family:inherit; background:transparent; border:1px solid var(--border-color); color:var(--text-light); margin-top:6px; }
+        #tmfKartModal .tmf-btn-kd-ekle:hover { border-color:var(--accent-red); color:var(--accent-red); }
         #tmfKartModal .tmf-btn-kd-sil { background:none; border:none; color:#e74c3c; cursor:pointer; font-size:14px; padding:2px 4px; opacity:0.6; }
         #tmfKartModal .tmf-btn-kd-sil:hover { opacity:1; }
         #tmfKartModal .tmf-modal-actions { padding:0 20px 16px 20px; display:flex; gap:8px; justify-content:flex-end; }
         #tmfKartModal .tmf-modal-btn { padding:8px 20px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:6px; font-family:inherit; }
-        #tmfKartModal .tmf-modal-btn-save { background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #66BB6A; color:#66BB6A; }
-        #tmfKartModal .tmf-modal-btn-save:hover { background:#152d4a; transform:translateY(-1px); }
-        #tmfKartModal .tmf-modal-btn-cancel { background:transparent; border:1px solid #243b52; color:#7a94ad; }
-        #tmfKartModal .tmf-modal-btn-cancel:hover { border-color:#a0b8cc; color:#e4eaf2; }
+        #tmfKartModal .tmf-modal-btn-save { background:var(--panel-bg); border:1px solid var(--btn-green); color:var(--btn-green); }
+        #tmfKartModal .tmf-modal-btn-save:hover { background:var(--bg-main); transform:translateY(-1px); }
+        #tmfKartModal .tmf-modal-btn-cancel { background:transparent; border:1px solid var(--border-color); color:var(--text-light); }
+        #tmfKartModal .tmf-modal-btn-cancel:hover { border-color:var(--accent-red); color:var(--text-dark); }
 
         .search-box { width: 100%; max-width: 400px; padding: 12px 15px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 20px; background: var(--input-bg); color: var(--text-dark); }
 
@@ -1194,71 +1211,6 @@
         [data-theme="dark"] .it-gantt-weekend { background:rgba(255,255,255,0.015); }
         [data-theme="dark"] .it-gantt-today { background:rgba(158,42,43,0.12); }
 
-        /* ================= TM FİYAT LİSTESİ EXCEL TAB SİSTEMİ ================= */
-        .tmf-tab-bar { display:flex; gap:4px; flex-wrap:wrap; align-items:stretch; min-height:38px; background:var(--bg-main); border-radius:8px; padding:4px; border:1px solid var(--border-color); }
-        .tmf-tab { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:8px; cursor:pointer; font-weight:700; font-size:13px; color:var(--text-light); background:transparent; transition:0.2s; user-select:none; white-space:nowrap; border:1px solid transparent; }
-        .tmf-tab:hover { background:var(--bg-main); color:var(--text-dark); border-color:var(--border-color); transform:translateY(-1px); }
-        .tmf-tab.active { background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #a0b8cc; color:#a0b8cc; }
-        .tmf-tab .tmf-tab-close { opacity:0.4; font-size:14px; line-height:1; cursor:pointer; transition:0.15s; padding:0 2px; }
-        .tmf-tab .tmf-tab-close:hover { opacity:1; color:var(--accent-red); }
-        .tmf-tab .tmf-tab-rename { opacity:0; font-size:12px; cursor:pointer; transition:0.15s; padding:0 2px; }
-        .tmf-tab:hover .tmf-tab-rename { opacity:0.5; }
-        .tmf-tab .tmf-tab-rename:hover { opacity:1; color:var(--btn-green); }
-
-        .tmf-tab-empty { text-align:center; padding:60px 20px; color:var(--text-light); background:var(--bg-main); border-radius:8px; border:1px dashed var(--border-color); }
-        .tmf-tab-empty p { font-size:15px; font-weight:600; margin:0 0 8px 0; }
-
-        .tmf-excel-wrap { border:1px solid var(--border-color); border-radius:8px; overflow:hidden; background:var(--panel-bg); }
-        .tmf-excel-scroll { overflow-x:auto; overflow-y:auto; max-height:70vh; }
-        .tmf-excel { border-collapse:collapse; table-layout:fixed; width:auto; min-width:100%; font-size:13px; }
-        .tmf-excel th, .tmf-excel td { border:1px solid var(--border-color); padding:0; margin:0; vertical-align:middle; }
-        .tmf-excel thead th { position:sticky; top:0; z-index:3; background:var(--bg-main); font-weight:700; font-size:12px; color:var(--text-light); text-align:center; height:32px; user-select:none; }
-        .tmf-excel thead th.tmf-ex-corner { width:46px; min-width:46px; background:var(--sidebar-bg); z-index:4; }
-        .tmf-excel thead th.tmf-ex-add-col { width:32px; min-width:32px; cursor:pointer; background:var(--bg-main); color:var(--btn-green); font-size:18px; font-weight:700; padding:0; transition:0.15s; }
-        .tmf-excel thead th.tmf-ex-add-col:hover { background:var(--btn-green); color:#fff; }
-        .tmf-excel thead th.tmf-ex-col-h { position:relative; cursor:default; }
-        .tmf-excel .tmf-ex-col-label { display:inline-block; padding:0 4px; }
-        .tmf-excel .tmf-ex-col-del { position:absolute; top:2px; right:8px; font-size:10px; cursor:pointer; opacity:0; transition:0.15s; color:var(--accent-red); padding:1px 3px; border-radius:3px; }
-        .tmf-excel th:hover .tmf-ex-col-del { opacity:0.6; }
-        .tmf-excel .tmf-ex-col-del:hover { opacity:1 !important; background:rgba(158,42,43,0.1); }
-        .tmf-excel .tmf-ex-col-resize { position:absolute; top:0; right:0; bottom:0; width:6px; cursor:col-resize; background:transparent; z-index:5; }
-        .tmf-excel .tmf-ex-col-resize:hover { background:var(--accent-red); opacity:0.25; }
-
-        .tmf-excel td.tmf-ex-row-h { width:46px; min-width:46px; text-align:center; background:var(--bg-main); font-weight:600; font-size:12px; color:var(--text-light); position:relative; user-select:none; overflow:hidden; }
-        .tmf-excel .tmf-ex-row-label { padding:0 4px; }
-        .tmf-excel .tmf-ex-row-del { position:absolute; left:2px; top:50%; transform:translateY(-50%); font-size:10px; cursor:pointer; opacity:0; transition:0.15s; color:var(--accent-red); padding:1px 3px; border-radius:3px; }
-        .tmf-excel tr:hover .tmf-ex-row-del { opacity:0.6; }
-        .tmf-excel .tmf-ex-row-del:hover { opacity:1 !important; background:rgba(158,42,43,0.1); }
-        .tmf-excel .tmf-ex-row-resize { position:absolute; bottom:0; left:0; right:0; height:5px; cursor:row-resize; background:transparent; z-index:5; }
-        .tmf-excel .tmf-ex-row-resize:hover { background:var(--accent-red); opacity:0.25; }
-        .tmf-excel td.tmf-ex-empty { width:32px; min-width:32px; background:var(--bg-main); }
-
-        .tmf-excel .tmf-ex-input { width:100%; height:100%; border:none; background:transparent; color:var(--text-dark); font-size:13px; padding:6px 8px; outline:none; box-sizing:border-box; font-family:inherit; min-height:30px; }
-        .tmf-excel .tmf-ex-input:focus { background:var(--input-bg); box-shadow:inset 0 0 0 2px rgba(158,42,43,0.15); }
-
-        .tmf-excel tbody tr:hover td { background:rgba(0,0,0,0.015); }
-        [data-theme="dark"] .tmf-excel tbody tr:hover td { background:rgba(255,255,255,0.015); }
-        .tmf-excel tbody tr:hover td.tmf-ex-row-h { background:var(--border-color); }
-
-        .tmf-ex-toolbar { display:flex; gap:8px; padding:10px 14px; background:var(--bg-main); border-top:1px solid var(--border-color); align-items:center; }
-        .tmf-ex-btn { background:transparent; border:1px solid var(--border-color); padding:7px 16px; border-radius:8px; cursor:pointer; font-weight:700; font-size:12px; color:var(--text-light); transition:0.2s; display:inline-flex; align-items:center; gap:6px; }
-        .tmf-ex-btn:hover { border-color:#a0b8cc; color:#1a3a5c; background:var(--bg-main); transform:translateY(-1px); }
-        .tmf-ex-btn-edit { background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #a0b8cc; color:#a0b8cc; }
-        .tmf-ex-btn-edit:hover { background:#152d4a; border-color:#a0b8cc; color:#a0b8cc; }
-        .tmf-fmt-bar { display:flex; align-items:center; gap:8px; padding:8px 14px; background:var(--bg-main); border-bottom:1px solid var(--border-color); flex-wrap:wrap; }
-        .tmf-fmt-btn { background:transparent; border:1px solid var(--border-color); padding:4px 12px; border-radius:6px; cursor:pointer; font-weight:700; font-size:13px; color:var(--text-light); transition:0.2s; min-width:32px; text-align:center; display:inline-flex; align-items:center; justify-content:center; gap:4px; }
-        .tmf-fmt-btn:hover { border-color:#a0b8cc; color:#1a3a5c; transform:translateY(-1px); }
-        .tmf-fmt-btn.active { background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #a0b8cc; color:#a0b8cc; }
-        .tmf-fmt-save { background:linear-gradient(135deg,#2E7D32,#1B5E20); border:1px solid #66BB6A; color:#fff; border-radius:6px; padding:4px 14px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; }
-        .tmf-fmt-save:hover { background:#1B5E20; transform:translateY(-1px); }
-        .tmf-fmt-cancel { background:transparent; border:1px solid var(--border-color); color:var(--text-light); border-radius:6px; padding:4px 14px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; }
-        .tmf-fmt-cancel:hover { background:var(--bg-main); transform:translateY(-1px); }
-        .tmf-fmt-select { padding:4px 6px; border:1px solid var(--border-color); border-radius:4px; background:var(--panel-bg); color:var(--text-dark); font-size:12px; cursor:pointer; }
-        .tmf-fmt-group { display:flex; align-items:center; gap:4px; }
-        .tmf-fmt-label { font-size:11px; color:var(--text-light); font-weight:600; white-space:nowrap; }
-        .tmf-ex-ta { width:100%; border:none; background:transparent; padding:6px 8px; outline:none; box-sizing:border-box; font-family:inherit; resize:none; overflow:hidden; min-height:30px; line-height:1.4; white-space:pre-wrap; word-wrap:break-word; }
-        .tmf-ex-ta:focus { background:var(--input-bg); box-shadow:inset 0 0 0 2px rgba(158,42,43,0.15); }
-        .tmf-ex-view { padding:6px 8px; overflow-y:auto; white-space:pre-wrap; word-wrap:break-word; line-height:1.4; }
         .cs-wrapper { position:relative; width:100%; }
 td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; min-width:80px; vertical-align:middle; }
         .cs-trigger { width:100%; padding:10px 14px; border:1px solid var(--border-color); border-radius:6px; background:var(--panel-bg); color:inherit; font-size:13px; font-weight:600; font-family:inherit; text-align:left; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px; box-sizing:border-box; }
@@ -1277,8 +1229,8 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .tm-scroll-hint::after { content:'← → kaydır'; display:none; position:absolute; bottom:2px; right:8px; font-size:9px; font-weight:700; color:var(--text-light); background:var(--panel-bg); padding:2px 8px; border-radius:4px; border:1px solid var(--border-color); opacity:0.7; pointer-events:none; animation:tmScrollPulse 2s ease-in-out infinite; z-index:2; }
         @keyframes tmScrollPulse { 0%,100% { opacity:0.4; } 50% { opacity:0.9; } }
         @media (hover:none) and (max-width:768px) {
-            .app-table, .it-tablo, .it-tablo-wrapper, .ft-tbl-wrap, .tmf-excel-scroll, .dash-table-widget, .ft-table { position:relative; }
-            .app-table.tm-scroll-hint-active::after, .it-tablo.tm-scroll-hint-active::after, .it-tablo-wrapper.tm-scroll-hint-active::after, .ft-tbl-wrap.tm-scroll-hint-active::after, .tmf-excel-scroll.tm-scroll-hint-active::after { content:'← → kaydır'; display:block; }
+            .app-table, .it-tablo, .it-tablo-wrapper, .ft-tbl-wrap, .dash-table-widget, .ft-table { position:relative; }
+            .app-table.tm-scroll-hint-active::after, .it-tablo.tm-scroll-hint-active::after, .it-tablo-wrapper.tm-scroll-hint-active::after, .ft-tbl-wrap.tm-scroll-hint-active::after { content:'← → kaydır'; display:block; }
         }
         .tm-tooltip-wrap { position:relative; display:inline-flex; }
         .tm-tooltip-text { visibility:hidden; opacity:0; position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:var(--sidebar-bg); color:#fff; font-size:10px; font-weight:600; padding:4px 10px; border-radius:5px; white-space:nowrap; pointer-events:none; transition:opacity 0.15s; z-index:999; box-shadow:0 2px 8px rgba(0,0,0,0.3); }

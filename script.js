@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.19.0';
+﻿        var APP_VERSION = 'V1.20.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -602,7 +602,7 @@ function gorevMailGonder(gorev) {
         }
 
         function tmScrollHintKontrol() {
-            document.querySelectorAll('.app-table, .it-tablo-wrapper, .ft-tbl-wrap, .tmf-excel-scroll').forEach(function(el){
+            document.querySelectorAll('.app-table, .it-tablo-wrapper, .ft-tbl-wrap').forEach(function(el){
                 if (el.scrollWidth > el.clientWidth || el.scrollWidth > el.parentElement.clientWidth) {
                     el.classList.add('tm-scroll-hint-active');
                 } else {
@@ -6681,7 +6681,7 @@ function gorevMailGonder(gorev) {
                 try { document.body.removeChild(sayfaEl); } catch(ex) { console.error(ex); }
             });
         }
-        /* ================= TM FİYAT LİSTESİ — FİYAT KARTLARI ================= */
+        /* ================= TM FIYAT LISTESI - FIYAT KARTLARI ================= */
         const TMF_KART_KEY = 'tm_kategorili_fiyatlar';
         let tmfEditId = null;
 
@@ -6690,22 +6690,31 @@ function gorevMailGonder(gorev) {
             if (!db || !db.kartlar) {
                 db = {
                     kartlar: [
-                        { id: 1, ad: "Uygulama Proje", tip: "kademeli", birim: "m²", not: "Konut projeleri için geçerlidir.", kademeler: [
-                            { min: "0", max: "100", fiyat: "1100" }, { min: "101", max: "200", fiyat: "570" }, { min: "201", max: "250", fiyat: "460" }, { min: "251", max: "500", fiyat: "240" }, { min: "501", max: "750", fiyat: "170" }, { min: "751", max: "1000", fiyat: "155" }, { min: "1001", max: "+", fiyat: "130" }
-                        ] },
-                        { id: 2, ad: "3B Modelleme ve Tasarım", tip: "birim", birim: "m²", not: "", birimFiyat: "500" },
-                        { id: 3, ad: "Şantiye Şefliği", tip: "kademeli", birim: "ay", not: "Toplam inşaat alanına göre aylık ücret.", kademeler: [
-                            { min: "0", max: "500", fiyat: "8000" }, { min: "501", max: "1000", fiyat: "12000" }, { min: "1001", max: "+", fiyat: "15000" }
-                        ] },
-                        { id: 4, ad: "Kat İrtifakı/Mülkiyeti", tip: "birim", birim: "adet", not: "Her bir bağımsız bölüm için.", birimFiyat: "5000" },
-                        { id: 5, ad: "Danışmanlık", tip: "birim", birim: "saat", not: "", birimFiyat: "750" },
-                        { id: 6, ad: "Rölöve", tip: "birim", birim: "m²", not: "", birimFiyat: "200" },
-                        { id: 7, ad: "Keşif", tip: "sabit", birim: "adet", not: "Anahtar teslim keşif bedeli.", sabitFiyat: "3000" }
+                        { id:1, ad:"Uygulama Proje", tip:"kademeli", birim:"m\u00b2", not:"Konut projeleri i\u00e7in ge\u00e7erlidir.", kdSutunlar:[{ id:"min", ad:"Min", g:55 },{ id:"max", ad:"Max", g:55 },{ id:"col_1", ad:"Birim Fiyat (\u20ba)", g:105 }], kademeler:[{ min:"0", max:"100", col_1:"1100" },{ min:"101", max:"200", col_1:"570" },{ min:"201", max:"250", col_1:"460" },{ min:"251", max:"500", col_1:"240" },{ min:"501", max:"750", col_1:"170" },{ min:"751", max:"1000", col_1:"155" },{ min:"1001", max:"+", col_1:"130" }] },
+                        { id:2, ad:"3B Modelleme ve Tasar\u0131m", tip:"birim", birim:"m\u00b2", not:"", birimFiyat:"500" },
+                        { id:3, ad:"\u015eantiye \u015eefli\u011fi", tip:"kademeli", birim:"ay", not:"Toplam in\u015faat alan\u0131na g\u00f6re ayl\u0131k \u00fccret.", kdSutunlar:[{ id:"min", ad:"Min", g:55 },{ id:"max", ad:"Max", g:55 },{ id:"col_1", ad:"Ayl\u0131k \u00dccret (\u20ba)", g:105 }], kademeler:[{ min:"0", max:"500", col_1:"8000" },{ min:"501", max:"1000", col_1:"12000" },{ min:"1001", max:"+", col_1:"15000" }] },
+                        { id:4, ad:"Kat \u0130rtifak\u0131/M\u00fclkiyeti", tip:"birim", birim:"adet", not:"Her bir ba\u011f\u0131ms\u0131z b\u00f6l\u00fcm i\u00e7in.", birimFiyat:"5000" },
+                        { id:5, ad:"Dan\u0131\u015fmanl\u0131k", tip:"birim", birim:"saat", not:"", birimFiyat:"750" },
+                        { id:6, ad:"R\u00f6l\u00f6ve", tip:"birim", birim:"m\u00b2", not:"", birimFiyat:"200" },
+                        { id:7, ad:"Ke\u015fif", tip:"sabit", birim:"adet", not:"Anahtar teslim ke\u015fif bedeli.", sabitFiyat:"3000" }
                     ],
                     sonrakiId: 8
                 };
                 origSetItem(TMF_KART_KEY, JSON.stringify(db));
             }
+            db.kartlar.forEach(function(k) {
+                if (k.tip === "kademeli") {
+                    if (!k.kdSutunlar) {
+                        k.kdSutunlar = [{ id:"min", ad:"Min", g:55 }, { id:"max", ad:"Max", g:55 }];
+                        if (k.kademeler && k.kademeler.length > 0 && k.kademeler[0].fiyat !== undefined) {
+                            k.kdSutunlar.push({ id:"col_1", ad:"Fiyat (\u20ba)", g:100 });
+                            k.kademeler = k.kademeler.map(function(s) { return { min: s.min, max: s.max, col_1: s.fiyat }; });
+                        } else {
+                            k.kdSutunlar.push({ id:"col_1", ad:"Fiyat (\u20ba)", g:100 });
+                        }
+                    }
+                }
+            });
             return db;
         }
 
@@ -6727,29 +6736,35 @@ function gorevMailGonder(gorev) {
             const grid = document.getElementById("tmfKartGrid");
             if (!grid) return;
             if (db.kartlar.length === 0) {
-                grid.innerHTML = '<div class="tmf-bos-durum"><div class="tmf-bos-icon">📇</div><div class="tmf-bos-title">Henüz fiyat kartı yok</div><div class="tmf-bos-desc">"Yeni Kart" butonuna tıklayarak ilk fiyatlandırma kartınızı oluşturun.</div></div>';
+                grid.innerHTML = '<div class="tmf-bos-durum"><div class="tmf-bos-icon">\U0001f4c7</div><div class="tmf-bos-title">Hen\u00fcz fiyat kart\u0131 yok</div><div class="tmf-bos-desc">"Yeni Kart" butonuna t\u0131klayarak ilk fiyatland\u0131rma kart\u0131n\u0131z\u0131 olu\u015fturun.</div></div>';
                 return;
             }
             let h = "";
-            db.kartlar.forEach(k => {
+            db.kartlar.forEach(function(k, idx) {
                 const tipEtiket = k.tip === "sabit" ? "Sabit" : k.tip === "birim" ? "Birim" : "Kademeli";
-                const tipIcon = k.tip === "sabit" ? "💰" : k.tip === "birim" ? "📏" : "📐";
+                const tipIcon = k.tip === "sabit" ? "\U0001f4b0" : k.tip === "birim" ? "\U0001f4cf" : "\U0001f4d0";
                 h += '<div class="tmf-kart">';
                 h += '<div class="tmf-kart-header"><h3>' + esc(k.ad) + '</h3><div class="tmf-kart-badges">';
                 h += '<span class="tmf-badge tmf-badge-' + k.tip + '">' + tipIcon + ' ' + tipEtiket + '</span>';
-                h += '<span class="tmf-badge tmf-badge-unit">' + esc(k.birim || "—") + '</span>';
+                h += '<span class="tmf-badge tmf-badge-unit">' + esc(k.birim || "\u2014") + '</span>';
                 h += '</div></div>';
                 h += '<div class="tmf-kart-body">';
                 if (k.tip === "sabit") {
-                    h += '<div class="tmf-sabit-goster"><div class="tmf-fiyat-buyuk">' + tmfFmt(tmfDegerCoz(k.sabitFiyat)) + ' ₺</div></div>';
+                    h += '<div class="tmf-sabit-goster"><div class="tmf-fiyat-buyuk">' + tmfFmt(tmfDegerCoz(k.sabitFiyat)) + ' \u20ba</div></div>';
                 } else if (k.tip === "birim") {
-                    h += '<div class="tmf-birim-goster"><div class="tmf-fiyat-orta">' + tmfFmt(tmfDegerCoz(k.birimFiyat)) + ' ₺</div>';
+                    h += '<div class="tmf-birim-goster"><div class="tmf-fiyat-orta">' + tmfFmt(tmfDegerCoz(k.birimFiyat)) + ' \u20ba</div>';
                     h += '<div class="tmf-unit-label">/ ' + esc(k.birim) + '</div></div>';
-                } else if (k.tip === "kademeli" && k.kademeler) {
+                } else if (k.tip === "kademeli" && k.kademeler && k.kdSutunlar) {
+                    var fiyatSutunlari = k.kdSutunlar.filter(function(c) { return c.id !== "min" && c.id !== "max"; });
                     h += '<table class="tmf-kademeli-tablo">';
-                    k.kademeler.forEach(kd => {
-                        const aralik = kd.max === "+" ? kd.min + ' ' + esc(k.birim) + ' ve üzeri' : kd.min + ' - ' + kd.max + ' ' + esc(k.birim);
-                        h += '<tr><td class="tmf-range">' + aralik + '</td><td class="tmf-price">' + tmfFmt(tmfDegerCoz(kd.fiyat)) + ' ₺</td></tr>';
+                    k.kademeler.forEach(function(kd) {
+                        var aralik = kd.max === "+" ? kd.min + ' ' + esc(k.birim) + ' ve \u00fczeri' : kd.min + ' - ' + kd.max + ' ' + esc(k.birim);
+                        h += '<tr><td class="tmf-range">' + aralik + '</td>';
+                        fiyatSutunlari.forEach(function(col) {
+                            var val = kd[col.id] || "";
+                            h += '<td class="tmf-price">' + (val ? tmfFmt(tmfDegerCoz(val)) + ' \u20ba' : '\u2014') + '</td>';
+                        });
+                        h += '</tr>';
                     });
                     h += '</table>';
                 }
@@ -6757,15 +6772,32 @@ function gorevMailGonder(gorev) {
                 h += '<div class="tmf-kart-hesapla">';
                 h += '<div class="tmf-hesap-row"><input type="text" class="tmf-hesap-input" id="tmfHesapInput_' + k.id + '" oninput="tmfKartHesapla(' + k.id + ')" placeholder="Miktar girin..." value=""><span class="tmf-hesap-unit">' + esc(k.birim) + '</span></div>';
                 h += '<div class="tmf-hesap-islem" id="tmfHesapIslem_' + k.id + '"></div>';
-                h += '<div class="tmf-hesap-sonuc"><span class="tmf-hesap-label">Toplam</span><span id="tmfHesapSonuc_' + k.id + '">—</span></div>';
+                h += '<div class="tmf-hesap-sonuc"><span class="tmf-hesap-label">Toplam</span><span id="tmfHesapSonuc_' + k.id + '">\u2014</span></div>';
                 h += '</div>';
-                if (k.not) { h += '<div class="tmf-kart-not">📌 ' + esc(k.not) + '</div>'; }
+                if (k.not) { h += '<div class="tmf-kart-not">\U0001f4cc ' + esc(k.not) + '</div>'; }
                 h += '<div class="tmf-kart-actions">';
-                h += '<button class="tmf-btn-edit" onclick="tmfKartDuzenle(' + k.id + ')">✏️ Düzenle</button>';
-                h += '<button class="tmf-btn-del" onclick="tmfKartSil(' + k.id + ')">🗑️</button>';
+                h += '<div class="tmf-btn-spacer"></div>';
+                h += '<button class="tmf-btn-move" onclick="tmfKartTasima(' + k.id + ',-1)"' + (idx === 0 ? ' disabled' : '') + '>\u2191</button>';
+                h += '<button class="tmf-btn-move" onclick="tmfKartTasima(' + k.id + ',1)"' + (idx === db.kartlar.length - 1 ? ' disabled' : '') + '>\u2193</button>';
+                h += '<button class="tmf-btn-edit" onclick="tmfKartDuzenle(' + k.id + ')">\u270f\ufe0f</button>';
+                h += '<button class="tmf-btn-del" onclick="tmfKartSil(' + k.id + ')">\U0001f5d1\ufe0f</button>';
                 h += '</div></div>';
             });
             grid.innerHTML = h;
+        }
+
+        function tmfKartTasima(id, yon) {
+            const db = tmfVeriYukle();
+            var idx = -1;
+            for (var i = 0; i < db.kartlar.length; i++) { if (db.kartlar[i].id === id) { idx = i; break; } }
+            if (idx === -1) return;
+            var yeniIdx = idx + yon;
+            if (yeniIdx < 0 || yeniIdx >= db.kartlar.length) return;
+            var tmp = db.kartlar[idx];
+            db.kartlar[idx] = db.kartlar[yeniIdx];
+            db.kartlar[yeniIdx] = tmp;
+            tmfVeriKaydet(db);
+            tmfSayfayiYukle();
         }
 
         function tmfKartHesapla(id) {
@@ -6778,7 +6810,7 @@ function gorevMailGonder(gorev) {
             if (!miktarStr) {
                 const sEl = document.getElementById("tmfHesapSonuc_" + id);
                 const iEl = document.getElementById("tmfHesapIslem_" + id);
-                if (sEl) sEl.textContent = "—";
+                if (sEl) sEl.textContent = "\u2014";
                 if (iEl) iEl.textContent = "";
                 return;
             }
@@ -6786,36 +6818,39 @@ function gorevMailGonder(gorev) {
             if (miktar <= 0) {
                 const sEl = document.getElementById("tmfHesapSonuc_" + id);
                 const iEl = document.getElementById("tmfHesapIslem_" + id);
-                if (sEl) sEl.textContent = "0,00 ₺";
+                if (sEl) sEl.textContent = "0,00 \u20ba";
                 if (iEl) iEl.textContent = "";
                 return;
             }
             const sEl = document.getElementById("tmfHesapSonuc_" + id);
             const iEl = document.getElementById("tmfHesapIslem_" + id);
             if (kart.tip === "sabit") {
-                const f = tmfDegerCoz(kart.sabitFiyat);
-                if (sEl) sEl.textContent = tmfFmt(f) + ' ₺';
-                if (iEl) iEl.textContent = "Sabit fiyat × 1";
+                var f = tmfDegerCoz(kart.sabitFiyat);
+                if (sEl) sEl.textContent = tmfFmt(f) + ' \u20ba';
+                if (iEl) iEl.textContent = "Sabit fiyat \u00d7 1";
             } else if (kart.tip === "birim") {
-                const bf = tmfDegerCoz(kart.birimFiyat);
-                const t = miktar * bf;
-                if (sEl) sEl.textContent = tmfFmt(t) + ' ₺';
-                if (iEl) iEl.textContent = tmfFmt(bf) + ' ₺ × ' + tmfFmt(miktar) + ' ' + kart.birim;
-            } else if (kart.tip === "kademeli" && kart.kademeler) {
-                let eslesen = null;
-                for (let i = 0; i < kart.kademeler.length; i++) {
-                    const kd = kart.kademeler[i];
-                    const min = tmfDegerCoz(kd.min);
-                    const max = kd.max === "+" ? Infinity : tmfDegerCoz(kd.max);
+                var bf = tmfDegerCoz(kart.birimFiyat);
+                var t = miktar * bf;
+                if (sEl) sEl.textContent = tmfFmt(t) + ' \u20ba';
+                if (iEl) iEl.textContent = tmfFmt(bf) + ' \u20ba \u00d7 ' + tmfFmt(miktar) + ' ' + kart.birim;
+            } else if (kart.tip === "kademeli" && kart.kademeler && kart.kdSutunlar) {
+                var ilkFiyatCol = null;
+                for (var ci = 0; ci < kart.kdSutunlar.length; ci++) { if (kart.kdSutunlar[ci].id !== "min" && kart.kdSutunlar[ci].id !== "max") { ilkFiyatCol = kart.kdSutunlar[ci].id; break; } }
+                if (!ilkFiyatCol) { if (sEl) sEl.textContent = '\u2014'; return; }
+                var eslesen = null;
+                for (var ri = 0; ri < kart.kademeler.length; ri++) {
+                    var kd = kart.kademeler[ri];
+                    var min = tmfDegerCoz(kd.min);
+                    var max = kd.max === "+" ? Infinity : tmfDegerCoz(kd.max);
                     if (miktar >= min && miktar <= max) { eslesen = kd; break; }
                 }
                 if (eslesen) {
-                    const bf = tmfDegerCoz(eslesen.fiyat);
-                    const t = miktar * bf;
-                    if (sEl) sEl.textContent = tmfFmt(t) + ' ₺';
-                    if (iEl) iEl.textContent = tmfFmt(bf) + ' ₺ × ' + tmfFmt(miktar) + ' ' + kart.birim;
+                    var bf2 = tmfDegerCoz(eslesen[ilkFiyatCol]);
+                    var t2 = miktar * bf2;
+                    if (sEl) sEl.textContent = tmfFmt(t2) + ' \u20ba';
+                    if (iEl) iEl.textContent = tmfFmt(bf2) + ' \u20ba \u00d7 ' + tmfFmt(miktar) + ' ' + kart.birim;
                 } else {
-                    if (sEl) sEl.textContent = '⚠️ Aralık dışı';
+                    if (sEl) sEl.textContent = '\u26a0\ufe0f Aral\u0131k d\u0131\u015f\u0131';
                     if (iEl) iEl.textContent = "";
                 }
             }
@@ -6823,11 +6858,11 @@ function gorevMailGonder(gorev) {
 
         function tmfKartEkle() {
             const db = tmfVeriYukle();
-            tmPrompt("Kart adı:", function(ad) {
+            tmPrompt("Kart ad\u0131:", function(ad) {
                 if (!ad || ad.trim() === "") return;
                 ad = ad.trim();
-                const yeniId = db.sonrakiId++;
-                db.kartlar.push({ id: yeniId, ad: ad, tip: "birim", birim: "m²", not: "", birimFiyat: "" });
+                var yeniId = db.sonrakiId++;
+                db.kartlar.push({ id: yeniId, ad: ad, tip: "birim", birim: "m\u00b2", not: "", birimFiyat: "" });
                 tmfVeriKaydet(db);
                 tmfSayfayiYukle();
                 tmNotify("Kart eklendi: " + ad, "success");
@@ -6838,8 +6873,8 @@ function gorevMailGonder(gorev) {
             const db = tmfVeriYukle();
             const kart = db.kartlar.find(k => k.id === id);
             if (!kart) return;
-            tmConfirm('"' + kart.ad + '" kartını silmek istediğinize emin misiniz?', function() {
-                db.kartlar = db.kartlar.filter(k => k.id !== id);
+            tmConfirm('"' + kart.ad + '" kart\u0131n\u0131 silmek istedi\u011finize emin misiniz?', function() {
+                db.kartlar = db.kartlar.filter(function(k) { return k.id !== id; });
                 tmfVeriKaydet(db);
                 tmfSayfayiYukle();
                 tmNotify("Kart silindi.", "success");
@@ -6854,43 +6889,60 @@ function gorevMailGonder(gorev) {
             const modal = document.getElementById("tmfKartModal");
             const icerik = document.getElementById("tmfKartModalIcerik");
             if (!modal || !icerik) return;
-            let h = '<div class="tmf-modal-header"><h3>✏️ Kart Düzenle</h3><button class="tmf-modal-close" onclick="tmfKartModalKapat()">✕</button></div>';
+            var h = '<div class="tmf-modal-header"><h3>\u270f\ufe0f Kart D\u00fczenle</h3><button class="tmf-modal-close" onclick="tmfKartModalKapat()">\u2715</button></div>';
             h += '<div class="tmf-modal-body">';
-            h += '<div class="tmf-modal-field"><label>Kart Adı</label><input type="text" id="tmfModalAd" value="' + esc(kart.ad) + '"></div>';
-            h += '<div class="tmf-modal-field"><label>Fiyat Türü</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="sabit"' + (kart.tip==="sabit"?' selected':'') + '>💰 Sabit Fiyat</option><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>📏 Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '>📐 Kademeli Fiyat</option></select></div>';
-            h += '<div class="tmf-modal-field"><label>Birim Türü</label><input type="text" id="tmfModalBirim" value="' + esc(kart.birim) + '" placeholder="m², adet, ay, saat..."></div>';
+            h += '<div class="tmf-modal-field"><label>Kart Ad\u0131</label><input type="text" id="tmfModalAd" value="' + esc(kart.ad) + '"></div>';
+            h += '<div class="tmf-modal-field"><label>Fiyat T\u00fcr\u00fc</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="sabit"' + (kart.tip==="sabit"?' selected':'') + '>\U0001f4b0 Sabit Fiyat</option><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>\U0001f4cf Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '>\U0001f4d0 Kademeli Fiyat</option></select></div>';
+            h += '<div class="tmf-modal-field"><label>Birim T\u00fcr\u00fc</label><input type="text" id="tmfModalBirim" value="' + esc(kart.birim) + '" placeholder="m\u00b2, adet, ay, saat..."></div>';
             h += '<div id="tmfModalDinamikAlan"></div>';
-            h += '<div class="tmf-modal-field"><label>Not (isteğe bağlı)</label><textarea id="tmfModalNot" placeholder="Bu kartla ilgili notlar...">' + esc(kart.not || "") + '</textarea></div>';
+            h += '<div class="tmf-modal-field"><label>Not</label><textarea id="tmfModalNot" placeholder="Bu kartla ilgili notlar...">' + esc(kart.not || "") + '</textarea></div>';
             h += '</div>';
-            h += '<div class="tmf-modal-actions"><button class="tmf-modal-btn tmf-modal-btn-save" onclick="tmfKartModalKaydet()">💾 Kaydet</button><button class="tmf-modal-btn tmf-modal-btn-cancel" onclick="tmfKartModalKapat()">İptal</button></div>';
+            h += '<div class="tmf-modal-actions"><button class="tmf-modal-btn tmf-modal-btn-save" onclick="tmfKartModalKaydet()">\U0001f4be Kaydet</button><button class="tmf-modal-btn tmf-modal-btn-cancel" onclick="tmfKartModalKapat()">\u0130ptal</button></div>';
             icerik.innerHTML = h;
             modal.style.display = "flex";
             tmfModalTipDegisti();
         }
 
         function tmfModalTipDegisti() {
-            const tip = document.getElementById("tmfModalTip").value;
-            const alan = document.getElementById("tmfModalDinamikAlan");
+            var tip = document.getElementById("tmfModalTip").value;
+            var alan = document.getElementById("tmfModalDinamikAlan");
             if (!alan) return;
             const db = tmfVeriYukle();
             const kart = db.kartlar.find(k => k.id === tmfEditId);
             if (!kart) return;
-            let h = "";
+            var h = "";
             if (tip === "sabit") {
-                h += '<div class="tmf-modal-field"><label>Sabit Fiyat (₺)</label><input type="text" id="tmfModalSabit" value="' + esc(kart.sabitFiyat || "") + '" placeholder="Örn: 5000"></div>';
+                h += '<div class="tmf-modal-field"><label>Sabit Fiyat (\u20ba)</label><input type="text" id="tmfModalSabit" value="' + esc(kart.sabitFiyat || "") + '" placeholder="\u00d6rn: 5000"></div>';
             } else if (tip === "birim") {
-                h += '<div class="tmf-modal-field"><label>Birim Fiyat (₺)</label><input type="text" id="tmfModalBirimFiyat" value="' + esc(kart.birimFiyat || "") + '" placeholder="Örn: 500"></div>';
+                h += '<div class="tmf-modal-field"><label>Birim Fiyat (\u20ba)</label><input type="text" id="tmfModalBirimFiyat" value="' + esc(kart.birimFiyat || "") + '" placeholder="\u00d6rn: 500"></div>';
             } else if (tip === "kademeli") {
-                const kd = kart.kademeler && kart.kademeler.length > 0 ? kart.kademeler : [{ min: "", max: "", fiyat: "" }];
-                h += '<div class="tmf-modal-kademeler"><label style="font-size:9px; font-weight:700; color:#7a94ad; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; display:block;">Fiyat Kademeleri</label>';
-                h += '<table><thead><tr><th style="width:60px;">Min</th><th style="width:60px;">Max</th><th>Fiyat (₺)</th><th style="width:30px;"></th></tr></thead><tbody id="tmfKademeTbody">';
-                kd.forEach((k, i) => {
+                var sut = kart.kdSutunlar || [{ id:"min", ad:"Min", g:55 }, { id:"max", ad:"Max", g:55 }, { id:"col_1", ad:"Fiyat (\u20ba)", g:100 }];
+                var kdList = kart.kademeler && kart.kademeler.length > 0 ? kart.kademeler : [{ min:"", max:"" }];
+                sut.forEach(function(c) { if (c.id !== "min" && c.id !== "max" && kdList[0][c.id] === undefined) { kdList.forEach(function(r) { r[c.id] = ""; }); } });
+                /* Column editor */
+                h += '<div class="tmf-modal-kd-sutunlar"><div class="tmf-kd-sutun-label">\U0001f4cb S\u00fctunlar</div>';
+                h += '<table class="tmf-kd-sutun-tbl" id="tmfKdSutunTbl"><thead><tr><th style="width:32px;">Kolon</th><th>Ad\u0131</th><th style="width:50px;">Geni\u015flik</th><th style="width:24px;"></th></tr></thead><tbody>';
+                sut.forEach(function(c) {
+                    var sabit = c.id === "min" || c.id === "max";
+                    h += '<tr data-colid="' + c.id + '"><td style="font-size:10px;color:var(--text-light);font-weight:700;">' + (sabit ? c.id.toUpperCase() : c.id) + '</td>';
+                    h += '<td><input class="tmf-kd-sut-ad" type="text" value="' + esc(c.ad) + '" placeholder="S\u00fctun ad\u0131"></td>';
+                    h += '<td><input class="tmf-kd-sut-g" type="text" value="' + (c.g || 100) + '" placeholder="60"></td>';
+                    h += '<td>' + (sabit ? '<span style="color:var(--text-light);font-size:10px;opacity:0.5;">\U0001f512</span>' : '<button class="tmf-btn-sut-sil" onclick="tmfKdSutunSil(this)">\u2715</button>') + '</td></tr>';
+                });
+                h += '</tbody></table>';
+                h += '<button class="tmf-btn-sut-ekle" onclick="tmfKdSutunEkle()">+ S\u00fctun Ekle</button></div>';
+                /* Rows */
+                h += '<div class="tmf-modal-kademeler"><div class="tmf-kd-label">\U0001f4ca Kademeler</div>';
+                h += '<table><thead><tr>';
+                sut.forEach(function(c) { h += '<th style="width:' + (c.g || 100) + 'px;">' + esc(c.ad) + '</th>'; });
+                h += '<th style="width:30px;"></th></tr></thead><tbody id="tmfKademeTbody">';
+                kdList.forEach(function(kd) {
                     h += '<tr>';
-                    h += '<td><input class="tmf-kd-min" type="text" value="' + esc(k.min) + '" placeholder="0"></td>';
-                    h += '<td><input class="tmf-kd-max" type="text" value="' + esc(k.max) + '" placeholder="100"></td>';
-                    h += '<td><input class="tmf-kd-fiyat" type="text" value="' + esc(k.fiyat) + '" placeholder="1100"></td>';
-                    h += '<td>' + (kd.length > 1 ? '<button class="tmf-btn-kd-sil" onclick="this.closest(\'tr\').remove()">✕</button>' : '') + '</td>';
-                    h += '</tr>';
+                    sut.forEach(function(c) {
+                        var val = kd[c.id] || "";
+                        h += '<td><input class="tmf-kd-cell" data-colid="' + c.id + '" type="text" value="' + esc(val) + '" placeholder="' + (c.id==="min"||c.id==="max"?"Aral\u0131k":"Fiyat") + '"></td>';
+                    });
+                    h += '<td>' + (kdList.length > 1 ? '<button class="tmf-btn-kd-sil" onclick="this.closest(\'tr\').remove()">\u2715</button>' : '') + '</td></tr>';
                 });
                 h += '</tbody></table>';
                 h += '<button class="tmf-btn-kd-ekle" onclick="tmfKademeEkle()">+ Kademe Ekle</button></div>';
@@ -6898,11 +6950,68 @@ function gorevMailGonder(gorev) {
             alan.innerHTML = h;
         }
 
-        function tmfKademeEkle() {
-            const tbody = document.getElementById("tmfKademeTbody");
+        function tmfKdSutunEkle() {
+            var tbody = document.querySelector("#tmfKdSutunTbl tbody");
             if (!tbody) return;
-            const tr = document.createElement("tr");
-            tr.innerHTML = '<td><input class="tmf-kd-min" type="text" value="" placeholder="0"></td><td><input class="tmf-kd-max" type="text" value="" placeholder="100"></td><td><input class="tmf-kd-fiyat" type="text" value="" placeholder="1100"></td><td><button class="tmf-btn-kd-sil" onclick="this.closest(\'tr\').remove()">✕</button></td>';
+            var maxNum = 0;
+            tbody.querySelectorAll("tr").forEach(function(tr) {
+                var cid = tr.getAttribute("data-colid") || "";
+                var m = cid.match(/^col_(\d+)$/);
+                if (m) { var n = parseInt(m[1]); if (n > maxNum) maxNum = n; }
+            });
+            var yeniId = "col_" + (maxNum + 1);
+            var tr = document.createElement("tr");
+            tr.setAttribute("data-colid", yeniId);
+            tr.innerHTML = '<td style="font-size:10px;color:var(--text-light);font-weight:700;">' + yeniId + '</td><td><input class="tmf-kd-sut-ad" type="text" value="" placeholder="S\u00fctun ad\u0131"></td><td><input class="tmf-kd-sut-g" type="text" value="100" placeholder="60"></td><td><button class="tmf-btn-sut-sil" onclick="tmfKdSutunSil(this)">\u2715</button></td>';
+            tbody.appendChild(tr);
+            tmfKdKademeTablosunuGuncelle();
+        }
+
+        function tmfKdSutunSil(btn) {
+            var tr = btn.closest("tr");
+            if (!tr) return;
+            tr.remove();
+            tmfKdKademeTablosunuGuncelle();
+        }
+
+        function tmfKdKademeTablosunuGuncelle() {
+            var sutunlar = tmfKdSutunlariOku();
+            var tbody = document.getElementById("tmfKademeTbody");
+            if (!tbody) return;
+            var rows = tbody.querySelectorAll("tr");
+            var oncekiSatirlar = [];
+            rows.forEach(function(tr) { var obj = {}; tr.querySelectorAll(".tmf-kd-cell").forEach(function(inp) { obj[inp.getAttribute("data-colid")] = inp.value; }); oncekiSatirlar.push(obj); });
+            var yeniHtml = "";
+            oncekiSatirlar.forEach(function(kd) {
+                yeniHtml += '<tr>';
+                sutunlar.forEach(function(c) { yeniHtml += '<td><input class="tmf-kd-cell" data-colid="' + c.id + '" type="text" value="' + esc(kd[c.id] || "") + '" placeholder="' + (c.id==="min"||c.id==="max"?"Aral\u0131k":"Fiyat") + '"></td>'; });
+                yeniHtml += '<td>' + (oncekiSatirlar.length > 1 ? '<button class="tmf-btn-kd-sil" onclick="this.closest(\'tr\').remove()">\u2715</button>' : '') + '</td></tr>';
+            });
+            tbody.innerHTML = yeniHtml;
+        }
+
+        function tmfKdSutunlariOku() {
+            var sutunlar = [];
+            var tbody = document.querySelector("#tmfKdSutunTbl tbody");
+            if (!tbody) return sutunlar;
+            tbody.querySelectorAll("tr").forEach(function(tr) {
+                var id = tr.getAttribute("data-colid") || "";
+                var adInput = tr.querySelector(".tmf-kd-sut-ad");
+                var gInput = tr.querySelector(".tmf-kd-sut-g");
+                sutunlar.push({ id: id, ad: adInput ? adInput.value : id, g: parseInt(gInput ? gInput.value : 100) || 100 });
+            });
+            return sutunlar;
+        }
+
+        function tmfKademeEkle() {
+            var tbody = document.getElementById("tmfKademeTbody");
+            if (!tbody) return;
+            var sutunlar = tmfKdSutunlariOku();
+            var tr = document.createElement("tr");
+            var h = "";
+            sutunlar.forEach(function(c) { h += '<td><input class="tmf-kd-cell" data-colid="' + c.id + '" type="text" value="" placeholder="' + (c.id==="min"||c.id==="max"?"Aral\u0131k":"Fiyat") + '"></td>'; });
+            h += '<td><button class="tmf-btn-kd-sil" onclick="this.closest(\'tr\').remove()">\u2715</button></td>';
+            tr.innerHTML = h;
             tbody.appendChild(tr);
         }
 
@@ -6910,40 +7019,36 @@ function gorevMailGonder(gorev) {
             const db = tmfVeriYukle();
             const kart = db.kartlar.find(k => k.id === tmfEditId);
             if (!kart) return;
-            const ad = document.getElementById("tmfModalAd");
-            const tip = document.getElementById("tmfModalTip");
-            const birim = document.getElementById("tmfModalBirim");
-            const notEl = document.getElementById("tmfModalNot");
+            var ad = document.getElementById("tmfModalAd");
+            var tip = document.getElementById("tmfModalTip");
+            var birim = document.getElementById("tmfModalBirim");
+            var notEl = document.getElementById("tmfModalNot");
             if (!ad || !tip || !birim) return;
-            if (!ad.value.trim()) { tmNotify("Kart adı boş olamaz.", "error"); return; }
+            if (!ad.value.trim()) { tmNotify("Kart ad\u0131 bo\u015f olamaz.", "error"); return; }
             kart.ad = ad.value.trim();
             kart.tip = tip.value;
-            kart.birim = birim.value.trim() || "—";
+            kart.birim = birim.value.trim() || "\u2014";
             kart.not = notEl ? notEl.value : "";
             if (kart.tip === "sabit") {
-                const s = document.getElementById("tmfModalSabit");
+                var s = document.getElementById("tmfModalSabit");
                 kart.sabitFiyat = s ? s.value : "";
-                delete kart.birimFiyat;
-                delete kart.kademeler;
+                delete kart.birimFiyat; delete kart.kademeler; delete kart.kdSutunlar;
             } else if (kart.tip === "birim") {
-                const b = document.getElementById("tmfModalBirimFiyat");
+                var b = document.getElementById("tmfModalBirimFiyat");
                 kart.birimFiyat = b ? b.value : "";
-                delete kart.sabitFiyat;
-                delete kart.kademeler;
+                delete kart.sabitFiyat; delete kart.kademeler; delete kart.kdSutunlar;
             } else if (kart.tip === "kademeli") {
-                const tbody = document.getElementById("tmfKademeTbody");
+                kart.kdSutunlar = tmfKdSutunlariOku();
+                var tbody = document.getElementById("tmfKademeTbody");
+                kart.kademeler = [];
                 if (tbody) {
-                    const rows = tbody.querySelectorAll("tr");
-                    kart.kademeler = [];
-                    rows.forEach(function(tr) {
-                        const inputs = tr.querySelectorAll("input");
-                        if (inputs.length >= 3) {
-                            kart.kademeler.push({ min: inputs[0].value, max: inputs[1].value, fiyat: inputs[2].value });
-                        }
+                    tbody.querySelectorAll("tr").forEach(function(tr) {
+                        var obj = {};
+                        tr.querySelectorAll(".tmf-kd-cell").forEach(function(inp) { obj[inp.getAttribute("data-colid")] = inp.value; });
+                        kart.kademeler.push(obj);
                     });
                 }
-                delete kart.sabitFiyat;
-                delete kart.birimFiyat;
+                delete kart.sabitFiyat; delete kart.birimFiyat;
             }
             tmfVeriKaydet(db);
             tmfKartModalKapat();
@@ -6952,13 +7057,10 @@ function gorevMailGonder(gorev) {
         }
 
         function tmfKartModalKapat() {
-            const modal = document.getElementById("tmfKartModal");
+            var modal = document.getElementById("tmfKartModal");
             if (modal) modal.style.display = "none";
             tmfEditId = null;
         }
-
-        /* ==================== FATURA TAKİP SİSTEMİ ==================== */
-        /* ==================== FATURA TAKİP SİSTEMİ ==================== */
         const FT_DB_KEY = "tm_fatura_takip_db";
 
         function ftDbYukle() {
@@ -9230,3 +9332,4 @@ function itDurumMetni(o) {
         function esc(s) { return (s||"").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
         function tarihStr(d) { try { return new Date(d).toLocaleDateString("tr-TR"); } catch(e) { return d||"-"; } }
         function formatPhone(el) { var v=el.value.replace(/\D/g,'').substring(0,11); if(v.length>0){var p=[];p.push(v.substring(0,4));if(v.length>4)p.push(v.substring(4,7));if(v.length>7)p.push(v.substring(7,9));if(v.length>9)p.push(v.substring(9,11));el.value=p.join(' ');} }
+
