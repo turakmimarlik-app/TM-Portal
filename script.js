@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.21.2';
+        var APP_VERSION = 'V1.22.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -4323,13 +4323,31 @@ function gorevMailGonder(gorev) {
 
             let kalemSatirlari = "";
             kayit.kalemler.forEach(function(k) {
-                const odenen = k.odenenTutar || 0;
-                const kalan = Math.max(0, k.tutar - odenen);
                 const tipText = k.tip === "alacak" ? "TAHSİLAT" : "GİDER";
                 const tipRenk = k.tip === "alacak" ? "#2E7D32" : "#9E2A2B";
                 const aciklama = k.aciklama || (k.tip === "alacak" ? "TAHSİLAT" : "ÖDEME");
                 const kisiFirma = k.kisi || "-";
-                kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:600;color:#2E7D32;">' + odenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:' + (kalan > 0 ? '#9E2A2B' : '#666') + ';">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>';
+                if(k.tip === "alacak") {
+                    const tarih = k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-";
+                    kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">' + tarih + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:600;color:#2E7D32;">0 ₺</td></tr>';
+                } else {
+                    const kayitlar = k.odemeKayitlari || [];
+                    if(kayitlar.length > 0) {
+                        kayitlar.forEach(function(od) {
+                            const odemeTarih = od.tarih ? new Date(od.tarih).toLocaleDateString("tr-TR") : "-";
+                            kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">' + odemeTarih + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#9E2A2B;">' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:600;color:#666;">-</td></tr>';
+                        });
+                        const kalan = Math.max(0, k.tutar - (k.odenenTutar || 0));
+                        if(kalan > 0) {
+                            kalemSatirlari += '<tr style="background:#fafafa;"><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;font-weight:700;">' + aciklama + ' (KALAN)</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;"></td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">-</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">KALAN</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:800;color:#9E2A2B;">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>';
+                        }
+                    } else {
+                        const odenen = k.odenenTutar || 0;
+                        const kalan = Math.max(0, k.tutar - odenen);
+                        const tarih = (k.odemeTarihi || k.tarih) ? new Date(k.odemeTarihi || k.tarih).toLocaleDateString("tr-TR") : "-";
+                        kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">' + tarih + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:800;color:' + (kalan > 0 ? '#9E2A2B' : '#2E7D32') + ';">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>';
+                    }
+                }
             });
 
             const sayfaHtml = '<div style="width:297mm;min-height:210mm;padding:6mm 8mm;box-sizing:border-box;font-family:\'Segoe UI\',\'Helvetica Neue\',Arial,sans-serif;background:#fff;color:#222;text-transform:uppercase;">'
@@ -4359,12 +4377,12 @@ function gorevMailGonder(gorev) {
                 + '<div style="border:1.5px solid #e0e0e0;border-radius:3px;overflow:hidden;margin-bottom:3mm;">'
                 + '<table style="width:100%;border-collapse:collapse;font-size:10px;">'
                 + '<thead><tr style="background:#1a1a2e;color:#fff;">'
-                + '<th style="padding:2.5mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;width:28%;">AÇIKLAMA</th>'
-                + '<th style="padding:2.5mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;width:16%;">KİŞİ / FİRMA</th>'
-                + '<th style="padding:2.5mm 4mm;text-align:center;font-size:8px;letter-spacing:1px;width:12%;">TİP</th>'
-                + '<th style="padding:2.5mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:15%;">TUTAR</th>'
-                + '<th style="padding:2.5mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:14%;">ÖDENEN</th>'
-                + '<th style="padding:2.5mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:15%;">KALAN</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;width:24%;">AÇIKLAMA</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;width:14%;">KİŞİ / FİRMA</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:center;font-size:8px;letter-spacing:1px;width:14%;">TARİH</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:center;font-size:8px;letter-spacing:1px;width:10%;">TİP</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:19%;">TUTAR</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:19%;">KALAN</th>'
                 + '</tr></thead><tbody>'
                 + (kalemSatirlari || '<tr><td colspan="6" style="padding:3mm 4mm;text-align:center;font-size:10px;color:#999;">KALEM BULUNMAMAKTADIR</td></tr>')
                 + '</tbody></table></div>'
