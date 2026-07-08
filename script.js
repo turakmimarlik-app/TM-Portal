@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.24.0';
+        var APP_VERSION = 'V1.24.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2192,14 +2192,14 @@ function gorevMailGonder(gorev) {
         }
 
         function pbTokenSor(callback) {
-            tmPrompt("GitHub Personal Access Token (repo yetkili) girin:", "", function(val) {
+            tmPrompt("GitHub Personal Access Token (repo yetkili) girin:", function(val) {
                 if (val && val.trim()) {
                     localStorage.setItem(PB_TOKEN_KEY, val.trim());
                     if (callback) callback(val.trim());
                 } else {
                     tmNotify("Token girmediniz!", "error");
                 }
-            }, "GitHub Token");
+            }, "", "GitHub Token");
         }
 
         function pbDosyaVerileriniYukle() {
@@ -2220,23 +2220,35 @@ function gorevMailGonder(gorev) {
 
             fetch(url, {
                 method: "PUT",
-                headers: { "Authorization": "token " + token, "Content-Type": "application/json", "Accept": "application/vnd.github.v3+json" },
+                headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json", "Accept": "application/vnd.github.v3+json" },
                 body: JSON.stringify(data)
-            }).then(function(r) { return r.json(); }).then(function(j) {
+            }).then(function(r) {
+                if (!r.ok) {
+                    if (r.status === 401 || r.status === 403) {
+                        localStorage.removeItem(PB_TOKEN_KEY);
+                        callback("Token geçersiz veya repo yetkisi yok. Lütfen yeni bir token oluşturun (repo scope).");
+                    } else if (r.status === 422) {
+                        callback("GitHub hatası: Dosya zaten var veya geçersiz istek.");
+                    } else {
+                        return r.json().then(function(j) {
+                            callback("GitHub hatası (" + r.status + "): " + (j.message || "Bilinmeyen hata"));
+                        }).catch(function() {
+                            callback("GitHub bağlantı hatası (" + r.status + ")");
+                        });
+                    }
+                    return null;
+                }
+                return r.json();
+            }).then(function(j) {
+                if (!j) return;
                 if (j.content && j.content.download_url) {
                     callback(null, { downloadURL: j.content.download_url, storagePath: path });
-                } else if (j.message) {
-                    if (j.message.indexOf("Bad credentials") !== -1 || j.message.indexOf("401") !== -1) {
-                        localStorage.removeItem(PB_TOKEN_KEY);
-                        callback("Token geçersiz. Lütfen yeniden girin.");
-                    } else {
-                        callback("GitHub hatası: " + j.message);
-                    }
                 } else {
-                    callback("Dosya yüklenemedi.");
+                    callback("Dosya yüklenemedi. GitHub yanıtı beklenmedik.");
                 }
             }).catch(function(err) {
-                callback("Bağlantı hatası: " + (err.message || err));
+                if (err && err.message) callback("Bağlantı hatası: " + err.message);
+                else callback("Bağlantı hatası. İnternet bağlantınızı kontrol edin.");
             });
         }
 
@@ -2245,7 +2257,7 @@ function gorevMailGonder(gorev) {
             if (!token) { callback("Token bulunamadı"); return; }
 
             var url = "https://api.github.com/repos/" + PB_GITHUB_REPO + "/contents/" + storagePath;
-            var headers = { "Authorization": "token " + token, "Content-Type": "application/json", "Accept": "application/vnd.github.v3+json" };
+            var headers = { "Authorization": "Bearer " + token, "Content-Type": "application/json", "Accept": "application/vnd.github.v3+json" };
 
             fetch(url, { method: "GET", headers: headers }).then(function(r) { return r.json(); }).then(function(f) {
                 if (!f.sha) { callback(null); return; }
@@ -2253,7 +2265,7 @@ function gorevMailGonder(gorev) {
                     method: "DELETE",
                     headers: headers,
                     body: JSON.stringify({ message: "Dosya silindi: " + storagePath, sha: f.sha, branch: PB_GITHUB_BRANCH })
-                }).then(function(r) { return r.json(); }).then(function() { callback(null); }).catch(function() { callback(null); });
+                }).then(function() { callback(null); }).catch(function() { callback(null); });
             }).catch(function() { callback(null); });
         }
 
