@@ -518,7 +518,7 @@
         #is-muhasebe-page .isMuh-status-strip small { font-size:9px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.5px; }
         #is-muhasebe-page .isMuh-status-strip span { font-size:18px; font-weight:800; color:var(--ht-text); }
         #is-muhasebe-page .portfolio-card { background:var(--ht-card) !important; border:1px solid var(--ht-border) !important; border-top:3px solid var(--ht-accent) !important; border-radius:12px !important; padding:20px 0 16px 0 !important; box-shadow:0 4px 16px rgba(0,0,0,0.2) !important; transition:0.2s !important; display:flex; flex-direction:column; }
-        #is-muhasebe-page .portfolio-card:hover { transform:translateY(-2px) !important; border-color:var(--ht-accent) !important; box-shadow:0 8px 24px rgba(0,0,0,0.25) !important; }
+        #is-muhasebe-page .portfolio-card:hover { transform:translateY(-2px) !important; border-color:var(--accent-red) !important; box-shadow:0 8px 24px rgba(0,0,0,0.25) !important; outline:2px solid var(--accent-red) !important; outline-offset:-1px !important; }
         #is-muhasebe-page .portfolio-card .card-main-header { padding:0 20px !important; margin-bottom:10px !important; }
         #is-muhasebe-page .portfolio-card h4 { margin:0 0 4px 0; font-size:15px; font-weight:700; color:var(--ht-text); letter-spacing:0.3px; }
         #is-muhasebe-page .portfolio-card .card-actions { margin-top:10px; padding-top:10px; display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--ht-border); }
