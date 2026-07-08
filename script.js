@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.21.1';
+        var APP_VERSION = 'V1.21.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -4383,7 +4383,9 @@ function gorevMailGonder(gorev) {
                 const dt = cv.toDataURL('image/jpeg',0.95);
                 const doc = new jspdf.jsPDF({format:'a4',orientation:'landscape',unit:'mm'});
                 doc.addImage(dt,'JPEG',0,0,297,210);
-                doc.save("IS_MUHASEBESI_" + formatliId.replace('#','') + ".pdf");
+                const temizle = function(s) { return (s || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim(); };
+                const dosyaAdi = temizle(kayit.isAdi) + "_" + temizle(kayit.firma) + "_" + temizle(kayit.pafta) + "_" + temizle(kayit.ada) + "_" + temizle(kayit.parsel) + "_" + formatliId.replace('#','');
+                doc.save(dosyaAdi + ".pdf");
                 document.body.removeChild(sayfaEl);
                 tmLoadingGizle();
             }).catch(function(e){
