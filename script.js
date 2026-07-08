@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.25.5';
+        var APP_VERSION = 'V1.25.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -581,7 +581,7 @@ function gorevMailGonder(gorev) {
             if (!lo) {
                 lo = document.createElement('div');
                 lo.id = 'tmLoadingIndicator';
-                lo.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:99998;justify-content:center;align-items:center;backdrop-filter:blur(2px);';
+                lo.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9998;justify-content:center;align-items:center;backdrop-filter:blur(2px);';
                 lo.innerHTML = '<div style="background:var(--panel-bg);padding:30px 40px;border-radius:14px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);border:1px solid var(--border-color);min-width:200px;"><div style="border:3px solid var(--border-color);border-top:3px solid var(--accent-red);border-radius:50%;width:30px;height:30px;animation:tmLoadingSpin 0.8s linear infinite;margin:0 auto 14px;"></div><div style="font-size:13px;font-weight:700;color:var(--text-dark);letter-spacing:0.3px;" id="tmLoadingMsg">İşlem yapılıyor...</div></div>';
                 document.body.appendChild(lo);
                 var styleEl = document.createElement('style');
@@ -2211,44 +2211,10 @@ function gorevMailGonder(gorev) {
             try { localStorage.setItem(PB_DOSYA_DB_KEY, JSON.stringify(data)); } catch(e) { console.error("Dosya veri kaydetme hatasi:", e); }
         }
 
-        function pbCloudinaryYukle(file, callback) {
-            var formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", PB_UPLOAD_PRESET);
-
-            fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/upload", {
-                method: "POST",
-                body: formData
-            }).then(function(r) { return r.json(); }).then(function(j) {
-                if (j.secure_url) {
-                    callback(null, { downloadURL: j.secure_url, publicId: j.public_id, fileSize: j.bytes });
-                } else if (j.error && j.error.message) {
-                    callback("Cloudinary hatası: " + j.error.message);
-                } else {
-                    callback("Dosya yüklenemedi.");
-                }
-            }).catch(function(err) {
-                callback("Bağlantı hatası: " + (err.message || err));
-            });
-        }
-
-        function pbCloudinarySil(publicId, callback) {
+        function pbCredSil(publicId, callback) {
             var apiKey = pbCredAl(PB_CLOUD_KEY_KEY);
             var apiSecret = pbCredAl(PB_CLOUD_SECRET_KEY);
-            if (!apiKey || !apiSecret) {
-                tmPrompt("Cloudinary API Key girin (Dashboard'da görebilirsin):", function(val) {
-                    if (val && val.trim()) {
-                        localStorage.setItem(PB_CLOUD_KEY_KEY, val.trim());
-                        tmPrompt("Cloudinary API Secret girin:", function(val2) {
-                            if (val2 && val2.trim()) {
-                                localStorage.setItem(PB_CLOUD_SECRET_KEY, val2.trim());
-                                pbCloudinarySil(publicId, callback);
-                            }
-                        });
-                    }
-                });
-                return;
-            }
+            if (!apiKey || !apiSecret) { callback(null); return; }
 
             var timestamp = Math.floor(Date.now() / 1000);
             var str = "public_id=" + publicId + "&timestamp=" + timestamp + apiSecret;
@@ -2261,9 +2227,7 @@ function gorevMailGonder(gorev) {
                 fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/destroy", {
                     method: "POST",
                     body: fd
-                }).then(function(r) { return r.json(); }).then(function(j) {
-                    callback(null);
-                }).catch(function() { callback(null); });
+                }).then(function(r) { return r.json(); }).then(function() { callback(null); }).catch(function() { callback(null); });
             });
         }
 
@@ -2278,37 +2242,48 @@ function gorevMailGonder(gorev) {
                 if (file.size > 100 * 1024 * 1024) { tmNotify("Dosya boyutu 100MB'dan büyük olamaz!", "error"); return; }
 
                 tmLoadingGoster("Dosya yükleniyor...");
-                pbCloudinaryYukle(file, function(err, result) {
-                    if (err) { tmLoadingGizle(); tmNotify(err, "error"); return; }
-                    var fileId = Date.now() + "_" + Math.random().toString(36).substr(2, 6);
-                    var dosyaDb = pbDosyaVerileriniYukle();
-                    dosyaDb.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, publicId: result.publicId, downloadURL: result.downloadURL, fileSize: result.fileSize, uploadDate: new Date().toISOString() });
-                    pbDosyaVerileriniKaydet(dosyaDb);
+                var formData = new FormData();
+                formData.append("file", file);
+                formData.append("upload_preset", PB_UPLOAD_PRESET);
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/upload", {
+                    method: "POST",
+                    body: formData
+                }).then(function(r) { return r.json(); }).then(function(j) {
                     tmLoadingGizle();
-                    tmNotify("Dosya başarıyla yüklendi: " + file.name, "success");
-                    pbDosyaPopupGuncelle(kartId, tur);
+                    if (j.secure_url) {
+                        var fileId = Date.now() + "_" + Math.random().toString(36).substr(2, 6);
+                        var dosyaDb = pbDosyaVerileriniYukle();
+                        dosyaDb.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, publicId: j.public_id, downloadURL: j.secure_url, fileSize: j.bytes, uploadDate: new Date().toISOString() });
+                        pbDosyaVerileriniKaydet(dosyaDb);
+                        tmNotify("Dosya başarıyla yüklendi: " + file.name, "success");
+                        pbDosyaPopupGuncelle(kartId, tur);
+                    } else {
+                        tmNotify("Cloudinary hatası: " + ((j.error && j.error.message) || "Dosya yüklenemedi."), "error");
+                    }
+                }).catch(function(err) {
+                    tmLoadingGizle();
+                    tmNotify("Bağlantı hatası: " + (err.message || err), "error");
                 });
             };
             input.click();
         }
 
         function pbDosyaSil(kartId, fileId, tur) {
-            tmConfirm("Bu dosyayı silmek istediğinize emin misiniz?", function() {
-                var dosyaDb = pbDosyaVerileriniYukle();
-                var fileData = dosyaDb.find(function(f) { return f.id === fileId && f.kartId === kartId && f.tur === tur; });
-                if (!fileData) { tmNotify("Dosya bulunamadı!", "error"); return; }
+            var dosyaDb = pbDosyaVerileriniYukle();
+            var fileData = dosyaDb.find(function(f) { return f.id === fileId && f.kartId === kartId && f.tur === tur; });
+            if (!fileData) { tmNotify("Dosya bulunamadı!", "error"); return; }
 
+            tmConfirm("Bu dosyayı silmek istediğinize emin misiniz?", function() {
                 tmLoadingGoster("Dosya siliniyor...");
-                var silLocally = function() {
-                    dosyaDb = dosyaDb.filter(function(f) { return !(f.id === fileId && f.kartId === kartId && f.tur === tur); });
+                function silLocally() {
+                    dosyaDb = pbDosyaVerileriniYukle().filter(function(f) { return !(f.id === fileId && f.kartId === kartId && f.tur === tur); });
                     pbDosyaVerileriniKaydet(dosyaDb);
                     tmLoadingGizle();
                     tmNotify("Dosya silindi.", "success");
                     pbDosyaPopupGuncelle(kartId, tur);
-                };
-
+                }
                 if (fileData.publicId) {
-                    pbCloudinarySil(fileData.publicId, function() { silLocally(); });
+                    pbCredSil(fileData.publicId, function() { silLocally(); });
                 } else { silLocally(); }
             });
         }
