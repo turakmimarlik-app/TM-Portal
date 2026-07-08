@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.25.9';
+        var APP_VERSION = 'V1.26.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2224,7 +2224,7 @@ function gorevMailGonder(gorev) {
                 fd.append("api_key", apiKey);
                 fd.append("timestamp", timestamp);
                 fd.append("signature", signature);
-                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/image/destroy", {
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/destroy", {
                     method: "POST",
                     body: fd
                 }).then(function(r) { return r.json(); }).then(function() { callback(null); }).catch(function() { callback(null); });
@@ -2245,7 +2245,7 @@ function gorevMailGonder(gorev) {
                 var formData = new FormData();
                 formData.append("file", file);
                 formData.append("upload_preset", PB_UPLOAD_PRESET);
-                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/auto/upload", {
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/upload", {
                     method: "POST",
                     body: formData
                 }).then(function(r) { return r.json(); }).then(function(j) {
@@ -2312,28 +2312,7 @@ function gorevMailGonder(gorev) {
         }
 
         function pbDosyaIndir(url, fileName) {
-            if (url && url.indexOf("res.cloudinary.com") > -1) {
-                var fetchUrl = url.replace("/raw/upload/", "/image/upload/");
-                tmLoadingGoster("Dosya indiriliyor...");
-                fetch(fetchUrl).then(function(r) {
-                    if (!r.ok) throw new Error("HTTP " + r.status);
-                    return r.blob();
-                }).then(function(blob) {
-                    tmLoadingGizle();
-                    var a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = fileName || 'dosya.pdf';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    setTimeout(function() { URL.revokeObjectURL(a.href); }, 60000);
-                }).catch(function(err) {
-                    tmLoadingGizle();
-                    tmNotify("Dosya indirilemedi: " + err.message, "error");
-                });
-            } else {
-                window.open(url, '_blank');
-            }
+            window.open(url, '_blank');
         }
 
         function pbDosyaPopupGuncelle(kartId, tur) {
