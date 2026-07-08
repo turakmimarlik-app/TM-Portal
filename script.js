@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.25.7';
+        var APP_VERSION = 'V1.25.8';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2224,7 +2224,7 @@ function gorevMailGonder(gorev) {
                 fd.append("api_key", apiKey);
                 fd.append("timestamp", timestamp);
                 fd.append("signature", signature);
-                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/destroy", {
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/image/destroy", {
                     method: "POST",
                     body: fd
                 }).then(function(r) { return r.json(); }).then(function() { callback(null); }).catch(function() { callback(null); });
@@ -2245,7 +2245,7 @@ function gorevMailGonder(gorev) {
                 var formData = new FormData();
                 formData.append("file", file);
                 formData.append("upload_preset", PB_UPLOAD_PRESET);
-                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/upload", {
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/auto/upload", {
                     method: "POST",
                     body: formData
                 }).then(function(r) { return r.json(); }).then(function(j) {
@@ -2313,9 +2313,10 @@ function gorevMailGonder(gorev) {
 
         function pbDosyaIndir(url, fileName) {
             if (url && url.indexOf("res.cloudinary.com") > -1) {
+                var fetchUrl = url.replace("/raw/upload/", "/image/upload/");
                 tmLoadingGoster("Dosya indiriliyor...");
-                fetch(url, { mode: 'cors' }).then(function(r) {
-                    if (!r.ok) throw new Error("Sunucu yanıt vermedi (" + r.status + ")");
+                fetch(fetchUrl).then(function(r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
                     return r.blob();
                 }).then(function(blob) {
                     tmLoadingGizle();
