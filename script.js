@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.1';
+        var APP_VERSION = 'V1.24.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -108,8 +108,6 @@ function gorevMailGonder(gorev) {
         };
         var fdb = null;
         try { firebase.initializeApp(firebaseConfig); fdb = firebase.firestore(); } catch(e) { console.error("Firebase init error:", e); }
-        var fStorage = null;
-        try { fStorage = firebase.storage(); } catch(e) { console.error("Firebase Storage init error:", e); }
         const FS_COLLECTION = "tm_sync";
         let fsTimer = null;
         let fsUnsubscribe = null;
@@ -1190,15 +1188,16 @@ function gorevMailGonder(gorev) {
             document.getElementById("tmConfirmOk").onclick = function() { document.getElementById("tmConfirmOverlay").style.display = "none"; if (onEvet) onEvet(); };
             document.getElementById("tmConfirmCancel").onclick = function() { document.getElementById("tmConfirmOverlay").style.display = "none"; };
         }
-        function tmPrompt(msg, onTamam) {
+        function tmPrompt(msg, onTamam, defaultVal, title) {
+            document.getElementById("tmPromptTitle").textContent = title || "GİRİŞ";
             document.getElementById("tmPromptMsg").textContent = msg;
-            document.getElementById("tmPromptInput").value = "";
+            document.getElementById("tmPromptInput").value = defaultVal || "";
             document.getElementById("tmPromptOverlay").style.display = "flex";
             setTimeout(function() { document.getElementById("tmPromptInput").focus(); }, 100);
             document.getElementById("tmPromptOk").onclick = function() {
                 var val = document.getElementById("tmPromptInput").value;
                 document.getElementById("tmPromptOverlay").style.display = "none";
-                if (onTamam) onTamam(val);
+                if (onTamam) onTamam(val || "");
             };
             document.getElementById("tmPromptCancel").onclick = function() {
                 document.getElementById("tmPromptOverlay").style.display = "none";
@@ -2181,68 +2180,115 @@ function gorevMailGonder(gorev) {
             });
         }
 
-        /* ================= PORTFOLYO DOSYA YÖNETİMİ ================= */
+        /* ================= PORTFOLYO DOSYA YÖNETİMİ (GitHub API) ================= */
+        const PB_GITHUB_REPO = "turakmimarlik-app/TM-Portal";
+        const PB_GITHUB_BRANCH = "main";
+        const PB_TOKEN_KEY = "tm_github_token";
+        const PB_DOSYA_DB_KEY = "tm_portfolio_dosyalari";
+
+        function pbTokenAl() {
+            var t = localStorage.getItem(PB_TOKEN_KEY);
+            return t && t !== "null" ? t : null;
+        }
+
+        function pbTokenSor(callback) {
+            tmPrompt("GitHub Personal Access Token (repo yetkili) girin:", "", function(val) {
+                if (val && val.trim()) {
+                    localStorage.setItem(PB_TOKEN_KEY, val.trim());
+                    if (callback) callback(val.trim());
+                } else {
+                    tmNotify("Token girmediniz!", "error");
+                }
+            }, "GitHub Token");
+        }
+
         function pbDosyaVerileriniYukle() {
-            try { return JSON.parse(localStorage.getItem("tm_portfolio_dosyalari")) || []; } catch(e) { return []; }
+            try { return JSON.parse(localStorage.getItem(PB_DOSYA_DB_KEY)) || []; } catch(e) { return []; }
         }
 
         function pbDosyaVerileriniKaydet(data) {
-            try { localStorage.setItem("tm_portfolio_dosyalari", JSON.stringify(data)); } catch(e) { console.error("Dosya veri kaydetme hatasi:", e); }
+            try { localStorage.setItem(PB_DOSYA_DB_KEY, JSON.stringify(data)); } catch(e) { console.error("Dosya veri kaydetme hatasi:", e); }
+        }
+
+        function pbGithubYukle(dosyaAdi, base64Content, kartId, tur, callback) {
+            var token = pbTokenAl();
+            if (!token) { pbTokenSor(function(t) { pbGithubYukle(dosyaAdi, base64Content, kartId, tur, callback); }); return; }
+
+            var path = "dosyalar/" + tur + "/" + kartId + "/" + dosyaAdi;
+            var url = "https://api.github.com/repos/" + PB_GITHUB_REPO + "/contents/" + path;
+            var data = { message: "Dosya yuklendi: " + dosyaAdi, content: base64Content, branch: PB_GITHUB_BRANCH };
+
+            fetch(url, {
+                method: "PUT",
+                headers: { "Authorization": "token " + token, "Content-Type": "application/json", "Accept": "application/vnd.github.v3+json" },
+                body: JSON.stringify(data)
+            }).then(function(r) { return r.json(); }).then(function(j) {
+                if (j.content && j.content.download_url) {
+                    callback(null, { downloadURL: j.content.download_url, storagePath: path });
+                } else if (j.message) {
+                    if (j.message.indexOf("Bad credentials") !== -1 || j.message.indexOf("401") !== -1) {
+                        localStorage.removeItem(PB_TOKEN_KEY);
+                        callback("Token geçersiz. Lütfen yeniden girin.");
+                    } else {
+                        callback("GitHub hatası: " + j.message);
+                    }
+                } else {
+                    callback("Dosya yüklenemedi.");
+                }
+            }).catch(function(err) {
+                callback("Bağlantı hatası: " + (err.message || err));
+            });
+        }
+
+        function pbGithubSil(storagePath, callback) {
+            var token = pbTokenAl();
+            if (!token) { callback("Token bulunamadı"); return; }
+
+            var url = "https://api.github.com/repos/" + PB_GITHUB_REPO + "/contents/" + storagePath;
+            var headers = { "Authorization": "token " + token, "Content-Type": "application/json", "Accept": "application/vnd.github.v3+json" };
+
+            fetch(url, { method: "GET", headers: headers }).then(function(r) { return r.json(); }).then(function(f) {
+                if (!f.sha) { callback(null); return; }
+                fetch(url, {
+                    method: "DELETE",
+                    headers: headers,
+                    body: JSON.stringify({ message: "Dosya silindi: " + storagePath, sha: f.sha, branch: PB_GITHUB_BRANCH })
+                }).then(function(r) { return r.json(); }).then(function() { callback(null); }).catch(function() { callback(null); });
+            }).catch(function() { callback(null); });
         }
 
         function pbDosyaYukle(kartId, tur) {
+            var token = pbTokenAl();
+            if (!token) { pbTokenSor(function() { pbDosyaYukle(kartId, tur); }); return; }
+
             var input = document.createElement('input');
             input.type = 'file';
             input.accept = '.pdf,.PDF';
             input.onchange = function(e) {
                 var file = e.target.files[0];
                 if (!file) return;
-                var ad = file.name.toLowerCase();
-                if (ad.indexOf('.pdf') === -1) { tmNotify("Yalnızca PDF dosyaları yüklenebilir!", "error"); return; }
+                if (file.name.toLowerCase().indexOf('.pdf') === -1) { tmNotify("Yalnızca PDF dosyaları yüklenebilir!", "error"); return; }
                 if (file.size > 10 * 1024 * 1024) { tmNotify("Dosya boyutu 10MB'dan büyük olamaz!", "error"); return; }
-                if (!fStorage) { tmNotify("Firebase Storage bağlantısı kurulamadı!", "error"); return; }
 
                 tmLoadingGoster("Dosya yükleniyor...");
-                var fileId = Date.now() + "_" + Math.random().toString(36).substr(2, 6);
-                var storagePath = "portfolio_dosyalari/" + tur + "/" + kartId + "/" + fileId + "_" + file.name;
-                var storageRef = fStorage.ref(storagePath);
-                var uploadTask = storageRef.put(file);
-                var asama = 0;
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    var base64 = ev.target.result.split(',')[1];
+                    var fileId = Date.now() + "_" + Math.random().toString(36).substr(2, 6);
+                    var dosyaAdi = fileId + "_" + file.name;
 
-                uploadTask.on('state_changed',
-                    function(snapshot) {
-                        asama = 1;
-                    },
-                    function(error) {
+                    pbGithubYukle(dosyaAdi, base64, kartId, tur, function(err, result) {
+                        if (err) { tmLoadingGizle(); tmNotify(err, "error"); return; }
+                        var dosyaDb = pbDosyaVerileriniYukle();
+                        dosyaDb.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, storagePath: result.storagePath, downloadURL: result.downloadURL, fileSize: file.size, uploadDate: new Date().toISOString() });
+                        pbDosyaVerileriniKaydet(dosyaDb);
                         tmLoadingGizle();
-                        var msg = error.message || error.code || error || "Bilinmeyen hata";
-                        if (msg.indexOf("permission") !== -1 || msg.indexOf("unauthorized") !== -1) {
-                            tmNotify("Storage kuralları henüz yayınlanmamış! Firebase Console'da kuralları güncelleyip YAYINLA butonuna basın.", "error");
-                        } else {
-                            tmNotify("Dosya yüklenirken hata: " + msg, "error");
-                        }
-                    },
-                    function() {
-                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            var dosyaDb = pbDosyaVerileriniYukle();
-                            dosyaDb.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, storagePath: storagePath, downloadURL: downloadURL, fileSize: file.size, uploadDate: new Date().toISOString() });
-                            pbDosyaVerileriniKaydet(dosyaDb);
-                            tmLoadingGizle();
-                            tmNotify("Dosya başarıyla yüklendi: " + file.name, "success");
-                            pbDosyaPopupGuncelle(kartId, tur);
-                        }).catch(function(err) {
-                            tmLoadingGizle();
-                            tmNotify("İndirme bağlantısı alınırken hata: " + (err.message || err), "error");
-                        });
-                    }
-                );
-
-                setTimeout(function() {
-                    if (asama === 0) {
-                        tmLoadingGizle();
-                        tmNotify("Bağlantı zaman aşımına uğradı. Firebase Storage kurallarını kontrol edin.", "error");
-                    }
-                }, 30000);
+                        tmNotify("Dosya başarıyla yüklendi: " + file.name, "success");
+                        pbDosyaPopupGuncelle(kartId, tur);
+                    });
+                };
+                reader.onerror = function() { tmLoadingGizle(); tmNotify("Dosya okunamadı!", "error"); };
+                reader.readAsDataURL(file);
             };
             input.click();
         }
@@ -2254,20 +2300,13 @@ function gorevMailGonder(gorev) {
                 if (!fileData) { tmNotify("Dosya bulunamadı!", "error"); return; }
 
                 tmLoadingGoster("Dosya siliniyor...");
-                var silLocally = function() {
+                pbGithubSil(fileData.storagePath, function() {
                     dosyaDb = dosyaDb.filter(function(f) { return !(f.id === fileId && f.kartId === kartId && f.tur === tur); });
                     pbDosyaVerileriniKaydet(dosyaDb);
                     tmLoadingGizle();
                     tmNotify("Dosya silindi.", "success");
                     pbDosyaPopupGuncelle(kartId, tur);
-                };
-
-                if (fStorage) {
-                    fStorage.ref(fileData.storagePath).delete().then(silLocally).catch(function(err) {
-                        silLocally();
-                        tmNotify("Storage silme hatası oluştu ama yerel kayıt silindi.", "warning");
-                    });
-                } else { silLocally(); }
+                });
             });
         }
 
