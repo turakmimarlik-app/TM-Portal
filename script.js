@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.20.2';
+        var APP_VERSION = 'V1.21.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -4283,85 +4283,114 @@ function gorevMailGonder(gorev) {
 
         function isMuhasebePdfUret(id) {
             const db = isMuhasebeVerileriniYukle();
-            const kayit = db.find(k => k.id === id);
+            let kayit = db.find(k => k.id === id);
+            if(!kayit) {
+                const tamDb = tamamlananIsMuhasebeVerileriniYukle();
+                kayit = tamDb.find(k => k.id === id);
+            }
             if(!kayit) { tmNotify("Kayıt bulunamadı!", "error"); return; }
 
             let toplamAlacak = 0, toplamVerecek = 0, toplamOdenen = 0;
-            kayit.kalemler.forEach(k => {
+            kayit.kalemler.forEach(function(k) {
                 if(k.tip === "alacak") toplamAlacak += k.tutar;
                 else { toplamVerecek += k.tutar; toplamOdenen += (k.odenenTutar || 0); }
             });
             const kalanToplam = toplamVerecek - toplamOdenen;
             const netDurum = toplamAlacak - toplamVerecek;
+            const kalanTahsilat = (kayit.anlasmaUcreti || 0) - toplamAlacak;
+
             const p = kayit.pafta && kayit.pafta !== "-" ? kayit.pafta : "";
             const a = kayit.ada && kayit.ada !== "-" ? kayit.ada : "";
             const par = kayit.parsel && kayit.parsel !== "-" ? kayit.parsel : "";
-            const paftaAdaParsel = (p ? "Pafta: " + p + ", " : "") + (a ? "Ada: " + a + ", " : "") + (par ? "Parsel: " + par : "") || kayit.parsel || "-";
-
-            let kalemSatirlari = "";
-            kayit.kalemler.forEach(k => {
-                if(k.tip === "alacak") {
-                    kalemSatirlari += '<tr><td style="padding:6px 8px; font-size:11px;">' + (k.aciklama || "TAHSİLAT") + '</td><td style="padding:6px 8px; font-size:11px; text-align:center;">TAHSİLAT</td><td style="padding:6px 8px; font-size:11px; text-align:right;">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>';
-                } else {
-                    const odenen = k.odenenTutar || 0;
-                    kalemSatirlari += '<tr><td style="padding:6px 8px; font-size:11px;">' + (k.dal || k.aciklama || "ÖDEME") + (k.kisi ? " (" + k.kisi + ")" : "") + '</td><td style="padding:6px 8px; font-size:11px; text-align:center;">ÖDEME</td><td style="padding:6px 8px; font-size:11px; text-align:right;">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>';
-                }
-            });
+            const paftaAdaParsel = (p ? p + ", " : "") + (a ? a + ", " : "") + (par ? par : "") || "-";
 
             const formatliId = "#" + String(kayit.id).padStart(4, '0');
-            const tarihStr = kayit.anlasmaTarihi ? new Date(kayit.anlasmaTarihi).toLocaleDateString("tr-TR") : "-";
+            const tarihStr = kayit.anlasmaTarihi ? new Date(kayit.anlasmaTarihi).toLocaleDateString("tr-TR", {day:'2-digit',month:'long',year:'numeric'}) : "-";
 
-            const pdfContent = `
-                <div style="width:210mm; padding:20mm; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; color:#111; text-transform:uppercase;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #111; padding-bottom:15px; margin-bottom:25px;">
-                        <div><h1 style="margin:0 0 2px 0;font-size:26px;font-weight:900;letter-spacing:4px;color:#111;line-height:1.1;">TURAK MİMARLIK</h1><p style="margin:3px 0 0 0; font-size:9px; color:#9E2A2B; font-weight:700;">İŞ MUHASEBESİ RAPORU</p></div>
-                        <div style="text-align:right; font-size:14px; font-weight:800; color:#9E2A2B;">${formatliId}</div>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:25px;">
-                        <div style="border-left:3px solid #111; padding-left:12px; width:55%;">
-                            <p style="font-size:11px; font-weight:800; color:#777; letter-spacing:1px;">PROJE & İŞ BİLGİLERİ</p>
-                            <p style="margin:4px 0;"><b>İŞ ADI:</b> ${kayit.isAdi}</p>
-                            <p style="margin:4px 0;"><b>FİRMA/MÜŞTERİ:</b> ${kayit.firma}</p>
-                            <p style="margin:4px 0;"><b>PAFTA/ADA/PARSEL:</b> ${paftaAdaParsel}</p>
-                            <p style="margin:4px 0;"><b>ANLAŞMA TARİHİ:</b> ${tarihStr}</p>
-                        </div>
-                        <div style="text-align:right; width:40%; font-size:12px;">
-                            <p><b>ANLAŞMA ÜCRETİ:</b> ${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</p>
-                            <p style="color:#2E7D32;"><b>TAHSİLAT:</b> ${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</p>
-                            <p style="color:#9E2A2B;"><b>TOPLAM GİDER:</b> ${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</p>
-                            <p style="color:#2E7D32;"><b>ÖDENEN:</b> ${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</p>
-                        </div>
-                    </div>
-                    <table style="width:100%; border-collapse:collapse; margin-top:15px;">
-                        <thead>
-                            <tr style="border-bottom:2px solid #111;">
-                                <th style="padding:8px; text-align:left; font-size:11px; letter-spacing:1px;">KALEM AÇIKLAMASI</th>
-                                <th style="padding:8px; text-align:center; font-size:11px; letter-spacing:1px;">TİP</th>
-                                <th style="padding:8px; text-align:right; font-size:11px; letter-spacing:1px;">TUTAR</th>
-                            </tr>
-                        </thead>
-                        <tbody>${kalemSatirlari}</tbody>
-                    </table>
-                    <div style="display:flex; justify-content:flex-end; margin-top:25px; padding-top:15px; border-top:2px solid #111;">
-                        <table style="width:50%; border-collapse:collapse;">
-                            <tr><td style="padding:8px; font-size:12px;"><b>KALAN ÖDEME:</b></td><td style="padding:8px; font-size:12px; text-align:right; color:#9E2A2B; font-weight:700;">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</td></tr>
-                            <tr><td style="padding:8px; font-size:12px;"><b>NET DURUM:</b></td><td style="padding:8px; font-size:12px; text-align:right; font-weight:700; color:${netDurum >= 0 ? '#2E7D32' : '#9E2A2B'};">${netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</td></tr>
-                        </table>
-                    </div>
-                    <div style="margin-top:50px; font-size:10px; border-top:1px solid #111; padding-top:15px; display:flex; justify-content:space-between;">
-                        <div>KIRKLARELİ / DEMİRKÖY / İĞNEADA</div>
-                        <div style="font-weight:700;">TURAK ARCHITECTURE</div>
-                    </div>
-                </div>
-            `;
+            const logoData = localStorage.getItem("tm_sirket_logo");
+            let logoHtml = '';
+            if (logoData && logoData !== "null" && logoData.length > 100) {
+                logoHtml = '<img src="' + logoData + '" style="height:15mm;width:auto;vertical-align:middle;" alt="Logo">';
+            }
 
-            try {
-                const pdfWindow = window.open('', '_blank');
-                if (!pdfWindow) { tmNotify("Pop-up engelleyici PDF açılmasını engelledi!", "error"); return; }
-                pdfWindow.document.write(pdfContent);
-                pdfWindow.document.close();
-                setTimeout(function() { try { pdfWindow.print(); } catch(e) { console.error("PDF yazdirma hatasi:", e); } }, 500);
-            } catch(e) { console.error("Is muhasebe PDF hatasi:", e); tmNotify("PDF oluşturulurken hata: " + e.message, "error"); }
+            const fb = (function() {
+                try { return JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { return {}; }
+            })();
+            const firmaAd = fb.ad || "TURAK MİMARLIK";
+            const firmaAdres = fb.adres || "Deniz Mah. Selvi Sk. No: 14/D İĞNEADA / DEMİRKÖY / KIRKLARELİ";
+            const firmaTel = fb.gsm || fb.telefon || "0543 123 45 67";
+            const firmaEposta = fb.email || "info@turakmimarlik.com";
+
+            let kalemSatirlari = "";
+            kayit.kalemler.forEach(function(k) {
+                const odenen = k.odenenTutar || 0;
+                const kalan = Math.max(0, k.tutar - odenen);
+                const tipText = k.tip === "alacak" ? "TAHSİLAT" : "GİDER";
+                const tipRenk = k.tip === "alacak" ? "#2E7D32" : "#9E2A2B";
+                const aciklama = k.aciklama || (k.tip === "alacak" ? "TAHSİLAT" : "ÖDEME");
+                const kisiFirma = k.kisi || "-";
+                kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:600;color:#2E7D32;">' + odenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:' + (kalan > 0 ? '#9E2A2B' : '#666') + ';">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>';
+            });
+
+            const sayfaHtml = '<div style="width:297mm;min-height:210mm;padding:6mm 8mm;box-sizing:border-box;font-family:\'Segoe UI\',\'Helvetica Neue\',Arial,sans-serif;background:#fff;color:#222;text-transform:uppercase;">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:2.5mm;border-bottom:2.5px solid #1a1a2e;margin-bottom:4mm;">'
+                + '<div style="display:flex;align-items:center;gap:4mm;">' + (logoHtml ? '<div>' + logoHtml + '</div>' : '')
+                + '<div><div style="font-size:20px;font-weight:900;color:#1a1a2e;letter-spacing:3px;">' + firmaAd + '</div><div style="font-size:9px;font-weight:700;color:#9E2A2B;letter-spacing:1.5px;margin-top:0.5mm;">İŞ MUHASEBESİ RAPORU</div></div>'
+                + '</div><div style="text-align:right;"><div style="font-size:8px;font-weight:700;color:#888;letter-spacing:1px;">RAPOR NO</div><div style="font-size:16px;font-weight:900;color:#9E2A2B;letter-spacing:1px;">' + formatliId + '</div></div></div>'
+                + '<div style="display:flex;gap:4mm;margin-bottom:4mm;">'
+                + '<div style="flex:1.3;border:1.5px solid #e0e0e0;border-radius:3px;padding:2.5mm 3.5mm;background:#fafafa;"><div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:2mm;">PROJE BİLGİLERİ</div>'
+                + '<table style="width:100%;border-collapse:collapse;font-size:10px;">'
+                + '<tr><td style="padding:1.5px 3px;width:32%;color:#999;white-space:nowrap;">İŞ ADI</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + kayit.isAdi + '</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">MÜŞTERİ / FİRMA</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + (kayit.firma || "-") + '</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">PAFTA / ADA / PARSEL</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + paftaAdaParsel + '</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">ANLAŞMA TARİHİ</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + tarihStr + '</td></tr>'
+                + '</table></div>'
+                + '<div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2.5mm 3.5mm;background:#fafafa;"><div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:2mm;">FİNANSAL ÖZET</div>'
+                + '<table style="width:100%;border-collapse:collapse;font-size:10px;">'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">ANLAŞMA ÜCRETİ</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#1a1a2e;">' + (kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#2E7D32;font-weight:600;">TOPLAM TAHSİLAT</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#2E7D32;">' + toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#9E2A2B;font-weight:600;">TOPLAM GİDER</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#9E2A2B;">' + toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">TOP. ÖDENEN</td><td style="padding:1.5px 3px;text-align:right;font-weight:700;color:#2E7D32;">' + toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>'
+                + '<tr><td style="padding:2.5px 3px;border-top:1.5px solid #ddd;"></td><td style="padding:2.5px 3px;border-top:1.5px solid #ddd;"></td></tr>'
+                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">KALAN ÖDEME</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:#9E2A2B;font-size:11px;">' + kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">KALAN TAHSİLAT</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:' + (kalanTahsilat > 0 ? '#9E2A2B' : '#2E7D32') + ';font-size:11px;">' + kalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">NET DURUM</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:' + (netDurum >= 0 ? '#2E7D32' : '#9E2A2B') + ';font-size:11px;">' + netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>'
+                + '</table></div></div>'
+                + '<div style="border:1.5px solid #e0e0e0;border-radius:3px;overflow:hidden;margin-bottom:3mm;">'
+                + '<table style="width:100%;border-collapse:collapse;font-size:10px;">'
+                + '<thead><tr style="background:#1a1a2e;color:#fff;">'
+                + '<th style="padding:2.5mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;width:28%;">AÇIKLAMA</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;width:16%;">KİŞİ / FİRMA</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:center;font-size:8px;letter-spacing:1px;width:12%;">TİP</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:15%;">TUTAR</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:14%;">ÖDENEN</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:15%;">KALAN</th>'
+                + '</tr></thead><tbody>'
+                + (kalemSatirlari || '<tr><td colspan="6" style="padding:3mm 4mm;text-align:center;font-size:10px;color:#999;">KALEM BULUNMAMAKTADIR</td></tr>')
+                + '</tbody></table></div>'
+                + '<div style="border-top:2px solid #1a1a2e;padding-top:1.5mm;display:flex;justify-content:space-between;align-items:center;">'
+                + '<div style="font-size:7px;color:#888;line-height:1.5;"><b>' + firmaAd + '</b> · ' + firmaAdres + '<br>Tel: ' + firmaTel + ' · E-posta: ' + firmaEposta + '</div>'
+                + '<div style="font-size:7px;color:#aaa;text-align:right;">' + new Date().toLocaleDateString("tr-TR", {day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) + '</div>'
+                + '</div></div>';
+
+            const sayfaEl = document.createElement("div");
+            sayfaEl.style.cssText = "position:fixed;left:-9999px;top:0;width:297mm;min-height:210mm;overflow:hidden;";
+            sayfaEl.innerHTML = sayfaHtml;
+            document.body.appendChild(sayfaEl);
+
+            tmLoadingGoster("PDF oluşturuluyor...");
+            html2canvas(sayfaEl, {scale:5,useCORS:true,logging:false,width:1122,height:794}).then(function(cv){
+                const dt = cv.toDataURL('image/jpeg',0.95);
+                const doc = new jspdf.jsPDF({format:'a4',orientation:'landscape',unit:'mm'});
+                doc.addImage(dt,'JPEG',0,0,297,210);
+                doc.save("IS_MUHASEBESI_" + formatliId.replace('#','') + ".pdf");
+                document.body.removeChild(sayfaEl);
+                tmLoadingGizle();
+            }).catch(function(e){
+                tmLoadingGizle();
+                tmNotify("PDF oluşturulurken hata: " + (e.message||e), "error");
+                try { document.body.removeChild(sayfaEl); } catch(ex) {}
+            });
         }
 
         /* ================= NAKİT ÖDEMEK DEKONTU MOTORU ================= */
