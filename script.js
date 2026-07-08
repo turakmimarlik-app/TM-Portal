@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.0';
+        var APP_VERSION = 'V1.23.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2193,11 +2193,12 @@ function gorevMailGonder(gorev) {
         function pbDosyaYukle(kartId, tur) {
             var input = document.createElement('input');
             input.type = 'file';
-            input.accept = '.pdf';
+            input.accept = '.pdf,.PDF';
             input.onchange = function(e) {
                 var file = e.target.files[0];
                 if (!file) return;
-                if (file.type !== 'application/pdf') { tmNotify("Yalnızca PDF dosyaları yüklenebilir!", "error"); return; }
+                var ad = file.name.toLowerCase();
+                if (ad.indexOf('.pdf') === -1) { tmNotify("Yalnızca PDF dosyaları yüklenebilir!", "error"); return; }
                 if (file.size > 10 * 1024 * 1024) { tmNotify("Dosya boyutu 10MB'dan büyük olamaz!", "error"); return; }
                 if (!fStorage) { tmNotify("Firebase Storage bağlantısı kurulamadı!", "error"); return; }
 
@@ -2205,20 +2206,43 @@ function gorevMailGonder(gorev) {
                 var fileId = Date.now() + "_" + Math.random().toString(36).substr(2, 6);
                 var storagePath = "portfolio_dosyalari/" + tur + "/" + kartId + "/" + fileId + "_" + file.name;
                 var storageRef = fStorage.ref(storagePath);
+                var uploadTask = storageRef.put(file);
+                var asama = 0;
 
-                storageRef.put(file).then(function(snapshot) {
-                    return snapshot.ref.getDownloadURL();
-                }).then(function(downloadURL) {
-                    var dosyaDb = pbDosyaVerileriniYukle();
-                    dosyaDb.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, storagePath: storagePath, downloadURL: downloadURL, fileSize: file.size, uploadDate: new Date().toISOString() });
-                    pbDosyaVerileriniKaydet(dosyaDb);
-                    tmLoadingGizle();
-                    tmNotify("Dosya başarıyla yüklendi: " + file.name, "success");
-                    pbDosyaPopupGuncelle(kartId, tur);
-                }).catch(function(err) {
-                    tmLoadingGizle();
-                    tmNotify("Dosya yüklenirken hata: " + (err.message || err), "error");
-                });
+                uploadTask.on('state_changed',
+                    function(snapshot) {
+                        asama = 1;
+                    },
+                    function(error) {
+                        tmLoadingGizle();
+                        var msg = error.message || error.code || error || "Bilinmeyen hata";
+                        if (msg.indexOf("permission") !== -1 || msg.indexOf("unauthorized") !== -1) {
+                            tmNotify("Storage kuralları henüz yayınlanmamış! Firebase Console'da kuralları güncelleyip YAYINLA butonuna basın.", "error");
+                        } else {
+                            tmNotify("Dosya yüklenirken hata: " + msg, "error");
+                        }
+                    },
+                    function() {
+                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                            var dosyaDb = pbDosyaVerileriniYukle();
+                            dosyaDb.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, storagePath: storagePath, downloadURL: downloadURL, fileSize: file.size, uploadDate: new Date().toISOString() });
+                            pbDosyaVerileriniKaydet(dosyaDb);
+                            tmLoadingGizle();
+                            tmNotify("Dosya başarıyla yüklendi: " + file.name, "success");
+                            pbDosyaPopupGuncelle(kartId, tur);
+                        }).catch(function(err) {
+                            tmLoadingGizle();
+                            tmNotify("İndirme bağlantısı alınırken hata: " + (err.message || err), "error");
+                        });
+                    }
+                );
+
+                setTimeout(function() {
+                    if (asama === 0) {
+                        tmLoadingGizle();
+                        tmNotify("Bağlantı zaman aşımına uğradı. Firebase Storage kurallarını kontrol edin.", "error");
+                    }
+                }, 30000);
             };
             input.click();
         }
