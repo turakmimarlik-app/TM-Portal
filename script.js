@@ -2216,7 +2216,7 @@ function gorevMailGonder(gorev) {
             formData.append("file", file);
             formData.append("upload_preset", PB_UPLOAD_PRESET);
 
-            fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/auto/upload", {
+            fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/upload", {
                 method: "POST",
                 body: formData
             }).then(function(r) { return r.json(); }).then(function(j) {
@@ -2258,7 +2258,7 @@ function gorevMailGonder(gorev) {
                 fd.append("api_key", apiKey);
                 fd.append("timestamp", timestamp);
                 fd.append("signature", signature);
-                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/image/destroy", {
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/destroy", {
                     method: "POST",
                     body: fd
                 }).then(function(r) { return r.json(); }).then(function(j) {
