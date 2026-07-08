@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.26.1';
+        var APP_VERSION = 'V1.26.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2207,7 +2207,7 @@ function gorevMailGonder(gorev) {
                 var fd = new FormData();
                 fd.append("file", file);
                 fd.append("upload_preset", PB_UPLOAD_PRESET);
-                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/auto/upload", {
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/upload", {
                     method: "POST", body: fd
                 }).then(function(r) { return r.json(); }).then(function(j) {
                     tmLoadingGizle();
@@ -2244,29 +2244,14 @@ function gorevMailGonder(gorev) {
 
         function pbDosyaIndir(url, fileName) {
             if (url && url.indexOf("res.cloudinary.com") > -1) {
-                var imgUrl = url.replace("/raw/upload/", "/image/upload/");
-                tmLoadingGoster("Dosya indiriliyor...");
-                fetch(imgUrl).then(function(r) {
-                    if (!r.ok) throw new Error();
-                    return r.blob();
-                }).then(function(blob) {
-                    tmLoadingGizle();
-                    var a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = fileName || 'dosya.pdf';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    setTimeout(function() { URL.revokeObjectURL(a.href); }, 60000);
-                }).catch(function() {
-                    tmLoadingGizle();
-                    var a = document.createElement('a');
-                    a.href = imgUrl;
-                    a.download = fileName || 'dosya.pdf';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                });
+                var dlUrl = url.indexOf("/raw/upload/") > -1 ? url.replace("/raw/upload/", "/raw/upload/fl_attachment/") : url.replace("/image/upload/", "/image/upload/fl_attachment/");
+                var a = document.createElement('a');
+                a.href = dlUrl;
+                a.download = fileName || 'dosya.pdf';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
             } else { window.open(url, '_blank'); }
         }
 
