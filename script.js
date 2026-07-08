@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.25.2';
+        var APP_VERSION = 'V1.25.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2216,7 +2216,7 @@ function gorevMailGonder(gorev) {
             formData.append("file", file);
             formData.append("upload_preset", PB_UPLOAD_PRESET);
 
-            fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/upload", {
+            fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/auto/upload", {
                 method: "POST",
                 body: formData
             }).then(function(r) { return r.json(); }).then(function(j) {
@@ -2258,7 +2258,7 @@ function gorevMailGonder(gorev) {
                 fd.append("api_key", apiKey);
                 fd.append("timestamp", timestamp);
                 fd.append("signature", signature);
-                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/destroy", {
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/image/destroy", {
                     method: "POST",
                     body: fd
                 }).then(function(r) { return r.json(); }).then(function(j) {
@@ -2336,6 +2336,15 @@ function gorevMailGonder(gorev) {
             if (popup) popup.style.display = "none";
         }
 
+        function pbDosyaIndir(url, fileName) {
+            if (url && url.indexOf("res.cloudinary.com") > -1) {
+                var dlUrl = url.replace("/upload/", "/upload/fl_attachment/");
+                window.open(dlUrl, '_blank');
+            } else {
+                window.open(url, '_blank');
+            }
+        }
+
         function pbDosyaPopupGuncelle(kartId, tur) {
             var listeEl = document.getElementById("pbDosyaListesi");
             if (!listeEl) return;
@@ -2358,7 +2367,7 @@ function gorevMailGonder(gorev) {
                     + '<div style="min-width:0;"><div style="font-size:13px;font-weight:600;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(f.fileName) + '</div>'
                     + '<div style="font-size:11px;color:var(--text-light);">' + boyut + ' · ' + tarih + '</div></div></div>'
                     + '<div style="display:flex;gap:6px;flex-shrink:0;">'
-                    + '<button class="btn btn-primary btn-sm" onclick="window.open(\'' + f.downloadURL + '\', \'_blank\')" style="padding:5px 12px;font-size:11px;">📥 İndir</button>'
+                    + '<button class="btn btn-primary btn-sm" onclick="pbDosyaIndir(\'' + f.downloadURL.replace(/'/g, "\\'") + '\', \'' + f.fileName.replace(/'/g, "\\'") + '\')" style="padding:5px 12px;font-size:11px;">📥 İndir</button>'
                     + '<button class="btn-danger btn-sm" onclick="pbDosyaSil(' + kartId + ', \'' + f.id + '\', \'' + tur + '\')" style="padding:5px 12px;font-size:11px;">🗑 Sil</button>'
                     + '</div></div>';
             });
