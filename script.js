@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.24.2';
+        var APP_VERSION = 'V1.25.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2180,26 +2180,27 @@ function gorevMailGonder(gorev) {
             });
         }
 
-        /* ================= PORTFOLYO DOSYA YÖNETİMİ (GitHub API) ================= */
-        const PB_GITHUB_REPO = "turakmimarlik-app/TM-Portal";
-        const PB_GITHUB_BRANCH = "main";
-        const PB_TOKEN_KEY = "tm_github_token";
+        /* ================= PORTFOLYO DOSYA YÖNETİMİ (Cloudinary) ================= */
+        const PB_CLOUD_NAME = "n5dhadej";
+        const PB_UPLOAD_PRESET = "tm-portal";
         const PB_DOSYA_DB_KEY = "tm_portfolio_dosyalari";
+        const PB_CLOUD_KEY_KEY = "tm_cloudinary_key";
+        const PB_CLOUD_SECRET_KEY = "tm_cloudinary_secret";
 
-        function pbTokenAl() {
-            var t = localStorage.getItem(PB_TOKEN_KEY);
-            return t && t !== "null" ? t : null;
+        function pbCredAl(key) {
+            var v = localStorage.getItem(key);
+            return v && v !== "null" ? v : null;
         }
 
-        function pbTokenSor(callback) {
-            tmPrompt("GitHub Personal Access Token (repo yetkili) girin:", function(val) {
-                if (val && val.trim()) {
-                    localStorage.setItem(PB_TOKEN_KEY, val.trim());
-                    if (callback) callback(val.trim());
-                } else {
-                    tmNotify("Token girmediniz!", "error");
-                }
-            }, "", "GitHub Token");
+        function pbSha1(str) {
+            if (!window.crypto || !crypto.subtle) {
+                return Promise.resolve(str.split('').reduce(function(h, c) {
+                    return ((h << 5) - h) + c.charCodeAt(0) | 0;
+                }, 0).toString(16));
+            }
+            return crypto.subtle.digest('SHA-1', new TextEncoder().encode(str)).then(function(hash) {
+                return Array.from(new Uint8Array(hash)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+            });
         }
 
         function pbDosyaVerileriniYukle() {
@@ -2210,69 +2211,63 @@ function gorevMailGonder(gorev) {
             try { localStorage.setItem(PB_DOSYA_DB_KEY, JSON.stringify(data)); } catch(e) { console.error("Dosya veri kaydetme hatasi:", e); }
         }
 
-        function pbGithubYukle(dosyaAdi, base64Content, kartId, tur, callback) {
-            var token = pbTokenAl();
-            if (!token) { pbTokenSor(function(t) { pbGithubYukle(dosyaAdi, base64Content, kartId, tur, callback); }); return; }
+        function pbCloudinaryYukle(file, callback) {
+            var formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", PB_UPLOAD_PRESET);
 
-            var path = "dosyalar/" + tur + "/" + kartId + "/" + dosyaAdi;
-            var url = "https://api.github.com/repos/" + PB_GITHUB_REPO + "/contents/" + path;
-            var data = { message: "Dosya yuklendi: " + dosyaAdi, content: base64Content, branch: PB_GITHUB_BRANCH };
-
-            fetch(url, {
-                method: "PUT",
-                headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json", "Accept": "application/vnd.github.v3+json" },
-                body: JSON.stringify(data)
-            }).then(function(r) {
-                if (!r.ok) {
-                    if (r.status === 401 || r.status === 403) {
-                        localStorage.removeItem(PB_TOKEN_KEY);
-                        callback("Token geçersiz veya repo yetkisi yok. Lütfen yeni bir token oluşturun (repo scope).");
-                    } else if (r.status === 422) {
-                        callback("GitHub hatası: Dosya zaten var veya geçersiz istek.");
-                    } else {
-                        return r.json().then(function(j) {
-                            callback("GitHub hatası (" + r.status + "): " + (j.message || "Bilinmeyen hata"));
-                        }).catch(function() {
-                            callback("GitHub bağlantı hatası (" + r.status + ")");
-                        });
-                    }
-                    return null;
-                }
-                return r.json();
-            }).then(function(j) {
-                if (!j) return;
-                if (j.content && j.content.download_url) {
-                    callback(null, { downloadURL: j.content.download_url, storagePath: path });
+            fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/auto/upload", {
+                method: "POST",
+                body: formData
+            }).then(function(r) { return r.json(); }).then(function(j) {
+                if (j.secure_url) {
+                    callback(null, { downloadURL: j.secure_url, publicId: j.public_id, fileSize: j.bytes });
+                } else if (j.error && j.error.message) {
+                    callback("Cloudinary hatası: " + j.error.message);
                 } else {
-                    callback("Dosya yüklenemedi. GitHub yanıtı beklenmedik.");
+                    callback("Dosya yüklenemedi.");
                 }
             }).catch(function(err) {
-                if (err && err.message) callback("Bağlantı hatası: " + err.message);
-                else callback("Bağlantı hatası. İnternet bağlantınızı kontrol edin.");
+                callback("Bağlantı hatası: " + (err.message || err));
             });
         }
 
-        function pbGithubSil(storagePath, callback) {
-            var token = pbTokenAl();
-            if (!token) { callback("Token bulunamadı"); return; }
+        function pbCloudinarySil(publicId, callback) {
+            var apiKey = pbCredAl(PB_CLOUD_KEY_KEY);
+            var apiSecret = pbCredAl(PB_CLOUD_SECRET_KEY);
+            if (!apiKey || !apiSecret) {
+                tmPrompt("Cloudinary API Key girin (Dashboard'da görebilirsin):", function(val) {
+                    if (val && val.trim()) {
+                        localStorage.setItem(PB_CLOUD_KEY_KEY, val.trim());
+                        tmPrompt("Cloudinary API Secret girin:", function(val2) {
+                            if (val2 && val2.trim()) {
+                                localStorage.setItem(PB_CLOUD_SECRET_KEY, val2.trim());
+                                pbCloudinarySil(publicId, callback);
+                            }
+                        });
+                    }
+                });
+                return;
+            }
 
-            var url = "https://api.github.com/repos/" + PB_GITHUB_REPO + "/contents/" + storagePath;
-            var headers = { "Authorization": "Bearer " + token, "Content-Type": "application/json", "Accept": "application/vnd.github.v3+json" };
-
-            fetch(url, { method: "GET", headers: headers }).then(function(r) { return r.json(); }).then(function(f) {
-                if (!f.sha) { callback(null); return; }
-                fetch(url, {
-                    method: "DELETE",
-                    headers: headers,
-                    body: JSON.stringify({ message: "Dosya silindi: " + storagePath, sha: f.sha, branch: PB_GITHUB_BRANCH })
-                }).then(function() { callback(null); }).catch(function() { callback(null); });
-            }).catch(function() { callback(null); });
+            var timestamp = Math.floor(Date.now() / 1000);
+            var str = "public_id=" + publicId + "&timestamp=" + timestamp + apiSecret;
+            pbSha1(str).then(function(signature) {
+                var fd = new FormData();
+                fd.append("public_id", publicId);
+                fd.append("api_key", apiKey);
+                fd.append("timestamp", timestamp);
+                fd.append("signature", signature);
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/image/destroy", {
+                    method: "POST",
+                    body: fd
+                }).then(function(r) { return r.json(); }).then(function(j) {
+                    callback(null);
+                }).catch(function() { callback(null); });
+            });
         }
 
         function pbDosyaYukle(kartId, tur) {
-            var token = pbTokenAl();
-            if (!token) { pbTokenSor(function() { pbDosyaYukle(kartId, tur); }); return; }
-
             var input = document.createElement('input');
             input.type = 'file';
             input.accept = '.pdf,.PDF';
@@ -2280,27 +2275,19 @@ function gorevMailGonder(gorev) {
                 var file = e.target.files[0];
                 if (!file) return;
                 if (file.name.toLowerCase().indexOf('.pdf') === -1) { tmNotify("Yalnızca PDF dosyaları yüklenebilir!", "error"); return; }
-                if (file.size > 25 * 1024 * 1024) { tmNotify("Dosya boyutu 25MB'dan büyük olamaz!", "error"); return; }
+                if (file.size > 100 * 1024 * 1024) { tmNotify("Dosya boyutu 100MB'dan büyük olamaz!", "error"); return; }
 
                 tmLoadingGoster("Dosya yükleniyor...");
-                var reader = new FileReader();
-                reader.onload = function(ev) {
-                    var base64 = ev.target.result.split(',')[1];
+                pbCloudinaryYukle(file, function(err, result) {
+                    if (err) { tmLoadingGizle(); tmNotify(err, "error"); return; }
                     var fileId = Date.now() + "_" + Math.random().toString(36).substr(2, 6);
-                    var dosyaAdi = fileId + "_" + file.name;
-
-                    pbGithubYukle(dosyaAdi, base64, kartId, tur, function(err, result) {
-                        if (err) { tmLoadingGizle(); tmNotify(err, "error"); return; }
-                        var dosyaDb = pbDosyaVerileriniYukle();
-                        dosyaDb.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, storagePath: result.storagePath, downloadURL: result.downloadURL, fileSize: file.size, uploadDate: new Date().toISOString() });
-                        pbDosyaVerileriniKaydet(dosyaDb);
-                        tmLoadingGizle();
-                        tmNotify("Dosya başarıyla yüklendi: " + file.name, "success");
-                        pbDosyaPopupGuncelle(kartId, tur);
-                    });
-                };
-                reader.onerror = function() { tmLoadingGizle(); tmNotify("Dosya okunamadı!", "error"); };
-                reader.readAsDataURL(file);
+                    var dosyaDb = pbDosyaVerileriniYukle();
+                    dosyaDb.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, publicId: result.publicId, downloadURL: result.downloadURL, fileSize: result.fileSize, uploadDate: new Date().toISOString() });
+                    pbDosyaVerileriniKaydet(dosyaDb);
+                    tmLoadingGizle();
+                    tmNotify("Dosya başarıyla yüklendi: " + file.name, "success");
+                    pbDosyaPopupGuncelle(kartId, tur);
+                });
             };
             input.click();
         }
@@ -2312,13 +2299,17 @@ function gorevMailGonder(gorev) {
                 if (!fileData) { tmNotify("Dosya bulunamadı!", "error"); return; }
 
                 tmLoadingGoster("Dosya siliniyor...");
-                pbGithubSil(fileData.storagePath, function() {
+                var silLocally = function() {
                     dosyaDb = dosyaDb.filter(function(f) { return !(f.id === fileId && f.kartId === kartId && f.tur === tur); });
                     pbDosyaVerileriniKaydet(dosyaDb);
                     tmLoadingGizle();
                     tmNotify("Dosya silindi.", "success");
                     pbDosyaPopupGuncelle(kartId, tur);
-                });
+                };
+
+                if (fileData.publicId) {
+                    pbCloudinarySil(fileData.publicId, function() { silLocally(); });
+                } else { silLocally(); }
             });
         }
 
