@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.24.1';
+        var APP_VERSION = 'V1.24.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2280,7 +2280,7 @@ function gorevMailGonder(gorev) {
                 var file = e.target.files[0];
                 if (!file) return;
                 if (file.name.toLowerCase().indexOf('.pdf') === -1) { tmNotify("Yalnızca PDF dosyaları yüklenebilir!", "error"); return; }
-                if (file.size > 10 * 1024 * 1024) { tmNotify("Dosya boyutu 10MB'dan büyük olamaz!", "error"); return; }
+                if (file.size > 25 * 1024 * 1024) { tmNotify("Dosya boyutu 25MB'dan büyük olamaz!", "error"); return; }
 
                 tmLoadingGoster("Dosya yükleniyor...");
                 var reader = new FileReader();
