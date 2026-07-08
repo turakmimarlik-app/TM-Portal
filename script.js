@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.25.3';
+        var APP_VERSION = 'V1.25.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2338,8 +2338,25 @@ function gorevMailGonder(gorev) {
 
         function pbDosyaIndir(url, fileName) {
             if (url && url.indexOf("res.cloudinary.com") > -1) {
-                var dlUrl = url.replace("/upload/", "/upload/fl_attachment/");
-                window.open(dlUrl, '_blank');
+                tmLoadingGoster("Dosya indiriliyor...");
+                fetch(url).then(function(r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.blob();
+                }).then(function(blob) {
+                    tmLoadingGizle();
+                    var blobUrl = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = fileName || 'dosya.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(function() { URL.revokeObjectURL(blobUrl); }, 60000);
+                }).catch(function(err) {
+                    tmLoadingGizle();
+                    tmNotify("Dosya indirilemedi: " + err.message, "error");
+                    window.open(url, '_blank');
+                });
             } else {
                 window.open(url, '_blank');
             }
