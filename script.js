@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.22.0';
+        var APP_VERSION = 'V1.23.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -108,6 +108,8 @@ function gorevMailGonder(gorev) {
         };
         var fdb = null;
         try { firebase.initializeApp(firebaseConfig); fdb = firebase.firestore(); } catch(e) { console.error("Firebase init error:", e); }
+        var fStorage = null;
+        try { fStorage = firebase.storage(); } catch(e) { console.error("Firebase Storage init error:", e); }
         const FS_COLLECTION = "tm_sync";
         let fsTimer = null;
         let fsUnsubscribe = null;
@@ -1968,6 +1970,7 @@ function gorevMailGonder(gorev) {
                         <div class="p-detail"><b>Adres:</b> <span class="m-search-adres">${m.adres}</span></div>
                         <div class="p-detail" style="flex-direction:column; gap:2px;"><b>Banka Hesapları:</b>${bankaHTML}</div>
                         <div class="card-actions">
+                            <button class="btn btn-primary" onclick="pbPopupAc(${m.id}, 'musteri')" style="margin-right:auto;">📁 DOSYALAR</button>
                             <button class="btn-warning" onclick="musteriDuzenle(${m.id})">Düzenle</button>
                             <button class="btn-danger" onclick="portfolioKartSil('tm_musteriler_db', ${m.id}, 'musteri')">Sil</button>
                         </div>
@@ -2139,6 +2142,7 @@ function gorevMailGonder(gorev) {
                         <div class="p-detail"><b>Adres:</b> <span class="p-search-adres">${io.adres || '-'}</span></div>
                         <div class="p-detail" style="flex-direction:column; gap:2px;"><b>Banka Hesapları:</b>${bankaHTML}</div>
                         <div class="card-actions">
+                            <button class="btn btn-primary" onclick="pbPopupAc(${io.id}, 'partner')" style="margin-right:auto;">📁 DOSYALAR</button>
                             <button class="btn-warning" onclick="partnerDuzenle(${io.id})">Düzenle</button>
                             <button class="btn-danger" onclick="portfolioKartSil('tm_isortaklari_db', ${io.id}, 'partner')">Sil</button>
                         </div>
@@ -2175,6 +2179,124 @@ function gorevMailGonder(gorev) {
                 if(tip === 'musteri') { musteriKartlariniYenile(); aktiviteEkle("Müşteri silindi: " + silinenAd, "Portföy"); }
                 if(tip === 'partner') { isOrtaklariKartlariniYenile(); aktiviteEkle("İş ortağı silindi: " + silinenAd, "Portföy"); }
             });
+        }
+
+        /* ================= PORTFOLYO DOSYA YÖNETİMİ ================= */
+        function pbDosyaVerileriniYukle() {
+            try { return JSON.parse(localStorage.getItem("tm_portfolio_dosyalari")) || []; } catch(e) { return []; }
+        }
+
+        function pbDosyaVerileriniKaydet(data) {
+            try { localStorage.setItem("tm_portfolio_dosyalari", JSON.stringify(data)); } catch(e) { console.error("Dosya veri kaydetme hatasi:", e); }
+        }
+
+        function pbDosyaYukle(kartId, tur) {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.pdf';
+            input.onchange = function(e) {
+                var file = e.target.files[0];
+                if (!file) return;
+                if (file.type !== 'application/pdf') { tmNotify("Yalnızca PDF dosyaları yüklenebilir!", "error"); return; }
+                if (file.size > 10 * 1024 * 1024) { tmNotify("Dosya boyutu 10MB'dan büyük olamaz!", "error"); return; }
+                if (!fStorage) { tmNotify("Firebase Storage bağlantısı kurulamadı!", "error"); return; }
+
+                tmLoadingGoster("Dosya yükleniyor...");
+                var fileId = Date.now() + "_" + Math.random().toString(36).substr(2, 6);
+                var storagePath = "portfolio_dosyalari/" + tur + "/" + kartId + "/" + fileId + "_" + file.name;
+                var storageRef = fStorage.ref(storagePath);
+
+                storageRef.put(file).then(function(snapshot) {
+                    return snapshot.ref.getDownloadURL();
+                }).then(function(downloadURL) {
+                    var dosyaDb = pbDosyaVerileriniYukle();
+                    dosyaDb.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, storagePath: storagePath, downloadURL: downloadURL, fileSize: file.size, uploadDate: new Date().toISOString() });
+                    pbDosyaVerileriniKaydet(dosyaDb);
+                    tmLoadingGizle();
+                    tmNotify("Dosya başarıyla yüklendi: " + file.name, "success");
+                    pbDosyaPopupGuncelle(kartId, tur);
+                }).catch(function(err) {
+                    tmLoadingGizle();
+                    tmNotify("Dosya yüklenirken hata: " + (err.message || err), "error");
+                });
+            };
+            input.click();
+        }
+
+        function pbDosyaSil(kartId, fileId, tur) {
+            tmConfirm("Bu dosyayı silmek istediğinize emin misiniz?", function() {
+                var dosyaDb = pbDosyaVerileriniYukle();
+                var fileData = dosyaDb.find(function(f) { return f.id === fileId && f.kartId === kartId && f.tur === tur; });
+                if (!fileData) { tmNotify("Dosya bulunamadı!", "error"); return; }
+
+                tmLoadingGoster("Dosya siliniyor...");
+                var silLocally = function() {
+                    dosyaDb = dosyaDb.filter(function(f) { return !(f.id === fileId && f.kartId === kartId && f.tur === tur); });
+                    pbDosyaVerileriniKaydet(dosyaDb);
+                    tmLoadingGizle();
+                    tmNotify("Dosya silindi.", "success");
+                    pbDosyaPopupGuncelle(kartId, tur);
+                };
+
+                if (fStorage) {
+                    fStorage.ref(fileData.storagePath).delete().then(silLocally).catch(function(err) {
+                        silLocally();
+                        tmNotify("Storage silme hatası oluştu ama yerel kayıt silindi.", "warning");
+                    });
+                } else { silLocally(); }
+            });
+        }
+
+        function pbPopupAc(kartId, tur) {
+            var popup = document.getElementById("pbDosyaPopupOverlay");
+            if (!popup) return;
+            popup.dataset.kartId = kartId;
+            popup.dataset.tur = tur;
+
+            var dbKey = tur === "musteri" ? "tm_musteriler_db" : "tm_isortaklari_db";
+            var db;
+            try { db = JSON.parse(localStorage.getItem(dbKey)) || []; } catch(e) { db = []; }
+            var kart = db.find(function(k) { return k.id === kartId; });
+            var kartAdi = kart ? (kart.ad || "") : "";
+            var turAdi = tur === "musteri" ? "MÜŞTERİ" : "İŞ ORTAĞI";
+            document.getElementById("pbPopupTitle").innerText = "📁 DOSYALAR - " + turAdi + ": " + kartAdi;
+
+            pbDosyaPopupGuncelle(kartId, tur);
+            popup.style.display = "flex";
+        }
+
+        function pbPopupKapat() {
+            var popup = document.getElementById("pbDosyaPopupOverlay");
+            if (popup) popup.style.display = "none";
+        }
+
+        function pbDosyaPopupGuncelle(kartId, tur) {
+            var listeEl = document.getElementById("pbDosyaListesi");
+            if (!listeEl) return;
+            var dosyaDb = pbDosyaVerileriniYukle();
+            var kartDosyalari = dosyaDb.filter(function(f) { return f.kartId === kartId && f.tur === tur; });
+
+            if (kartDosyalari.length === 0) {
+                listeEl.innerHTML = '<div style="text-align:center;padding:30px 20px;color:#888;font-size:14px;">Henüz dosya yüklenmemiş.<br><small>PDF formatında belgelerinizi yüklemek için "Dosya Yükle" butonunu kullanın.</small></div>';
+                return;
+            }
+
+            var html = '';
+            kartDosyalari.sort(function(a, b) { return (b.uploadDate || "").localeCompare(a.uploadDate || ""); });
+            kartDosyalari.forEach(function(f) {
+                var tarih = f.uploadDate ? new Date(f.uploadDate).toLocaleDateString("tr-TR", {day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) : "-";
+                var boyut = f.fileSize ? (f.fileSize / 1024).toFixed(1) + " KB" : "-";
+                html += '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;margin-bottom:6px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-card);gap:10px;">'
+                    + '<div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">'
+                    + '<span style="font-size:22px;">📄</span>'
+                    + '<div style="min-width:0;"><div style="font-size:13px;font-weight:600;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(f.fileName) + '</div>'
+                    + '<div style="font-size:11px;color:var(--text-light);">' + boyut + ' · ' + tarih + '</div></div></div>'
+                    + '<div style="display:flex;gap:6px;flex-shrink:0;">'
+                    + '<button class="btn btn-primary btn-sm" onclick="window.open(\'' + f.downloadURL + '\', \'_blank\')" style="padding:5px 12px;font-size:11px;">📥 İndir</button>'
+                    + '<button class="btn-danger btn-sm" onclick="pbDosyaSil(' + kartId + ', \'' + f.id + '\', \'' + tur + '\')" style="padding:5px 12px;font-size:11px;">🗑 Sil</button>'
+                    + '</div></div>';
+            });
+            listeEl.innerHTML = html;
         }
 
         /* ================= ŞİRKET BİLGİLERİ & LOGO ================= */
