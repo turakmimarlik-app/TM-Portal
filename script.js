@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.25.6';
+        var APP_VERSION = 'V1.25.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -581,7 +581,7 @@ function gorevMailGonder(gorev) {
             if (!lo) {
                 lo = document.createElement('div');
                 lo.id = 'tmLoadingIndicator';
-                lo.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9998;justify-content:center;align-items:center;backdrop-filter:blur(2px);';
+                lo.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10003;justify-content:center;align-items:center;backdrop-filter:blur(2px);';
                 lo.innerHTML = '<div style="background:var(--panel-bg);padding:30px 40px;border-radius:14px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);border:1px solid var(--border-color);min-width:200px;"><div style="border:3px solid var(--border-color);border-top:3px solid var(--accent-red);border-radius:50%;width:30px;height:30px;animation:tmLoadingSpin 0.8s linear infinite;margin:0 auto 14px;"></div><div style="font-size:13px;font-weight:700;color:var(--text-dark);letter-spacing:0.3px;" id="tmLoadingMsg">İşlem yapılıyor...</div></div>';
                 document.body.appendChild(lo);
                 var styleEl = document.createElement('style');
@@ -2312,7 +2312,27 @@ function gorevMailGonder(gorev) {
         }
 
         function pbDosyaIndir(url, fileName) {
-            window.open(url, '_blank');
+            if (url && url.indexOf("res.cloudinary.com") > -1) {
+                tmLoadingGoster("Dosya indiriliyor...");
+                fetch(url, { mode: 'cors' }).then(function(r) {
+                    if (!r.ok) throw new Error("Sunucu yanıt vermedi (" + r.status + ")");
+                    return r.blob();
+                }).then(function(blob) {
+                    tmLoadingGizle();
+                    var a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = fileName || 'dosya.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(function() { URL.revokeObjectURL(a.href); }, 60000);
+                }).catch(function(err) {
+                    tmLoadingGizle();
+                    tmNotify("Dosya indirilemedi: " + err.message, "error");
+                });
+            } else {
+                window.open(url, '_blank');
+            }
         }
 
         function pbDosyaPopupGuncelle(kartId, tur) {
