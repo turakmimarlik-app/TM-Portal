@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.26.3';
+        var APP_VERSION = 'V1.26.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2245,27 +2245,21 @@ function gorevMailGonder(gorev) {
         function pbDosyaIndir(url, fileName) {
             if (url && url.indexOf("res.cloudinary.com") > -1) {
                 tmLoadingGoster("Dosya indiriliyor...");
-                var dene = function(u) {
-                    return fetch(u).then(function(r) {
-                        if (!r.ok) throw new Error();
-                        return r.blob();
-                    }).then(function(blob) {
-                        tmLoadingGizle();
-                        var a = document.createElement('a');
-                        a.href = URL.createObjectURL(blob);
-                        a.download = fileName || 'dosya.pdf';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        setTimeout(function() { URL.revokeObjectURL(a.href); }, 60000);
-                    });
-                };
-                dene(url).catch(function() {
-                    var altUrl = url.indexOf("/image/upload/") > -1 ? url.replace("/image/upload/", "/raw/upload/") : url.replace("/raw/upload/", "/image/upload/");
-                    dene(altUrl).catch(function() {
-                        tmLoadingGizle();
-                        tmNotify("Dosya indirilemedi. Cloudinary ayarlarini kontrol edin.", "error");
-                    });
+                fetch(url).then(function(r) {
+                    if (!r.ok) throw new Error();
+                    return r.blob();
+                }).then(function(blob) {
+                    tmLoadingGizle();
+                    var a = document.createElement('a');
+                    a.href = URL.createObjectURL(new Blob([blob], { type: 'application/octet-stream' }));
+                    a.download = fileName || 'dosya.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(function() { URL.revokeObjectURL(a.href); }, 60000);
+                }).catch(function() {
+                    tmLoadingGizle();
+                    tmNotify("Dosya indirilemedi. Cloudinary ayarlarini kontrol edin.", "error");
                 });
             } else { window.open(url, '_blank'); }
         }
