@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.27.0';
+        var APP_VERSION = 'V1.27.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2180,7 +2180,7 @@ function gorevMailGonder(gorev) {
             });
         }
 
-        /* ================= PORTFOLYODOSYA YONETIMI (Cloudinary + IndexedDB) ================= */
+        /* ================= PORTFOLYODOSYA YONETIMI (Cloudinary) ================= */
         const PB_CLOUD_NAME = "n5dhadej";
         const PB_UPLOAD_PRESET = "tm-portal";
         const PB_DOSYA_DB_KEY = "tm_portfolio_dosyalari";
@@ -2193,45 +2193,6 @@ function gorevMailGonder(gorev) {
             try { localStorage.setItem(PB_DOSYA_DB_KEY, JSON.stringify(data)); } catch(e) { console.error("Dosya veri kaydetme hatasi:", e); }
         }
 
-        var pbIDB = null;
-        function pbIDBAc(cb) {
-            if (pbIDB) { cb(pbIDB); return; }
-            var r = indexedDB.open("TMPortalFiles", 1);
-            r.onupgradeneeded = function(e) {
-                var db = e.target.result;
-                if (!db.objectStoreNames.contains("files")) db.createObjectStore("files", { keyPath: "id" });
-            };
-            r.onsuccess = function(e) { pbIDB = e.target.result; cb(pbIDB); };
-            r.onerror = function() { cb(null); };
-        }
-
-        function pbIDBKaydet(id, blob, cb) {
-            pbIDBAc(function(db) {
-                if (!db) { if (cb) cb(); return; }
-                var t = db.transaction("files", "readwrite").objectStore("files").put({ id: id, blob: blob });
-                t.onsuccess = function() { if (cb) cb(); };
-                t.onerror = function() { if (cb) cb(); };
-            });
-        }
-
-        function pbIDBAl(id, cb) {
-            pbIDBAc(function(db) {
-                if (!db) { cb(null); return; }
-                var t = db.transaction("files", "readonly").objectStore("files").get(id);
-                t.onsuccess = function(e) { cb(e.target.result ? e.target.result.blob : null); };
-                t.onerror = function() { cb(null); };
-            });
-        }
-
-        function pbIDBSil(id, cb) {
-            pbIDBAc(function(db) {
-                if (!db) { if (cb) cb(); return; }
-                var t = db.transaction("files", "readwrite").objectStore("files").delete(id);
-                t.onsuccess = function() { if (cb) cb(); };
-                t.onerror = function() { if (cb) cb(); };
-            });
-        }
-
         function pbDosyaYukle(kartId, tur) {
             var input = document.createElement('input');
             input.type = 'file';
@@ -2242,32 +2203,30 @@ function gorevMailGonder(gorev) {
                 if (file.name.toLowerCase().indexOf('.pdf') === -1) { tmNotify("Yalnızca PDF dosyaları yüklenebilir!", "error"); return; }
                 if (file.size > 10 * 1024 * 1024) { tmNotify("Dosya boyutu 10MB'dan buyuk olamaz!", "error"); return; }
 
-                var fileId = Date.now() + "_" + Math.random().toString(36).substr(2, 6);
                 tmLoadingGoster("Dosya yukleniyor...");
-
-                // IndexedDB'ye kaydet
-                pbIDBKaydet(fileId, file, function() {
-                    // Cloudinary'ye yukle
-                    var fd = new FormData();
-                    fd.append("file", file);
-                    fd.append("upload_preset", PB_UPLOAD_PRESET);
-                    fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/auto/upload", {
-                        method: "POST", body: fd
-                    }).then(function(r) { return r.json(); }).then(function(j) {
-                        tmLoadingGizle();
-                        if (j.secure_url) {
-                            var db = pbDosyaVerileriniYukle();
-                            db.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, downloadURL: j.secure_url, fileSize: j.bytes, uploadDate: new Date().toISOString() });
-                            pbDosyaVerileriniKaydet(db);
-                            tmNotify("Dosya basariyla yuklendi: " + file.name, "success");
-                            pbDosyaPopupGuncelle(kartId, tur);
-                        } else {
-                            tmNotify("Hata: " + ((j.error && j.error.message) || "Bilinmeyen hata"), "error");
-                        }
-                    }).catch(function(err) {
-                        tmLoadingGizle();
-                        tmNotify("Baglanti hatasi: " + (err.message || err), "error");
-                    });
+                var fd = new FormData();
+                fd.append("file", file);
+                fd.append("upload_preset", PB_UPLOAD_PRESET);
+                var orjAd = file.name.replace(/\.pdf$/i, '').replace(/[^a-zA-Z0-9çÇğĞıİöÖşŞüÜ\s_-]/g, '_').trim();
+                var uniqueId = Date.now().toString(36).slice(-4) + Math.random().toString(36).substr(2, 4);
+                fd.append("public_id", orjAd + '_' + uniqueId);
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/auto/upload", {
+                    method: "POST", body: fd
+                }).then(function(r) { return r.json(); }).then(function(j) {
+                    tmLoadingGizle();
+                    if (j.secure_url) {
+                        var fileId = Date.now() + "_" + Math.random().toString(36).substr(2, 6);
+                        var db = pbDosyaVerileriniYukle();
+                        db.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, downloadURL: j.secure_url, fileSize: j.bytes, uploadDate: new Date().toISOString() });
+                        pbDosyaVerileriniKaydet(db);
+                        tmNotify("Dosya basariyla yuklendi: " + file.name, "success");
+                        pbDosyaPopupGuncelle(kartId, tur);
+                    } else {
+                        tmNotify("Hata: " + ((j.error && j.error.message) || "Bilinmeyen hata"), "error");
+                    }
+                }).catch(function(err) {
+                    tmLoadingGizle();
+                    tmNotify("Baglanti hatasi: " + (err.message || err), "error");
                 });
             };
             input.click();
@@ -2279,46 +2238,15 @@ function gorevMailGonder(gorev) {
             if (!f) { tmNotify("Dosya bulunamadi!", "error"); return; }
 
             tmConfirm("Bu dosyayi silmek istediginize emin misiniz?", function() {
-                pbIDBSil(fileId, function() {
-                    db = pbDosyaVerileriniYukle().filter(function(x) { return !(x.id === fileId && x.kartId === kartId && x.tur === tur); });
-                    pbDosyaVerileriniKaydet(db);
-                    tmNotify("Dosya silindi.", "success");
-                    pbDosyaPopupGuncelle(kartId, tur);
-                });
+                db = pbDosyaVerileriniYukle().filter(function(x) { return !(x.id === fileId && x.kartId === kartId && x.tur === tur); });
+                pbDosyaVerileriniKaydet(db);
+                tmNotify("Dosya silindi.", "success");
+                pbDosyaPopupGuncelle(kartId, tur);
             });
         }
 
-        function pbDosyaIndir(url, fileName, fileId) {
-            if (fileId) {
-                pbIDBAl(fileId, function(blob) {
-                    if (blob) {
-                        var a = document.createElement('a');
-                        a.href = URL.createObjectURL(new Blob([blob], { type: 'application/octet-stream' }));
-                        a.download = fileName || 'dosya.pdf';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        setTimeout(function() { URL.revokeObjectURL(a.href); }, 60000);
-                        return;
-                    }
-                    // IndexedDB'de yoksa Cloudinary'den dene
-                    fetch(url).then(function(r) {
-                        if (!r.ok) throw new Error();
-                        return r.blob();
-                    }).then(function(blob) {
-                        pbIDBKaydet(fileId, blob);
-                        var a = document.createElement('a');
-                        a.href = URL.createObjectURL(new Blob([blob], { type: 'application/octet-stream' }));
-                        a.download = fileName || 'dosya.pdf';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        setTimeout(function() { URL.revokeObjectURL(a.href); }, 60000);
-                    }).catch(function() {
-                        window.open(url, '_blank');
-                    });
-                });
-            } else { window.open(url, '_blank'); }
+        function pbDosyaIndir(url, fileName) {
+            window.open(url, '_blank');
         }
 
         function pbPopupAc(kartId, tur) {
@@ -2370,7 +2298,7 @@ function gorevMailGonder(gorev) {
                     + '<div style="min-width:0;"><div style="font-size:13px;font-weight:600;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(f.fileName) + '</div>'
                     + '<div style="font-size:11px;color:var(--text-light);">' + boyut + ' · ' + tarih + '</div></div></div>'
                     + '<div style="display:flex;gap:6px;flex-shrink:0;">'
-                    + '<button class="btn btn-primary btn-sm" onclick="pbDosyaIndir(\'' + f.downloadURL.replace(/'/g, "\\'") + '\', \'' + f.fileName.replace(/'/g, "\\'") + '\', \'' + f.id + '\')" style="padding:5px 12px;font-size:11px;">📥 İndir</button>'
+                    + '<button class="btn btn-primary btn-sm" onclick="pbDosyaIndir(\'' + f.downloadURL.replace(/'/g, "\\'") + '\', \'' + f.fileName.replace(/'/g, "\\'") + '\')" style="padding:5px 12px;font-size:11px;">📥 İndir</button>'
                     + '<button class="btn-danger btn-sm" onclick="pbDosyaSil(' + kartId + ', \'' + f.id + '\', \'' + tur + '\')" style="padding:5px 12px;font-size:11px;">🗑 Sil</button>'
                     + '</div></div>';
             });
