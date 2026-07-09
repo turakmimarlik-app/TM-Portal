@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.26.5';
+        var APP_VERSION = 'V1.26.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2243,22 +2243,26 @@ function gorevMailGonder(gorev) {
         }
 
         function pbDosyaIndir(url, fileName) {
-            if (url && url.indexOf("/image/upload/") > -1) {
-                var a = document.createElement('a');
-                a.href = url.replace("/image/upload/", "/image/upload/fl_attachment/");
-                a.download = fileName || 'dosya.pdf';
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            } else if (url && url.indexOf("res.cloudinary.com") > -1) {
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = fileName || 'dosya.pdf';
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+            if (url && url.indexOf("res.cloudinary.com") > -1) {
+                tmLoadingGoster("Dosya indiriliyor...");
+                fetch(url).then(function(r) {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.blob();
+                }).then(function(blob) {
+                    tmLoadingGizle();
+                    var a = document.createElement('a');
+                    a.href = URL.createObjectURL(new Blob([blob], { type: 'application/octet-stream' }));
+                    a.download = fileName || 'dosya.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(function() { URL.revokeObjectURL(a.href); }, 60000);
+                }).catch(function(err) {
+                    tmLoadingGizle();
+                    var msg = err ? (err.message || err.toString()) : "bilinmeyen hata";
+                    tmNotify("Hata (" + msg + "). PDF yeni sekmede aciliyor.", "error");
+                    window.open(url, '_blank');
+                });
             } else { window.open(url, '_blank'); }
         }
 
