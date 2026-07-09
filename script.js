@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.26.2';
+        var APP_VERSION = 'V1.26.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2207,7 +2207,7 @@ function gorevMailGonder(gorev) {
                 var fd = new FormData();
                 fd.append("file", file);
                 fd.append("upload_preset", PB_UPLOAD_PRESET);
-                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/raw/upload", {
+                fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/auto/upload", {
                     method: "POST", body: fd
                 }).then(function(r) { return r.json(); }).then(function(j) {
                     tmLoadingGizle();
@@ -2244,14 +2244,29 @@ function gorevMailGonder(gorev) {
 
         function pbDosyaIndir(url, fileName) {
             if (url && url.indexOf("res.cloudinary.com") > -1) {
-                var dlUrl = url.indexOf("/raw/upload/") > -1 ? url.replace("/raw/upload/", "/raw/upload/fl_attachment/") : url.replace("/image/upload/", "/image/upload/fl_attachment/");
-                var a = document.createElement('a');
-                a.href = dlUrl;
-                a.download = fileName || 'dosya.pdf';
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                tmLoadingGoster("Dosya indiriliyor...");
+                var dene = function(u) {
+                    return fetch(u).then(function(r) {
+                        if (!r.ok) throw new Error();
+                        return r.blob();
+                    }).then(function(blob) {
+                        tmLoadingGizle();
+                        var a = document.createElement('a');
+                        a.href = URL.createObjectURL(blob);
+                        a.download = fileName || 'dosya.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(function() { URL.revokeObjectURL(a.href); }, 60000);
+                    });
+                };
+                dene(url).catch(function() {
+                    var altUrl = url.indexOf("/image/upload/") > -1 ? url.replace("/image/upload/", "/raw/upload/") : url.replace("/raw/upload/", "/image/upload/");
+                    dene(altUrl).catch(function() {
+                        tmLoadingGizle();
+                        tmNotify("Dosya indirilemedi. Cloudinary ayarlarini kontrol edin.", "error");
+                    });
+                });
             } else { window.open(url, '_blank'); }
         }
 
