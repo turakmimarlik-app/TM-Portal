@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.27.1';
+        var APP_VERSION = 'V1.28.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -288,6 +288,7 @@ function gorevMailGonder(gorev) {
 
         document.addEventListener("DOMContentLoaded", function() {
             try { document.querySelector('.version-tag').textContent = APP_VERSION; } catch(e){}
+            if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function(){}); }
 
             if(!localStorage.getItem("tm_yillik_butce_clean")) { localStorage.removeItem("tm_yillik_butce_db"); origSetItem("tm_yillik_butce_clean","1"); }
 
@@ -2245,10 +2246,6 @@ function gorevMailGonder(gorev) {
             });
         }
 
-        function pbDosyaIndir(url, fileName) {
-            window.open(url, '_blank');
-        }
-
         function pbPopupAc(kartId, tur) {
             var popup = document.getElementById("pbDosyaPopupOverlay");
             if (!popup) return;
@@ -2273,7 +2270,15 @@ function gorevMailGonder(gorev) {
         }
 
         function pbDosyaIndir(url, fileName) {
-            window.open(url, '_blank');
+            if (url.indexOf('res.cloudinary.com') > -1 && 'serviceWorker' in navigator) {
+                navigator.serviceWorker.ready.then(function() {
+                    window.location.href = '_download?url=' + encodeURIComponent(url) + '&name=' + encodeURIComponent(fileName);
+                }).catch(function() {
+                    window.open(url, '_blank');
+                });
+            } else {
+                window.open(url, '_blank');
+            }
         }
 
         function pbDosyaPopupGuncelle(kartId, tur) {
