@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.0';
+        var APP_VERSION = 'V1.30.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9481,9 +9481,10 @@ function itDurumMetni(o) {
 
             notes.sort(function(a, b) { return (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0); });
             liste.innerHTML = notes.map(function(n) {
-                var snippet = (n.content || "").replace(/<[^>]+>/g, '').trim().substring(0, 120);
-                if (snippet.length >= 120) snippet += '...';
-                return '<div class="note-kart"><div class="note-kart-left" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-baslik">' + esc(n.title || "Başlıksız") + '</div><div class="note-kart-snippet">' + esc(snippet) + '</div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div><div class="note-kart-actions"><button class="note-kart-btn" onclick="event.stopPropagation();noteAc(\'' + n.id + '\')">📖 Aç</button><button class="note-kart-btn" onclick="event.stopPropagation();noteTasi(\'' + n.id + '\')">📂 Taşı</button><button class="note-kart-btn" onclick="event.stopPropagation();noteSil(\'' + n.id + '\')">🗑️ Sil</button></div></div>';
+                var snippet = (n.content || "").replace(/<[^>]+>/g, '').trim().substring(0, 60);
+                if (snippet.length >= 60) snippet += '...';
+                var ilkHarf = (n.title || "?").charAt(0);
+                return '<div class="note-kart"><div class="note-kart-icon" onclick="noteAc(\'' + n.id + '\')">' + esc(ilkHarf) + '</div><div class="note-kart-body" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-baslik">' + esc(n.title || "BAŞLIKSIZ") + '</div><div class="note-kart-snippet">' + esc(snippet) + '</div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div><div class="note-kart-actions"><button class="note-kart-btn" onclick="event.stopPropagation();noteAc(\'' + n.id + '\')" title="Aç">📖</button><button class="note-kart-btn" onclick="event.stopPropagation();noteTasi(\'' + n.id + '\')" title="Taşı">📂</button><button class="note-kart-btn" onclick="event.stopPropagation();noteSil(\'' + n.id + '\')" title="Sil">🗑️</button></div></div>';
             }).join('');
         }
 
@@ -9494,6 +9495,7 @@ function itDurumMetni(o) {
             document.getElementById("noteEditorIcerik").innerHTML = "";
             document.getElementById("noteEditorModal").style.display = "flex";
             setTimeout(function() { document.getElementById("noteEditorBaslik").focus(); }, 200);
+            setTimeout(function() { noteTbBtnDurumGuncelle(); }, 300);
         }
 
         function noteDuzenle() {
@@ -9504,14 +9506,15 @@ function itDurumMetni(o) {
             var n = notes.find(function(x) { return x.id === id; });
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
             document.getElementById("noteEditorId").value = id;
-            document.getElementById("noteEditorTitle").innerText = "✏️ Notu Düzenle";
-            document.getElementById("noteEditorBaslik").value = n.title || "";
+            document.getElementById("noteEditorTitle").innerText = "✏️ NOTU DÜZENLE";
+            document.getElementById("noteEditorBaslik").value = (n.title || "").toUpperCase();
             document.getElementById("noteEditorIcerik").innerHTML = n.content || "";
             document.getElementById("noteEditorModal").style.display = "flex";
+            setTimeout(function() { noteTbBtnDurumGuncelle(); }, 300);
         }
 
         function noteEditorKaydet() {
-            var baslik = document.getElementById("noteEditorBaslik").value.trim();
+            var baslik = document.getElementById("noteEditorBaslik").value.trim().toUpperCase();
             var icerik = document.getElementById("noteEditorIcerik").innerHTML;
             var id = document.getElementById("noteEditorId").value;
             if (!baslik) { tmNotify("Not başlığı gerekli!", "error"); return; }
@@ -9537,9 +9540,42 @@ function itDurumMetni(o) {
             document.getElementById("noteEditorModal").style.display = "none";
         }
 
+        function noteTbBtnDurumGuncelle() {
+            document.querySelectorAll('.note-tb-btn').forEach(function(btn) {
+                var c = btn.getAttribute('onclick') || '';
+                var m = c.match(/noteTbCmd\('([^']+)'/);
+                if (m) {
+                    var sc = m[1];
+                    if (['bold','italic','underline','strikeThrough','insertUnorderedList','insertOrderedList','justifyLeft','justifyCenter','justifyRight','justifyFull'].indexOf(sc) !== -1) {
+                        if (document.queryCommandState(sc)) btn.classList.add('active');
+                        else btn.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('mouseup', function() { if (document.getElementById("noteEditorModal").style.display === "flex") noteTbBtnDurumGuncelle(); });
+        document.addEventListener('keyup', function() { if (document.getElementById("noteEditorModal").style.display === "flex") noteTbBtnDurumGuncelle(); });
+
         function noteTbCmd(cmd, val) {
             document.execCommand(cmd, false, val || null);
             document.getElementById("noteEditorIcerik").focus();
+            setTimeout(function() {
+                document.querySelectorAll('.note-tb-btn').forEach(function(btn) {
+                    var c = btn.getAttribute('onclick') || '';
+                    var m = c.match(/noteTbCmd\('([^']+)'/);
+                    if (m) {
+                        var stateCmd = m[1];
+                        if (['justifyLeft','justifyCenter','justifyRight','justifyFull'].indexOf(stateCmd) !== -1) {
+                            btn.classList.remove('active');
+                            if (document.queryCommandState(stateCmd)) btn.classList.add('active');
+                        } else if (['bold','italic','underline','strikeThrough','insertUnorderedList','insertOrderedList'].indexOf(stateCmd) !== -1) {
+                            if (document.queryCommandState(stateCmd)) btn.classList.add('active');
+                            else btn.classList.remove('active');
+                        }
+                    }
+                });
+            }, 10);
         }
 
         function noteAc(id) {
@@ -9547,7 +9583,7 @@ function itDurumMetni(o) {
             var n = notes.find(function(x) { return x.id === id; });
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
             noteViewerId = id;
-            document.getElementById("noteViewerTitle").innerText = n.title || "Başlıksız";
+            document.getElementById("noteViewerTitle").innerText = (n.title || "BAŞLIKSIZ").toUpperCase();
             document.getElementById("noteViewerIcerik").innerHTML = n.content || '<p style="color:var(--text-light);font-style:italic;">İçerik yok.</p>';
             document.getElementById("noteViewerModal").style.display = "flex";
         }
@@ -9583,7 +9619,7 @@ function itDurumMetni(o) {
         function noteKlasorKapat() { document.getElementById("noteKlasorModal").style.display = "none"; }
 
         function noteKlasorEkle() {
-            var ad = document.getElementById("noteYeniKlasorAd").value.trim();
+            var ad = document.getElementById("noteYeniKlasorAd").value.trim().toUpperCase();
             if (!ad) { tmNotify("Klasör adı gerekli!", "error"); return; }
             var klasorler = noteKlasorDbYukle();
             if (klasorler.some(function(k) { return k.name.toLowerCase() === ad.toLowerCase(); })) { tmNotify("Bu adla klasör zaten var!", "error"); return; }
@@ -9599,9 +9635,11 @@ function itDurumMetni(o) {
                 if (!yeniAd || !yeniAd.trim()) return;
                 var klasorler = noteKlasorDbYukle();
                 var k = klasorler.find(function(x) { return x.id === id; });
-                if (k) { k.name = yeniAd.trim(); noteKlasorDbKaydet(klasorler); noteKlasorDialog(); noteListele(); tmNotify("Klasör adı değiştirildi.", "success"); }
+                if (k) { k.name = yeniAd.trim().toUpperCase(); noteKlasorDbKaydet(klasorler); noteKlasorDialog(); noteListele(); tmNotify("Klasör adı değiştirildi.", "success"); }
             }, (noteKlasorDbYukle().find(function(x) { return x.id === id; }) || {}).name || "");
         }
+
+        function noteKlasorDuzenle(id) { noteKlasorAdDegistir(id); }
 
         function noteKlasorSil(id) {
             tmConfirm("Bu klasörü silmek içindeki notları da silmek istediğinize emin misiniz?", function() {
