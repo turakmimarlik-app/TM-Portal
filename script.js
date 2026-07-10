@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.1';
+        var APP_VERSION = 'V1.31.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9511,10 +9511,11 @@ function itDurumMetni(o) {
         }
 
         function noteBaslikTrDuzenle(el) {
-            requestAnimationFrame(function() {
-                var v = trToUpper(el.value);
-                if (el.value !== v) el.value = v;
-            });
+            if (el._trBusy) return;
+            el._trBusy = true;
+            var v = trToUpper(el.value);
+            if (el.value !== v) el.value = v;
+            el._trBusy = false;
         }
 
         function noteEditorKaydet() {
