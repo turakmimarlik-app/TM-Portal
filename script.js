@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.5';
+        var APP_VERSION = 'V1.31.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9466,10 +9466,10 @@ function itDurumMetni(o) {
             if (!liste || !klasorListe) return;
 
             var klasorler = noteKlasorDbYukle();
-            klasorListe.innerHTML = '<button class="note-klasor-item' + (!noteAktifKlasorId ? ' active' : '') + '" data-id="" onclick="noteAktifKlasorDegistir(null)" ondragover="noteDragOver(event)" ondrop="noteDrop(event,null)" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)">📂 Tüm Notlar<span class="k-count">' + notes.length + '</span></button>';
+            klasorListe.innerHTML = '<button class="note-klasor-item' + (!noteAktifKlasorId ? ' active' : '') + '" data-id="" onclick="noteAktifKlasorDegistir(null)" ondragover="noteDragOver(event)" ondrop="noteDrop(event,null)" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)"><span class="k-name">📂 Tüm Notlar</span><span class="k-count">' + notes.length + '</span></button>';
             klasorler.forEach(function(k) {
                 var adet = notes.filter(function(n) { return n.folderId === k.id; }).length;
-                klasorListe.innerHTML += '<button class="note-klasor-item' + (noteAktifKlasorId === k.id ? ' active' : '') + '" data-id="' + k.id + '" onclick="noteAktifKlasorDegistir(\'' + k.id + '\')" ondragover="noteDragOver(event)" ondrop="noteDrop(event,\'' + k.id + '\')" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)">📁 ' + esc(k.name) + '<span class="k-count">' + adet + '</span><span style="display:flex;gap:2px;margin-left:4px;"><span style="font-size:10px;cursor:pointer;color:var(--text-light);" onclick="event.stopPropagation();noteKlasorDuzenle(\'' + k.id + '\')">✏️</span><span style="font-size:10px;cursor:pointer;color:var(--accent-red);" onclick="event.stopPropagation();noteKlasorSil(\'' + k.id + '\')">🗑️</span></span></button>';
+                klasorListe.innerHTML += '<button class="note-klasor-item' + (noteAktifKlasorId === k.id ? ' active' : '') + '" data-id="' + k.id + '" onclick="noteAktifKlasorDegistir(\'' + k.id + '\')" ondragover="noteDragOver(event)" ondrop="noteDrop(event,\'' + k.id + '\')" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)"><span class="k-name">📁 ' + esc(k.name) + '</span><span class="k-count">' + adet + '</span><span class="k-actions"><span style="font-size:11px;cursor:pointer;color:var(--text-light);" onclick="event.stopPropagation();noteKlasorDuzenle(\'' + k.id + '\')">✏️</span><span style="font-size:11px;cursor:pointer;color:var(--accent-red);" onclick="event.stopPropagation();noteKlasorSil(\'' + k.id + '\')">🗑️</span></span></button>';
             });
 
             if (noteAktifKlasorId) { notes = notes.filter(function(n) { return n.folderId === noteAktifKlasorId; }); }
@@ -9742,13 +9742,23 @@ function itDurumMetni(o) {
             var kartlar = document.querySelectorAll('.note-kart');
             kartlar.forEach(function(kart) {
                 var title = kart.querySelector('.note-kart-icon-title');
-                if (!title) return;
-                var maxW = title.offsetWidth;
-                var fs = 15;
+                var icon = kart.querySelector('.note-kart-icon');
+                if (!title || !icon) return;
+                var maxW = icon.clientWidth - 16;
+                var maxH = icon.clientHeight - 28;
+                if (maxW < 10) maxW = 60;
+                if (maxH < 10) maxH = 20;
+                var fs = 18;
                 title.style.fontSize = fs + 'px';
-                while (title.scrollWidth > maxW && fs > 9) {
+                while ((title.scrollWidth > maxW || title.scrollHeight > maxH) && fs > 9) {
                     fs--;
                     title.style.fontSize = fs + 'px';
+                }
+                while (title.scrollWidth < maxW && fs < 18 && title.scrollHeight < maxH) {
+                    var t = fs + 1;
+                    title.style.fontSize = t + 'px';
+                    if (title.scrollWidth > maxW || title.scrollHeight > maxH) break;
+                    fs = t;
                 }
             });
         }
@@ -9891,14 +9901,15 @@ function itDurumMetni(o) {
 
             var el = document.createElement("div");
             el.id = "_pdfEl";
-            el.style.cssText = "position:fixed;left:0;top:0;z-index:-1;opacity:0.01;width:794px;padding:50px 60px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;box-sizing:border-box;";
+            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:50px 60px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;box-sizing:border-box;";
             var pdfStyle = document.createElement("style");
             pdfStyle.id = "_pdfStyle";
             pdfStyle.textContent = '#_pdfEl,#_pdfEl > * { background-color:#ffffff !important; color:#000000 !important; }'
-                + '#_pdfEl > div, #_pdfEl p, #_pdfEl span, #_pdfEl li, #_pdfEl td, #_pdfEl th { word-wrap:break-word !important; overflow-wrap:break-word !important; word-break:break-word !important; max-width:100% !important; white-space:normal !important; box-sizing:border-box !important; }'
+                + '#_pdfEl, #_pdfEl div, #_pdfEl p, #_pdfEl span, #_pdfEl li, #_pdfEl td, #_pdfEl th { word-wrap:break-word !important; overflow-wrap:break-word !important; word-break:break-word !important; max-width:100% !important; white-space:normal !important; box-sizing:border-box !important; }'
                 + '#_pdfEl table { table-layout:fixed !important; width:100% !important; }'
                 + '#_pdfEl img { max-width:100% !important; height:auto !important; }'
-                + '#_pdfEl pre { white-space:pre-wrap !important; }';
+                + '#_pdfEl pre { white-space:pre-wrap !important; line-height:1.5 !important; }'
+                + '#_pdfEl * { line-height:1.6 !important; }';
             document.body.appendChild(pdfStyle);
             el.innerHTML = '<h1 style="font-size:22px;margin-bottom:10px;color:#222222;margin-top:0;">' + esc(trToUpper(n.title || "BAŞLIKSIZ")) + '</h1>'
                 + '<hr style="border:none;border-top:2px solid #cccccc;margin-bottom:20px;">'
