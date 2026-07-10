@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.7';
+        var APP_VERSION = 'V1.31.8';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9483,7 +9483,6 @@ function itDurumMetni(o) {
             liste.innerHTML = notes.map(function(n) {
                 return '<div class="note-kart" draggable="true" ondragstart="noteDragStart(event,\'' + n.id + '\')" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-icon"><span class="note-kart-icon-title">' + esc(trToUpper(n.title || "BAŞLIKSIZ")) + '</span></div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div>';
             }).join('');
-            setTimeout(function() { noteKartBaslikBoyutlandir(); }, 50);
         }
 
         function noteYeniNot() {
@@ -9735,31 +9734,6 @@ function itDurumMetni(o) {
                 noteDbKaydet(notes);
                 noteListele();
                 tmNotify("Not silindi.", "success");
-            });
-        }
-
-        function noteKartBaslikBoyutlandir() {
-            var kartlar = document.querySelectorAll('.note-kart');
-            kartlar.forEach(function(kart) {
-                var title = kart.querySelector('.note-kart-icon-title');
-                var icon = kart.querySelector('.note-kart-icon');
-                if (!title || !icon) return;
-                var maxW = icon.clientWidth - 16;
-                var maxH = icon.clientHeight - 28;
-                if (maxW < 10) maxW = 60;
-                if (maxH < 10) maxH = 20;
-                var fs = 18;
-                title.style.fontSize = fs + 'px';
-                while ((title.scrollWidth > maxW || title.scrollHeight > maxH) && fs > 9) {
-                    fs--;
-                    title.style.fontSize = fs + 'px';
-                }
-                while (title.scrollWidth < maxW && fs < 18 && title.scrollHeight < maxH) {
-                    var t = fs + 1;
-                    title.style.fontSize = t + 'px';
-                    if (title.scrollWidth > maxW || title.scrollHeight > maxH) break;
-                    fs = t;
-                }
             });
         }
 
