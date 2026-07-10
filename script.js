@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.5';
+        var APP_VERSION = 'V1.30.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9466,10 +9466,10 @@ function itDurumMetni(o) {
             if (!liste || !klasorListe) return;
 
             var klasorler = noteKlasorDbYukle();
-            klasorListe.innerHTML = '<button class="note-klasor-item' + (!noteAktifKlasorId ? ' active' : '') + '" data-id="" onclick="noteAktifKlasorDegistir(null)">📂 Tüm Notlar<span class="k-count">' + notes.length + '</span></button>';
+            klasorListe.innerHTML = '<button class="note-klasor-item' + (!noteAktifKlasorId ? ' active' : '') + '" data-id="" onclick="noteAktifKlasorDegistir(null)" ondragover="noteDragOver(event)" ondrop="noteDrop(event,null)" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)">📂 Tüm Notlar<span class="k-count">' + notes.length + '</span></button>';
             klasorler.forEach(function(k) {
                 var adet = notes.filter(function(n) { return n.folderId === k.id; }).length;
-                klasorListe.innerHTML += '<button class="note-klasor-item' + (noteAktifKlasorId === k.id ? ' active' : '') + '" data-id="' + k.id + '" onclick="noteAktifKlasorDegistir(\'' + k.id + '\')">📁 ' + esc(k.name) + '<span class="k-count">' + adet + '</span><span style="display:flex;gap:2px;margin-left:4px;"><span style="font-size:10px;cursor:pointer;color:var(--text-light);" onclick="event.stopPropagation();noteKlasorDuzenle(\'' + k.id + '\')">✏️</span><span style="font-size:10px;cursor:pointer;color:var(--accent-red);" onclick="event.stopPropagation();noteKlasorSil(\'' + k.id + '\')">🗑️</span></span></button>';
+                klasorListe.innerHTML += '<button class="note-klasor-item' + (noteAktifKlasorId === k.id ? ' active' : '') + '" data-id="' + k.id + '" onclick="noteAktifKlasorDegistir(\'' + k.id + '\')" ondragover="noteDragOver(event)" ondrop="noteDrop(event,\'' + k.id + '\')" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)">📁 ' + esc(k.name) + '<span class="k-count">' + adet + '</span><span style="display:flex;gap:2px;margin-left:4px;"><span style="font-size:10px;cursor:pointer;color:var(--text-light);" onclick="event.stopPropagation();noteKlasorDuzenle(\'' + k.id + '\')">✏️</span><span style="font-size:10px;cursor:pointer;color:var(--accent-red);" onclick="event.stopPropagation();noteKlasorSil(\'' + k.id + '\')">🗑️</span></span></button>';
             });
 
             if (noteAktifKlasorId) { notes = notes.filter(function(n) { return n.folderId === noteAktifKlasorId; }); }
@@ -9481,7 +9481,7 @@ function itDurumMetni(o) {
 
             notes.sort(function(a, b) { return (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0); });
             liste.innerHTML = notes.map(function(n) {
-                return '<div class="note-kart" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-icon"><span class="note-kart-icon-title">' + esc(n.title || "BAŞLIKSIZ") + '</span></div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div>';
+                return '<div class="note-kart" draggable="true" ondragstart="noteDragStart(event,\'' + n.id + '\')" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-icon"><span class="note-kart-icon-title">' + esc(n.title || "BAŞLIKSIZ") + '</span></div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div>';
             }).join('');
         }
 
@@ -9632,6 +9632,49 @@ function itDurumMetni(o) {
             });
         }
 
+        var noteDragId = null;
+
+        function noteDragStart(event, id) {
+            noteDragId = id;
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', id);
+        }
+
+        function noteDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+        }
+
+        function noteDragEnter(event) {
+            event.preventDefault();
+            var item = event.target.closest('.note-klasor-item');
+            if (item) item.classList.add('drag-over');
+        }
+
+        function noteDragLeave(event) {
+            var item = event.target.closest('.note-klasor-item');
+            if (item) item.classList.remove('drag-over');
+        }
+
+        function noteDrop(event, folderId) {
+            event.preventDefault();
+            var item = event.target.closest('.note-klasor-item');
+            if (item) item.classList.remove('drag-over');
+            var id = noteDragId || event.dataTransfer.getData('text/plain');
+            if (!id) return;
+            noteDragId = null;
+            var notes = noteDbYukle();
+            var n = notes.find(function(x) { return x.id === id; });
+            if (!n) return;
+            var hedefKlasorId = folderId || null;
+            if (n.folderId === hedefKlasorId) return;
+            n.folderId = hedefKlasorId;
+            n.updatedAt = Date.now();
+            noteDbKaydet(notes);
+            noteListele();
+            tmNotify("Not taşındı.", "success");
+        }
+
         function noteKlasorDialog() {
             var body = document.getElementById("noteKlasorBody");
             var klasorler = noteKlasorDbYukle();
@@ -9715,21 +9758,23 @@ function itDurumMetni(o) {
             var n = notes.find(function(x) { return x.id === id; });
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
 
-            var sayfaHtml = '<div style="width:794px;padding:40px 50px;font-family:Montserrat,sans-serif;background:#fff;color:#000;">'
-                + '<h1 style="font-size:22px;margin-bottom:10px;color:#222;">' + esc(n.title) + '</h1>'
-                + '<hr style="border:none;border-top:2px solid #ccc;margin-bottom:20px;">'
-                + '<div style="font-size:14px;line-height:1.6;">' + (n.content || "") + '</div>'
-                + '<hr style="border:none;border-top:1px solid #eee;margin-top:30px;">'
-                + '<p style="font-size:11px;color:#999;">Oluşturma: ' + tarihStr(n.createdAt) + ' | Son Güncelleme: ' + tarihStr(n.updatedAt) + '</p>'
-                + '</div>';
+            var icerik = (n.content || "");
+            icerik = icerik.replace(/<font\s+size=["'](\d)["']/gi, function(m, s) {
+                var sizes = { '1':'10px','2':'12px','3':'14px','4':'16px','5':'20px','6':'28px','7':'40px' };
+                return '<span style="font-size:' + (sizes[s] || '14px') + '"';
+            }).replace(/<\/font>/gi, '<\/span>');
 
-            var sayfaEl = document.createElement("div");
-            sayfaEl.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#fff;";
-            sayfaEl.innerHTML = sayfaHtml;
-            document.body.appendChild(sayfaEl);
+            var el = document.createElement("div");
+            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:40px 50px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;";
+            el.innerHTML = '<h1 style="font-size:22px;margin-bottom:10px;color:#222222;margin-top:0;">' + esc(n.title) + '</h1>'
+                + '<hr style="border:none;border-top:2px solid #cccccc;margin-bottom:20px;">'
+                + '<div style="font-size:14px;line-height:1.6;color:#000000;background-color:transparent;">' + icerik + '</div>'
+                + '<hr style="border:none;border-top:1px solid #eeeeee;margin-top:30px;">'
+                + '<p style="font-size:11px;color:#999999;">Oluşturma: ' + tarihStr(n.createdAt) + ' | Son Güncelleme: ' + tarihStr(n.updatedAt) + '</p>';
+            document.body.appendChild(el);
 
             tmLoadingGoster("PDF oluşturuluyor...");
-            html2canvas(sayfaEl, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', width: 794, height: sayfaEl.scrollHeight }).then(function(cv) {
+            html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', width: 794 }).then(function(cv) {
                 var imgData = cv.toDataURL('image/jpeg', 0.95);
                 var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
                 var a4w = 210, a4h = 297;
@@ -9738,26 +9783,26 @@ function itDurumMetni(o) {
                 if (imgHmm <= a4h) {
                     doc.addImage(imgData, 'JPEG', 0, 0, a4w, imgHmm);
                 } else {
-                    var sliceHpx = Math.round(a4h * ratio);
-                    var totalPages = Math.ceil(cv.height / sliceHpx);
-                    for (var i = 0; i < totalPages; i++) {
+                    var slicePx = a4h * ratio;
+                    var pages = Math.ceil(cv.height / slicePx);
+                    for (var i = 0; i < pages; i++) {
                         if (i > 0) doc.addPage();
-                        var srcY = i * sliceHpx;
-                        var sH = Math.min(sliceHpx, cv.height - srcY);
-                        if (sH <= 0) break;
+                        var sy = i * slicePx;
+                        var sh = Math.min(slicePx, cv.height - sy);
+                        if (sh <= 0) break;
                         var c2 = document.createElement('canvas');
                         c2.width = cv.width;
-                        c2.height = sH;
+                        c2.height = sh;
                         var ctx = c2.getContext('2d');
                         ctx.fillStyle = '#ffffff';
                         ctx.fillRect(0, 0, c2.width, c2.height);
-                        ctx.drawImage(cv, 0, srcY, cv.width, sH, 0, 0, cv.width, sH);
-                        doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, a4w, sH / ratio);
+                        ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
+                        doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, a4w, sh / ratio);
                     }
                 }
-                var temizle = function(s) { return (s || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim(); };
-                doc.save(temizle(n.title) + ".pdf");
-                document.body.removeChild(sayfaEl);
+                var t = (n.title || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim();
+                doc.save(t + ".pdf");
+                document.body.removeChild(el);
                 tmLoadingGizle();
             }).catch(function() {
                 tmLoadingGizle();
