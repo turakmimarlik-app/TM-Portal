@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.2';
+        var APP_VERSION = 'V1.30.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9481,8 +9481,8 @@ function itDurumMetni(o) {
 
             notes.sort(function(a, b) { return (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0); });
             liste.innerHTML = notes.map(function(n) {
-                var snippet = (n.content || "").replace(/<[^>]+>/g, '').trim().substring(0, 60);
-                if (snippet.length >= 60) snippet += '...';
+                var snippet = (n.content || "").replace(/<[^>]+>/g, '').trim().substring(0, 30);
+                if (snippet.length >= 30) snippet += '...';
                 var ilkHarf = (n.title || "?").charAt(0);
                 return '<div class="note-kart"><div class="note-kart-icon" onclick="noteAc(\'' + n.id + '\')">' + esc(ilkHarf) + '</div><div class="note-kart-body" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-baslik">' + esc(n.title || "BAŞLIKSIZ") + '</div><div class="note-kart-snippet">' + esc(snippet) + '</div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div><div class="note-kart-actions"><button class="note-kart-btn" onclick="event.stopPropagation();noteAc(\'' + n.id + '\')" title="Aç">📖</button><button class="note-kart-btn" onclick="event.stopPropagation();noteTasi(\'' + n.id + '\')" title="Taşı">📂</button><button class="note-kart-btn" onclick="event.stopPropagation();noteSil(\'' + n.id + '\')" title="Sil">🗑️</button></div></div>';
             }).join('');
@@ -9648,7 +9648,6 @@ function itDurumMetni(o) {
                 var notes = noteDbYukle().map(function(x) { if (x.folderId === id) x.folderId = null; return x; });
                 noteDbKaydet(notes);
                 if (noteAktifKlasorId === id) noteAktifKlasorDegistir(null);
-                noteKlasorDialog();
                 noteListele();
                 tmNotify("Klasör silindi, notlar korundu.", "success");
             });

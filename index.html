@@ -123,7 +123,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.30.2</div>
+                <div class="version-tag">V1.30.3</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1158,16 +1158,16 @@
                 <div id="lock-notlar" class="page-lock-overlay"></div>
                 <h2>📝 Notlar</h2>
                 <div style="display:flex; gap:20px; align-items:stretch; min-height:60vh;">
-                    <div style="width:240px; min-width:240px; background:var(--bg-main); border-radius:10px; border:1px solid var(--border-color); padding:16px; display:flex; flex-direction:column; gap:8px;">
-                        <button class="btn btn-primary" onclick="noteKlasorDialog()" style="padding:8px; font-size:13px; width:100%;">📁 Yeni Klasör</button>
-                        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:2px;" id="notlarKlasorListesi"></div>
+                    <div style="width:280px; min-width:280px; background:var(--bg-main); border-radius:10px; border:1px solid var(--border-color); padding:16px; display:flex; flex-direction:column; gap:8px;">
+                        <button class="btn btn-primary" onclick="noteKlasorDialog()" style="padding:10px; font-size:14px; width:100%;">📁 Yeni Klasör</button>
+                        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:4px;" id="notlarKlasorListesi"></div>
                     </div>
                     <div style="flex:1; display:flex; flex-direction:column; gap:12px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
                             <span style="font-weight:700; font-size:18px; color:var(--accent-red);" id="noteKlasorAdi">Tüm Notlar</span>
                             <button class="btn btn-primary" onclick="noteYeniNot()" style="padding:8px 16px; font-size:13px;">➕ Yeni Not Oluştur</button>
                         </div>
-                        <div id="notlarListesi" style="flex:1; display:flex; flex-direction:column; gap:8px;"></div>
+                        <div id="notlarListesi" style="flex:1; display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:12px; align-content:start;"></div>
                     </div>
                 </div>
             </div>
