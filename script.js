@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.28.2';
+        var APP_VERSION = 'V1.29.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -3894,6 +3894,8 @@ function gorevMailGonder(gorev) {
 
                 const kalanTahsilat = (kayit.anlasmaUcreti || 0) - toplamAlacak;
                 const kalanTahsilatRenk = kalanTahsilat >= 0 ? "var(--accent-red)" : "var(--btn-green)";
+                const tahsilatYuzde = (kayit.anlasmaUcreti || 0) > 0 ? Math.min(100, Math.round((toplamAlacak / (kayit.anlasmaUcreti || 0)) * 100)) : 0;
+                const odemeYuzde = toplamVerecek > 0 ? Math.min(100, Math.round((toplamOdenen / toplamVerecek) * 100)) : 0;
 
                 konteyner.innerHTML += `
                     <div class="portfolio-card is-muh-card" data-search="${kayit.isAdi} ${kayit.firma} ${paftaAdaParsel} ${formatliId}" style="width:100%; cursor:pointer;" onclick="isMuhKartToggle(${kayit.id}, event)">
@@ -3910,6 +3912,10 @@ function gorevMailGonder(gorev) {
                             <div style="display:flex; gap:15px; margin-top:4px; font-size:13px;">
                                 ${kayit.firma && kayit.firma !== "-" ? '<span style="color:var(--text-light);"><b>Firma:</b> ' + kayit.firma + '</span>' : ''}
                                 ${paftaAdaParsel && paftaAdaParsel !== "-" ? '<span style="color:var(--text-light);">' + paftaAdaParsel + '</span>' : ''}
+                            </div>
+                            <div style="display:flex; gap:15px; margin-top:6px; padding:0 2px;">
+                                <div style="flex:1;"><div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-light); margin-bottom:2px;"><span>Tahsilat</span><span>%${tahsilatYuzde}</span></div><div style="height:6px; background:var(--bg-main); border-radius:3px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);"><div style="height:100%; width:${tahsilatYuzde}%; background:linear-gradient(90deg, var(--btn-green), #4caf50); border-radius:3px; transition:width 0.4s;"></div></div></div>
+                                <div style="flex:1;"><div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-light); margin-bottom:2px;"><span>Ödeme</span><span>%${odemeYuzde}</span></div><div style="height:6px; background:var(--bg-main); border-radius:3px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);"><div style="height:100%; width:${odemeYuzde}%; background:linear-gradient(90deg, var(--accent-red), #ff5722); border-radius:3px; transition:width 0.4s;"></div></div></div>
                             </div>
                         </div>
                         <div id="isMuhKartContent_${kayit.id}" style="display:none;">
