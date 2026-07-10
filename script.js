@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.29.1';
+        var APP_VERSION = 'V1.29.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -3906,11 +3906,11 @@ function gorevMailGonder(gorev) {
                                     <h4 style="margin:0;">${kayit.isAdi}</h4>
                                 </div>
                                 <div style="display:flex; align-items:center; gap:12px;">
-                                    <div style="display:flex; flex-direction:column; gap:2px; min-width:120px;">
-                                        <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:9px; color:var(--btn-green); font-weight:600; min-width:38px;">Tahsilat</span><div style="flex:1; height:5px; background:var(--bg-main); border-radius:2px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);"><div style="height:100%; width:${tahsilatYuzde}%; background:linear-gradient(90deg, var(--btn-green), #4caf50); border-radius:2px; transition:width 0.4s;"></div></div><span style="font-size:9px; color:var(--text-light); font-weight:600; min-width:28px; text-align:right;">%${tahsilatYuzde}</span></div>
-                                        <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:9px; color:var(--accent-red); font-weight:600; min-width:38px;">Ödeme</span><div style="flex:1; height:5px; background:var(--bg-main); border-radius:2px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);"><div style="height:100%; width:${odemeYuzde}%; background:linear-gradient(90deg, var(--accent-red), #ff5722); border-radius:2px; transition:width 0.4s;"></div></div><span style="font-size:9px; color:var(--text-light); font-weight:600; min-width:28px; text-align:right;">%${odemeYuzde}</span></div>
+                                    <div style="display:flex; flex-direction:column; gap:3px; min-width:160px;">
+                                        <div style="display:flex; align-items:center; gap:6px;"><span style="font-size:11px; color:var(--btn-green); font-weight:600; min-width:44px;">Tahsilat</span><div style="flex:1; height:10px; background:var(--bg-main); border-radius:4px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.15);"><div style="height:100%; width:${tahsilatYuzde}%; background:linear-gradient(90deg, var(--btn-green), #4caf50); border-radius:4px; transition:width 0.4s;"></div></div><span style="font-size:11px; color:var(--text-light); font-weight:600; min-width:32px; text-align:right;">%${tahsilatYuzde}</span></div>
+                                        <div style="display:flex; align-items:center; gap:6px;"><span style="font-size:11px; color:var(--accent-red); font-weight:600; min-width:44px;">Ödeme</span><div style="flex:1; height:10px; background:var(--bg-main); border-radius:4px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.15);"><div style="height:100%; width:${odemeYuzde}%; background:linear-gradient(90deg, var(--accent-red), #ff5722); border-radius:4px; transition:width 0.4s;"></div></div><span style="font-size:11px; color:var(--text-light); font-weight:600; min-width:32px; text-align:right;">%${odemeYuzde}</span></div>
                                     </div>
-                                    <span style="font-weight:700; color:var(--accent-red); font-size:14px;">${formatliId}</span>
+                                    <span style="font-weight:700; color:var(--accent-red); font-size:16px;">${formatliId}</span>
                                 </div>
                             </div>
                             <div style="display:flex; gap:15px; margin-top:4px; font-size:13px;">
