@@ -3905,17 +3905,17 @@ function gorevMailGonder(gorev) {
                                     <span id="isMuhKartIcon_${kayit.id}" style="font-size:14px; color:var(--accent-red); font-weight:700;">▶</span>
                                     <h4 style="margin:0;">${kayit.isAdi}</h4>
                                 </div>
-                                <div style="display:flex; align-items:center; gap:15px;">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="display:flex; flex-direction:column; gap:2px; min-width:120px;">
+                                        <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:9px; color:var(--btn-green); font-weight:600; min-width:38px;">Tahsilat</span><div style="flex:1; height:5px; background:var(--bg-main); border-radius:2px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);"><div style="height:100%; width:${tahsilatYuzde}%; background:linear-gradient(90deg, var(--btn-green), #4caf50); border-radius:2px; transition:width 0.4s;"></div></div><span style="font-size:9px; color:var(--text-light); font-weight:600; min-width:28px; text-align:right;">%${tahsilatYuzde}</span></div>
+                                        <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:9px; color:var(--accent-red); font-weight:600; min-width:38px;">Ödeme</span><div style="flex:1; height:5px; background:var(--bg-main); border-radius:2px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);"><div style="height:100%; width:${odemeYuzde}%; background:linear-gradient(90deg, var(--accent-red), #ff5722); border-radius:2px; transition:width 0.4s;"></div></div><span style="font-size:9px; color:var(--text-light); font-weight:600; min-width:28px; text-align:right;">%${odemeYuzde}</span></div>
+                                    </div>
                                     <span style="font-weight:700; color:var(--accent-red); font-size:14px;">${formatliId}</span>
                                 </div>
                             </div>
                             <div style="display:flex; gap:15px; margin-top:4px; font-size:13px;">
                                 ${kayit.firma && kayit.firma !== "-" ? '<span style="color:var(--text-light);"><b>Firma:</b> ' + kayit.firma + '</span>' : ''}
                                 ${paftaAdaParsel && paftaAdaParsel !== "-" ? '<span style="color:var(--text-light);">' + paftaAdaParsel + '</span>' : ''}
-                            </div>
-                            <div style="display:flex; gap:15px; margin-top:6px; padding:0 2px;">
-                                <div style="flex:1;"><div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-light); margin-bottom:2px;"><span>Tahsilat</span><span>%${tahsilatYuzde}</span></div><div style="height:6px; background:var(--bg-main); border-radius:3px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);"><div style="height:100%; width:${tahsilatYuzde}%; background:linear-gradient(90deg, var(--btn-green), #4caf50); border-radius:3px; transition:width 0.4s;"></div></div></div>
-                                <div style="flex:1;"><div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-light); margin-bottom:2px;"><span>Ödeme</span><span>%${odemeYuzde}</span></div><div style="height:6px; background:var(--bg-main); border-radius:3px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);"><div style="height:100%; width:${odemeYuzde}%; background:linear-gradient(90deg, var(--accent-red), #ff5722); border-radius:3px; transition:width 0.4s;"></div></div></div>
                             </div>
                         </div>
                         <div id="isMuhKartContent_${kayit.id}" style="display:none;">
