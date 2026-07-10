@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.3';
+        var APP_VERSION = 'V1.30.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9481,10 +9481,7 @@ function itDurumMetni(o) {
 
             notes.sort(function(a, b) { return (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0); });
             liste.innerHTML = notes.map(function(n) {
-                var snippet = (n.content || "").replace(/<[^>]+>/g, '').trim().substring(0, 30);
-                if (snippet.length >= 30) snippet += '...';
-                var ilkHarf = (n.title || "?").charAt(0);
-                return '<div class="note-kart"><div class="note-kart-icon" onclick="noteAc(\'' + n.id + '\')">' + esc(ilkHarf) + '</div><div class="note-kart-body" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-baslik">' + esc(n.title || "BAŞLIKSIZ") + '</div><div class="note-kart-snippet">' + esc(snippet) + '</div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div><div class="note-kart-actions"><button class="note-kart-btn" onclick="event.stopPropagation();noteAc(\'' + n.id + '\')" title="Aç">📖</button><button class="note-kart-btn" onclick="event.stopPropagation();noteTasi(\'' + n.id + '\')" title="Taşı">📂</button><button class="note-kart-btn" onclick="event.stopPropagation();noteSil(\'' + n.id + '\')" title="Sil">🗑️</button></div></div>';
+                return '<div class="note-kart" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-icon"><span class="note-kart-icon-emoji">📝</span><span class="note-kart-icon-title">' + esc(n.title || "BAŞLIKSIZ") + '</span></div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div>';
             }).join('');
         }
 
@@ -9591,6 +9588,18 @@ function itDurumMetni(o) {
         function noteViewerKapat() {
             document.getElementById("noteViewerModal").style.display = "none";
             noteViewerId = null;
+        }
+
+        function noteViewerSil() {
+            var id = noteViewerId;
+            if (!id) return;
+            noteViewerKapat();
+            tmConfirm("Bu notu silmek istediğinize emin misiniz?", function() {
+                var notes = noteDbYukle().filter(function(x) { return x.id !== id; });
+                noteDbKaydet(notes);
+                noteListele();
+                tmNotify("Not silindi.", "success");
+            });
         }
 
         function noteSil(id) {
