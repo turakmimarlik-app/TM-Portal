@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.9';
+        var APP_VERSION = 'V1.31.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9504,14 +9504,21 @@ function itDurumMetni(o) {
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
             document.getElementById("noteEditorId").value = id;
             document.getElementById("noteEditorTitle").innerText = "✏️ NOTU DÜZENLE";
-            document.getElementById("noteEditorBaslik").value = (n.title || "").toUpperCase();
+            document.getElementById("noteEditorBaslik").value = (n.title || "") ? trToUpper(n.title || "") : "";
             document.getElementById("noteEditorIcerik").innerHTML = n.content || "";
             document.getElementById("noteEditorModal").style.display = "flex";
             setTimeout(function() { noteTbBtnDurumGuncelle(); }, 300);
         }
 
+        function noteBaslikTrDuzenle(el) {
+            requestAnimationFrame(function() {
+                var v = trToUpper(el.value);
+                if (el.value !== v) el.value = v;
+            });
+        }
+
         function noteEditorKaydet() {
-            var baslik = document.getElementById("noteEditorBaslik").value.trim().toUpperCase();
+            var baslik = trToUpper(document.getElementById("noteEditorBaslik").value.trim()) || "BAŞLKSZ";
             var icerik = document.getElementById("noteEditorIcerik").innerHTML;
             var id = document.getElementById("noteEditorId").value;
             if (!baslik) { tmNotify("Not başlığı gerekli!", "error"); return; }
@@ -9647,7 +9654,7 @@ function itDurumMetni(o) {
             var n = notes.find(function(x) { return x.id === id; });
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
             noteViewerId = id;
-            document.getElementById("noteViewerTitle").innerText = (n.title || "BAŞLIKSIZ").toUpperCase();
+            document.getElementById("noteViewerTitle").innerText = n.title ? trToUpper(n.title) : "BAŞLIKSIZ";
             document.getElementById("noteViewerIcerik").innerHTML = n.content || '<p style="color:var(--text-light);font-style:italic;">İçerik yok.</p>';
             document.getElementById("noteViewerModal").style.display = "flex";
         }

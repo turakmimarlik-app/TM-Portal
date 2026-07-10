@@ -123,7 +123,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.30.9</div>
+                <div class="version-tag">V1.31.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1177,7 +1177,7 @@
                 <div class="modal-box" style="max-width:850px; width:92%;">
                     <div class="modal-header"><h3 id="noteEditorTitle">📝 Yeni Not</h3></div>
                     <div class="modal-body">
-                        <input type="text" id="noteEditorBaslik" placeholder="NOT BAŞLIĞI..." style="width:100%; padding:10px 14px; font-size:15px; font-weight:600; margin-bottom:10px; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-card); color:var(--text-dark); box-sizing:border-box; text-transform:uppercase;">
+                        <input type="text" id="noteEditorBaslik" placeholder="NOT BAŞLIĞI..." style="width:100%; padding:10px 14px; font-size:15px; font-weight:600; margin-bottom:10px; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-card); color:var(--text-dark); box-sizing:border-box; text-transform:uppercase;" oninput="noteBaslikTrDuzenle(this)">
                         <div class="note-editor-toolbar" style="display:flex; align-items:center; gap:2px; padding:6px 10px; background:var(--bg-main); border:1px solid var(--border-color); border-bottom:none; border-radius:8px 8px 0 0; flex-wrap:nowrap;">
                             <button type="button" class="note-tb-btn" onclick="noteTbCmd('bold')" title="Kalın (Ctrl+B)"><b>B</b></button>
                             <button type="button" class="note-tb-btn" onclick="noteTbCmd('italic')" title="İtalik (Ctrl+I)"><i>I</i></button>
