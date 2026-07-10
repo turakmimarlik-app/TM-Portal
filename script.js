@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.6';
+        var APP_VERSION = 'V1.30.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9443,6 +9443,7 @@ function itDurumMetni(o) {
         const NOTE_KLASOR_DB = "tm_notlar_folders_db";
         var noteAktifKlasorId = null;
         var noteViewerId = null;
+        var noteTbSavedRange = null;
 
         function noteDbYukle() { try { return JSON.parse(localStorage.getItem(NOTE_DB)) || []; } catch(e) { return []; } }
         function noteDbKaydet(d) { try { localStorage.setItem(NOTE_DB, JSON.stringify(d)); } catch(e) { console.error("Note kaydetme hatasi:", e); } }
@@ -9554,26 +9555,33 @@ function itDurumMetni(o) {
         document.addEventListener('mouseup', function() { if (document.getElementById("noteEditorModal").style.display === "flex") noteTbBtnDurumGuncelle(); });
         document.addEventListener('keyup', function() { if (document.getElementById("noteEditorModal").style.display === "flex") noteTbBtnDurumGuncelle(); });
 
+        function noteTbRangeKaydet() {
+            var sel = window.getSelection();
+            if (sel.rangeCount) {
+                noteTbSavedRange = sel.getRangeAt(0).cloneRange();
+            }
+        }
+
         function noteTbCmd(cmd, val) {
             var editor = document.getElementById("noteEditorIcerik");
             if (cmd === 'fontSize') {
-                var sel = window.getSelection();
-                if (sel.rangeCount) {
-                    var range = sel.getRangeAt(0);
-                    if (!range.collapsed) {
-                        var sizeMap = { '1':'10px','2':'12px','3':'14px','4':'16px','5':'20px','6':'28px','7':'40px' };
-                        var span = document.createElement('span');
-                        span.style.fontSize = sizeMap[val] || '14px';
-                        try { range.surroundContents(span); }
-                        catch(e) {
-                            var fragment = range.extractContents();
-                            span.appendChild(fragment);
-                            range.insertNode(span);
-                        }
-                        sel.removeAllRanges();
-                        sel.addRange(range);
+                var range = noteTbSavedRange;
+                if (!range) { var sel = window.getSelection(); if (sel.rangeCount) range = sel.getRangeAt(0); }
+                if (range && !range.collapsed) {
+                    var px = val + 'px';
+                    var span = document.createElement('span');
+                    span.style.fontSize = px;
+                    try { range.surroundContents(span); }
+                    catch(e) {
+                        var fragment = range.extractContents();
+                        span.appendChild(fragment);
+                        range.insertNode(span);
                     }
+                    var sel2 = window.getSelection();
+                    sel2.removeAllRanges();
+                    sel2.addRange(range);
                 }
+                noteTbSavedRange = null;
             } else {
                 document.execCommand(cmd, false, val || null);
             }

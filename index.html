@@ -123,7 +123,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.30.6</div>
+                <div class="version-tag">V1.30.7</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1184,8 +1184,8 @@
                             <button type="button" class="note-tb-btn" onclick="noteTbCmd('underline')" title="Altı Çizili (Ctrl+U)"><u>U</u></button>
                             <button type="button" class="note-tb-btn" onclick="noteTbCmd('strikeThrough')" title="Üstü Çizili"><s>S</s></button>
                             <span class="note-tb-sep"></span>
-                            <select class="note-tb-select" onchange="noteTbCmd('fontSize', this.value)" title="Yazı Boyutu">
-                                <option value="1">8</option><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">36</option>
+                            <select class="note-tb-select" onmousedown="noteTbRangeKaydet()" onchange="noteTbCmd('fontSize', this.value);this.blur()" title="Yazı Boyutu">
+                                <option value="8">8</option><option value="10">10</option><option value="12" selected>12</option><option value="14">14</option><option value="18">18</option><option value="24">24</option><option value="36">36</option>
                             </select>
                             <span class="note-tb-sep"></span>
                             <button type="button" class="note-tb-btn note-tb-align" onclick="noteTbCmd('justifyLeft')" title="Sola Yasla"><svg width="14" height="14" viewBox="0 0 14 14"><line x1="1" y1="2" x2="13" y2="2" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="6" x2="9" y2="6" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="10" x2="11" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="14" x2="7" y2="14" stroke="currentColor" stroke-width="1.5"/></svg></button>
@@ -1197,7 +1197,6 @@
                             <button type="button" class="note-tb-btn" onclick="noteTbCmd('insertOrderedList')" title="Numaralı Liste">1.</button>
                             <span class="note-tb-sep"></span>
                             <label class="note-tb-color" title="Metin Rengi"><span style="border-bottom:3px solid red;">A</span><input type="color" onchange="noteTbCmd('foreColor', this.value); this.value='#000000';"></label>
-                            <label class="note-tb-color" title="Arkaplan Rengi"><span style="background:yellow;">A</span><input type="color" onchange="noteTbCmd('hiliteColor', this.value); this.value='#ffff00';"></label>
                         </div>
                         <div id="noteEditorIcerik" contenteditable="true" style="min-height:350px; max-height:55vh; overflow-y:auto; padding:16px; border:1px solid var(--border-color); border-top:none; border-radius:0 0 6px 6px; background:var(--bg-card); color:var(--text-dark); font-size:14px; line-height:1.6; outline:none; box-sizing:border-box;" data-placeholder="Notunuzu yazmaya başlayın..."></div>
                     </div>
