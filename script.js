@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.9';
+        var APP_VERSION = 'V1.31.10';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9896,45 +9896,67 @@ function itDurumMetni(o) {
                     var margin = 15;
                     var pageW = 210, pageH = 297;
                     var printW = pageW - 2 * margin;
-                    var headerH = 13;
-                    var footerH = 12;
-                    var contentY = margin + headerH;
-                    var contentH = pageH - 2 * margin - headerH - footerH;
+                    var printH = pageH - 2 * margin;
+                    var hdrH = 14;
+                    var ftrH = 12;
                     var ratio = cv.width / printW;
-                    var slicePx = contentH * ratio;
-                    var pages = Math.ceil(cv.height / slicePx);
+
+                    // Page 1 content area is smaller (has header + footer)
+                    var slicePx1 = (printH - hdrH - ftrH) * ratio;
+                    // Pages 2+ use full area
+                    var slicePxN = printH * ratio;
+
+                    var totalH = cv.height;
+                    var pages = 1;
+                    if (totalH > slicePx1) {
+                        pages = Math.ceil((totalH - slicePx1) / slicePxN) + 1;
+                    }
 
                     for (var i = 0; i < pages; i++) {
                         if (i > 0) doc.addPage();
 
-                        doc.setFont('helvetica', 'bold');
-                        doc.setFontSize(14);
-                        doc.setTextColor(0, 0, 0);
-                        doc.text(trToUpper(n.title || "BAŞLIKSIZ"), margin, margin + 7);
+                        if (i === 0) {
+                            doc.setFont('helvetica', 'bold');
+                            doc.setFontSize(14);
+                            doc.setTextColor(0, 0, 0);
+                            doc.text(trToUpper(n.title || "BAŞLIKSIZ"), margin, margin + 7);
+                            doc.setDrawColor(200, 200, 200);
+                            doc.line(margin, margin + 9.5, pageW - margin, margin + 9.5);
 
-                        doc.setDrawColor(200, 200, 200);
-                        doc.line(margin, margin + 9.5, pageW - margin, margin + 9.5);
+                            var sy = 0;
+                            var sh = Math.min(slicePx1, totalH);
+                            if (sh > 0) {
+                                var c2 = document.createElement('canvas');
+                                c2.width = cv.width;
+                                c2.height = sh;
+                                var ctx = c2.getContext('2d');
+                                ctx.fillStyle = '#ffffff';
+                                ctx.fillRect(0, 0, c2.width, c2.height);
+                                ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
+                                doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin + hdrH, printW, sh / ratio);
+                            }
 
-                        var sy = i * slicePx;
-                        var sh = Math.min(slicePx, cv.height - sy);
-                        if (sh > 0) {
-                            var c2 = document.createElement('canvas');
-                            c2.width = cv.width;
-                            c2.height = sh;
-                            var ctx = c2.getContext('2d');
-                            ctx.fillStyle = '#ffffff';
-                            ctx.fillRect(0, 0, c2.width, c2.height);
-                            ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
-                            doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, contentY, printW, sh / ratio);
+                            var ftY = pageH - margin - ftrH;
+                            doc.setDrawColor(200, 200, 200);
+                            doc.line(margin, ftY, pageW - margin, ftY);
+                            doc.setFont('helvetica', 'normal');
+                            doc.setFontSize(8);
+                            doc.setTextColor(150, 150, 150);
+                            doc.text("Oluşturma: " + tarihStr(n.createdAt) + " | Son Güncelleme: " + tarihStr(n.updatedAt), margin, ftY + 5);
+                        } else {
+                            var sy = slicePx1 + (i - 1) * slicePxN;
+                            var sh = Math.min(slicePxN, totalH - sy);
+                            if (sh > 0) {
+                                var c2 = document.createElement('canvas');
+                                c2.width = cv.width;
+                                c2.height = sh;
+                                var ctx = c2.getContext('2d');
+                                ctx.fillStyle = '#ffffff';
+                                ctx.fillRect(0, 0, c2.width, c2.height);
+                                ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
+                                doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, printW, sh / ratio);
+                            }
                         }
-
-                        var ftY = pageH - margin - footerH;
-                        doc.setDrawColor(200, 200, 200);
-                        doc.line(margin, ftY, pageW - margin, ftY);
-                        doc.setFont('helvetica', 'normal');
-                        doc.setFontSize(8);
-                        doc.setTextColor(150, 150, 150);
-                        doc.text("Oluşturma: " + tarihStr(n.createdAt) + " | Son Güncelleme: " + tarihStr(n.updatedAt), margin, ftY + 5);
                     }
                     var t = (n.title || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim();
                     doc.save(t + ".pdf");
