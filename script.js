@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.10';
+        var APP_VERSION = 'V1.31.11';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9897,16 +9897,14 @@ function itDurumMetni(o) {
                     var pageW = 210, pageH = 297;
                     var printW = pageW - 2 * margin;
                     var printH = pageH - 2 * margin;
-                    var hdrH = 14;
-                    var ftrH = 12;
                     var ratio = cv.width / printW;
+                    var totalH = cv.height;
 
-                    // Page 1 content area is smaller (has header + footer)
-                    var slicePx1 = (printH - hdrH - ftrH) * ratio;
-                    // Pages 2+ use full area
+                    var hdrEst = 16;
+                    var ftrH = 8;
+                    var slicePx1 = (printH - hdrEst - ftrH) * ratio;
                     var slicePxN = printH * ratio;
 
-                    var totalH = cv.height;
                     var pages = 1;
                     if (totalH > slicePx1) {
                         pages = Math.ceil((totalH - slicePx1) / slicePxN) + 1;
@@ -9916,15 +9914,34 @@ function itDurumMetni(o) {
                         if (i > 0) doc.addPage();
 
                         if (i === 0) {
+                            var titleText = trToUpper(n.title || "BAŞLIKSIZ");
+                            var titleLines = doc.splitTextToSize(titleText, printW - 4);
+                            if (titleLines.length > 2) {
+                                titleLines = titleLines.slice(0, 2);
+                                titleLines[1] += '...';
+                            }
+
                             doc.setFont('helvetica', 'bold');
                             doc.setFontSize(14);
                             doc.setTextColor(0, 0, 0);
-                            doc.text(trToUpper(n.title || "BAŞLIKSIZ"), margin, margin + 7);
-                            doc.setDrawColor(200, 200, 200);
-                            doc.line(margin, margin + 9.5, pageW - margin, margin + 9.5);
+                            doc.text(titleLines, margin, margin + 7);
 
-                            var sy = 0;
-                            var sh = Math.min(slicePx1, totalH);
+                            var hdrBottom = margin + 7 + (titleLines.length > 1 ? 10 : 0) + 3;
+                            doc.setDrawColor(200, 200, 200);
+                            doc.line(margin, hdrBottom, pageW - margin, hdrBottom);
+
+                            var contentStart = hdrBottom + 2;
+
+                            var ftLine = pageH - margin - 3;
+                            doc.setDrawColor(200, 200, 200);
+                            doc.line(margin, ftLine, pageW - margin, ftLine);
+                            doc.setFont('helvetica', 'normal');
+                            doc.setFontSize(8);
+                            doc.setTextColor(150, 150, 150);
+                            doc.text("Oluşturma: " + tarihStr(n.createdAt) + " | Son Güncelleme: " + tarihStr(n.updatedAt), margin, ftLine + 3);
+
+                            var availH = ftLine - contentStart;
+                            var sh = Math.min(availH * ratio, totalH);
                             if (sh > 0) {
                                 var c2 = document.createElement('canvas');
                                 c2.width = cv.width;
@@ -9932,17 +9949,9 @@ function itDurumMetni(o) {
                                 var ctx = c2.getContext('2d');
                                 ctx.fillStyle = '#ffffff';
                                 ctx.fillRect(0, 0, c2.width, c2.height);
-                                ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
-                                doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin + hdrH, printW, sh / ratio);
+                                ctx.drawImage(cv, 0, 0, cv.width, sh, 0, 0, c2.width, c2.height);
+                                doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, contentStart, printW, sh / ratio);
                             }
-
-                            var ftY = pageH - margin - ftrH;
-                            doc.setDrawColor(200, 200, 200);
-                            doc.line(margin, ftY, pageW - margin, ftY);
-                            doc.setFont('helvetica', 'normal');
-                            doc.setFontSize(8);
-                            doc.setTextColor(150, 150, 150);
-                            doc.text("Oluşturma: " + tarihStr(n.createdAt) + " | Son Güncelleme: " + tarihStr(n.updatedAt), margin, ftY + 5);
                         } else {
                             var sy = slicePx1 + (i - 1) * slicePxN;
                             var sh = Math.min(slicePxN, totalH - sy);
