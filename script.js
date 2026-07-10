@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.0';
+        var APP_VERSION = 'V1.31.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -515,7 +515,7 @@ function gorevMailGonder(gorev) {
         }
 
         function trToUpper(text) {
-            if(!text) return "-";
+            if(!text) return "";
             return text.toString().replace(/i/g, "İ").replace(/ı/g, "I").toUpperCase();
         }
         function trToLower(text) {
@@ -9481,7 +9481,7 @@ function itDurumMetni(o) {
 
             notes.sort(function(a, b) { return (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0); });
             liste.innerHTML = notes.map(function(n) {
-                return '<div class="note-kart" draggable="true" ondragstart="noteDragStart(event,\'' + n.id + '\')" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-icon"><span class="note-kart-icon-title">' + esc(n.title || "BAŞLIKSIZ") + '</span></div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div>';
+                return '<div class="note-kart" draggable="true" ondragstart="noteDragStart(event,\'' + n.id + '\')" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-icon"><span class="note-kart-icon-title">' + esc(trToUpper(n.title || "BAŞLIKSIZ")) + '</span></div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div>';
             }).join('');
         }
 
@@ -9823,14 +9823,14 @@ function itDurumMetni(o) {
 
             var el = document.createElement("div");
             el.id = "_pdfEl";
-            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:40px 50px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;";
+            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:60px 70px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word;";
             var pdfStyle = document.createElement("style");
             pdfStyle.id = "_pdfStyle";
-            pdfStyle.textContent = '#_pdfEl,#_pdfEl * { background-color:#ffffff !important; color:#000000 !important; }';
+            pdfStyle.textContent = '#_pdfEl,#_pdfEl * { background-color:#ffffff !important; color:#000000 !important; word-wrap:break-word;overflow-wrap:break-word; }';
             document.body.appendChild(pdfStyle);
-            el.innerHTML = '<h1 style="font-size:22px;margin-bottom:10px;color:#222222;margin-top:0;">' + esc(n.title) + '</h1>'
+            el.innerHTML = '<h1 style="font-size:22px;margin-bottom:10px;color:#222222;margin-top:0;">' + esc(trToUpper(n.title || "BAŞLIKSIZ")) + '</h1>'
                 + '<hr style="border:none;border-top:2px solid #cccccc;margin-bottom:20px;">'
-                + '<div style="font-size:14px;line-height:1.6;color:#000000;background-color:transparent;">' + icerik + '</div>'
+                + '<div style="font-size:14px;line-height:1.6;color:#000000;background-color:transparent;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word;">' + icerik + '</div>'
                 + '<hr style="border:none;border-top:1px solid #eeeeee;margin-top:30px;">'
                 + '<p style="font-size:11px;color:#999999;">Oluşturma: ' + tarihStr(n.createdAt) + ' | Son Güncelleme: ' + tarihStr(n.updatedAt) + '</p>';
             document.body.appendChild(el);
