@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.11';
+        var APP_VERSION = 'V1.31.12';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9873,110 +9873,55 @@ function itDurumMetni(o) {
                 return '<span style="' + style + '">';
             }).replace(/<\/font>/gi, '<\/span>');
 
-            var el = document.createElement("div");
-            el.id = "_pdfEl";
-            el.style.cssText = "position:fixed;left:-9999px;top:0;width:694px;padding:10px 0;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;box-sizing:border-box;";
-            var pdfStyle = document.createElement("style");
-            pdfStyle.id = "_pdfStyle";
-            pdfStyle.textContent = '#_pdfEl * { background-color:#ffffff !important; color:#000000 !important; line-height:1.6 !important; }'
-                + '#_pdfEl { word-wrap:break-word !important; overflow-wrap:break-word !important; word-break:break-word !important; white-space:normal !important; }'
-                + '#_pdfEl table { table-layout:fixed !important; width:100% !important; }'
-                + '#_pdfEl img { max-width:100% !important; height:auto !important; }'
-                + '#_pdfEl pre { white-space:pre-wrap !important; }';
-            document.body.appendChild(pdfStyle);
-            el.innerHTML = '<div style="font-size:14px;line-height:1.6;color:#000000;">' + icerik + '</div>';
-            document.body.appendChild(el);
+            var baslik = esc(trToUpper(n.title || "BAŞLIKSIZ"));
+            var tarihOlusturma = tarihStr(n.createdAt);
+            var tarihGuncelleme = tarihStr(n.updatedAt);
+
+            var pdfHtml = '<div style="width:794px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;background:#fff;color:#222;padding:0;">'
+                + '<div style="padding:40px 50px 20px 50px;">'
+                + '<div style="margin-bottom:20px;">'
+                + '<h1 style="font-size:20px;font-weight:700;margin:0 0 4px 0;color:#1a1a1a;line-height:1.3;">' + baslik + '</h1>'
+                + '<hr style="border:none;border-top:2px solid #d4d4d4;margin:0;">'
+                + '</div>'
+                + '<div style="font-size:13px;line-height:1.7;color:#222;">' + icerik + '</div>'
+                + '<div style="margin-top:30px;">'
+                + '<hr style="border:none;border-top:1px solid #e0e0e0;margin:0 0 6px 0;">'
+                + '<p style="font-size:9px;color:#999;margin:0;">Oluşturma: ' + tarihOlusturma + ' &nbsp;|&nbsp; Son Güncelleme: ' + tarihGuncelleme + '</p>'
+                + '</div>'
+                + '</div>'
+                + '<style>'
+                + 'body{margin:0;padding:0;}'
+                + '*{box-sizing:border-box;}'
+                + 'img{max-width:100%;height:auto;}'
+                + 'table{width:100%;border-collapse:collapse;}'
+                + 'td,th{padding:4px 6px;border:1px solid #ccc;text-align:left;}'
+                + 'pre{white-space:pre-wrap;word-break:break-word;}'
+                + 'p,div,span,li,td,th{word-wrap:break-word;overflow-wrap:break-word;}'
+                + '</style>'
+                + '</div>';
+
+            var tmpDiv = document.createElement('div');
+            tmpDiv.id = '_pdfHtmlContainer';
+            tmpDiv.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-1;';
+            tmpDiv.innerHTML = pdfHtml;
+            document.body.appendChild(tmpDiv);
 
             tmLoadingGoster("PDF oluşturuluyor...");
             setTimeout(function() {
-                var h = el.scrollHeight;
-                var w = el.offsetWidth || 694;
-                html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', width: w, height: h }).then(function(cv) {
-                    var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
-                    var margin = 15;
-                    var pageW = 210, pageH = 297;
-                    var printW = pageW - 2 * margin;
-                    var printH = pageH - 2 * margin;
-                    var ratio = cv.width / printW;
-                    var totalH = cv.height;
-
-                    var hdrEst = 16;
-                    var ftrH = 8;
-                    var slicePx1 = (printH - hdrEst - ftrH) * ratio;
-                    var slicePxN = printH * ratio;
-
-                    var pages = 1;
-                    if (totalH > slicePx1) {
-                        pages = Math.ceil((totalH - slicePx1) / slicePxN) + 1;
-                    }
-
-                    for (var i = 0; i < pages; i++) {
-                        if (i > 0) doc.addPage();
-
-                        if (i === 0) {
-                            var titleText = trToUpper(n.title || "BAŞLIKSIZ");
-                            var titleLines = doc.splitTextToSize(titleText, printW - 4);
-                            if (titleLines.length > 2) {
-                                titleLines = titleLines.slice(0, 2);
-                                titleLines[1] += '...';
-                            }
-
-                            doc.setFont('helvetica', 'bold');
-                            doc.setFontSize(14);
-                            doc.setTextColor(0, 0, 0);
-                            doc.text(titleLines, margin, margin + 7);
-
-                            var hdrBottom = margin + 7 + (titleLines.length > 1 ? 10 : 0) + 3;
-                            doc.setDrawColor(200, 200, 200);
-                            doc.line(margin, hdrBottom, pageW - margin, hdrBottom);
-
-                            var contentStart = hdrBottom + 2;
-
-                            var ftLine = pageH - margin - 3;
-                            doc.setDrawColor(200, 200, 200);
-                            doc.line(margin, ftLine, pageW - margin, ftLine);
-                            doc.setFont('helvetica', 'normal');
-                            doc.setFontSize(8);
-                            doc.setTextColor(150, 150, 150);
-                            doc.text("Oluşturma: " + tarihStr(n.createdAt) + " | Son Güncelleme: " + tarihStr(n.updatedAt), margin, ftLine + 3);
-
-                            var availH = ftLine - contentStart;
-                            var sh = Math.min(availH * ratio, totalH);
-                            if (sh > 0) {
-                                var c2 = document.createElement('canvas');
-                                c2.width = cv.width;
-                                c2.height = sh;
-                                var ctx = c2.getContext('2d');
-                                ctx.fillStyle = '#ffffff';
-                                ctx.fillRect(0, 0, c2.width, c2.height);
-                                ctx.drawImage(cv, 0, 0, cv.width, sh, 0, 0, c2.width, c2.height);
-                                doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, contentStart, printW, sh / ratio);
-                            }
-                        } else {
-                            var sy = slicePx1 + (i - 1) * slicePxN;
-                            var sh = Math.min(slicePxN, totalH - sy);
-                            if (sh > 0) {
-                                var c2 = document.createElement('canvas');
-                                c2.width = cv.width;
-                                c2.height = sh;
-                                var ctx = c2.getContext('2d');
-                                ctx.fillStyle = '#ffffff';
-                                ctx.fillRect(0, 0, c2.width, c2.height);
-                                ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
-                                doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, printW, sh / ratio);
-                            }
-                        }
-                    }
-                    var t = (n.title || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim();
-                    doc.save(t + ".pdf");
-                    document.body.removeChild(el);
-                    var ps = document.getElementById("_pdfStyle"); if (ps) document.body.removeChild(ps);
-                    tmLoadingGizle();
-                }).catch(function() {
-                    tmLoadingGizle();
-                    document.body.removeChild(el);
-                    var ps = document.getElementById("_pdfStyle"); if (ps) document.body.removeChild(ps);
-                    tmNotify("PDF oluşturulurken hata oluştu.", "error");
+                var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
+                doc.html(tmpDiv, {
+                    callback: function(doc) {
+                        var t = (n.title || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim();
+                        doc.save(t + ".pdf");
+                        document.body.removeChild(tmpDiv);
+                        tmLoadingGizle();
+                    },
+                    html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', width: 794 },
+                    x: 15,
+                    y: 15,
+                    width: 180,
+                    margin: [15, 15, 15, 15],
+                    autoPaging: 'text'
                 });
-            }, 100);
+            }, 200);
         }
