@@ -9884,18 +9884,32 @@ function itDurumMetni(o) {
             var tOlusturma = tarihStr(n.createdAt);
             var tGuncelleme = tarihStr(n.updatedAt);
 
-            var tmp = document.createElement('div');
-            tmp.innerHTML = (n.content || '')
-                .replace(/<br\s*\/?>/gi, '\n')
-                .replace(/<\/p>/gi, '\n\n')
-                .replace(/<\/div>/gi, '\n')
-                .replace(/<[^>]+>/g, '')
-                .replace(/&nbsp;/gi, ' ')
-                .replace(/&amp;/gi, '&')
-                .replace(/&lt;/gi, '<')
-                .replace(/&gt;/gi, '>');
-            var plainText = tmp.textContent || tmp.innerText || '';
-            plainText = plainText.replace(/\n{3,}/g, '\n\n').trim();
+            function htmlToPlain(html) {
+                var d = document.createElement('div');
+                d.innerHTML = html;
+                function walk(node) {
+                    var r = '';
+                    for (var i = 0; i < node.childNodes.length; i++) {
+                        var c = node.childNodes[i];
+                        if (c.nodeType === 3) { r += c.textContent; }
+                        else if (c.nodeType === 1) {
+                            var t = c.tagName.toLowerCase();
+                            if (t === 'br') { r += '\n'; }
+                            else if (['blockquote','caption','center'].indexOf(t) !== -1) { var inner = walk(c).trim(); if (inner) r += inner + '\n'; }
+                            else if (['div','p','h1','h2','h3','h4','h5','h6','tr','th','td','pre'].indexOf(t) !== -1) { r += walk(c).trim() + '\n'; }
+                            else if (t === 'li') { r += '- ' + walk(c).trim() + '\n'; }
+                            else if (t === 'ul' || t === 'ol') { r += walk(c); if (i < node.childNodes.length - 1) r += '\n'; }
+                            else { r += walk(c); }
+                        }
+                    }
+                    return r;
+                }
+                return walk(d.body || d);
+            }
+
+            var plainText = htmlToPlain(n.content || '');
+            plainText = plainText.replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>');
+            plainText = plainText.replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
 
             tmLoadingGoster("PDF oluşturuluyor...");
             try {
