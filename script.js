@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.7';
+        var APP_VERSION = 'V1.30.8';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9443,7 +9443,6 @@ function itDurumMetni(o) {
         const NOTE_KLASOR_DB = "tm_notlar_folders_db";
         var noteAktifKlasorId = null;
         var noteViewerId = null;
-        var noteTbSavedRange = null;
 
         function noteDbYukle() { try { return JSON.parse(localStorage.getItem(NOTE_DB)) || []; } catch(e) { return []; } }
         function noteDbKaydet(d) { try { localStorage.setItem(NOTE_DB, JSON.stringify(d)); } catch(e) { console.error("Note kaydetme hatasi:", e); } }
@@ -9555,36 +9554,9 @@ function itDurumMetni(o) {
         document.addEventListener('mouseup', function() { if (document.getElementById("noteEditorModal").style.display === "flex") noteTbBtnDurumGuncelle(); });
         document.addEventListener('keyup', function() { if (document.getElementById("noteEditorModal").style.display === "flex") noteTbBtnDurumGuncelle(); });
 
-        function noteTbRangeKaydet() {
-            var sel = window.getSelection();
-            if (sel.rangeCount) {
-                noteTbSavedRange = sel.getRangeAt(0).cloneRange();
-            }
-        }
-
         function noteTbCmd(cmd, val) {
             var editor = document.getElementById("noteEditorIcerik");
-            if (cmd === 'fontSize') {
-                var range = noteTbSavedRange;
-                if (!range) { var sel = window.getSelection(); if (sel.rangeCount) range = sel.getRangeAt(0); }
-                if (range && !range.collapsed) {
-                    var px = val + 'px';
-                    var span = document.createElement('span');
-                    span.style.fontSize = px;
-                    try { range.surroundContents(span); }
-                    catch(e) {
-                        var fragment = range.extractContents();
-                        span.appendChild(fragment);
-                        range.insertNode(span);
-                    }
-                    var sel2 = window.getSelection();
-                    sel2.removeAllRanges();
-                    sel2.addRange(range);
-                }
-                noteTbSavedRange = null;
-            } else {
-                document.execCommand(cmd, false, val || null);
-            }
+            document.execCommand(cmd, false, val || null);
             editor.focus();
             setTimeout(function() {
                 document.querySelectorAll('.note-tb-btn').forEach(function(btn) {
@@ -9603,6 +9575,49 @@ function itDurumMetni(o) {
                 });
             }, 10);
         }
+
+        function noteTbFontSizeToggle(e) {
+            e.stopPropagation();
+            var dds = document.querySelectorAll('.note-tb-dropmenu.open');
+            dds.forEach(function(d) { if (d.id !== 'noteTbFontSizeMenu') d.classList.remove('open'); });
+            document.getElementById("noteTbFontSizeMenu").classList.toggle('open');
+        }
+
+        function noteTbFontSizeSelect(px, el) {
+            document.getElementById("noteTbFontSizeMenu").classList.remove('open');
+            document.querySelector('#noteTbFontSizeDropdown .note-tb-dropbtn').innerHTML = px + '<span class="dd-arrow">▾</span>';
+            var editor = document.getElementById("noteEditorIcerik");
+            var sel = window.getSelection();
+            if (sel.rangeCount && !sel.getRangeAt(0).collapsed && sel.anchorNode && editor.contains(sel.anchorNode)) {
+                var range = sel.getRangeAt(0);
+                var span = document.createElement('span');
+                span.style.fontSize = px + 'px';
+                try { range.surroundContents(span); }
+                catch(e) {
+                    var frag = range.extractContents();
+                    span.appendChild(frag);
+                    range.insertNode(span);
+                }
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+            editor.focus();
+            setTimeout(function() { noteTbBtnDurumGuncelle(); }, 10);
+        }
+
+        function noteTbColor(hex) {
+            var editor = document.getElementById("noteEditorIcerik");
+            document.execCommand('foreColor', false, hex);
+            editor.focus();
+        }
+
+        document.addEventListener('click', function(e) {
+            var dd = document.getElementById("noteTbFontSizeDropdown");
+            if (dd && !dd.contains(e.target)) {
+                var menu = document.getElementById("noteTbFontSizeMenu");
+                if (menu) menu.classList.remove('open');
+            }
+        });
 
         function noteAc(id) {
             var notes = noteDbYukle();
@@ -9767,13 +9782,22 @@ function itDurumMetni(o) {
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
 
             var icerik = (n.content || "");
-            icerik = icerik.replace(/<font\s+size=["'](\d)["']/gi, function(m, s) {
-                var sizes = { '1':'10px','2':'12px','3':'14px','4':'16px','5':'20px','6':'28px','7':'40px' };
-                return '<span style="font-size:' + (sizes[s] || '14px') + '"';
+            icerik = icerik.replace(/<font\s+([^>]*)>/gi, function(m, attrs) {
+                var style = '';
+                var sm = attrs.match(/size=["']?(\d)["']?/i);
+                if (sm) { var sz = { '1':'10px','2':'12px','3':'14px','4':'16px','5':'20px','6':'28px','7':'40px' }; style += 'font-size:' + (sz[sm[1]] || '14px') + ';'; }
+                var cm = attrs.match(/color=["']?([^"'\s>]+)["']?/i);
+                if (cm) style += 'color:' + cm[1] + ';';
+                return '<span style="' + style + '">';
             }).replace(/<\/font>/gi, '<\/span>');
 
             var el = document.createElement("div");
+            el.id = "_pdfEl";
             el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:40px 50px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;";
+            var pdfStyle = document.createElement("style");
+            pdfStyle.id = "_pdfStyle";
+            pdfStyle.textContent = '#_pdfEl,#_pdfEl * { background-color:#ffffff !important; color:#000000 !important; }';
+            document.body.appendChild(pdfStyle);
             el.innerHTML = '<h1 style="font-size:22px;margin-bottom:10px;color:#222222;margin-top:0;">' + esc(n.title) + '</h1>'
                 + '<hr style="border:none;border-top:2px solid #cccccc;margin-bottom:20px;">'
                 + '<div style="font-size:14px;line-height:1.6;color:#000000;background-color:transparent;">' + icerik + '</div>'
@@ -9811,9 +9835,12 @@ function itDurumMetni(o) {
                 var t = (n.title || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim();
                 doc.save(t + ".pdf");
                 document.body.removeChild(el);
+                var ps = document.getElementById("_pdfStyle"); if (ps) document.body.removeChild(ps);
                 tmLoadingGizle();
             }).catch(function() {
                 tmLoadingGizle();
+                document.body.removeChild(el);
+                var ps = document.getElementById("_pdfStyle"); if (ps) document.body.removeChild(ps);
                 tmNotify("PDF oluşturulurken hata oluştu.", "error");
             });
         }

@@ -123,7 +123,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.30.7</div>
+                <div class="version-tag">V1.30.8</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1184,9 +1184,18 @@
                             <button type="button" class="note-tb-btn" onclick="noteTbCmd('underline')" title="Altı Çizili (Ctrl+U)"><u>U</u></button>
                             <button type="button" class="note-tb-btn" onclick="noteTbCmd('strikeThrough')" title="Üstü Çizili"><s>S</s></button>
                             <span class="note-tb-sep"></span>
-                            <select class="note-tb-select" onmousedown="noteTbRangeKaydet()" onchange="noteTbCmd('fontSize', this.value);this.blur()" title="Yazı Boyutu">
-                                <option value="8">8</option><option value="10">10</option><option value="12" selected>12</option><option value="14">14</option><option value="18">18</option><option value="24">24</option><option value="36">36</option>
-                            </select>
+                            <div class="note-tb-dropdown" id="noteTbFontSizeDropdown">
+                                <div class="note-tb-dropbtn" onclick="noteTbFontSizeToggle(event)">12<span class="dd-arrow">▾</span></div>
+                                <div class="note-tb-dropmenu" id="noteTbFontSizeMenu">
+                                    <div class="note-tb-dropitem" onclick="noteTbFontSizeSelect(8,this)">8</div>
+                                    <div class="note-tb-dropitem" onclick="noteTbFontSizeSelect(10,this)">10</div>
+                                    <div class="note-tb-dropitem" onclick="noteTbFontSizeSelect(12,this)">12</div>
+                                    <div class="note-tb-dropitem" onclick="noteTbFontSizeSelect(14,this)">14</div>
+                                    <div class="note-tb-dropitem" onclick="noteTbFontSizeSelect(18,this)">18</div>
+                                    <div class="note-tb-dropitem" onclick="noteTbFontSizeSelect(24,this)">24</div>
+                                    <div class="note-tb-dropitem" onclick="noteTbFontSizeSelect(36,this)">36</div>
+                                </div>
+                            </div>
                             <span class="note-tb-sep"></span>
                             <button type="button" class="note-tb-btn note-tb-align" onclick="noteTbCmd('justifyLeft')" title="Sola Yasla"><svg width="14" height="14" viewBox="0 0 14 14"><line x1="1" y1="2" x2="13" y2="2" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="6" x2="9" y2="6" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="10" x2="11" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="14" x2="7" y2="14" stroke="currentColor" stroke-width="1.5"/></svg></button>
                             <button type="button" class="note-tb-btn note-tb-align" onclick="noteTbCmd('justifyCenter')" title="Ortala"><svg width="14" height="14" viewBox="0 0 14 14"><line x1="1" y1="2" x2="13" y2="2" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="1.5"/><line x1="2" y1="10" x2="12" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="4" y1="14" x2="10" y2="14" stroke="currentColor" stroke-width="1.5"/></svg></button>
@@ -1196,7 +1205,18 @@
                             <button type="button" class="note-tb-btn" onclick="noteTbCmd('insertUnorderedList')" title="Madde İşareti">•</button>
                             <button type="button" class="note-tb-btn" onclick="noteTbCmd('insertOrderedList')" title="Numaralı Liste">1.</button>
                             <span class="note-tb-sep"></span>
-                            <label class="note-tb-color" title="Metin Rengi"><span style="border-bottom:3px solid red;">A</span><input type="color" onchange="noteTbCmd('foreColor', this.value); this.value='#000000';"></label>
+                            <div class="note-tb-color-list">
+                                <span class="note-tb-c-swatch" style="background:#E53935;" onclick="noteTbColor('#E53935')" title="Kırmızı"></span>
+                                <span class="note-tb-c-swatch" style="background:#FF7043;" onclick="noteTbColor('#FF7043')" title="Turuncu"></span>
+                                <span class="note-tb-c-swatch" style="background:#FFB300;" onclick="noteTbColor('#FFB300')" title="Sarı"></span>
+                                <span class="note-tb-c-swatch" style="background:#66BB6A;" onclick="noteTbColor('#66BB6A')" title="Yeşil"></span>
+                                <span class="note-tb-c-swatch" style="background:#26C6DA;" onclick="noteTbColor('#26C6DA')" title="Turkuaz"></span>
+                                <span class="note-tb-c-swatch" style="background:#42A5F5;" onclick="noteTbColor('#42A5F5')" title="Mavi"></span>
+                                <span class="note-tb-c-swatch" style="background:#7E57C2;" onclick="noteTbColor('#7E57C2')" title="Mor"></span>
+                                <span class="note-tb-c-swatch" style="background:#EC407A;" onclick="noteTbColor('#EC407A')" title="Pembe"></span>
+                                <span class="note-tb-c-swatch" style="background:#8D6E63;" onclick="noteTbColor('#8D6E63')" title="Kahverengi"></span>
+                                <span class="note-tb-c-swatch" style="background:#000000;" onclick="noteTbColor('#000000')" title="Siyah"></span>
+                            </div>
                         </div>
                         <div id="noteEditorIcerik" contenteditable="true" style="min-height:350px; max-height:55vh; overflow-y:auto; padding:16px; border:1px solid var(--border-color); border-top:none; border-radius:0 0 6px 6px; background:var(--bg-card); color:var(--text-dark); font-size:14px; line-height:1.6; outline:none; box-sizing:border-box;" data-placeholder="Notunuzu yazmaya başlayın..."></div>
                     </div>
