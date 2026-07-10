@@ -109,6 +109,8 @@
                     <div id="sub-yillik-butce" class="submenu-item" onclick="menudenSayfaAc('yillik-butce', 'yillik-butce-page', this)">↳ <span class="menu-text">Yıllık Bütçeler</span></div>
                 </div>
 
+                <li id="menu-notlar" class="menu-item" onclick="menudenSayfaAc('notlar', 'notlar-page', this)"><span>📝 <span class="menu-text">Notlar</span></span></li>
+
                 <li id="menu-yonetim" class="menu-item" onclick="menudenSayfaAc('yonetim', 'yonetim-page', this)"><span>⚙️ <span class="menu-text">Portal Yönetimi</span></span></li>
             </ul>
 
@@ -121,7 +123,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.29.6</div>
+                <div class="version-tag">V1.30.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1148,6 +1150,93 @@
                             <button class="btn btn-save-green" onclick="itNotKaydet()">💾 KAYDET</button>
                             <button class="btn btn-clear-gray" onclick="itNotPopupKapat()">KAPAT</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="notlar-page" class="page">
+                <div id="lock-notlar" class="page-lock-overlay"></div>
+                <h2>📝 Notlar</h2>
+                <div style="display:flex; gap:20px; align-items:stretch; min-height:60vh;">
+                    <div style="width:240px; min-width:240px; background:var(--bg-main); border-radius:10px; border:1px solid var(--border-color); padding:16px; display:flex; flex-direction:column; gap:8px;">
+                        <button class="btn btn-primary" onclick="noteKlasorDialog()" style="padding:8px; font-size:13px; width:100%;">📁 Yeni Klasör</button>
+                        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:2px;" id="notlarKlasorListesi"></div>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; gap:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+                            <span style="font-weight:700; font-size:18px; color:var(--accent-red);" id="noteKlasorAdi">Tüm Notlar</span>
+                            <button class="btn btn-primary" onclick="noteYeniNot()" style="padding:8px 16px; font-size:13px;">➕ Yeni Not Oluştur</button>
+                        </div>
+                        <div id="notlarListesi" style="flex:1; display:flex; flex-direction:column; gap:8px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOT DÜZENLEYİCİ MODAL -->
+            <div id="noteEditorModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)noteEditorKapat()">
+                <div class="modal-box" style="max-width:850px; width:92%;">
+                    <div class="modal-header"><h3 id="noteEditorTitle">📝 Yeni Not</h3></div>
+                    <div class="modal-body">
+                        <input type="text" id="noteEditorBaslik" placeholder="Not başlığı..." style="width:100%; padding:10px 14px; font-size:15px; font-weight:600; margin-bottom:10px; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-card); color:var(--text-dark); box-sizing:border-box;">
+                        <div class="note-editor-toolbar">
+                            <button type="button" class="note-tb-btn" onclick="noteTbCmd('bold')" title="Kalın"><b>B</b></button>
+                            <button type="button" class="note-tb-btn" onclick="noteTbCmd('italic')" title="İtalik"><i>I</i></button>
+                            <button type="button" class="note-tb-btn" onclick="noteTbCmd('underline')" title="Altı Çizili"><u>U</u></button>
+                            <button type="button" class="note-tb-btn" onclick="noteTbCmd('strikeThrough')" title="Üstü Çizili"><s>S</s></button>
+                            <span class="note-tb-sep"></span>
+                            <select class="note-tb-select" onchange="noteTbCmd('fontSize', this.value)">
+                                <option value="3">Normal</option><option value="4">Orta</option><option value="5">Büyük</option><option value="6">Çok Büyük</option><option value="7">En Büyük</option>
+                            </select>
+                            <span class="note-tb-sep"></span>
+                            <button type="button" class="note-tb-btn" onclick="noteTbCmd('justifyLeft')" title="Sola Daya">⬅</button>
+                            <button type="button" class="note-tb-btn" onclick="noteTbCmd('justifyCenter')" title="Ortala">⬇</button>
+                            <button type="button" class="note-tb-btn" onclick="noteTbCmd('justifyRight')" title="Sağa Daya">➡</button>
+                            <span class="note-tb-sep"></span>
+                            <label class="note-tb-color" title="Metin Rengi"><span style="border-bottom:3px solid red;">A</span><input type="color" onchange="noteTbCmd('foreColor', this.value); this.value='#000000';"></label>
+                            <label class="note-tb-color" title="Arkaplan Rengi"><span style="background:yellow;">A</span><input type="color" onchange="noteTbCmd('hiliteColor', this.value); this.value='#ffff00';"></label>
+                        </div>
+                        <div id="noteEditorIcerik" contenteditable="true" style="min-height:350px; max-height:55vh; overflow-y:auto; padding:16px; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-card); color:var(--text-dark); font-size:14px; line-height:1.6; outline:none; box-sizing:border-box;" data-placeholder="Notunuzu yazmaya başlayın..."></div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-save-green" onclick="noteEditorKaydet()" style="padding:8px 24px; font-size:13px;">💾 Kaydet</button>
+                        <button class="btn btn-clear-gray" onclick="noteEditorKapat()" style="padding:8px 24px; font-size:13px;">İptal</button>
+                    </div>
+                    <input type="hidden" id="noteEditorId" value="">
+                </div>
+            </div>
+
+            <!-- NOT GÖRÜNTÜLEME MODAL -->
+            <div id="noteViewerModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)noteViewerKapat()">
+                <div class="modal-box" style="max-width:850px; width:92%;">
+                    <div class="modal-header"><h3 id="noteViewerTitle">📄 Not</h3></div>
+                    <div class="modal-body" id="noteViewerIcerik" style="font-size:14px; line-height:1.7; padding:10px 0;"></div>
+                    <div class="modal-actions">
+                        <button class="btn-warning" onclick="noteDuzenle()" style="padding:8px 20px; font-size:13px;">✏️ Düzenle</button>
+                        <button class="btn btn-pdf-red" onclick="notePdfIndir()" style="padding:8px 20px; font-size:13px;">📄 PDF</button>
+                        <button class="btn btn-clear-gray" onclick="noteViewerKapat()" style="padding:8px 20px; font-size:13px;">Kapat</button>
+                    </div>
+                    <input type="hidden" id="noteViewerId" value="">
+                </div>
+            </div>
+
+            <!-- KLASOR YONETIM MODAL -->
+            <div id="noteKlasorModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)noteKlasorKapat()">
+                <div class="modal-box" style="max-width:450px;">
+                    <div class="modal-header"><h3>📁 Klasör Yönetimi</h3></div>
+                    <div class="modal-body" id="noteKlasorBody"></div>
+                    <div class="modal-actions">
+                        <button class="btn btn-clear-gray" onclick="noteKlasorKapat()" style="padding:8px 20px;">Kapat</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOT TASI MODAL -->
+            <div id="noteTasiModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)noteTasiKapat()">
+                <div class="modal-box" style="max-width:400px;">
+                    <div class="modal-header"><h3>📂 Notu Taşı</h3></div>
+                    <div class="modal-body" id="noteTasiBody"></div>
+                    <div class="modal-actions">
+                        <button class="btn btn-clear-gray" onclick="noteTasiKapat()" style="padding:8px 20px;">İptal</button>
                     </div>
                 </div>
             </div>

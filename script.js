@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.29.6';
+        var APP_VERSION = 'V1.30.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -468,7 +468,8 @@ function gorevMailGonder(gorev) {
             { key:"hesap-takip", label:"🏦 Muhasebe: Hesap Takip Sistemi" },
             { key:"fatura-takip", label:"🧾 Muhasebe: Fatura Takip Sistemi" },
             { key:"yillik-butce", label:"📊 Muhasebe: Yıllık Bütçeler" },
-            { key:"yonetim", label:"⚙️ Portal Yönetimi" }
+            { key:"yonetim", label:"⚙️ Portal Yönetimi" },
+            { key:"notlar", label:"📝 Notlar" }
         ];
 
         function yetkiCheckboxlariniRenderEt() {
@@ -1309,6 +1310,7 @@ function gorevMailGonder(gorev) {
                 else if (pageId === 'istakibi-page') { itGoster(); }
                 else if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); aktiviteListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); multiLogoGridRender(); sonYedekTarihiGoster(); }
                 else if (pageId === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
+                else if (pageId === 'notlar-page') { noteListele(); }
             } catch(e) { console.warn('sayfa yenileme hatasi', e); }
             localStorage.setItem('tm_active_page', pageId);
             tmFormDirty = false;
@@ -9435,3 +9437,241 @@ function itDurumMetni(o) {
         function esc(s) { return (s||"").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
         function tarihStr(d) { try { return new Date(d).toLocaleDateString("tr-TR"); } catch(e) { return d||"-"; } }
         function formatPhone(el) { var v=el.value.replace(/\D/g,'').substring(0,11); if(v.length>0){var p=[];p.push(v.substring(0,4));if(v.length>4)p.push(v.substring(4,7));if(v.length>7)p.push(v.substring(7,9));if(v.length>9)p.push(v.substring(9,11));el.value=p.join(' ');} }
+
+        /* ================= NOTLAR SISTEMI ================= */
+        const NOTE_DB = "tm_notlar_notes_db";
+        const NOTE_KLASOR_DB = "tm_notlar_folders_db";
+        var noteAktifKlasorId = null;
+        var noteViewerId = null;
+
+        function noteDbYukle() { try { return JSON.parse(localStorage.getItem(NOTE_DB)) || []; } catch(e) { return []; } }
+        function noteDbKaydet(d) { try { localStorage.setItem(NOTE_DB, JSON.stringify(d)); } catch(e) { console.error("Note kaydetme hatasi:", e); } }
+        function noteKlasorDbYukle() { try { return JSON.parse(localStorage.getItem(NOTE_KLASOR_DB)) || []; } catch(e) { return []; } }
+        function noteKlasorDbKaydet(d) { try { localStorage.setItem(NOTE_KLASOR_DB, JSON.stringify(d)); } catch(e) { console.error("Klasor kaydetme hatasi:", e); } }
+
+        function noteIdUret() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 6); }
+
+        function noteAktifKlasorDegistir(klasorId) {
+            noteAktifKlasorId = klasorId;
+            document.querySelectorAll('.note-klasor-item').forEach(function(el) { el.classList.toggle('active', el.dataset.id === String(klasorId)); });
+            var ad = klasorId ? (noteKlasorDbYukle().find(function(k) { return k.id === klasorId; }) || {}).name : "Tüm Notlar";
+            document.getElementById("noteKlasorAdi").innerText = ad || "Tüm Notlar";
+            noteListele();
+        }
+
+        function noteListele() {
+            var notes = noteDbYukle();
+            var liste = document.getElementById("notlarListesi");
+            var klasorListe = document.getElementById("notlarKlasorListesi");
+            if (!liste || !klasorListe) return;
+
+            var klasorler = noteKlasorDbYukle();
+            klasorListe.innerHTML = '<button class="note-klasor-item' + (!noteAktifKlasorId ? ' active' : '') + '" data-id="" onclick="noteAktifKlasorDegistir(null)">📂 Tüm Notlar<span class="k-count">' + notes.length + '</span></button>';
+            klasorler.forEach(function(k) {
+                var adet = notes.filter(function(n) { return n.folderId === k.id; }).length;
+                klasorListe.innerHTML += '<button class="note-klasor-item' + (noteAktifKlasorId === k.id ? ' active' : '') + '" data-id="' + k.id + '" onclick="noteAktifKlasorDegistir(\'' + k.id + '\')">📁 ' + esc(k.name) + '<span class="k-count">' + adet + '</span><span style="margin-left:4px;font-size:10px;cursor:pointer;color:var(--text-light);" onclick="event.stopPropagation();noteKlasorDuzenle(\'' + k.id + '\')">✏️</span></button>';
+            });
+
+            if (noteAktifKlasorId) { notes = notes.filter(function(n) { return n.folderId === noteAktifKlasorId; }); }
+
+            if (notes.length === 0) {
+                liste.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);font-size:14px;">Henüz not eklenmemiş.<br><small>Yeni bir not oluşturmak için "Yeni Not Oluştur" butonunu kullanın.</small></div>';
+                return;
+            }
+
+            notes.sort(function(a, b) { return (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0); });
+            liste.innerHTML = notes.map(function(n) {
+                var snippet = (n.content || "").replace(/<[^>]+>/g, '').trim().substring(0, 120);
+                if (snippet.length >= 120) snippet += '...';
+                return '<div class="note-kart"><div class="note-kart-left" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-baslik">' + esc(n.title || "Başlıksız") + '</div><div class="note-kart-snippet">' + esc(snippet) + '</div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div><div class="note-kart-actions"><button class="note-kart-btn" onclick="event.stopPropagation();noteAc(\'' + n.id + '\')">📖 Aç</button><button class="note-kart-btn" onclick="event.stopPropagation();noteTasi(\'' + n.id + '\')">📂 Taşı</button><button class="note-kart-btn" onclick="event.stopPropagation();noteSil(\'' + n.id + '\')">🗑️ Sil</button></div></div>';
+            }).join('');
+        }
+
+        function noteYeniNot() {
+            document.getElementById("noteEditorId").value = "";
+            document.getElementById("noteEditorTitle").innerText = "📝 Yeni Not";
+            document.getElementById("noteEditorBaslik").value = "";
+            document.getElementById("noteEditorIcerik").innerHTML = "";
+            document.getElementById("noteEditorModal").style.display = "flex";
+            setTimeout(function() { document.getElementById("noteEditorBaslik").focus(); }, 200);
+        }
+
+        function noteDuzenle() {
+            var id = noteViewerId;
+            if (!id) return;
+            noteViewerKapat();
+            var notes = noteDbYukle();
+            var n = notes.find(function(x) { return x.id === id; });
+            if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
+            document.getElementById("noteEditorId").value = id;
+            document.getElementById("noteEditorTitle").innerText = "✏️ Notu Düzenle";
+            document.getElementById("noteEditorBaslik").value = n.title || "";
+            document.getElementById("noteEditorIcerik").innerHTML = n.content || "";
+            document.getElementById("noteEditorModal").style.display = "flex";
+        }
+
+        function noteEditorKaydet() {
+            var baslik = document.getElementById("noteEditorBaslik").value.trim();
+            var icerik = document.getElementById("noteEditorIcerik").innerHTML;
+            var id = document.getElementById("noteEditorId").value;
+            if (!baslik) { tmNotify("Not başlığı gerekli!", "error"); return; }
+
+            var notes = noteDbYukle();
+            if (id) {
+                var idx = notes.findIndex(function(x) { return x.id === id; });
+                if (idx !== -1) {
+                    notes[idx].title = baslik;
+                    notes[idx].content = icerik;
+                    notes[idx].updatedAt = Date.now();
+                }
+            } else {
+                notes.push({ id: noteIdUret(), title: baslik, content: icerik, folderId: noteAktifKlasorId, createdAt: Date.now(), updatedAt: Date.now() });
+            }
+            noteDbKaydet(notes);
+            noteEditorKapat();
+            noteListele();
+            tmNotify("Not kaydedildi.", "success");
+        }
+
+        function noteEditorKapat() {
+            document.getElementById("noteEditorModal").style.display = "none";
+        }
+
+        function noteTbCmd(cmd, val) {
+            document.execCommand(cmd, false, val || null);
+            document.getElementById("noteEditorIcerik").focus();
+        }
+
+        function noteAc(id) {
+            var notes = noteDbYukle();
+            var n = notes.find(function(x) { return x.id === id; });
+            if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
+            noteViewerId = id;
+            document.getElementById("noteViewerTitle").innerText = n.title || "Başlıksız";
+            document.getElementById("noteViewerIcerik").innerHTML = n.content || '<p style="color:var(--text-light);font-style:italic;">İçerik yok.</p>';
+            document.getElementById("noteViewerModal").style.display = "flex";
+        }
+
+        function noteViewerKapat() {
+            document.getElementById("noteViewerModal").style.display = "none";
+            noteViewerId = null;
+        }
+
+        function noteSil(id) {
+            tmConfirm("Bu notu silmek istediğinize emin misiniz?", function() {
+                var notes = noteDbYukle().filter(function(x) { return x.id !== id; });
+                noteDbKaydet(notes);
+                noteListele();
+                tmNotify("Not silindi.", "success");
+            });
+        }
+
+        function noteKlasorDialog() {
+            var body = document.getElementById("noteKlasorBody");
+            var klasorler = noteKlasorDbYukle();
+            var html = '<div style="display:flex;gap:8px;margin-bottom:14px;"><input type="text" id="noteYeniKlasorAd" placeholder="Klasör adı..." style="flex:1;padding:8px 12px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-card);color:var(--text-dark);"><button class="btn-save-green" onclick="noteKlasorEkle()" style="padding:8px 16px;">Ekle</button></div><div style="display:flex;flex-direction:column;gap:4px;" id="noteKlasorListeBody">';
+            if (klasorler.length === 0) { html += '<p style="color:var(--text-light);font-size:13px;text-align:center;">Henüz klasör yok.</p>'; }
+            klasorler.forEach(function(k) {
+                html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg-card);border-radius:6px;border:1px solid var(--border-color);"><span style="flex:1;font-size:13px;">📁 ' + esc(k.name) + '</span><button class="btn-warning" onclick="noteKlasorAdDegistir(\'' + k.id + '\')" style="padding:3px 8px;font-size:10px;">✏️</button><button class="btn-danger" onclick="noteKlasorSil(\'' + k.id + '\')" style="padding:3px 8px;font-size:10px;">🗑️</button></div>';
+            });
+            html += '</div>';
+            body.innerHTML = html;
+            document.getElementById("noteKlasorModal").style.display = "flex";
+            setTimeout(function() { var inp = document.getElementById("noteYeniKlasorAd"); if (inp) inp.focus(); }, 200);
+        }
+
+        function noteKlasorKapat() { document.getElementById("noteKlasorModal").style.display = "none"; }
+
+        function noteKlasorEkle() {
+            var ad = document.getElementById("noteYeniKlasorAd").value.trim();
+            if (!ad) { tmNotify("Klasör adı gerekli!", "error"); return; }
+            var klasorler = noteKlasorDbYukle();
+            if (klasorler.some(function(k) { return k.name.toLowerCase() === ad.toLowerCase(); })) { tmNotify("Bu adla klasör zaten var!", "error"); return; }
+            klasorler.push({ id: noteIdUret(), name: ad, createdAt: Date.now() });
+            noteKlasorDbKaydet(klasorler);
+            noteKlasorDialog();
+            noteListele();
+            tmNotify("Klasör oluşturuldu: " + ad, "success");
+        }
+
+        function noteKlasorAdDegistir(id) {
+            tmPrompt("Yeni klasör adı:", function(yeniAd) {
+                if (!yeniAd || !yeniAd.trim()) return;
+                var klasorler = noteKlasorDbYukle();
+                var k = klasorler.find(function(x) { return x.id === id; });
+                if (k) { k.name = yeniAd.trim(); noteKlasorDbKaydet(klasorler); noteKlasorDialog(); noteListele(); tmNotify("Klasör adı değiştirildi.", "success"); }
+            }, (noteKlasorDbYukle().find(function(x) { return x.id === id; }) || {}).name || "");
+        }
+
+        function noteKlasorSil(id) {
+            tmConfirm("Bu klasörü silmek içindeki notları da silmek istediğinize emin misiniz?", function() {
+                var klasorler = noteKlasorDbYukle().filter(function(x) { return x.id !== id; });
+                noteKlasorDbKaydet(klasorler);
+                var notes = noteDbYukle().filter(function(x) { return x.folderId !== id; });
+                noteDbKaydet(notes);
+                if (noteAktifKlasorId === id) noteAktifKlasorDegistir(null);
+                noteKlasorDialog();
+                noteListele();
+                tmNotify("Klasör silindi.", "success");
+            });
+        }
+
+        function noteTasi(id) {
+            var body = document.getElementById("noteTasiBody");
+            var klasorler = noteKlasorDbYukle();
+            var html = '<p style="font-size:13px;margin-bottom:10px;">Notu taşımak için bir klasör seçin:</p>';
+            html += '<div style="display:flex;flex-direction:column;gap:4px;">';
+            html += '<button class="note-klasor-item" onclick="noteTasiSec(\'' + id + '\', null)" style="width:100%;">📂 Tüm Notlar (Klasörsüz)</button>';
+            klasorler.forEach(function(k) {
+                html += '<button class="note-klasor-item" onclick="noteTasiSec(\'' + id + '\', \'' + k.id + '\')" style="width:100%;">📁 ' + esc(k.name) + '</button>';
+            });
+            html += '</div>';
+            body.innerHTML = html;
+            document.getElementById("noteTasiModal").style.display = "flex";
+        }
+
+        function noteTasiSec(noteId, klasorId) {
+            var notes = noteDbYukle();
+            var n = notes.find(function(x) { return x.id === noteId; });
+            if (n) { n.folderId = klasorId; n.updatedAt = Date.now(); noteDbKaydet(notes); }
+            noteTasiKapat();
+            noteListele();
+            tmNotify("Not taşındı.", "success");
+        }
+
+        function noteTasiKapat() { document.getElementById("noteTasiModal").style.display = "none"; }
+
+        function notePdfIndir() {
+            var id = noteViewerId;
+            if (!id) return;
+            var notes = noteDbYukle();
+            var n = notes.find(function(x) { return x.id === id; });
+            if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
+
+            var sayfaHtml = '<div style="width:210mm;min-height:297mm;padding:15mm 20mm;font-family:sans-serif;background:#fff;color:#000;">'
+                + '<h1 style="font-size:22px;margin-bottom:10px;color:#222;">' + esc(n.title) + '</h1>'
+                + '<hr style="border:none;border-top:2px solid #ccc;margin-bottom:20px;">'
+                + '<div style="font-size:14px;line-height:1.6;">' + (n.content || "") + '</div>'
+                + '<hr style="border:none;border-top:1px solid #eee;margin-top:30px;">'
+                + '<p style="font-size:11px;color:#999;">Oluşturma: ' + tarihStr(n.createdAt) + ' | Son Güncelleme: ' + tarihStr(n.updatedAt) + '</p>'
+                + '</div>';
+
+            var sayfaEl = document.createElement("div");
+            sayfaEl.style.cssText = "position:fixed;left:-9999px;top:0;width:210mm;min-height:297mm;overflow:hidden;";
+            sayfaEl.innerHTML = sayfaHtml;
+            document.body.appendChild(sayfaEl);
+
+            tmLoadingGoster("PDF oluşturuluyor...");
+            html2canvas(sayfaEl, { scale: 4, useCORS: true, logging: false, width: 794, height: 1123 }).then(function(cv) {
+                var dt = cv.toDataURL('image/jpeg', 0.95);
+                var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
+                doc.addImage(dt, 'JPEG', 0, 0, 210, 297);
+                var temizle = function(s) { return (s || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim(); };
+                doc.save(temizle(n.title) + ".pdf");
+                document.body.removeChild(sayfaEl);
+                tmLoadingGizle();
+            }).catch(function() {
+                tmLoadingGizle();
+                tmNotify("PDF oluşturulurken hata oluştu.", "error");
+            });
+        }
