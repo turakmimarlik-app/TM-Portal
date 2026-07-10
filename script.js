@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.2';
+        var APP_VERSION = 'V1.31.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9650,6 +9650,28 @@ function itDurumMetni(o) {
             });
         });
 
+        document.addEventListener('paste', function(e) {
+            var editor = document.getElementById("noteEditorIcerik");
+            if (!editor || !editor.contains(e.target)) return;
+            e.preventDefault();
+            var html = (e.clipboardData || window.clipboardData).getData('text/html');
+            var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+            if (html) {
+                var d = document.createElement('div');
+                d.innerHTML = html;
+                d.querySelectorAll('*').forEach(function(el) {
+                    el.style.backgroundColor = '';
+                    el.style.background = '';
+                });
+                d.querySelectorAll('*').forEach(function(el) {
+                    if (el.getAttribute('style') === null || el.getAttribute('style').trim() === '') el.removeAttribute('style');
+                });
+                document.execCommand('insertHTML', false, d.innerHTML);
+            } else if (text) {
+                document.execCommand('insertText', false, text);
+            }
+        });
+
         function noteAc(id) {
             var notes = noteDbYukle();
             var n = notes.find(function(x) { return x.id === id; });
@@ -9824,14 +9846,17 @@ function itDurumMetni(o) {
 
             var el = document.createElement("div");
             el.id = "_pdfEl";
-            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:60px 70px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word;";
+            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:50px 60px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;overflow:hidden;";
             var pdfStyle = document.createElement("style");
             pdfStyle.id = "_pdfStyle";
-            pdfStyle.textContent = '#_pdfEl,#_pdfEl * { background-color:#ffffff !important; color:#000000 !important; word-wrap:break-word;overflow-wrap:break-word; }';
+            pdfStyle.textContent = '#_pdfEl,#_pdfEl * { background-color:#ffffff !important; color:#000000 !important; overflow-wrap:break-word !important; word-break:break-word !important; max-width:100% !important; white-space:normal !important; box-sizing:border-box !important; }'
+                + '#_pdfEl table { table-layout:fixed !important; width:100% !important; }'
+                + '#_pdfEl img { max-width:100% !important; height:auto !important; }'
+                + '#_pdfEl pre { white-space:pre-wrap !important; }';
             document.body.appendChild(pdfStyle);
             el.innerHTML = '<h1 style="font-size:22px;margin-bottom:10px;color:#222222;margin-top:0;">' + esc(trToUpper(n.title || "BAŞLIKSIZ")) + '</h1>'
                 + '<hr style="border:none;border-top:2px solid #cccccc;margin-bottom:20px;">'
-                + '<div style="font-size:14px;line-height:1.6;color:#000000;background-color:transparent;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word;">' + icerik + '</div>'
+                + '<div style="font-size:14px;line-height:1.6;color:#000000;background-color:transparent;">' + icerik + '</div>'
                 + '<hr style="border:none;border-top:1px solid #eeeeee;margin-top:30px;">'
                 + '<p style="font-size:11px;color:#999999;">Oluşturma: ' + tarihStr(n.createdAt) + ' | Son Güncelleme: ' + tarihStr(n.updatedAt) + '</p>';
             document.body.appendChild(el);
