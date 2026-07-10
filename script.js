@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.4';
+        var APP_VERSION = 'V1.30.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9481,7 +9481,7 @@ function itDurumMetni(o) {
 
             notes.sort(function(a, b) { return (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0); });
             liste.innerHTML = notes.map(function(n) {
-                return '<div class="note-kart" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-icon"><span class="note-kart-icon-emoji">📝</span><span class="note-kart-icon-title">' + esc(n.title || "BAŞLIKSIZ") + '</span></div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div>';
+                return '<div class="note-kart" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-icon"><span class="note-kart-icon-title">' + esc(n.title || "BAŞLIKSIZ") + '</span></div><div class="note-kart-tarih">📅 ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div>';
             }).join('');
         }
 
@@ -9555,8 +9555,29 @@ function itDurumMetni(o) {
         document.addEventListener('keyup', function() { if (document.getElementById("noteEditorModal").style.display === "flex") noteTbBtnDurumGuncelle(); });
 
         function noteTbCmd(cmd, val) {
-            document.execCommand(cmd, false, val || null);
-            document.getElementById("noteEditorIcerik").focus();
+            var editor = document.getElementById("noteEditorIcerik");
+            if (cmd === 'fontSize') {
+                var sel = window.getSelection();
+                if (sel.rangeCount) {
+                    var range = sel.getRangeAt(0);
+                    if (!range.collapsed) {
+                        var sizeMap = { '1':'10px','2':'12px','3':'14px','4':'16px','5':'20px','6':'28px','7':'40px' };
+                        var span = document.createElement('span');
+                        span.style.fontSize = sizeMap[val] || '14px';
+                        try { range.surroundContents(span); }
+                        catch(e) {
+                            var fragment = range.extractContents();
+                            span.appendChild(fragment);
+                            range.insertNode(span);
+                        }
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                }
+            } else {
+                document.execCommand(cmd, false, val || null);
+            }
+            editor.focus();
             setTimeout(function() {
                 document.querySelectorAll('.note-tb-btn').forEach(function(btn) {
                     var c = btn.getAttribute('onclick') || '';
@@ -9694,7 +9715,7 @@ function itDurumMetni(o) {
             var n = notes.find(function(x) { return x.id === id; });
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
 
-            var sayfaHtml = '<div style="width:210mm;min-height:297mm;padding:15mm 20mm;font-family:sans-serif;background:#fff;color:#000;">'
+            var sayfaHtml = '<div style="width:794px;padding:40px 50px;font-family:Montserrat,sans-serif;background:#fff;color:#000;">'
                 + '<h1 style="font-size:22px;margin-bottom:10px;color:#222;">' + esc(n.title) + '</h1>'
                 + '<hr style="border:none;border-top:2px solid #ccc;margin-bottom:20px;">'
                 + '<div style="font-size:14px;line-height:1.6;">' + (n.content || "") + '</div>'
@@ -9703,15 +9724,37 @@ function itDurumMetni(o) {
                 + '</div>';
 
             var sayfaEl = document.createElement("div");
-            sayfaEl.style.cssText = "position:fixed;left:-9999px;top:0;width:210mm;min-height:297mm;overflow:hidden;";
+            sayfaEl.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#fff;";
             sayfaEl.innerHTML = sayfaHtml;
             document.body.appendChild(sayfaEl);
 
             tmLoadingGoster("PDF oluşturuluyor...");
-            html2canvas(sayfaEl, { scale: 4, useCORS: true, logging: false, width: 794, height: 1123 }).then(function(cv) {
-                var dt = cv.toDataURL('image/jpeg', 0.95);
+            html2canvas(sayfaEl, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', width: 794, height: sayfaEl.scrollHeight }).then(function(cv) {
+                var imgData = cv.toDataURL('image/jpeg', 0.95);
                 var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
-                doc.addImage(dt, 'JPEG', 0, 0, 210, 297);
+                var a4w = 210, a4h = 297;
+                var ratio = cv.width / a4w;
+                var imgHmm = cv.height / ratio;
+                if (imgHmm <= a4h) {
+                    doc.addImage(imgData, 'JPEG', 0, 0, a4w, imgHmm);
+                } else {
+                    var sliceHpx = Math.round(a4h * ratio);
+                    var totalPages = Math.ceil(cv.height / sliceHpx);
+                    for (var i = 0; i < totalPages; i++) {
+                        if (i > 0) doc.addPage();
+                        var srcY = i * sliceHpx;
+                        var sH = Math.min(sliceHpx, cv.height - srcY);
+                        if (sH <= 0) break;
+                        var c2 = document.createElement('canvas');
+                        c2.width = cv.width;
+                        c2.height = sH;
+                        var ctx = c2.getContext('2d');
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, c2.width, c2.height);
+                        ctx.drawImage(cv, 0, srcY, cv.width, sH, 0, 0, cv.width, sH);
+                        doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, a4w, sH / ratio);
+                    }
+                }
                 var temizle = function(s) { return (s || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim(); };
                 doc.save(temizle(n.title) + ".pdf");
                 document.body.removeChild(sayfaEl);
