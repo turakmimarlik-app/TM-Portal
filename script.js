@@ -9654,22 +9654,39 @@ function itDurumMetni(o) {
             var editor = document.getElementById("noteEditorIcerik");
             if (!editor || !editor.contains(e.target)) return;
             e.preventDefault();
-            var html = (e.clipboardData || window.clipboardData).getData('text/html');
-            var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+            var text = e.clipboardData.getData('text/plain');
+            var html = e.clipboardData.getData('text/html');
             if (html) {
-                var d = document.createElement('div');
-                d.innerHTML = html;
-                d.querySelectorAll('*').forEach(function(el) {
-                    el.style.backgroundColor = '';
-                    el.style.background = '';
+                var t = document.createElement('div');
+                t.innerHTML = html;
+                t.querySelectorAll('*').forEach(function(n) {
+                    n.style.backgroundColor = '';
+                    n.style.background = '';
+                    if (n.style.cssText === '') n.removeAttribute('style');
                 });
-                d.querySelectorAll('*').forEach(function(el) {
-                    if (el.getAttribute('style') === null || el.getAttribute('style').trim() === '') el.removeAttribute('style');
-                });
-                document.execCommand('insertHTML', false, d.innerHTML);
-            } else if (text) {
-                document.execCommand('insertText', false, text);
+                html = t.innerHTML;
             }
+            var sel = window.getSelection();
+            if (sel.rangeCount) {
+                var range = sel.getRangeAt(0);
+                range.deleteContents();
+                var lastNode;
+                if (html) {
+                    var frag = range.createContextualFragment(html);
+                    lastNode = frag.lastChild;
+                    range.insertNode(frag);
+                } else {
+                    lastNode = document.createTextNode(text);
+                    range.insertNode(lastNode);
+                }
+                if (lastNode) {
+                    range.setStartAfter(lastNode);
+                    range.collapse(true);
+                }
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+            editor.focus();
         });
 
         function noteAc(id) {
@@ -9846,10 +9863,11 @@ function itDurumMetni(o) {
 
             var el = document.createElement("div");
             el.id = "_pdfEl";
-            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:50px 60px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;overflow:hidden;";
+            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:50px 60px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;";
             var pdfStyle = document.createElement("style");
             pdfStyle.id = "_pdfStyle";
-            pdfStyle.textContent = '#_pdfEl,#_pdfEl * { background-color:#ffffff !important; color:#000000 !important; overflow-wrap:break-word !important; word-break:break-word !important; max-width:100% !important; white-space:normal !important; box-sizing:border-box !important; }'
+            pdfStyle.textContent = '#_pdfEl,#_pdfEl > * { background-color:#ffffff !important; color:#000000 !important; }'
+                + '#_pdfEl > div { word-wrap:break-word !important; overflow-wrap:break-word !important; word-break:break-word !important; max-width:100% !important; white-space:normal !important; box-sizing:border-box !important; }'
                 + '#_pdfEl table { table-layout:fixed !important; width:100% !important; }'
                 + '#_pdfEl img { max-width:100% !important; height:auto !important; }'
                 + '#_pdfEl pre { white-space:pre-wrap !important; }';
