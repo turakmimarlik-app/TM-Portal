@@ -1472,7 +1472,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .note-kart-icon { width:100%; min-height:130px; border-radius:8px; background:linear-gradient(145deg, #f5f5f0, #e8e8e0); border:1px solid #ccc; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:14px 8px; box-sizing:border-box; position:relative; overflow:hidden; }
         .note-kart-icon:before { content:''; position:absolute; top:0; right:0; width:28px; height:28px; background:linear-gradient(135deg, transparent 50%, #d0d0c8 50%); border-radius:0 8px 0 0; }
         .note-kart-icon:after { content:'📄'; position:absolute; top:4px; left:6px; font-size:18px; opacity:0.25; }
-        .note-kart-icon-title { font-weight:700; color:#333; max-width:100%; word-break:break-word; line-height:1.35; z-index:1; }
+        .note-kart-icon-title { font-weight:700; color:#333; max-width:100%; overflow:hidden; text-overflow:ellipsis; word-break:break-word; line-height:1.35; z-index:1; }
         .note-kart-tarih { font-size:10px; color:var(--text-light); }
         .note-kart-actions { display:flex; gap:2px; }
         .note-kart-btn { background:transparent; border:none; padding:2px 6px; cursor:pointer; font-size:11px; color:var(--text-light); opacity:0.5; transition:0.15s; border-radius:4px; }
@@ -1495,3 +1495,11 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .note-klasor-item .k-count { font-size:12px; color:var(--text-light); background:var(--bg-main); padding:2px 10px; border-radius:12px; flex-shrink:0; }
         .note-klasor-item.drag-over { background:var(--accent-red) !important; color:#fff !important; border-radius:8px; }
         #noteViewerModal .modal-body { max-height:65vh; overflow-y:auto; }
+        #noteViewerIcerik * { line-height:1.6 !important; }
+        #noteViewerIcerik font[size="1"] { font-size:10px !important; }
+        #noteViewerIcerik font[size="2"] { font-size:12px !important; }
+        #noteViewerIcerik font[size="3"] { font-size:14px !important; }
+        #noteViewerIcerik font[size="4"] { font-size:16px !important; }
+        #noteViewerIcerik font[size="5"] { font-size:20px !important; }
+        #noteViewerIcerik font[size="6"] { font-size:28px !important; line-height:1.5 !important; }
+        #noteViewerIcerik font[size="7"] { font-size:40px !important; line-height:1.4 !important; }

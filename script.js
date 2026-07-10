@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.6';
+        var APP_VERSION = 'V1.31.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9901,7 +9901,7 @@ function itDurumMetni(o) {
 
             var el = document.createElement("div");
             el.id = "_pdfEl";
-            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:50px 60px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;box-sizing:border-box;";
+            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;padding:30px 50px;background-color:#ffffff;color:#000000;font-family:Montserrat,sans-serif;box-sizing:border-box;";
             var pdfStyle = document.createElement("style");
             pdfStyle.id = "_pdfStyle";
             pdfStyle.textContent = '#_pdfEl,#_pdfEl > * { background-color:#ffffff !important; color:#000000 !important; }'
@@ -9911,11 +9911,13 @@ function itDurumMetni(o) {
                 + '#_pdfEl pre { white-space:pre-wrap !important; line-height:1.5 !important; }'
                 + '#_pdfEl * { line-height:1.6 !important; }';
             document.body.appendChild(pdfStyle);
-            el.innerHTML = '<h1 style="font-size:22px;margin-bottom:10px;color:#222222;margin-top:0;">' + esc(trToUpper(n.title || "BAŞLIKSIZ")) + '</h1>'
+            el.innerHTML = '<div style="padding:20px 0;">'
+                + '<h1 style="font-size:22px;margin-bottom:10px;color:#222222;margin-top:0;">' + esc(trToUpper(n.title || "BAŞLIKSIZ")) + '</h1>'
                 + '<hr style="border:none;border-top:2px solid #cccccc;margin-bottom:20px;">'
                 + '<div style="font-size:14px;line-height:1.6;color:#000000;background-color:transparent;">' + icerik + '</div>'
                 + '<hr style="border:none;border-top:1px solid #eeeeee;margin-top:30px;">'
-                + '<p style="font-size:11px;color:#999999;">Oluşturma: ' + tarihStr(n.createdAt) + ' | Son Güncelleme: ' + tarihStr(n.updatedAt) + '</p>';
+                + '<p style="font-size:11px;color:#999999;">Oluşturma: ' + tarihStr(n.createdAt) + ' | Son Güncelleme: ' + tarihStr(n.updatedAt) + '</p>'
+                + '</div>';
             document.body.appendChild(el);
 
             tmLoadingGoster("PDF oluşturuluyor...");
@@ -9925,13 +9927,15 @@ function itDurumMetni(o) {
                 html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', width: w, height: h }).then(function(cv) {
                     var imgData = cv.toDataURL('image/jpeg', 0.95);
                     var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
-                    var a4w = 210, a4h = 297;
-                    var ratio = cv.width / a4w;
+                    var pdfW = 210, pdfH = 297, margin = 12;
+                    var printW = pdfW - 2 * margin;
+                    var printH = pdfH - 2 * margin;
+                    var ratio = cv.width / printW;
                     var imgHmm = cv.height / ratio;
-                    if (imgHmm <= a4h) {
-                        doc.addImage(imgData, 'JPEG', 0, 0, a4w, imgHmm);
+                    if (imgHmm <= printH) {
+                        doc.addImage(imgData, 'JPEG', margin, margin, printW, imgHmm);
                     } else {
-                        var slicePx = a4h * ratio;
+                        var slicePx = printH * ratio;
                         var pages = Math.ceil(cv.height / slicePx);
                         for (var i = 0; i < pages; i++) {
                             if (i > 0) doc.addPage();
@@ -9945,7 +9949,7 @@ function itDurumMetni(o) {
                             ctx.fillStyle = '#ffffff';
                             ctx.fillRect(0, 0, c2.width, c2.height);
                             ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
-                            doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, a4w, sh / ratio);
+                            doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, printW, sh / ratio);
                         }
                     }
                     var t = (n.title || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim();
