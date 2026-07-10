@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.13';
+        var APP_VERSION = 'V1.31.14';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -1183,6 +1183,23 @@ function gorevMailGonder(gorev) {
         }
         document.addEventListener('input', function(e) {
             if (!tmFormDirty && e.target && e.target.closest && e.target.closest('.page.active')) tmFormDirty = true;
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.target.closest('[contenteditable="true"]') || e.target.closest('textarea') || e.target.closest('input')) return;
+            var modal = document.querySelector('.modal-overlay[style*="display: flex"], .modal-overlay[style*="display:flex"], .as-modal-overlay[style*="display: flex"], .as-modal-overlay[style*="display:flex"], .lock-popup-overlay[style*="display: flex"], .lock-popup-overlay[style*="display:flex"]');
+            if (!modal) return;
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                var btns = modal.querySelectorAll('button');
+                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === '✕' || t.startsWith('✕') || t === 'İptal' || t === 'Kapat' || t === 'Vazgeç'; });
+                if (!btn) btn = btns[btns.length - 1];
+                if (btn) btn.click();
+            } else if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                var btns = modal.querySelectorAll('button');
+                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim().replace(/[📄🗑️✏️➕💾📁📂🔒💰]/g, '').trim(); return t === 'Evet' || t === 'Tamam' || t === 'Kaydet' || t === 'Onayla' || t === 'PDF Oluştur'; });
+                if (btn) btn.click();
+            }
         });
         function tmConfirm(msg, onEvet) {
             document.getElementById("tmConfirmMsg").textContent = msg;
@@ -9475,7 +9492,7 @@ function itDurumMetni(o) {
             if (noteAktifKlasorId) { notes = notes.filter(function(n) { return n.folderId === noteAktifKlasorId; }); }
 
             if (notes.length === 0) {
-                liste.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);font-size:14px;">Henüz not eklenmemiş.<br><small>Yeni bir not oluşturmak için "Yeni Not Oluştur" butonunu kullanın.</small></div>';
+                liste.innerHTML = '<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;color:var(--text-light);font-size:14px;text-align:center;">Henüz not eklenmemiş.<br><small>Yeni bir not oluşturmak için "Yeni Not Oluştur" butonunu kullanın.</small></div>';
                 return;
             }
 
@@ -9863,95 +9880,83 @@ function itDurumMetni(o) {
             var n = notes.find(function(x) { return x.id === id; });
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
 
-            var icerik = (n.content || "");
-            icerik = icerik.replace(/<font\s+([^>]*)>/gi, function(m, attrs) {
-                var style = '';
-                var sm = attrs.match(/size=["']?(\d)["']?/i);
-                if (sm) { var sz = { '1':'10px','2':'12px','3':'14px','4':'16px','5':'20px','6':'28px','7':'40px' }; style += 'font-size:' + (sz[sm[1]] || '14px') + ';'; }
-                var cm = attrs.match(/color=["']?([^"'\s>]+)["']?/i);
-                if (cm) style += 'color:' + cm[1] + ';';
-                return '<span style="' + style + '">';
-            }).replace(/<\/font>/gi, '<\/span>');
+            var baslik = trToUpper(n.title || "BAŞLIKSIZ");
+            var tOlusturma = tarihStr(n.createdAt);
+            var tGuncelleme = tarihStr(n.updatedAt);
 
-            var baslikHtml = '<div id="_pdfHdr" style="padding:0 50px 12px 50px;background:#fff;">'
-                + '<h1 style="font-size:20px;font-weight:700;margin:0 0 4px 0;color:#1a1a1a;line-height:1.3;word-wrap:break-word;">' + esc(trToUpper(n.title || "BAŞLIKSIZ")) + '</h1>'
-                + '<hr style="border:none;border-top:2px solid #d4d4d4;margin:0;">'
-                + '</div>';
-            var footerHtml = '<div id="_pdfFtr" style="padding:8px 50px 0 50px;background:#fff;">'
-                + '<hr style="border:none;border-top:1px solid #e0e0e0;margin:0 0 5px 0;">'
-                + '<p style="font-size:9px;color:#999;margin:0;">Oluşturma: ' + tarihStr(n.createdAt) + ' &nbsp;|&nbsp; Son Güncelleme: ' + tarihStr(n.updatedAt) + '</p>'
-                + '</div>';
-
-            var el = document.createElement("div");
-            el.id = "_pdfEl";
-            el.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#fff;color:#000;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.7;";
-            el.innerHTML = baslikHtml + '<div id="_pdfBody" style="padding:0 50px;background:#fff;">' + icerik + '</div>' + footerHtml;
-            document.body.appendChild(el);
+            var tmp = document.createElement('div');
+            tmp.innerHTML = (n.content || '')
+                .replace(/<br\s*\/?>/gi, '\n')
+                .replace(/<\/p>/gi, '\n\n')
+                .replace(/<\/div>/gi, '\n')
+                .replace(/<[^>]+>/g, '')
+                .replace(/&nbsp;/gi, ' ')
+                .replace(/&amp;/gi, '&')
+                .replace(/&lt;/gi, '<')
+                .replace(/&gt;/gi, '>');
+            var plainText = tmp.textContent || tmp.innerText || '';
+            plainText = plainText.replace(/\n{3,}/g, '\n\n').trim();
 
             tmLoadingGoster("PDF oluşturuluyor...");
-            setTimeout(function() {
-                var hdr = document.getElementById("_pdfHdr");
-                var body = document.getElementById("_pdfBody");
-                var ftr = document.getElementById("_pdfFtr");
-                var hdrH = hdr ? hdr.offsetHeight : 0;
-                var bodyH = body ? body.scrollHeight : 0;
-                var ftrH = ftr ? ftr.offsetHeight : 0;
-                var totalH = el.scrollHeight;
-                var w = 794;
+            try {
+                const { jsPDF } = window.jspdf;
+                var doc = new jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
 
-                html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', width: w, height: totalH }).then(function(cv) {
-                    var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
-                    var margin = 15;
-                    var pageW = 210, pageH = 297;
-                    var printW = pageW - 2 * margin;
-                    var printH = pageH - 2 * margin;
-                    var ratio = cv.width / printW;
+                var FN = 'Helvetica', M = 14, W = 182, BAR = [27, 42, 74], GRI = [90, 100, 115];
+                var y = 0, sayfa = 1;
 
-                    var hdrPx = hdrH;
-                    var ftrPx = ftrH;
-                    var bodyTotalPx = bodyH;
+                function fnt(stl, sz, clr) { doc.setFont(FN, stl); doc.setFontSize(sz); doc.setTextColor(clr[0], clr[1], clr[2]); }
+                function t(s) { return trAscii(s || ''); }
 
-                    var bodyPxPerPage = printH * ratio;
-                    var bodyPages = Math.ceil(bodyTotalPx / bodyPxPerPage);
+                doc.setFillColor(BAR[0], BAR[1], BAR[2]);
+                doc.rect(0, 0, 210, 3, 'F');
 
-                    for (var i = 0; i < bodyPages; i++) {
-                        if (i > 0) doc.addPage();
-                        if (i === 0) {
-                            var bodySlice = Math.min(bodyPxPerPage, bodyTotalPx);
-                            var pageTotalPx = hdrPx + bodySlice + ftrPx;
-                            var pageTotalHmm = pageTotalPx / ratio;
+                y = 12; fnt("bold", 16, BAR);
+                doc.text(t("NOT"), 105, y, { align: "center" });
+                y += 5; fnt("normal", 6.5, GRI);
+                doc.text(t("Olusturma: ")+tOlusturma+"  |  Son Guncelleme: "+tGuncelleme, 105, y, { align: "center" });
 
-                            var c2 = document.createElement('canvas');
-                            c2.width = cv.width;
-                            c2.height = pageTotalPx;
-                            var ctx = c2.getContext('2d');
-                            ctx.fillStyle = '#ffffff';
-                            ctx.fillRect(0, 0, c2.width, c2.height);
-                            ctx.drawImage(cv, 0, 0, cv.width, pageTotalPx, 0, 0, c2.width, c2.height);
-                            doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, printW, pageTotalHmm);
-                        } else {
-                            var sy = hdrPx + i * bodyPxPerPage;
-                            var sh = Math.min(bodyPxPerPage, bodyTotalPx - (i * bodyPxPerPage));
-                            if (sh <= 0) break;
-                            var c2 = document.createElement('canvas');
-                            c2.width = cv.width;
-                            c2.height = sh;
-                            var ctx = c2.getContext('2d');
-                            ctx.fillStyle = '#ffffff';
-                            ctx.fillRect(0, 0, c2.width, c2.height);
-                            ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
-                            var imgHmm = sh / ratio;
-                            doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, printW, imgHmm);
+                y = 26;
+                fnt("bold", 14, [30, 30, 30]);
+                var tls = doc.splitTextToSize(baslik, W);
+                for (var ti = 0; ti < tls.length; ti++) { doc.text(t(tls[ti]), M, y); y += 6; }
+                y += 2;
+                doc.setDrawColor(200, 200, 200); doc.setLineWidth(0.5);
+                doc.line(M, y, M + W, y); y += 8;
+
+                fnt("normal", 11, [50, 50, 50]);
+                var paras = plainText.split('\n');
+                for (var pi = 0; pi < paras.length; pi++) {
+                    var para = paras[pi].trim();
+                    if (!para) { y += 4; continue; }
+                    var lines = doc.splitTextToSize(para, W);
+                    for (var li = 0; li < lines.length; li++) {
+                        if (y > 283) {
+                            doc.addPage(); sayfa++; y = 22;
+                            doc.setFillColor(BAR[0], BAR[1], BAR[2]);
+                            doc.rect(0, 0, 210, 1.5, 'F');
+                            fnt("normal", 5, GRI);
+                            doc.text(t("NOT (devam)"), 105, y - 8, { align: "center" });
                         }
+                        doc.text(t(lines[li]), M, y);
+                        y += 5.5;
                     }
-                    var t = (n.title || "").replace(/[\/\\:*?"<>|,;\.]/g, '').trim();
-                    doc.save(t + ".pdf");
-                    document.body.removeChild(el);
-                    tmLoadingGizle();
-                }).catch(function() {
-                    tmLoadingGizle();
-                    document.body.removeChild(el);
-                    tmNotify("PDF oluşturulurken hata oluştu.", "error");
-                });
-            }, 100);
+                    y += 2;
+                }
+
+                y = Math.max(y + 6, 278);
+                doc.setDrawColor(BAR[0], BAR[1], BAR[2]);
+                doc.line(M, y, M + W, y);
+                fnt("normal", 6, GRI);
+                doc.text(t("Olusturma: ")+tOlusturma+"  |  Son Guncelleme: "+tGuncelleme, M, y + 4);
+                doc.text(t("Sayfa ")+sayfa, M + W, y + 4, { align: "right" });
+
+                var fn = (n.title || "NOT").replace(/[\/\\:*?"<>|,;\.]/g, '_').trim();
+                doc.save(fn + ".pdf");
+                tmLoadingGizle();
+            } catch (e) {
+                tmLoadingGizle();
+                tmNotify("PDF hatasi: " + (e.message || e), "error");
+                console.error("Note PDF error:", e);
+            }
         }
