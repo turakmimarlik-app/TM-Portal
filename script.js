@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.8';
+        var APP_VERSION = 'V1.30.9';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9576,10 +9576,17 @@ function itDurumMetni(o) {
             }, 10);
         }
 
+        var noteFzSavedRange = null;
+        var noteColorSavedRange = null;
+
         function noteTbFontSizeToggle(e) {
             e.stopPropagation();
-            var dds = document.querySelectorAll('.note-tb-dropmenu.open');
-            dds.forEach(function(d) { if (d.id !== 'noteTbFontSizeMenu') d.classList.remove('open'); });
+            var sel = window.getSelection();
+            if (sel.rangeCount) noteFzSavedRange = sel.getRangeAt(0).cloneRange();
+            document.querySelectorAll('.note-tb-dropmenu.open').forEach(function(d) {
+                if (d.id !== 'noteTbFontSizeMenu') d.classList.remove('open');
+            });
+            document.getElementById("noteTbColorMenu").classList.remove('open');
             document.getElementById("noteTbFontSizeMenu").classList.toggle('open');
         }
 
@@ -9587,36 +9594,52 @@ function itDurumMetni(o) {
             document.getElementById("noteTbFontSizeMenu").classList.remove('open');
             document.querySelector('#noteTbFontSizeDropdown .note-tb-dropbtn').innerHTML = px + '<span class="dd-arrow">▾</span>';
             var editor = document.getElementById("noteEditorIcerik");
-            var sel = window.getSelection();
-            if (sel.rangeCount && !sel.getRangeAt(0).collapsed && sel.anchorNode && editor.contains(sel.anchorNode)) {
-                var range = sel.getRangeAt(0);
-                var span = document.createElement('span');
-                span.style.fontSize = px + 'px';
-                try { range.surroundContents(span); }
-                catch(e) {
-                    var frag = range.extractContents();
-                    span.appendChild(frag);
-                    range.insertNode(span);
-                }
-                sel.removeAllRanges();
-                sel.addRange(range);
-            }
             editor.focus();
+            if (noteFzSavedRange) {
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(noteFzSavedRange);
+                noteFzSavedRange = null;
+                var sizeMap = { '8':'1', '10':'2', '12':'3', '14':'4', '18':'5', '24':'6', '36':'7' };
+                document.execCommand('fontSize', false, sizeMap[String(px)] || '3');
+            }
             setTimeout(function() { noteTbBtnDurumGuncelle(); }, 10);
         }
 
-        function noteTbColor(hex) {
+        function noteTbColorToggle(e) {
+            e.stopPropagation();
+            var sel = window.getSelection();
+            if (sel.rangeCount) noteColorSavedRange = sel.getRangeAt(0).cloneRange();
+            document.querySelectorAll('.note-tb-dropmenu.open').forEach(function(d) {
+                if (d.id !== 'noteTbColorMenu') d.classList.remove('open');
+            });
+            document.getElementById("noteTbFontSizeMenu").classList.remove('open');
+            document.getElementById("noteTbColorMenu").classList.toggle('open');
+        }
+
+        function noteTbColorPick(hex) {
+            document.getElementById("noteTbColorMenu").classList.remove('open');
+            document.getElementById("noteTbColorPreview").style.borderBottomColor = hex;
             var editor = document.getElementById("noteEditorIcerik");
-            document.execCommand('foreColor', false, hex);
             editor.focus();
+            if (noteColorSavedRange) {
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(noteColorSavedRange);
+                noteColorSavedRange = null;
+                document.execCommand('foreColor', false, hex);
+            }
+            setTimeout(function() { noteTbBtnDurumGuncelle(); }, 10);
         }
 
         document.addEventListener('click', function(e) {
-            var dd = document.getElementById("noteTbFontSizeDropdown");
-            if (dd && !dd.contains(e.target)) {
-                var menu = document.getElementById("noteTbFontSizeMenu");
-                if (menu) menu.classList.remove('open');
-            }
+            ['noteTbFontSizeDropdown','noteTbColorDropdown'].forEach(function(id) {
+                var dd = document.getElementById(id);
+                if (dd && !dd.contains(e.target)) {
+                    var menu = dd.querySelector('.note-tb-dropmenu');
+                    if (menu) menu.classList.remove('open');
+                }
+            });
         });
 
         function noteAc(id) {
