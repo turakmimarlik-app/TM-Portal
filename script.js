@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.1';
+        var APP_VERSION = 'V1.30.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9469,7 +9469,7 @@ function itDurumMetni(o) {
             klasorListe.innerHTML = '<button class="note-klasor-item' + (!noteAktifKlasorId ? ' active' : '') + '" data-id="" onclick="noteAktifKlasorDegistir(null)">📂 Tüm Notlar<span class="k-count">' + notes.length + '</span></button>';
             klasorler.forEach(function(k) {
                 var adet = notes.filter(function(n) { return n.folderId === k.id; }).length;
-                klasorListe.innerHTML += '<button class="note-klasor-item' + (noteAktifKlasorId === k.id ? ' active' : '') + '" data-id="' + k.id + '" onclick="noteAktifKlasorDegistir(\'' + k.id + '\')">📁 ' + esc(k.name) + '<span class="k-count">' + adet + '</span><span style="margin-left:4px;font-size:10px;cursor:pointer;color:var(--text-light);" onclick="event.stopPropagation();noteKlasorDuzenle(\'' + k.id + '\')">✏️</span></button>';
+                klasorListe.innerHTML += '<button class="note-klasor-item' + (noteAktifKlasorId === k.id ? ' active' : '') + '" data-id="' + k.id + '" onclick="noteAktifKlasorDegistir(\'' + k.id + '\')">📁 ' + esc(k.name) + '<span class="k-count">' + adet + '</span><span style="display:flex;gap:2px;margin-left:4px;"><span style="font-size:10px;cursor:pointer;color:var(--text-light);" onclick="event.stopPropagation();noteKlasorDuzenle(\'' + k.id + '\')">✏️</span><span style="font-size:10px;cursor:pointer;color:var(--accent-red);" onclick="event.stopPropagation();noteKlasorSil(\'' + k.id + '\')">🗑️</span></span></button>';
             });
 
             if (noteAktifKlasorId) { notes = notes.filter(function(n) { return n.folderId === noteAktifKlasorId; }); }
@@ -9642,15 +9642,15 @@ function itDurumMetni(o) {
         function noteKlasorDuzenle(id) { noteKlasorAdDegistir(id); }
 
         function noteKlasorSil(id) {
-            tmConfirm("Bu klasörü silmek içindeki notları da silmek istediğinize emin misiniz?", function() {
+            tmConfirm("Bu klasörü silmek istediğinize emin misiniz? (İçindeki notlar silinmez, klasörsüz kalır.)", function() {
                 var klasorler = noteKlasorDbYukle().filter(function(x) { return x.id !== id; });
                 noteKlasorDbKaydet(klasorler);
-                var notes = noteDbYukle().filter(function(x) { return x.folderId !== id; });
+                var notes = noteDbYukle().map(function(x) { if (x.folderId === id) x.folderId = null; return x; });
                 noteDbKaydet(notes);
                 if (noteAktifKlasorId === id) noteAktifKlasorDegistir(null);
                 noteKlasorDialog();
                 noteListele();
-                tmNotify("Klasör silindi.", "success");
+                tmNotify("Klasör silindi, notlar korundu.", "success");
             });
         }
 
