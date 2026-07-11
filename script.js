@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.21';
+        var APP_VERSION = 'V1.31.22';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9666,6 +9666,22 @@ function itDurumMetni(o) {
                 sel.addRange(noteColorSavedRange);
                 noteColorSavedRange = null;
                 document.execCommand('foreColor', false, hex);
+            }
+            setTimeout(function() { noteTbBtnDurumGuncelle(); }, 10);
+        }
+
+        function noteTbColorClear() {
+            document.getElementById("noteTbColorMenu").classList.remove('open');
+            document.getElementById("noteTbColorPreview").style.borderBottomColor = '';
+            var editor = document.getElementById("noteEditorIcerik");
+            editor.focus();
+            if (noteColorSavedRange) {
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(noteColorSavedRange);
+                noteColorSavedRange = null;
+                var def = getComputedStyle(editor).color;
+                document.execCommand('foreColor', false, def);
             }
             setTimeout(function() { noteTbBtnDurumGuncelle(); }, 10);
         }
