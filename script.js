@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.33.2';
+        var APP_VERSION = 'V1.33.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9905,62 +9905,68 @@ function itDurumMetni(o) {
 
             var baslik = esc(trToUpper(n.title || "BAŞLIKSIZ"));
 
-            var icerik = n.content || '';
-            icerik = icerik.replace(/<font\s+([^>]*)>/gi, function(m, a) {
-                var s = '';
-                var sz = a.match(/size=["']?(\d)["']?/i);
-                if (sz) { var m2 = {1:'10px',2:'12px',3:'14px',4:'16px',5:'20px',6:'28px',7:'40px'}; s += 'font-size:' + (m2[sz[1]] || '14px') + ';'; }
-                var c = a.match(/color=["']?([^"'\s>]+)["']?/i);
-                if (c) s += 'color:' + c[1] + ';';
-                return '<span style="' + s + '">';
-            }).replace(/<\/font>/gi, '</span>');
+            var icerik = (n.content || '')
+                .replace(/<font\s+([^>]*)>/gi, function(m, a) {
+                    var s = '';
+                    var sz = a.match(/size=["']?(\d)["']?/i);
+                    if (sz) { var m2 = {1:'10px',2:'12px',3:'14px',4:'16px',5:'20px',6:'28px',7:'40px'}; s += 'font-size:' + (m2[sz[1]] || '14px') + ';'; }
+                    var c = a.match(/color=["']?([^"'\s>]+)["']?/i);
+                    if (c) s += 'color:' + c[1] + ';';
+                    return '<span style="' + s + '">';
+                }).replace(/<\/font>/gi, '</span>');
 
-            var htm = '<div style="font-size:13px;line-height:1.6;color:#333;">'
-                + '<div style="font-size:15px;font-weight:700;color:#000;margin:0;">' + baslik + '</div>'
+            var htm = '<div style="font-size:14px;line-height:1.6;color:#333;">'
+                + '<div style="font-weight:700;font-size:15px;color:#000;margin:0;">' + baslik + '</div>'
                 + '<div style="height:24px;"></div>'
                 + icerik
                 + '<style>body{margin:0;padding:0;background:#fff;}img{max-width:100%;height:auto;}table{width:100%;border-collapse:collapse;}td,th{padding:4px 6px;border:1px solid #ccc;text-align:left;}pre{white-space:pre-wrap;word-break:break-word;}*{box-sizing:border-box;}</style></div>';
 
             var el = document.createElement('div');
-            el.style.cssText = 'position:fixed;left:0;top:0;width:210mm;padding:12mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;line-height:1.6;color:#333;z-index:99999;';
+            el.style.cssText = 'position:fixed;left:0;top:0;width:210mm;padding:12mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#333;z-index:99999;';
             el.innerHTML = htm;
             document.body.appendChild(el);
 
             tmLoadingGoster("PDF oluşturuluyor...");
             setTimeout(function() {
-                var totalH = el.scrollHeight;
-                html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' }).then(function(cv) {
-                    el.style.display = 'none';
-                    var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
-                    var m = 12;
-                    var iw = 210 - 2 * m, ih = 297 - 2 * m;
-                    var ew = el.offsetWidth || 794;
-                    var r = ew / iw;
-                    var pp = ih * r;
-                    var pg = Math.ceil(totalH / pp);
-
-                    for (var i = 0; i < pg; i++) {
-                        if (i > 0) doc.addPage();
-                        var sy = i * pp;
-                        var sh = Math.min(pp, totalH - sy);
-                        if (sh <= 0) break;
-                        var c2 = document.createElement('canvas');
-                        c2.width = cv.width;
-                        c2.height = sh;
-                        var ctx = c2.getContext('2d');
-                        ctx.fillStyle = '#ffffff';
-                        ctx.fillRect(0, 0, c2.width, c2.height);
-                        ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
-                        doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', m, m, iw, sh / r);
-                    }
-                    var fn = (n.title || "NOT").replace(/[\/\\:*?"<>|,;\.]/g, '_').trim();
-                    doc.save(fn + ".pdf");
-                    document.body.removeChild(el);
+                try {
+                    var totalH = el.scrollHeight;
+                    if (!totalH || totalH < 10) { throw new Error("Eleman yuksekligi alinamadi: " + totalH); }
+                    html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' }).then(function(cv) {
+                        el.style.display = 'none';
+                        if (!cv || cv.width < 10 || cv.height < 10) { throw new Error("Canvas gorsel icerigi bos"); }
+                        var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
+                        var m = 12;
+                        var iw = 210 - 2 * m, ih = 297 - 2 * m;
+                        var ew = el.offsetWidth || 794;
+                        var r = ew / iw;
+                        var pp = ih * r;
+                        var pg = Math.ceil(totalH / pp);
+                        for (var i = 0; i < pg; i++) {
+                            if (i > 0) doc.addPage();
+                            var sy = i * pp;
+                            var sh = Math.min(pp, totalH - sy);
+                            if (sh <= 0) break;
+                            var c2 = document.createElement('canvas');
+                            c2.width = cv.width;
+                            c2.height = sh;
+                            var ctx = c2.getContext('2d');
+                            ctx.fillStyle = '#ffffff';
+                            ctx.fillRect(0, 0, c2.width, c2.height);
+                            ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
+                            doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', m, m, iw, sh / r);
+                        }
+                        var fn = (n.title || "NOT").replace(/[\/\\:*?"<>|,;\.]/g, '_').trim();
+                        doc.save(fn + ".pdf");
+                        document.body.removeChild(el);
+                        tmLoadingGizle();
+                    }).catch(function(e) {
+                        throw e;
+                    });
+                } catch (e) {
+                    console.error("PDF hatasi:", e);
+                    try { document.body.removeChild(el); } catch (ex) {}
                     tmLoadingGizle();
-                }).catch(function() {
-                    document.body.removeChild(el);
-                    tmLoadingGizle();
-                    tmNotify("PDF oluşturulurken hata oluştu.", "error");
-                });
-            }, 300);
+                    tmNotify("PDF hatasi: " + (e.message || e), "error");
+                }
+            }, 400);
         }
