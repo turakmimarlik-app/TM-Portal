@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.34.4';
+        var APP_VERSION = 'V1.34.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2934,6 +2934,7 @@ function gorevMailGonder(gorev) {
                 if (tatil) cls = (cls ? cls + ' ' : '') + 'as-td-tatil';
                 html += '<td' + (cls ? ' class="' + cls + '"' : '') + '>';
                 html += '<span class="as-day-num">' + (tatil ? '🟥 ' : '') + g + '</span>';
+                if (tatil) { var kisaAd = tatil.name.replace(/Bayramı.*/,'Bay.').replace(/\(.*?\)/g,'').trim(); html += '<div class="as-tatil-etiketi" title="' + tatil.name + '">' + kisaAd + '</div>'; }
                 if (gunEtk.length > 0) {
                     html += '<div class="as-event-dots">';
                     gunEtk.forEach(function(e) {
@@ -2943,7 +2944,6 @@ function gorevMailGonder(gorev) {
                     html += '</div>';
                 }
                 html += '<span class="as-add-btn" onclick="asEventModalAc(\'' + gunStr + '\')">+</span>';
-                if (tatil) { var kisaAd = tatil.name.replace(/Bayramı.*/,'Bay.').replace(/\(.*?\)/g,'').trim(); html += '<div class="as-tatil-etiketi" title="' + tatil.name + '">' + kisaAd + '</div>'; }
                 html += '</td>';
                 if ((ilkGun === 0 ? 6 : ilkGun - 1) + g > 0 && ((ilkGun === 0 ? 6 : ilkGun - 1) + g) % 7 === 0) html += '</tr><tr>';
             }
