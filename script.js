@@ -1,7 +1,7 @@
         var APP_VERSION = 'V2.0.1';
 
         /* Production - console loglari kapat */
-        console.log=function(){}; console.warn=function(){}; console.error=function(){};
+        console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
 
         /* --- Ses Bildirim Sistemi --- */
 function tmSesCal(tur) {
