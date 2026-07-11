@@ -946,6 +946,21 @@
         .gt-card-body .as-tbl .as-add-btn { font-size:24px; margin-left:6px; }
         .gt-card-body .as-tatil-etiketi { font-size:13px; font-weight:800; padding:2px 5px; margin-top:3px; border-radius:4px; }
         .gt-card-body .as-gorev-item { padding:10px 12px; margin-bottom:6px; font-size:12px; }
+        .as-takvim-ozet { margin-top:16px; padding-top:16px; border-top:1px solid var(--border-color); }
+        .as-takvim-ozet-item { display:flex; align-items:flex-start; gap:10px; padding:6px 8px; border-radius:6px; transition:background 0.15s; }
+        .as-takvim-ozet-item:hover { background:rgba(255,255,255,0.03); }
+        .as-takvim-ozet-tarih { font-size:11px; font-weight:700; color:var(--text-light); min-width:70px; flex-shrink:0; padding-top:2px; }
+        .as-takvim-ozet-tarih.as-ozet-tatil-tarih { color:#E53935; }
+        .as-takvim-ozet-badge { display:inline-block; font-size:10px; font-weight:700; padding:1px 6px; border-radius:3px; margin-right:4px; }
+        .as-takvim-ozet-badge-tatil { background:#E53935; color:#fff; }
+        .as-takvim-ozet-badge-event { background:var(--accent-red); color:#fff; }
+        .as-takvim-ozet-events { flex:1; display:flex; flex-wrap:wrap; gap:4px; }
+        .as-takvim-ozet-event { font-size:11px; color:var(--text-dark); background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:4px; white-space:nowrap; max-width:220px; overflow:hidden; text-overflow:ellipsis; cursor:pointer; transition:0.15s; }
+        .as-takvim-ozet-event:hover { background:rgba(255,255,255,0.12); }
+        .as-takvim-ozet-event .as-ozet-dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:4px; vertical-align:middle; }
+        .as-takvim-ozet-event.tatil { background:rgba(229,57,53,0.15); color:#E53935; font-weight:600; cursor:default; }
+        .as-takvim-ozet-bos { text-align:center; padding:20px; color:var(--text-light); font-size:12px; }
+        @media (max-width:600px) { .as-takvim-ozet-item { flex-wrap:wrap; } .as-takvim-ozet-tarih { min-width:55px; font-size:10px; } .as-takvim-ozet-event { font-size:10px; max-width:160px; } }
         @media (max-width: 1200px) { .dash-stat-row { grid-template-columns: repeat(3, 1fr); } .dash-fin-row { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .dash-stat-row { grid-template-columns: repeat(2, 1fr); } .dash-fin-row { grid-template-columns: 1fr; } }
 

@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.35.2';
+        var APP_VERSION = 'V1.35.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2974,6 +2974,9 @@ function gorevMailGonder(gorev) {
             for (let i = 1; i <= kalan; i++) { html += '<td class="as-td-other">' + i + '</td>'; }
             html += '</tr></tbody></table>';
             container.innerHTML = html;
+            var ayBas = yil + "-" + String(ay + 1).padStart(2, "0") + "-01";
+            var ayBit = yil + "-" + String(ay + 1).padStart(2, "0") + "-" + String(ayGun).padStart(2, "0");
+            asOzetRender(etkinlikler, tatiller, ayBas, ayBit);
         }
         function asTakvimHaftalikRender(container) {
             const yil = asTakvimTarih.getFullYear(), ay = asTakvimTarih.getMonth();
@@ -3019,6 +3022,50 @@ function gorevMailGonder(gorev) {
             });
             html += '</tbody></table>';
             container.innerHTML = html;
+            var hBas = new Date(haftaBas);
+            var hBit = new Date(haftaBas);
+            hBit.setDate(hBit.getDate() + 6);
+            var hBasStr = hBas.getFullYear() + "-" + String(hBas.getMonth() + 1).padStart(2, "0") + "-" + String(hBas.getDate()).padStart(2, "0");
+            var hBitStr = hBit.getFullYear() + "-" + String(hBit.getMonth() + 1).padStart(2, "0") + "-" + String(hBit.getDate()).padStart(2, "0");
+            asOzetRender(etkinlikler, tatiller, hBasStr, hBitStr);
+        }
+        function asOzetRender(etkinlikler, tatiller, basStr, bitisStr) {
+            const ozetDiv = document.getElementById("asTakvimOzet");
+            if (!ozetDiv) return;
+            var bas = new Date(basStr + "T00:00:00");
+            var bitis = new Date(bitisStr + "T00:00:00");
+            var gunler = {};
+            var d = new Date(bas);
+            while (d <= bitis) {
+                var ds = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+                var gTatil = tatiller.find(function(t) { return t.date === ds; });
+                var gEtk = etkinlikler.filter(function(e) { return e.date === ds; });
+                if (gTatil || gEtk.length > 0) { gunler[ds] = { tatil: gTatil, etkinlikler: gEtk }; }
+                d.setDate(d.getDate() + 1);
+            }
+            var anahtarlar = Object.keys(gunler).sort();
+            if (anahtarlar.length === 0) { ozetDiv.innerHTML = '<div class="as-takvim-ozet-bos">Bu dönemde etkinlik veya resmi tatil bulunmamaktadır.</div>'; return; }
+            var h = '<div class="as-takvim-ozet-list">';
+            anahtarlar.forEach(function(ds) {
+                var g = gunler[ds];
+                var gunAdi = new Date(ds + "T12:00:00").toLocaleDateString("tr-TR", { weekday: "short", day: "numeric", month: "short" });
+                h += '<div class="as-takvim-ozet-item">';
+                h += '<div class="as-takvim-ozet-tarih' + (g.tatil ? ' as-ozet-tatil-tarih' : '') + '">' + gunAdi.toUpperCase() + '</div>';
+                h += '<div class="as-takvim-ozet-events">';
+                if (g.tatil) {
+                    h += '<span class="as-takvim-ozet-event tatil" title="' + g.tatil.name + '">🟥 ' + g.tatil.name + '</span>';
+                }
+                g.etkinlikler.forEach(function(e) {
+                    var renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
+                    var label = e.title;
+                    if (e.time) label = e.time + " " + label;
+                    if (e.paylas) label = "👥 " + label;
+                    h += '<span class="as-takvim-ozet-event" onclick="asGosterGunBilgi(\'' + ds + '\')" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-ozet-dot" style="background:' + renk + ';"></span>' + label + '</span>';
+                });
+                h += '</div></div>';
+            });
+            h += '</div>';
+            ozetDiv.innerHTML = h;
         }
         function asEtkinlikListele() {
             const container = document.getElementById("asEtkinlikListesi");
