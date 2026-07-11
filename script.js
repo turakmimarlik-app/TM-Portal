@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.17';
+        var APP_VERSION = 'V1.31.18';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -1198,7 +1198,7 @@ function gorevMailGonder(gorev) {
             if (e.key === 'Escape') {
                 e.preventDefault();
                 var btns = modal.querySelectorAll('button');
-                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === '✕' || t.startsWith('✕') || t === 'İptal' || t === 'Kapat' || t === 'Vazgeç'; });
+                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === '✕' || t.startsWith('✕') || t === 'İptal' || t === 'Kapat' || t === 'Vazgeç' || t === 'Hayır'; });
                 if (!btn) btn = btns[btns.length - 1];
                 if (btn) btn.click();
             } else if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('[contenteditable="true"]') && !e.target.closest('textarea') && !e.target.closest('input')) {
@@ -9901,34 +9901,32 @@ function itDurumMetni(o) {
                 return '<span style="' + s + '">';
             }).replace(/<\/font>/gi, '</span>');
 
-            var marginMm = 25.4;
-            var scale = 794 / 210;
-            var padPx = Math.round(marginMm * scale);
-
-            var htm = '<div style="padding:' + padPx + 'px ' + padPx + 'px ' + (padPx - 10) + 'px ' + padPx + 'px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#333;background:#fff;">'
-                + '<div style="text-align:center;margin:0 0 6px 0;font-size:22px;font-weight:700;color:#000;">NOT</div>'
-                + '<div style="text-align:center;font-size:9px;color:#999;margin:0 0 14px 0;">' + tOlusturma + ' &nbsp;|&nbsp; ' + tGuncelleme + '</div>'
-                + '<hr style="border:none;border-top:2px solid #bbb;margin:0 0 18px 0;">'
+            var htm = '<div style="text-align:center;font-size:22px;font-weight:700;color:#000;margin:0 0 4px 0;">NOT</div>'
+                + '<div style="text-align:center;font-size:9px;color:#888;margin:0 0 14px 0;">' + tOlusturma + ' &nbsp;|&nbsp; ' + tGuncelleme + '</div>'
+                + '<hr style="border:none;border-top:2px solid #bbb;margin:0 0 20px 0;">'
                 + '<div style="font-size:17px;font-weight:700;margin:0 0 12px 0;color:#000;">' + baslik + '</div>'
-                + '<hr style="border:none;border-top:1px solid #ddd;margin:0 0 16px 0;">'
+                + '<hr style="border:none;border-top:1px solid #ddd;margin:0 0 18px 0;">'
                 + '<div style="font-size:13px;line-height:1.6;color:#333;">' + icerik + '</div>'
-                + '<hr style="border:none;border-top:1px solid #ddd;margin:36px 0 4px 0;">'
+                + '<hr style="border:none;border-top:1px solid #ddd;margin:40px 0 4px 0;">'
                 + '<div style="font-size:8px;color:#999;">' + tOlusturma + ' &nbsp;|&nbsp; ' + tGuncelleme + '</div>'
-                + '<style>body{margin:0;padding:0;background:#fff;}img{max-width:100%;height:auto;}table{width:100%;border-collapse:collapse;}td,th{padding:4px 6px;border:1px solid #ccc;text-align:left;}pre{white-space:pre-wrap;word-break:break-word;}*{box-sizing:border-box;}</style></div>';
+                + '<style>body{margin:0;padding:0;background:#fff;}img{max-width:100%;height:auto;}table{width:100%;border-collapse:collapse;}td,th{padding:4px 6px;border:1px solid #ccc;text-align:left;}pre{white-space:pre-wrap;word-break:break-word;}*{box-sizing:border-box;}</style>';
 
             var el = document.createElement('div');
-            el.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-1;width:794px;';
+            el.style.cssText = 'position:fixed;left:0;top:0;opacity:0.005;pointer-events:none;z-index:-1;width:210mm;padding:25.4mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#333;';
             el.innerHTML = htm;
             document.body.appendChild(el);
 
             tmLoadingGoster("PDF oluşturuluyor...");
             setTimeout(function() {
                 var totalH = el.scrollHeight;
-                html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', width: 794, height: totalH, windowWidth: 794 }).then(function(cv) {
+                html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' }).then(function(cv) {
                     var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
-                    var printW = 210 - 2 * marginMm;
-                    var printH = 297 - 2 * marginMm;
-                    var ratio = 794 / printW;
+                    var margin = 25.4;
+                    var pw = 210, ph = 297;
+                    var printW = pw - 2 * margin;
+                    var printH = ph - 2 * margin;
+                    var elW = el.offsetWidth;
+                    var ratio = elW / printW;
                     var pixPage = printH * ratio;
                     var pages = Math.ceil(totalH / pixPage);
 
@@ -9944,7 +9942,7 @@ function itDurumMetni(o) {
                         ctx.fillStyle = '#ffffff';
                         ctx.fillRect(0, 0, c2.width, c2.height);
                         ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
-                        doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', marginMm, marginMm, printW, sh / ratio);
+                        doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, printW, sh / ratio);
                     }
                     var fn = (n.title || "NOT").replace(/[\/\\:*?"<>|,;\.]/g, '_').trim();
                     doc.save(fn + ".pdf");
@@ -9955,5 +9953,5 @@ function itDurumMetni(o) {
                     tmLoadingGizle();
                     tmNotify("PDF oluşturulurken hata oluştu.", "error");
                 });
-            }, 200);
+            }, 250);
         }
