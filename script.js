@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.33.5';
+        var APP_VERSION = 'V1.33.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9935,15 +9935,18 @@ function itDurumMetni(o) {
                     if (!totalH || totalH < 10) { throw new Error("Eleman yuksekligi alinamadi: " + totalH); }
                     html2canvas(el, { scale: 1, useCORS: true, logging: false, backgroundColor: '#ffffff' }).then(function(cv) {
                         var ew = el.offsetWidth;
+                        var lh = Math.round(parseFloat(getComputedStyle(el).lineHeight)) || 22;
                         el.style.display = 'none';
                         if (!cv || cv.width < 10 || cv.height < 10) { throw new Error("Canvas gorsel icerigi bos"); }
                         var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
                         var pxPerMm = ew / PW;
-                        var pp = PH * pxPerMm;
+                        var pp = Math.floor(PH * pxPerMm / lh) * lh;
+                        if (pp < lh) pp = lh;
                         var pg = Math.ceil(totalH / pp);
                         for (var i = 0; i < pg; i++) {
                             if (i > 0) doc.addPage();
-                            var sh = Math.min(pp, totalH - i * pp);
+                            var sy = i * pp;
+                            var sh = Math.min(pp, totalH - sy);
                             if (sh <= 0) break;
                             var c2 = document.createElement('canvas');
                             c2.width = cv.width;
@@ -9951,7 +9954,7 @@ function itDurumMetni(o) {
                             var ctx = c2.getContext('2d');
                             ctx.fillStyle = '#ffffff';
                             ctx.fillRect(0, 0, c2.width, c2.height);
-                            ctx.drawImage(cv, 0, i * pp, cv.width, sh, 0, 0, c2.width, c2.height);
+                            ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
                             doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', MM, MM, PW, sh / pxPerMm);
                         }
                         var fn = (n.title || "NOT").replace(/[\/\\:*?"<>|,;\.]/g, '_').trim();
