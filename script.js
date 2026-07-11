@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.33.6';
+        var APP_VERSION = 'V1.34.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -469,7 +469,8 @@ function gorevMailGonder(gorev) {
             { key:"fatura-takip", label:"🧾 Muhasebe: Fatura Takip Sistemi" },
             { key:"yillik-butce", label:"📊 Muhasebe: Yıllık Bütçeler" },
             { key:"yonetim", label:"⚙️ Portal Yönetimi" },
-            { key:"notlar", label:"📝 Notlar" }
+            { key:"notlar", label:"📝 Notlar" },
+            { key:"gorevler-takvim", label:"📅 Görevler ve Takvim" }
         ];
 
         function yetkiCheckboxlariniRenderEt() {
@@ -1318,7 +1319,7 @@ function gorevMailGonder(gorev) {
                 if (['nakit-dekont-page', 'is-muhasebe-olustur-page', 'is-muhasebe-page', 'tamamlanan-is-muhasebeleri-page', 'hesap-takip-page', 'fatura-takip-page', 'yillik-butce-page'].includes(pageId)) {
                     el = document.getElementById("menu-muhasebe-root"); if(el) el.classList.add("active");
                 }
-                if (pageId === 'anasayfa-page') { asTakvimRender(); asGorevListele(); dashboardVerileriniGuncelle(); }
+                if (pageId === 'anasayfa-page') { asOzetTakvimRender(); asOzetGorevListele(); dashboardVerileriniGuncelle(); }
                 else if (pageId === 'teklif-liste-page') { teklifListesiniYenile(); }
                 else if (pageId === 'piyasa-fiyatlari-page') { piyasaListesiniYenile(); }
                 else if (pageId === 'is-muhasebe-page') { isMuhasebeListesiniYenile(); }
@@ -1335,6 +1336,7 @@ function gorevMailGonder(gorev) {
                 else if (pageId === 'yonetim-page') { sirketBilgileriYukle(); girisCikisLogListele(); aktiviteListele(); gorevYetkiSelectleriDoldur(); gorevYetkiListele(); formSifirla(); kullaniciListesiniYenile(); multiLogoGridRender(); sonYedekTarihiGoster(); }
                 else if (pageId === 'is-muhasebe-olustur-page') { isMuhFormIdGuncelle(); }
                 else if (pageId === 'notlar-page') { noteListele(); }
+                else if (pageId === 'gorevler-takvim-page') { asTakvimRender(); asGorevListele(); }
             } catch(e) { console.warn('sayfa yenileme hatasi', e); }
             localStorage.setItem('tm_active_page', pageId);
             tmFormDirty = false;
@@ -1353,7 +1355,8 @@ function gorevMailGonder(gorev) {
                 var activePage = document.querySelector('.page.active');
                 if (!activePage) return;
                 var id = activePage.id;
-                if (id === 'anasayfa-page') { asTakvimRender(); asGorevListele(); dashboardVerileriniGuncelle(); }
+                if (id === 'anasayfa-page') { asOzetTakvimRender(); asOzetGorevListele(); dashboardVerileriniGuncelle(); }
+                else if (id === 'gorevler-takvim-page') { asTakvimRender(); asGorevListele(); }
                 else if (id === 'teklif-liste-page') { teklifListesiniYenile(); }
                 else if (id === 'piyasa-fiyatlari-page') { piyasaListesiniYenile(); }
                 else if (id === 'is-muhasebe-page') { isMuhasebeListesiniYenile(); }
@@ -2719,6 +2722,80 @@ function gorevMailGonder(gorev) {
             tmOnlineHeartbeatDurdur();
             if (!fdb) return;
             fdb.collection("tm_online").doc(kullanici).delete().catch(function(e){ console.error("Online cikis hatasi:", e); });
+        }
+
+        /* ================= ANA SAYFA ÖZET TAKVİM & GÖREVLER ================= */
+        function asOzetTakvimRender() {
+            const container = document.getElementById("asOzetTakvim");
+            if (!container) return;
+            const bugun = new Date();
+            const yil = bugun.getFullYear(), ay = bugun.getMonth();
+            const ayAdlari = ["OCAK","ŞUBAT","MART","NİSAN","MAYIS","HAZİRAN","TEMMUZ","AĞUSTOS","EYLÜL","EKİM","KASIM","ARALIK"];
+            const ilkGun = new Date(yil, ay, 1).getDay();
+            const ayGun = new Date(yil, ay + 1, 0).getDate();
+            const etkinlikler = asGetMergedEvents();
+            let html = '<div style="font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:0.5px;color:var(--text-dark);">' + yil + ' ' + ayAdlari[ay] + '</div>';
+            html += '<table class="as-tbl" style="font-size:10px;"><thead><tr>';
+            ["PTS","SAL","ÇAR","PER","CUM","CMT","PAZ"].forEach(function(g) { html += '<th style="font-size:8px;">' + g + '</th>'; });
+            html += '</tr></thead><tbody><tr>';
+            for (let i = 0; i < (ilkGun === 0 ? 6 : ilkGun - 1); i++) { html += '<td class="as-td-other"></td>'; }
+            for (let g = 1; g <= ayGun; g++) {
+                const gunStr = yil + "-" + String(ay + 1).padStart(2, "0") + "-" + String(g).padStart(2, "0");
+                const bugunMu = (bugun.getFullYear() === yil && bugun.getMonth() === ay && bugun.getDate() === g);
+                const gunEtk = etkinlikler.filter(function(e) { return e.date === gunStr; });
+                html += '<td' + (bugunMu ? ' class="as-day-today"' : '') + '>';
+                html += '<span class="as-day-num">' + g + '</span>';
+                if (gunEtk.length > 0) {
+                    html += '<div class="as-event-dots">';
+                    gunEtk.forEach(function(e) {
+                        const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
+                        html += '<span class="as-event-dot" style="background:' + renk + ';"></span>';
+                    });
+                    html += '</div>';
+                }
+                html += '</td>';
+                if ((ilkGun === 0 ? 6 : ilkGun - 1) + g > 0 && ((ilkGun === 0 ? 6 : ilkGun - 1) + g) % 7 === 0) html += '</tr><tr>';
+            }
+            var kalan = 7 - (((ilkGun === 0 ? 6 : ilkGun - 1) + ayGun) % 7 || 7);
+            for (let i = 1; i <= kalan; i++) { html += '<td class="as-td-other"></td>'; }
+            html += '</tr></tbody></table>';
+            var bugunStr = bugun.getFullYear() + "-" + String(bugun.getMonth() + 1).padStart(2, "0") + "-" + String(bugun.getDate()).padStart(2, "0");
+            var gelecek = etkinlikler.filter(function(e) { return e.date >= bugunStr; }).sort(function(a,b) { return a.date.localeCompare(b.date); }).slice(0, 5);
+            if (gelecek.length > 0) {
+                html += '<div style="margin-top:10px;">';
+                gelecek.forEach(function(e) {
+                    const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
+                    html += '<div class="as-etkinlik-item" style="padding:4px 0;font-size:11px;">';
+                    html += '<span class="as-etkinlik-dot" style="background:' + renk + ';"></span>';
+                    html += '<span class="as-etkinlik-text">' + e.title + ' <small>' + e.date + '</small></span></div>';
+                });
+                html += '</div>';
+            } else {
+                html += '<div style="text-align:center;padding:10px 0;font-size:11px;color:var(--text-light);">Önümüzdeki günlerde etkinlik bulunmamaktadır.</div>';
+            }
+            container.innerHTML = html;
+        }
+        function asOzetGorevListele() {
+            const container = document.getElementById("asOzetGorev");
+            if (!container) return;
+            const aktifUser = localStorage.getItem("tm_active_user") || "";
+            let gorevler = JSON.parse(localStorage.getItem("tm_gorevler")) || [];
+            var benimGorevlerim = gorevler.filter(function(g) {
+                var arr = Array.isArray(g.atanan) ? g.atanan : [g.atanan];
+                return arr.indexOf(aktifUser) >= 0 && g.durum !== "tamamlandi";
+            }).slice(0, 5);
+            if (benimGorevlerim.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:16px 0;font-size:12px;color:var(--text-light);">✅ Bekleyen göreviniz bulunmamaktadır.</div>';
+                return;
+            }
+            let html = '';
+            benimGorevlerim.forEach(function(g) {
+                const renk = asGorevRenk(g.durum, g.tarih);
+                const etiket = asGorevDurumEtiketi(g.durum, g.tarih);
+                html += '<div class="as-gorev-item" style="border-left:4px solid ' + renk + ';">';
+                html += '<div class="as-gorev-text"><b>' + etiket + ' ' + g.baslik + '</b><br><small>' + g.veren + ' → ' + g.tarih + '</small></div></div>';
+            });
+            container.innerHTML = html;
         }
 
         /* ================= ANA SAYFA TAKVİM ================= */

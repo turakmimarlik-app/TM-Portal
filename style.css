@@ -894,7 +894,46 @@
         .as-section-label { font-size:11px; font-weight:700; margin-bottom:8px; letter-spacing:1px; display:flex; align-items:center; gap:8px; }
         .as-section-label::after { content:''; flex:1; height:1px; background:var(--border-color); }
 
-        
+        /* GÖREVLER VE TAKVİM SAYFASI - PROFESYONEL TASARIM */
+        .gt-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+        .gt-header h2 { margin:0; font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--text-dark); }
+        .gt-header p { margin:4px 0 0; font-size:13px; color:var(--text-light); }
+        .gt-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+        @media (max-width:1000px) { .gt-grid { grid-template-columns:1fr; } }
+        .gt-card { background:var(--panel-bg); border:1px solid var(--border-color); border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.04); transition:box-shadow 0.25s,transform 0.2s; }
+        .gt-card:hover { box-shadow:0 8px 40px rgba(0,0,0,0.08); }
+        .gt-card-header { display:flex; align-items:center; gap:10px; padding:14px 20px; border-bottom:1px solid var(--border-color); background:linear-gradient(135deg,rgba(26,26,46,0.6),rgba(22,33,62,0.4)); }
+        .gt-card-icon { font-size:20px; }
+        .gt-card-title { flex:1; font-size:14px; font-weight:800; letter-spacing:1px; color:var(--text-dark); }
+        .gt-card-actions { display:flex; align-items:center; gap:8px; }
+        .gt-card-body { padding:16px 20px; }
+        .gt-btn-toggle {
+            background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #a0b8cc; color:#a0b8cc;
+            padding:6px 16px; border-radius:8px; font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; letter-spacing:0.5px; white-space:nowrap;
+        }
+        .gt-btn-toggle:hover { background:#152d4a; transform:translateY(-1px); }
+        .gt-btn-outline {
+            background:transparent; border:1px solid var(--border-color); color:var(--text-light);
+            padding:6px 14px; border-radius:8px; font-size:10px; font-weight:600; cursor:pointer; transition:0.2s; white-space:nowrap;
+        }
+        .gt-btn-outline:hover { border-color:var(--accent-red); color:var(--accent-red); background:rgba(158,42,43,0.06); }
+        .gt-btn-nav {
+            background:transparent; border:1px solid var(--border-color); color:var(--text-light);
+            padding:6px 12px; border-radius:8px; cursor:pointer; font-size:12px; font-weight:600; transition:0.2s;
+        }
+        .gt-btn-nav:hover { background:var(--bg-main); transform:translateY(-1px); }
+        .gt-takvim-nav { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:16px; }
+        .gt-takvim-baslik { font-size:16px; font-weight:800; min-width:160px; text-align:center; color:var(--text-dark); letter-spacing:0.5px; }
+        .gt-btn-assign {
+            background:linear-gradient(135deg,#2E7D32,#1B5E20); border:1px solid #66BB6A; color:#fff;
+            padding:8px 18px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; margin-bottom:14px; letter-spacing:0.5px; display:inline-flex; align-items:center; gap:6px;
+        }
+        .gt-btn-assign:hover { background:#1B5E20; transform:translateY(-1px); }
+        .gt-card-body .as-tbl td { height:52px; max-height:52px; }
+        .gt-card-body .as-tbl th { font-size:10px; padding:6px 2px; }
+        .gt-card-body .as-tbl .as-day-num { font-size:11px; }
+        .gt-card-body .as-tbl .as-event-dot { width:10px; height:10px; }
+        .gt-card-body .as-gorev-item { padding:12px 14px; margin-bottom:8px; font-size:13px; }
         @media (max-width: 1200px) { .dash-stat-row { grid-template-columns: repeat(3, 1fr); } .dash-fin-row { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .dash-stat-row { grid-template-columns: repeat(2, 1fr); } .dash-fin-row { grid-template-columns: 1fr; } }
 
