@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.35.3';
+        var APP_VERSION = 'V1.35.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2955,18 +2955,20 @@ function gorevMailGonder(gorev) {
                 if (bugunMu) cls = 'as-day-today';
                 if (gunIdx >= 5) cls = (cls ? cls + ' ' : '') + 'as-td-weekend';
                 if (tatil) cls = (cls ? cls + ' ' : '') + 'as-td-tatil';
-                html += '<td' + (cls ? ' class="' + cls + '"' : '') + '>';
+                html += '<td' + (cls ? ' class="' + cls + '"' : '') + ' onclick="asEventModalAc(\'' + gunStr + '\')">';
                 html += '<span class="as-day-num">' + (tatil ? '🟥 ' : '') + g + '</span>';
                 if (tatil) { var kisaAd = tatil.name.replace(/Bayramı.*/,'Bay.').replace(/\(.*?\)/g,'').trim(); html += '<div class="as-tatil-etiketi" title="' + tatil.name + '">' + kisaAd + '</div>'; }
                 if (gunEtk.length > 0) {
                     html += '<div class="as-event-dots">';
-                    gunEtk.forEach(function(e) {
+                    gunEtk.slice(0,5).forEach(function(e) {
                         const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
-                        html += '<span class="as-event-dot" style="background:' + renk + ';" onclick="asGosterGunBilgi(\'' + gunStr + '\');event.stopPropagation();" title="' + (e.paylas ? '👥 ' : '') + e.title.replace(/'/g,"&apos;") + '"></span>';
+                        var etkLabel = e.title;
+                        if (e.paylas) etkLabel = "👥" + etkLabel;
+                        html += '<span class="as-event-dot" onclick="event.stopPropagation();asGosterGunBilgi(\'' + gunStr + '\')" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-dot-c" style="background:' + renk + ';"></span>' + etkLabel + '</span>';
                     });
+                    if (gunEtk.length > 5) html += '<span class="as-event-dot" style="color:var(--text-light);font-size:8px;" onclick="event.stopPropagation();asGosterGunBilgi(\'' + gunStr + '\')">+' + (gunEtk.length - 5) + ' daha</span>';
                     html += '</div>';
                 }
-                html += '<span class="as-add-btn" onclick="asEventModalAc(\'' + gunStr + '\')">+</span>';
                 html += '</td>';
                 if ((ilkGun === 0 ? 6 : ilkGun - 1) + g > 0 && ((ilkGun === 0 ? 6 : ilkGun - 1) + g) % 7 === 0) html += '</tr><tr>';
             }
@@ -3010,11 +3012,12 @@ function gorevMailGonder(gorev) {
                             const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
                             const isGorev = e.type === "gorev";
                             const id = e.id || "";
-                            cell += '<span class="as-event-dot" style="background:' + renk + ';cursor:pointer;" onclick="event.stopPropagation();' + (isGorev ? 'asGosterGunBilgi(\'' + gunStr + '\')' : 'asEventDuzenle(\'' + id.replace(/'/g,"\\'") + '\')') + ';" title="' + (e.paylas ? '👥 ' : '') + e.title.replace(/'/g,"&apos;") + '"></span>';
+                            var etkLabel = e.title;
+                            if (e.paylas) etkLabel = "👥" + etkLabel;
+                            cell += '<span class="as-event-dot" onclick="event.stopPropagation();' + (isGorev ? 'asGosterGunBilgi(\'' + gunStr + '\')' : 'asEventDuzenle(\'' + id.replace(/'/g,"\\'") + '\')') + ';" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-dot-c" style="background:' + renk + ';"></span>' + etkLabel + '</span>';
                         });
                         cell += '</div>';
                     }
-                    cell += '<span style="position:absolute;right:1px;bottom:1px;font-size:10px;font-weight:700;color:var(--text-light);cursor:pointer;opacity:0.5;" onclick="event.stopPropagation();asEventModalAc(\'' + gunStr + '\');">+</span>';
                     cell += '</td>';
                     html += cell;
                 }
