@@ -634,7 +634,6 @@ function gorevMailGonder(gorev) {
                         b.classList.add('tm-tooltip-wrap');
                         b.innerHTML = b.innerHTML + '<span class="tm-tooltip-text">' + label + '</span>';
                     }
-                }
             });
         }
 
