@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.34.0';
+        var APP_VERSION = 'V1.34.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2724,6 +2724,49 @@ function gorevMailGonder(gorev) {
             fdb.collection("tm_online").doc(kullanici).delete().catch(function(e){ console.error("Online cikis hatasi:", e); });
         }
 
+        /* ================= TÜRKİYE RESMİ TATİLLER ================= */
+        function asGetTatiller(yil) {
+            var t = [];
+            t.push({date:yil+"-01-01",name:"Yılbaşı"});
+            t.push({date:yil+"-04-23",name:"Ulusal Egemenlik ve Çocuk Bayramı"});
+            t.push({date:yil+"-05-01",name:"Emek ve Dayanışma Günü"});
+            t.push({date:yil+"-05-19",name:"Atatürk'ü Anma, Gençlik ve Spor Bayramı"});
+            t.push({date:yil+"-07-15",name:"Demokrasi ve Milli Birlik Günü"});
+            t.push({date:yil+"-08-30",name:"Zafer Bayramı"});
+            t.push({date:yil+"-10-29",name:"Cumhuriyet Bayramı"});
+            var dini = asGetDiniTatiller(yil);
+            dini.forEach(function(h){ t.push(h); });
+            return t;
+        }
+        function asGetDiniTatiller(yil) {
+            var t = [];
+            var hy = Math.floor((yil - 622) * 365.25 / 354.367) + 1;
+            for (var yi = hy - 1; yi <= hy + 1; yi++) {
+                var r = asIslamiToMiladi(yi, 10, 1);
+                if (r && r.yil === yil) { for (var d=0;d<3;d++){ var dt=new Date(r.dt); dt.setDate(dt.getDate()+d); t.push({date:dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'),name:d===0?'Ramazan Bayramı (1. Gün)':d===1?'Ramazan Bayramı (2. Gün)':'Ramazan Bayramı (3. Gün)'}); } }
+                var k = asIslamiToMiladi(yi, 12, 10);
+                if (k && k.yil === yil) { for (var d=0;d<4;d++){ var dt=new Date(k.dt); dt.setDate(dt.getDate()+d); t.push({date:dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'),name:d===0?'Kurban Bayramı (1. Gün)':d===1?'Kurban Bayramı (2. Gün)':d===2?'Kurban Bayramı (3. Gün)':'Kurban Bayramı (4. Gün)'}); } }
+            }
+            return t;
+        }
+        function asIslamiToMiladi(hY, hM, hD) {
+            var jd = Math.floor((11 * hY + 3) / 30) + 354 * hY + 30 * hM - Math.floor((hM - 1) / 2) + hD + 1948440 - 385;
+            var j = jd - 1721119;
+            var y = Math.floor((4 * j - 1) / 146097);
+            j = 4 * j - 1 - 146097 * y;
+            var d = Math.floor(j / 4);
+            j = Math.floor((4 * d + 3) / 1461);
+            d = 4 * d + 3 - 1461 * j;
+            d = Math.floor((d + 4) / 4);
+            var m = Math.floor((5 * d - 3) / 153);
+            d = 5 * d - 3 - 153 * m;
+            d = Math.floor((d + 5) / 5);
+            var gY = 100 * y + j;
+            var gM = m < 10 ? m + 3 : m - 9;
+            var gD = d + 1;
+            return { yil: gY, ay: gM, gun: gD, dt: new Date(gY, gM - 1, gD) };
+        }
+
         /* ================= ANA SAYFA ÖZET TAKVİM & GÖREVLER ================= */
         function asOzetTakvimRender() {
             const container = document.getElementById("asOzetTakvim");
@@ -2734,16 +2777,26 @@ function gorevMailGonder(gorev) {
             const ilkGun = new Date(yil, ay, 1).getDay();
             const ayGun = new Date(yil, ay + 1, 0).getDate();
             const etkinlikler = asGetMergedEvents();
+            const tatiller = asGetTatiller(yil);
             let html = '<div style="font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:0.5px;color:var(--text-dark);">' + yil + ' ' + ayAdlari[ay] + '</div>';
             html += '<table class="as-tbl" style="font-size:10px;"><thead><tr>';
-            ["PTS","SAL","ÇAR","PER","CUM","CMT","PAZ"].forEach(function(g) { html += '<th style="font-size:8px;">' + g + '</th>'; });
+            for (var di = 0; di < 7; di++) {
+                var wc = di >= 5 ? ' class="as-th-weekend"' : '';
+                html += '<th' + wc + ' style="font-size:8px;">' + ["PTS","SAL","ÇAR","PER","CUM","CMT","PAZ"][di] + '</th>';
+            }
             html += '</tr></thead><tbody><tr>';
             for (let i = 0; i < (ilkGun === 0 ? 6 : ilkGun - 1); i++) { html += '<td class="as-td-other"></td>'; }
             for (let g = 1; g <= ayGun; g++) {
                 const gunStr = yil + "-" + String(ay + 1).padStart(2, "0") + "-" + String(g).padStart(2, "0");
+                const gunIdx = ((ilkGun === 0 ? 6 : ilkGun - 1) + g - 1) % 7;
                 const bugunMu = (bugun.getFullYear() === yil && bugun.getMonth() === ay && bugun.getDate() === g);
                 const gunEtk = etkinlikler.filter(function(e) { return e.date === gunStr; });
-                html += '<td' + (bugunMu ? ' class="as-day-today"' : '') + '>';
+                var tatil = tatiller.find(function(t){ return t.date === gunStr; });
+                var cls = '';
+                if (bugunMu) cls = 'as-day-today';
+                if (gunIdx >= 5) cls = (cls ? cls + ' ' : '') + 'as-td-weekend';
+                if (tatil) cls = (cls ? cls + ' ' : '') + 'as-td-tatil';
+                html += '<td' + (cls ? ' class="' + cls + '"' : '') + '>';
                 html += '<span class="as-day-num">' + g + '</span>';
                 if (gunEtk.length > 0) {
                     html += '<div class="as-event-dots">';
@@ -2858,18 +2911,29 @@ function gorevMailGonder(gorev) {
             const oncekiAyGun = new Date(yil, ay, 0).getDate();
             const bugun = new Date();
             const etkinlikler = asGetMergedEvents();
+            const tatiller = asGetTatiller(yil);
+            var gunAdlari = ["PTS","SAL","ÇAR","PER","CUM","CMT","PAZ"];
             let html = '<table class="as-tbl"><thead><tr>';
-            ["PTS","SAL","ÇAR","PER","CUM","CMT","PAZ"].forEach(function(g) { html += '<th>' + g + '</th>'; });
+            for (var di = 0; di < 7; di++) {
+                var wc = di >= 5 ? ' class="as-th-weekend"' : '';
+                html += '<th' + wc + '>' + gunAdlari[di] + '</th>';
+            }
             html += '</tr></thead><tbody><tr>';
             for (let i = 0; i < (ilkGun === 0 ? 6 : ilkGun - 1); i++) {
                 html += '<td class="as-td-other">' + (oncekiAyGun - (ilkGun === 0 ? 7 : ilkGun - 1) + 1 + i) + '</td>';
             }
             for (let g = 1; g <= ayGun; g++) {
                 const gunStr = yil + "-" + String(ay + 1).padStart(2, "0") + "-" + String(g).padStart(2, "0");
+                const gunIdx = ((ilkGun === 0 ? 6 : ilkGun - 1) + g - 1) % 7;
                 const bugunMu = (bugun.getFullYear() === yil && bugun.getMonth() === ay && bugun.getDate() === g);
                 const gunEtk = etkinlikler.filter(function(e) { return e.date === gunStr; });
-                html += '<td' + (bugunMu ? ' class="as-day-today"' : '') + '>';
-                html += '<span class="as-day-num">' + g + '</span>';
+                var tatil = tatiller.find(function(t){ return t.date === gunStr; });
+                var cls = '';
+                if (bugunMu) cls = 'as-day-today';
+                if (gunIdx >= 5) cls = (cls ? cls + ' ' : '') + 'as-td-weekend';
+                if (tatil) cls = (cls ? cls + ' ' : '') + 'as-td-tatil';
+                html += '<td' + (cls ? ' class="' + cls + '"' : '') + '>';
+                html += '<span class="as-day-num">' + (tatil ? '🟥 ' : '') + g + '</span>';
                 if (gunEtk.length > 0) {
                     html += '<div class="as-event-dots">';
                     gunEtk.forEach(function(e) {
@@ -2879,6 +2943,7 @@ function gorevMailGonder(gorev) {
                     html += '</div>';
                 }
                 html += '<span class="as-add-btn" onclick="asEventModalAc(\'' + gunStr + '\')">+</span>';
+                if (tatil) html += '<div class="as-tatil-etiketi" title="' + tatil.name + '">' + tatil.name.replace('Bayramı','').trim() + '</div>';
                 html += '</td>';
                 if ((ilkGun === 0 ? 6 : ilkGun - 1) + g > 0 && ((ilkGun === 0 ? 6 : ilkGun - 1) + g) % 7 === 0) html += '</tr><tr>';
             }
@@ -2893,13 +2958,17 @@ function gorevMailGonder(gorev) {
             const haftaBas = new Date(yil, ay, bugun - ((asTakvimTarih.getDay() || 7) - 1));
             document.getElementById("asTakvimBaslik").textContent = haftaBas.toLocaleDateString("tr-TR") + " HAFTASI";
             const etkinlikler = asGetMergedEvents();
+            const tatiller = asGetTatiller(haftaBas.getFullYear());
             const saatler = ["08","09","10","11","12","13","14","15","16","17","18","19","20"];
             let html = '<table class="as-tbl"><thead><tr><th style="width:30px;"></th>';
             for (let i = 0; i < 7; i++) {
                 const d = new Date(haftaBas); d.setDate(haftaBas.getDate() + i);
                 const gnAd = ["PTS","SAL","ÇAR","PER","CUM","CMT","PAZ"][i];
                 const bugunMu = (new Date().getFullYear() === d.getFullYear() && new Date().getMonth() === d.getMonth() && new Date().getDate() === d.getDate());
-                html += '<th' + (bugunMu ? ' style="color:var(--accent-red);"' : '') + '>' + gnAd + ' ' + d.getDate() + '</th>';
+                var gunStr2 = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+                var tatil = tatiller.find(function(t){ return t.date === gunStr2; });
+                var haftaCls = i >= 5 ? ' style="color:var(--text-light);background:rgba(255,255,255,0.04);"' : '';
+                html += '<th' + (bugunMu ? ' style="color:var(--accent-red);"' : haftaCls) + '>' + gnAd + ' ' + d.getDate() + (tatil ? ' 🟥' : '') + '</th>';
             }
             html += '</tr></thead><tbody>';
             saatler.forEach(function(s) {
@@ -2908,7 +2977,7 @@ function gorevMailGonder(gorev) {
                     const d = new Date(haftaBas); d.setDate(haftaBas.getDate() + i);
                     const gunStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
                     const saatEtk = etkinlikler.filter(function(e) { return e.date === gunStr && e.time && e.time.startsWith(s); });
-                    let cell = '<td style="padding:1px;border:1px solid var(--border-color);vertical-align:top;overflow:hidden;cursor:pointer;position:relative;" onclick="asEventModalAc(\'' + gunStr + '\');event.stopPropagation();">';
+                    let cell = '<td' + (i >= 5 ? ' style="background:rgba(255,255,255,0.02);padding:1px;border:1px solid var(--border-color);vertical-align:top;overflow:hidden;cursor:pointer;position:relative;"' : ' style="padding:1px;border:1px solid var(--border-color);vertical-align:top;overflow:hidden;cursor:pointer;position:relative;"') + ' onclick="asEventModalAc(\'' + gunStr + '\');event.stopPropagation();">';
                     if (saatEtk.length > 0) {
                         cell += '<div class="as-event-dots">';
                         saatEtk.forEach(function(e) {
