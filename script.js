@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.35.0';
+        var APP_VERSION = 'V1.35.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2889,9 +2889,8 @@ function gorevMailGonder(gorev) {
             etkinlikler.forEach(function(e) {
                 if (e.tekrar && e.tekrar.tip) {
                     var start = new Date(e.date + "T00:00:00");
-                    var now = new Date();
-                    var end = new Date(now);
-                    end.setFullYear(end.getFullYear() + 1);
+                    var end = new Date(start);
+                    end.setFullYear(end.getFullYear() + 100);
                     var cur = new Date(start);
                     while (cur <= end) {
                         var ds = cur.getFullYear() + "-" + String(cur.getMonth() + 1).padStart(2,"0") + "-" + String(cur.getDate()).padStart(2,"0");
