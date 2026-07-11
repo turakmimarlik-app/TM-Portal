@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.35.7';
+        var APP_VERSION = 'V1.36.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2857,6 +2857,10 @@ function gorevMailGonder(gorev) {
             else { asTakvimTarih.setDate(asTakvimTarih.getDate() + 7); }
             asTakvimRender();
         }
+        function asTakvimBugun() {
+            asTakvimTarih = new Date();
+            asTakvimRender();
+        }
         function asGorevRenk(durum, tarih) {
             if (durum === "tamamlandi") return "#2E7D32";
             const bugun = new Date(); bugun.setHours(23,59,59,0);
@@ -2883,9 +2887,12 @@ function gorevMailGonder(gorev) {
                     var end = new Date(start);
                     end.setFullYear(end.getFullYear() + 100);
                     var cur = new Date(start);
+                    var istisnalar = e.tekrar.istisnalar || [];
                     while (cur <= end) {
                         var ds = cur.getFullYear() + "-" + String(cur.getMonth() + 1).padStart(2,"0") + "-" + String(cur.getDate()).padStart(2,"0");
-                        expanded.push({ id: e.id, date: ds, time: e.time, title: e.title, description: e.description, type: e.type, tekrar: e.tekrar });
+                        if (istisnalar.indexOf(ds) < 0) {
+                            expanded.push({ id: e.id, date: ds, time: e.time, title: e.title, description: e.description, type: e.type, tumGun: e.tumGun, paylas: e.paylas, paylasan: e.paylasan, tekrar: e.tekrar });
+                        }
                         if (e.tekrar.tip === "weekly") cur.setDate(cur.getDate() + 7);
                         else if (e.tekrar.tip === "monthly") cur.setMonth(cur.getMonth() + 1);
                         else if (e.tekrar.tip === "yearly") cur.setFullYear(cur.getFullYear() + 1);
@@ -2986,12 +2993,37 @@ function gorevMailGonder(gorev) {
                 html += '<th' + (bugunMu ? ' style="color:var(--accent-red);"' : haftaCls) + '>' + gnAd + ' ' + d.getDate() + (tatil ? ' 🟥' : '') + '</th>';
             }
             html += '</tr></thead><tbody>';
+            /* Tüm Gün satırı */
+            html += '<tr><td style="padding:2px;text-align:center;font-size:7px;color:var(--text-light);border:1px solid var(--border-color);font-weight:600;background:rgba(255,255,255,0.03);">📅 TÜM GÜN</td>';
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(haftaBas); d.setDate(haftaBas.getDate() + i);
+                const gunStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+                const tumGunEtk = etkinlikler.filter(function(e) { return e.date === gunStr && (!e.time || e.tumGun || e.type === "note"); });
+                var tumGunCls = i >= 5 ? ' style="background:rgba(255,255,255,0.02);padding:1px;border:1px solid var(--border-color);vertical-align:top;overflow:hidden;cursor:pointer;position:relative;"' : ' style="padding:1px;border:1px solid var(--border-color);vertical-align:top;overflow:hidden;cursor:pointer;position:relative;"';
+                let cell = '<td' + tumGunCls + ' onclick="asEventModalAc(\'' + gunStr + '\');event.stopPropagation();">';
+                if (tumGunEtk.length > 0) {
+                    cell += '<div class="as-event-dots">';
+                    tumGunEtk.forEach(function(e) {
+                        const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
+                        const isGorev = e.type === "gorev";
+                        const id = e.id || "";
+                        var etkLabel = e.title;
+                        if (e.paylas) etkLabel = (e.paylasan ? "👥" + e.paylasan + " " : "👥") + etkLabel;
+                        if (e.tumGun) etkLabel = "📅 " + etkLabel;
+                        cell += '<span class="as-event-dot" onclick="event.stopPropagation();' + (isGorev ? 'asGosterGunBilgi(\'' + gunStr + '\')' : 'asEventDuzenle(\'' + id.replace(/'/g,"\\'") + '\')') + ';" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-dot-c" style="background:' + renk + ';"></span>' + etkLabel + '</span>';
+                    });
+                    cell += '</div>';
+                }
+                cell += '</td>';
+                html += cell;
+            }
+            html += '</tr>';
             saatler.forEach(function(s) {
                 html += '<tr><td style="padding:2px;text-align:center;font-size:8px;color:var(--text-light);border:1px solid var(--border-color);font-weight:600;">' + s + ':00</td>';
                 for (let i = 0; i < 7; i++) {
                     const d = new Date(haftaBas); d.setDate(haftaBas.getDate() + i);
                     const gunStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-                    const saatEtk = etkinlikler.filter(function(e) { return e.date === gunStr && e.time && e.time.startsWith(s); });
+                    const saatEtk = etkinlikler.filter(function(e) { return e.date === gunStr && e.time && !e.tumGun && e.type !== "note" && e.time.startsWith(s); });
                     let cell = '<td' + (i >= 5 ? ' style="background:rgba(255,255,255,0.02);padding:1px;border:1px solid var(--border-color);vertical-align:top;overflow:hidden;cursor:pointer;position:relative;"' : ' style="padding:1px;border:1px solid var(--border-color);vertical-align:top;overflow:hidden;cursor:pointer;position:relative;"') + ' onclick="asEventModalAc(\'' + gunStr + '\');event.stopPropagation();">';
                     if (saatEtk.length > 0) {
                         cell += '<div class="as-event-dots">';
@@ -3109,11 +3141,14 @@ function gorevMailGonder(gorev) {
             const aktifUser = localStorage.getItem("tm_active_user") || "";
             var etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
             var ev = etkinlikler.find(function(e) { return e.id === id; });
+            var isShared = false;
             if (!ev) {
                 var paylasilan = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
                 ev = paylasilan.find(function(e) { return e.id === id; });
+                isShared = true;
             }
             if (!ev) return;
+            var yetkili = !isShared || (ev.paylasan === aktifUser);
             document.getElementById("asEventEditId").value = id;
             document.getElementById("asEventDate").value = ev.date;
             document.getElementById("asEventTitle").value = ev.title;
@@ -3122,6 +3157,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("asEventDesc").value = ev.description || "";
             document.getElementById("asEventType").value = ev.type;
             asEventTypeDegisti();
+            asEventTumGunDegisti();
             if (ev.tekrar && ev.tekrar.tip) {
                 document.getElementById("asEventTekrar").checked = true;
                 document.getElementById("asEventTekrarOptions").style.display = "block";
@@ -3132,7 +3168,19 @@ function gorevMailGonder(gorev) {
             }
             document.getElementById("asEventPaylas").checked = ev.paylas || false;
             document.getElementById("asEventModalTitle").textContent = "ETKİNLİK DÜZENLE - " + ev.date;
-            document.getElementById("asEventSilBtn").style.display = "inline-block";
+            document.getElementById("asEventSilBtn").style.display = yetkili ? "inline-block" : "none";
+            document.querySelector("#asEventModal .as-btn-save").style.display = yetkili ? "inline-flex" : "none";
+            document.getElementById("asEventPaylas").disabled = !yetkili;
+            document.getElementById("asEventTitle").disabled = !yetkili;
+            document.getElementById("asEventDesc").disabled = !yetkili;
+            document.getElementById("asEventType").disabled = !yetkili;
+            document.getElementById("asEventTime").disabled = !yetkili || document.getElementById("asEventTumGun").checked;
+            document.getElementById("asEventTumGun").disabled = !yetkili;
+            document.getElementById("asEventTekrar").disabled = !yetkili;
+            document.getElementById("asEventTekrarTip").disabled = !yetkili;
+            if (!yetkili) {
+                document.getElementById("asEventModalTitle").textContent = "ETKİNLİK (SADECE GÖRÜNTÜLEME) - " + ev.date;
+            }
             document.getElementById("asEventModal").style.display = "flex";
         }
         function asEventKaydet() {
@@ -3150,9 +3198,15 @@ function gorevMailGonder(gorev) {
             var tekrar = null;
             if (document.getElementById("asEventTekrar").checked) {
                 var tip = document.getElementById("asEventTekrarTip").value;
-                if (tip) tekrar = { tip: tip };
+                if (tip) tekrar = { tip: tip, istisnalar: [] };
             }
-            var eventData = { id: editId || ("as_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4)), date: date, time: time, title: title, description: desc, type: type, tumGun: tumGun, tekrar: tekrar, paylas: paylas, paylasan: paylas ? aktifUser : undefined };
+            var existingPaylasan = null;
+            if (editId) {
+                var tumEtk = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
+                var mevcut = tumEtk.find(function(e) { return e.id === editId; });
+                if (mevcut) existingPaylasan = mevcut.paylasan;
+            }
+            var eventData = { id: editId || ("as_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4)), date: date, time: time, title: title, description: desc, type: type, tumGun: tumGun, tekrar: tekrar, paylas: paylas, paylasan: paylas ? (existingPaylasan || aktifUser) : undefined };
             if (paylas) {
                 var paylasilan = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
                 if (editId) { var idx = paylasilan.findIndex(function(e) { return e.id === editId; }); if (idx >= 0) paylasilan[idx] = eventData; else paylasilan.push(eventData); }
@@ -3177,20 +3231,62 @@ function gorevMailGonder(gorev) {
             const aktifUser = localStorage.getItem("tm_active_user") || "";
             var paylasilan = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
             var ev = paylasilan.find(function(e) { return e.id === id; });
-            var msg = ev ? "Bu paylaşılan etkinliği silmek tüm ekip üyeleri için kaldıracaktır. Emin misiniz?" : "Bu etkinliği silmek istediğinize emin misiniz?";
-            tmConfirm(msg, function() {
-                if (ev) {
-                    paylasilan = paylasilan.filter(function(e) { return e.id !== id; });
-                    localStorage.setItem("tm_as_etkinlikler_paylasilan", JSON.stringify(paylasilan));
-                } else {
-                    let etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
-                    etkinlikler = etkinlikler.filter(function(e) { return e.id !== id; });
-                    localStorage.setItem("tm_as_etkinlikler_" + aktifUser, JSON.stringify(etkinlikler));
+            if (!ev) {
+                var etkinlikler2 = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+                ev = etkinlikler2.find(function(e) { return e.id === id; });
+            }
+            if (!ev) return;
+            if (ev.paylasan && ev.paylasan !== aktifUser) { tmNotify("Bu paylaşılan etkinliği yalnızca oluşturan kullanıcı silebilir!", "error"); return; }
+            var dateStr = document.getElementById("asEventDate").value;
+            if (ev.tekrar && ev.tekrar.tip && dateStr) {
+                var el = document.createElement("div");
+                el.innerHTML = '<div style="padding:10px 0;"><p style="margin:0 0 12px 0;font-size:13px;">Bu etkinlik tekrarlanmaktadır. Nasıl silmek istersiniz?</p><div style="display:flex;gap:10px;"><button class="tm-confirm-yes" style="flex:1;" onclick="this.closest(\'.tm-confirm-wrap\').querySelector(\'.tm-confirm-thunk\').click()">SADECE BU TEKRARI</button><button class="tm-confirm-no" style="flex:1;" onclick="var el=this.closest(\'.tm-confirm-wrap\');el.querySelector(\'.tm-confirm-thunk\').dataset.all=true;el.querySelector(\'.tm-confirm-thunk\').click()">TÜM TEKRARLARI</button></div></div>';
+                var wrap = document.createElement("div");
+                wrap.className = "tm-confirm-wrap";
+                wrap.appendChild(el);
+                document.body.appendChild(wrap);
+                var thunk = document.createElement("button");
+                thunk.className = "tm-confirm-thunk";
+                thunk.style.display = "none";
+                thunk.onclick = function() {
+                    wrap.remove();
+                    if (thunk.dataset.all === "true") {
+                        _asSilModalDelete(id, aktifUser);
+                    } else {
+                        if (!ev.tekrar.istisnalar) ev.tekrar.istisnalar = [];
+                        if (ev.tekrar.istisnalar.indexOf(dateStr) < 0) ev.tekrar.istisnalar.push(dateStr);
+                        if (ev.paylasan) {
+                            var pl = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
+                            var pi = pl.findIndex(function(e) { return e.id === id; });
+                            if (pi >= 0) { pl[pi] = ev; localStorage.setItem("tm_as_etkinlikler_paylasilan", JSON.stringify(pl)); }
+                        } else {
+                            var kulEtk = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+                            var ki = kulEtk.findIndex(function(e) { return e.id === id; });
+                            if (ki >= 0) { kulEtk[ki] = ev; localStorage.setItem("tm_as_etkinlikler_" + aktifUser, JSON.stringify(kulEtk)); }
+                        }
+                    }
+                    asEventModalKapat();
+                    asTakvimRender();
+                    tmNotify("Etkinlik güncellendi.", "success");
+                };
+                wrap.appendChild(thunk);
+                return;
+            }
+            var msg = ev.paylasan ? "Bu paylaşılan etkinliği silmek tüm ekip üyeleri için kaldıracaktır. Emin misiniz?" : "Bu etkinliği silmek istediğinize emin misiniz?";
+            tmConfirm(msg, function() { _asSilModalDelete(id, aktifUser); });
+            function _asSilModalDelete(evId, user) {
+                var pl = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
+                var pi = pl.findIndex(function(e) { return e.id === evId; });
+                if (pi >= 0) { pl.splice(pi, 1); localStorage.setItem("tm_as_etkinlikler_paylasilan", JSON.stringify(pl)); }
+                else {
+                    var kulEtk = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + user)) || [];
+                    var ki = kulEtk.findIndex(function(e) { return e.id === evId; });
+                    if (ki >= 0) { kulEtk.splice(ki, 1); localStorage.setItem("tm_as_etkinlikler_" + user, JSON.stringify(kulEtk)); }
                 }
                 asEventModalKapat();
                 asTakvimRender();
                 tmNotify("Etkinlik silindi.", "success");
-            });
+            }
         }
         function asEventModalKapat() {
             document.getElementById("asEventModal").style.display = "none";
@@ -3203,61 +3299,120 @@ function gorevMailGonder(gorev) {
             const etkinlikler = asGetMergedEvents().filter(function(e) { return e.date === gunStr; });
             if (etkinlikler.length === 0) return;
             document.getElementById("asGunInfoTitle").textContent = "📅 " + gunStr + " - ETKİNLİKLER";
+            document.getElementById("asEventFilterBar").style.display = "none";
             var h = "";
             etkinlikler.forEach(function(e) {
                 const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
                 const turAdi = e.type === "reminder" ? "🔔 ANIMSATICI" : (e.type === "note" ? "📝 NOT" : (e.type === "gorev" ? (e.durum === "tamamlandi" ? "✅ GÖREV (TAMAMLANDI)" : "📋 GÖREV") : "🔵 DİĞER"));
                 const isGorev = e.type === "gorev";
                 const id = e.id || "";
+                const aktifUser = localStorage.getItem("tm_active_user") || "";
+                const canEdit = !isGorev && (!e.paylasan || e.paylasan === aktifUser);
                 h += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-color);">';
                 h += '<span style="width:12px;height:12px;border-radius:50%;background:' + renk + ';flex-shrink:0;margin-top:5px;"></span>';
                 h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);">' + turAdi + (e.time && e.type !== "note" && !e.tumGun ? ' &middot; ' + e.time : (e.tumGun ? ' &middot; 📅 Tüm Gün' : '')) + (e.paylas ? (e.paylasan ? ' &middot; 👥 ' + e.paylasan : ' &middot; 👥 Paylaşılan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
-                if (!isGorev) {
+                if (canEdit) {
                     var realId = id.replace("gorev_", "");
                     h += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + realId.replace(/'/g,"\\'") + '\');asGunInfoKapat();" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;" title="Düzenle">✏️</button>';
-                    h += '<button class="as-etkinlik-edit" onclick="asEventSilById(\'' + realId.replace(/'/g,"\\'") + '\');" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;color:var(--accent-red);" title="Sil">🗑</button>';
+                    h += '<button class="as-etkinlik-edit" onclick="asEventSilById(\'' + realId.replace(/'/g,"\\'") + '\',\'' + (e.date || gunStr) + '\');" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;color:var(--accent-red);" title="Sil">🗑</button>';
                 }
                 h += '</div>';
             });
             document.getElementById("asGunInfoBody").innerHTML = h;
             document.getElementById("asGunInfoModal").style.display = "flex";
         }
-        function asEventSilById(id) {
+        function asEventSilById(id, dateStr) {
             if (!id) return;
             const aktifUser = localStorage.getItem("tm_active_user") || "";
             var paylasilan = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
             var ev = paylasilan.find(function(e) { return e.id === id; });
-            var msg = ev ? "Bu paylaşılan etkinliği silmek tüm ekip üyeleri için kaldıracaktır. Emin misiniz?" : "Bu etkinliği silmek istediğinize emin misiniz?";
-            tmConfirm(msg, function() {
-                if (ev) {
-                    paylasilan = paylasilan.filter(function(e) { return e.id !== id; });
-                    localStorage.setItem("tm_as_etkinlikler_paylasilan", JSON.stringify(paylasilan));
-                } else {
-                    let etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
-                    etkinlikler = etkinlikler.filter(function(e) { return e.id !== id; });
-                    localStorage.setItem("tm_as_etkinlikler_" + aktifUser, JSON.stringify(etkinlikler));
+            if (!ev) {
+                var etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+                ev = etkinlikler.find(function(e) { return e.id === id; });
+            }
+            if (!ev) return;
+            if (ev.paylasan && ev.paylasan !== aktifUser) { tmNotify("Bu paylaşılan etkinliği yalnızca oluşturan kullanıcı silebilir!", "error"); return; }
+            function _deleteEventById(evId, user) {
+                var paylasilan2 = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
+                var pidx = paylasilan2.findIndex(function(e) { return e.id === evId; });
+                if (pidx >= 0) { paylasilan2.splice(pidx, 1); localStorage.setItem("tm_as_etkinlikler_paylasilan", JSON.stringify(paylasilan2)); }
+                else {
+                    var kullaniciEtk2 = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + user)) || [];
+                    var kdx = kullaniciEtk2.findIndex(function(e) { return e.id === evId; });
+                    if (kdx >= 0) { kullaniciEtk2.splice(kdx, 1); localStorage.setItem("tm_as_etkinlikler_" + user, JSON.stringify(kullaniciEtk2)); }
                 }
-                asGunInfoKapat();
-                asTakvimRender();
-                tmNotify("Etkinlik silindi.", "success");
-            });
+            }
+            if (ev.tekrar && ev.tekrar.tip && dateStr) {
+                var el = document.createElement("div");
+                el.innerHTML = '<div style="padding:10px 0;"><p style="margin:0 0 12px 0;font-size:13px;">Bu etkinlik tekrarlanmaktadır. Nasıl silmek istersiniz?</p><div style="display:flex;gap:10px;"><button class="tm-confirm-yes" style="flex:1;" onclick="this.closest(\'.tm-confirm-wrap\').querySelector(\'.tm-confirm-thunk\').click()">SADECE BU TEKRARI</button><button class="tm-confirm-no" style="flex:1;" onclick="var el=this.closest(\'.tm-confirm-wrap\');el.querySelector(\'.tm-confirm-thunk\').dataset.all=true;el.querySelector(\'.tm-confirm-thunk\').click()">TÜM TEKRARLARI</button></div></div>';
+                var wrap = document.createElement("div");
+                wrap.className = "tm-confirm-wrap";
+                wrap.appendChild(el);
+                document.body.appendChild(wrap);
+                var thunk = document.createElement("button");
+                thunk.className = "tm-confirm-thunk";
+                thunk.style.display = "none";
+                thunk.onclick = function() {
+                    wrap.remove();
+                    var silAll = thunk.dataset.all === "true";
+                    if (silAll) { _deleteEventById(id, aktifUser); }
+                    else {
+                        var kaynak = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
+                        var src = kaynak.find(function(e) { return e.id === id; });
+                        if (!src) {
+                            var kullaniciEtk = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+                            src = kullaniciEtk.find(function(e) { return e.id === id; });
+                        }
+                        if (src && src.tekrar) {
+                            if (!src.tekrar.istisnalar) src.tekrar.istisnalar = [];
+                            if (src.tekrar.istisnalar.indexOf(dateStr) < 0) src.tekrar.istisnalar.push(dateStr);
+                            if (src.paylasan) {
+                                var paylasilan2 = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
+                                var pidx = paylasilan2.findIndex(function(e) { return e.id === id; });
+                                if (pidx >= 0) { paylasilan2[pidx] = src; localStorage.setItem("tm_as_etkinlikler_paylasilan", JSON.stringify(paylasilan2)); }
+                            } else {
+                                var kullaniciEtk2 = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+                                var kdx = kullaniciEtk2.findIndex(function(e) { return e.id === id; });
+                                if (kdx >= 0) { kullaniciEtk2[kdx] = src; localStorage.setItem("tm_as_etkinlikler_" + aktifUser, JSON.stringify(kullaniciEtk2)); }
+                            }
+                        }
+                    }
+                    asGunInfoKapat();
+                    asTakvimRender();
+                    tmNotify("Etkinlik güncellendi.", "success");
+                };
+                wrap.appendChild(thunk);
+                return;
+            }
+            var msg = ev.paylasan ? "Bu paylaşılan etkinliği silmek tüm ekip üyeleri için kaldıracaktır. Emin misiniz?" : "Bu etkinliği silmek istediğinize emin misiniz?";
+            tmConfirm(msg, function() { _deleteEventById(id, aktifUser); asGunInfoKapat(); asTakvimRender(); tmNotify("Etkinlik silindi.", "success"); });
+        }
+        let asEventFilter = "all";
+        function asEventFilterSet(filter) {
+            asEventFilter = filter;
+            document.querySelectorAll("#asEventFilterBar .as-filter-btn").forEach(function(b) { b.classList.toggle("as-filter-active", b.getAttribute("data-filter") === filter); });
+            asTumEtkinlikleriGoster();
         }
         function asTumEtkinlikleriGoster() {
             const etkinlikler = asGetMergedEvents();
             document.getElementById("asGunInfoTitle").textContent = "📋 TÜM ETKİNLİKLER";
+            document.getElementById("asEventFilterBar").style.display = "flex";
+            var filtered = asEventFilter === "all" ? etkinlikler : etkinlikler.filter(function(e) { return e.type === asEventFilter; });
             var h = "";
-            etkinlikler.forEach(function(e) {
+            filtered.forEach(function(e) {
                 const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
                 const turAdi = e.type === "reminder" ? "🔔 ANIMSATICI" : (e.type === "note" ? "📝 NOT" : (e.type === "gorev" ? (e.durum === "tamamlandi" ? "✅ GÖREV (TAMAMLANDI)" : "📋 GÖREV") : "🔵 DİĞER"));
                 const isGorev = e.type === "gorev";
                 const id = e.id || "";
+                const aktifUser = localStorage.getItem("tm_active_user") || "";
+                const canEdit = !isGorev && (!e.paylasan || e.paylasan === aktifUser);
                 h += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-color);">';
                 h += '<span style="width:12px;height:12px;border-radius:50%;background:' + renk + ';flex-shrink:0;margin-top:5px;"></span>';
                 h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);"><span style="color:' + renk + ';">●</span> ' + turAdi + ' &middot; ' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : (e.tumGun ? ' 📅 Tüm Gün' : '')) + (e.paylas ? (e.paylasan ? ' &middot; 👥 ' + e.paylasan : ' &middot; 👥 Paylaşılan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
-                if (!isGorev) {
+                if (canEdit) {
                     var realId = id.replace("gorev_", "");
                     h += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + realId.replace(/'/g,"\\'") + '\');asGunInfoKapat();" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;" title="Düzenle">✏️</button>';
-                    h += '<button class="as-etkinlik-edit" onclick="asEventSilById(\'' + realId.replace(/'/g,"\\'") + '\');" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;color:var(--accent-red);" title="Sil">🗑</button>';
+                    h += '<button class="as-etkinlik-edit" onclick="asEventSilById(\'' + realId.replace(/'/g,"\\'") + '\',\'' + e.date + '\');" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;color:var(--accent-red);" title="Sil">🗑</button>';
                 }
                 h += '</div>';
             });

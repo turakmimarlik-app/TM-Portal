@@ -932,7 +932,8 @@
         }
         .gt-btn-nav:hover { background:var(--bg-main); transform:translateY(-1px); }
         .gt-takvim-nav { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:16px; }
-        .gt-takvim-baslik { font-size:16px; font-weight:800; min-width:160px; text-align:center; color:var(--text-dark); letter-spacing:0.5px; }
+        .gt-takvim-baslik { font-size:16px; font-weight:800; min-width:160px; text-align:center; color:var(--text-dark); letter-spacing:0.5px; cursor:pointer; transition:color .2s; }
+.gt-takvim-baslik:hover { color:var(--accent-red); }
         .gt-btn-assign {
             background:linear-gradient(135deg,#2E7D32,#1B5E20); border:1px solid #66BB6A; color:#fff;
             padding:8px 18px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; margin-bottom:14px; letter-spacing:0.5px; display:inline-flex; align-items:center; gap:6px;
@@ -946,6 +947,11 @@
         .gt-card-body .as-tbl .as-event-dot .as-dot-c { width:6px; height:6px; }
         .gt-card-body .as-tbl .as-add-btn { display:none; }
         .gt-card-body .as-tatil-etiketi { font-size:13px; font-weight:800; padding:2px 5px; margin-top:3px; border-radius:4px; }
+        .as-event-filter-bar { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+        .as-filter-label { font-size:11px; font-weight:700; color:var(--text-light); margin-right:2px; }
+        .as-filter-btn { background:transparent; border:1px solid var(--border-color); color:var(--text-light); border-radius:6px; padding:4px 10px; font-size:11px; font-weight:600; cursor:pointer; transition:0.2s; }
+        .as-filter-btn:hover { background:var(--bg-main); }
+        .as-filter-btn.as-filter-active { background:var(--accent-red); color:#fff; border-color:var(--accent-red); }
         .gt-card-body .as-gorev-item { padding:10px 12px; margin-bottom:6px; font-size:12px; }
         .as-takvim-ozet { margin-top:16px; padding-top:16px; border-top:1px solid var(--border-color); }
         .as-takvim-ozet-item { display:flex; align-items:flex-start; gap:10px; padding:6px 8px; border-radius:6px; transition:background 0.15s; }

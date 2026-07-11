@@ -124,7 +124,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.35.7</div>
+                <div class="version-tag">V1.36.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -323,7 +323,7 @@
             <div class="gt-card-body">
                 <div class="gt-takvim-nav">
                     <button class="gt-btn-nav" onclick="asTakvimGeri()">◀</button>
-                    <span class="gt-takvim-baslik" id="asTakvimBaslik"></span>
+                    <span class="gt-takvim-baslik" id="asTakvimBaslik" onclick="asTakvimBugun()" title="Bugüne git"></span>
                     <button class="gt-btn-nav" onclick="asTakvimIleri()">▶</button>
                 </div>
                 <div id="asTakvimIcerik"></div>
@@ -1582,6 +1582,12 @@
                     <div class="as-modal-header">
                         <h3 id="asGunInfoTitle">ETKİNLİKLER</h3>
                         <button class="as-modal-close" onclick="asGunInfoKapat()">✕</button>
+                    </div>
+                    <div id="asEventFilterBar" class="as-event-filter-bar" style="display:none;padding:8px 16px;border-bottom:1px solid var(--border-color);">
+                        <span class="as-filter-label">Filtre:</span>
+                        <button class="as-filter-btn as-filter-active" data-filter="all" onclick="asEventFilterSet('all')">Tümü</button>
+                        <button class="as-filter-btn" data-filter="reminder" onclick="asEventFilterSet('reminder')">🔔 Anımsatıcı</button>
+                        <button class="as-filter-btn" data-filter="note" onclick="asEventFilterSet('note')">📝 Not</button>
                     </div>
                     <div class="as-modal-body" id="asGunInfoBody"></div>
                     <div class="as-modal-actions">
