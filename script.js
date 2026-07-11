@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.16';
+        var APP_VERSION = 'V1.31.17';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -1185,8 +1185,15 @@ function gorevMailGonder(gorev) {
             if (!tmFormDirty && e.target && e.target.closest && e.target.closest('.page.active')) tmFormDirty = true;
         });
         document.addEventListener('keydown', function(e) {
-            if (e.target.closest('[contenteditable="true"]') || e.target.closest('textarea') || e.target.closest('input')) return;
-            var modal = document.querySelector('.modal-overlay[style*="display: flex"], .modal-overlay[style*="display:flex"], .as-modal-overlay[style*="display: flex"], .as-modal-overlay[style*="display:flex"], .lock-popup-overlay[style*="display: flex"], .lock-popup-overlay[style*="display:flex"]');
+            function gorunurModal() {
+                var list = document.querySelectorAll('.modal-overlay, .as-modal-overlay, .lock-popup-overlay');
+                for (var i = 0; i < list.length; i++) {
+                    var s = list[i].style.display;
+                    if (s === 'flex' || s === 'block' || s === '') return list[i];
+                }
+                return null;
+            }
+            var modal = gorunurModal();
             if (!modal) return;
             if (e.key === 'Escape') {
                 e.preventDefault();
@@ -1194,10 +1201,10 @@ function gorevMailGonder(gorev) {
                 var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === '✕' || t.startsWith('✕') || t === 'İptal' || t === 'Kapat' || t === 'Vazgeç'; });
                 if (!btn) btn = btns[btns.length - 1];
                 if (btn) btn.click();
-            } else if (e.key === 'Enter' || e.key === ' ') {
+            } else if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('[contenteditable="true"]') && !e.target.closest('textarea') && !e.target.closest('input')) {
                 e.preventDefault();
                 var btns = modal.querySelectorAll('button');
-                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim().replace(/[📄🗑️✏️➕💾📁📂🔒💰]/g, '').trim(); return t === 'Evet' || t === 'Tamam' || t === 'Kaydet' || t === 'Onayla' || t === 'PDF Oluştur'; });
+                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim().replace(/[📄🗑️✏️➕💾📁📂🔒💰📤🔍]/g, '').trim(); return t === 'Evet' || t === 'Tamam' || t === 'Kaydet' || t === 'Onayla' || t === 'PDF Oluştur' || t === 'KAYDET'; });
                 if (btn) btn.click();
             }
         });
@@ -9894,15 +9901,18 @@ function itDurumMetni(o) {
                 return '<span style="' + s + '">';
             }).replace(/<\/font>/gi, '</span>');
 
-            var HEAD_PX = 100, FOOT_PX = 40;
-            var htm = '<div style="padding:36px 48px 20px 48px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.7;color:#333;background:#fff;">'
-                + '<div style="margin:0 0 4px 0;font-size:20px;font-weight:700;color:#1a1a1a;letter-spacing:0.5px;">NOT</div>'
-                + '<div style="font-size:9px;color:#999;margin:0 0 10px 0;">' + tOlusturma + ' &nbsp;|&nbsp; ' + tGuncelleme + '</div>'
-                + '<hr style="border:none;border-top:2px solid #d4d4d4;margin:0 0 14px 0;">'
-                + '<div style="font-size:16px;font-weight:700;margin:0 0 10px 0;color:#1a1a1a;">' + baslik + '</div>'
-                + '<hr style="border:none;border-top:1px solid #e0e0e0;margin:0 0 14px 0;">'
-                + '<div style="font-size:13px;line-height:1.7;color:#333;">' + icerik + '</div>'
-                + '<hr style="border:none;border-top:1px solid #e0e0e0;margin:30px 0 5px 0;">'
+            var marginMm = 25.4;
+            var scale = 794 / 210;
+            var padPx = Math.round(marginMm * scale);
+
+            var htm = '<div style="padding:' + padPx + 'px ' + padPx + 'px ' + (padPx - 10) + 'px ' + padPx + 'px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#333;background:#fff;">'
+                + '<div style="text-align:center;margin:0 0 6px 0;font-size:22px;font-weight:700;color:#000;">NOT</div>'
+                + '<div style="text-align:center;font-size:9px;color:#999;margin:0 0 14px 0;">' + tOlusturma + ' &nbsp;|&nbsp; ' + tGuncelleme + '</div>'
+                + '<hr style="border:none;border-top:2px solid #bbb;margin:0 0 18px 0;">'
+                + '<div style="font-size:17px;font-weight:700;margin:0 0 12px 0;color:#000;">' + baslik + '</div>'
+                + '<hr style="border:none;border-top:1px solid #ddd;margin:0 0 16px 0;">'
+                + '<div style="font-size:13px;line-height:1.6;color:#333;">' + icerik + '</div>'
+                + '<hr style="border:none;border-top:1px solid #ddd;margin:36px 0 4px 0;">'
                 + '<div style="font-size:8px;color:#999;">' + tOlusturma + ' &nbsp;|&nbsp; ' + tGuncelleme + '</div>'
                 + '<style>body{margin:0;padding:0;background:#fff;}img{max-width:100%;height:auto;}table{width:100%;border-collapse:collapse;}td,th{padding:4px 6px;border:1px solid #ccc;text-align:left;}pre{white-space:pre-wrap;word-break:break-word;}*{box-sizing:border-box;}</style></div>';
 
@@ -9916,10 +9926,8 @@ function itDurumMetni(o) {
                 var totalH = el.scrollHeight;
                 html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', width: 794, height: totalH, windowWidth: 794 }).then(function(cv) {
                     var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
-                    var margin = 14;
-                    var pw = 210, ph = 297;
-                    var printW = pw - 2 * margin;
-                    var printH = ph - 2 * margin;
+                    var printW = 210 - 2 * marginMm;
+                    var printH = 297 - 2 * marginMm;
                     var ratio = 794 / printW;
                     var pixPage = printH * ratio;
                     var pages = Math.ceil(totalH / pixPage);
@@ -9936,7 +9944,7 @@ function itDurumMetni(o) {
                         ctx.fillStyle = '#ffffff';
                         ctx.fillRect(0, 0, c2.width, c2.height);
                         ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
-                        doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, printW, sh / ratio);
+                        doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', marginMm, marginMm, printW, sh / ratio);
                     }
                     var fn = (n.title || "NOT").replace(/[\/\\:*?"<>|,;\.]/g, '_').trim();
                     doc.save(fn + ".pdf");
