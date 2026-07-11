@@ -360,7 +360,7 @@ function gorevMailGonder(gorev) {
                             document.getElementById("loginSection").style.display = "flex";
                             var errorDiv = document.getElementById("loginError");
                             if (errorDiv) {
-                                errorDiv.innerText = "<i class="fa-solid fa-triangle-exclamation"></i> " + baskaAktif + " kullanıcısı aktif olduğu için oturumunuz sonlandırıldı.";
+                                errorDiv.innerText = "❌ " + baskaAktif + " kullanıcısı aktif olduğu için oturumunuz sonlandırıldı.";
                                 errorDiv.style.display = "block";
                             }
                             overlayGizle();
@@ -452,25 +452,25 @@ function gorevMailGonder(gorev) {
         let P_GRUP_SIRALAMA = {};
 
         const TM_YETKI_TANIMLARI = [
-            { key:"anasayfa", label:"<i class="fa-solid fa-house"></i> Ana Sayfa (Dashboard)" },
-            { key:"teklif-olustur", label:"<i class="fa-regular fa-file-lines"></i> Fiyatlandırma: Teklif Oluştur" },
-            { key:"teklif-liste", label:"<i class="fa-solid fa-list"></i> Fiyatlandırma: Geçmiş Teklifler" },
-            { key:"piyasa-fiyatlari", label:"<i class="fa-solid fa-chart-simple"></i> Fiyatlandırma: Piyasa Fiyatları" },
-            { key:"tm-fiyatlar", label:"<i class="fa-solid fa-chart-line"></i> Fiyatlandırma: TM Fiyatlar" },
-            { key:"musteriler", label:"<i class="fa-regular fa-folder-open"></i> Portföy: Müşteriler" },
-            { key:"isortaklari", label:"<i class="fa-solid fa-handshake"></i> Portföy: İş Ortakları" },
-            { key:"dilekce", label:"<i class="fa-regular fa-note-sticky"></i> Dilekçe Oluştur" },
-            { key:"istakibi", label:"<i class="fa-regular fa-calendar"></i> İş Takibi" },
-            { key:"nakit-dekont", label:"<i class="fa-regular fa-credit-card"></i> Muhasebe: Nakit Ödeme Dekontu" },
-            { key:"is-muhasebe-olustur", label:"<i class="fa-solid fa-thumbtack"></i> Muhasebe: İş Muhasebesi Oluştur" },
-            { key:"is-muhasebe", label:"<i class="fa-solid fa-coins"></i> Muhasebe: İş Muhasebesi Takibi" },
-            { key:"tamamlanan-is-muhasebe", label:"<i class="fa-solid fa-check"></i> Muhasebe: Tamamlanan İş Muhasebeleri" },
-            { key:"hesap-takip", label:"<i class="fa-solid fa-building-columns"></i> Muhasebe: Hesap Takip Sistemi" },
-            { key:"fatura-takip", label:"<i class="fa-solid fa-receipt"></i> Muhasebe: Fatura Takip Sistemi" },
-            { key:"yillik-butce", label:"<i class="fa-solid fa-chart-simple"></i> Muhasebe: Yıllık Bütçeler" },
-            { key:"yonetim", label:"<i class="fa-solid fa-gear"></i> Portal Yönetimi" },
-            { key:"notlar", label:"<i class="fa-regular fa-note-sticky"></i> Notlar" },
-            { key:"gorevler-takvim", label:"<i class="fa-regular fa-calendar"></i> Görevler ve Takvim" }
+            { key:"anasayfa", label:'<i class="fa-solid fa-house"></i> Ana Sayfa (Dashboard)' },
+            { key:"teklif-olustur", label:'<i class="fa-regular fa-file-lines"></i> Fiyatlandırma: Teklif Oluştur' },
+            { key:"teklif-liste", label:'<i class="fa-solid fa-list"></i> Fiyatlandırma: Geçmiş Teklifler' },
+            { key:"piyasa-fiyatlari", label:'<i class="fa-solid fa-chart-simple"></i> Fiyatlandırma: Piyasa Fiyatları' },
+            { key:"tm-fiyatlar", label:'<i class="fa-solid fa-chart-line"></i> Fiyatlandırma: TM Fiyatlar' },
+            { key:"musteriler", label:'<i class="fa-regular fa-folder-open"></i> Portföy: Müşteriler' },
+            { key:"isortaklari", label:'<i class="fa-solid fa-handshake"></i> Portföy: İş Ortakları' },
+            { key:"dilekce", label:'<i class="fa-regular fa-note-sticky"></i> Dilekçe Oluştur' },
+            { key:"istakibi", label:'<i class="fa-regular fa-calendar"></i> İş Takibi' },
+            { key:"nakit-dekont", label:'<i class="fa-regular fa-credit-card"></i> Muhasebe: Nakit Ödeme Dekontu' },
+            { key:"is-muhasebe-olustur", label:'<i class="fa-solid fa-thumbtack"></i> Muhasebe: İş Muhasebesi Oluştur' },
+            { key:"is-muhasebe", label:'<i class="fa-solid fa-coins"></i> Muhasebe: İş Muhasebesi Takibi' },
+            { key:"tamamlanan-is-muhasebe", label:'<i class="fa-solid fa-check"></i> Muhasebe: Tamamlanan İş Muhasebeleri' },
+            { key:"hesap-takip", label:'<i class="fa-solid fa-building-columns"></i> Muhasebe: Hesap Takip Sistemi' },
+            { key:"fatura-takip", label:'<i class="fa-solid fa-receipt"></i> Muhasebe: Fatura Takip Sistemi' },
+            { key:"yillik-butce", label:'<i class="fa-solid fa-chart-simple"></i> Muhasebe: Yıllık Bütçeler' },
+            { key:"yonetim", label:'<i class="fa-solid fa-gear"></i> Portal Yönetimi' },
+            { key:"notlar", label:'<i class="fa-regular fa-note-sticky"></i> Notlar' },
+            { key:"gorevler-takvim", label:'<i class="fa-regular fa-calendar"></i> Görevler ve Takvim' }
         ];
 
         function yetkiCheckboxlariniRenderEt() {
@@ -988,7 +988,7 @@ function gorevMailGonder(gorev) {
                 if (aktif && aktif !== kullanici) {
                     var errorDiv = document.getElementById("loginError");
                     if (errorDiv) {
-                        errorDiv.innerText = "<i class="fa-solid fa-triangle-exclamation"></i> " + aktif + " kullanıcısı halen aktif. Çıkış yapmasını bekleyin.";
+                        errorDiv.innerText = "❌ " + aktif + " kullanıcısı halen aktif. Çıkış yapmasını bekleyin.";
                         errorDiv.style.display = "block";
                     }
                     callback(false);
@@ -1789,8 +1789,8 @@ function gorevMailGonder(gorev) {
                 fatura:"Fatura Özeti", piyasa:"Piyasa Endeksi", vergi:"Vergi Takvimi", notlar:"Ofis Notları"
             };
             var widgetIkonlari = {
-                chart:"<i class="fa-solid fa-chart-simple"></i>", shortcuts:"<i class="fa-solid fa-rocket"></i>", takvim:"<i class="fa-regular fa-calendar"></i>", teklifler:"<i class="fa-regular fa-file-lines"></i>",
-                isler:"<i class="fa-solid fa-helmet-safety"></i>", gorevler:"<i class="fa-solid fa-list"></i>", fatura:"<i class="fa-solid fa-coins"></i>", piyasa:"<i class="fa-solid fa-chart-simple"></i>", vergi:"<i class="fa-regular fa-calendar"></i>", notlar:"<i class="fa-regular fa-note-sticky"></i>"
+                chart:'<i class="fa-solid fa-chart-simple"></i>', shortcuts:'<i class="fa-solid fa-rocket"></i>', takvim:'<i class="fa-regular fa-calendar"></i>', teklifler:'<i class="fa-regular fa-file-lines"></i>',
+                isler:'<i class="fa-solid fa-helmet-safety"></i>', gorevler:'<i class="fa-solid fa-list"></i>', fatura:'<i class="fa-solid fa-coins"></i>', piyasa:'<i class="fa-solid fa-chart-simple"></i>', vergi:'<i class="fa-regular fa-calendar"></i>', notlar:'<i class="fa-regular fa-note-sticky"></i>'
             };
             var h = "";
             Object.keys(widgetAdlari).forEach(function(wid){
@@ -1821,12 +1821,12 @@ function gorevMailGonder(gorev) {
         var DASH_KISAYOL_KEY = "tm_dashboard_shortcuts";
         function dashKisayolVarsayilan() {
             return [
-                { icon:"<i class="fa-regular fa-file-lines"></i>", label:"Yeni Teklif", page:"teklif-olustur", perm:"teklif-olustur" },
-                { icon:"<i class="fa-solid fa-user"></i>", label:"Müşteri Ekle", page:"musteriler", perm:"musteriler-page" },
-                { icon:"<i class="fa-solid fa-handshake"></i>", label:"Partner Ekle", page:"isortaklari", perm:"isortaklari-page" },
-                { icon:"<i class="fa-solid fa-money-bill-wave"></i>", label:"Nakit Dekont", page:"nakit-dekont", perm:"nakit-dekont" },
-                { icon:"<i class="fa-regular fa-calendar"></i>", label:"İş Takibi", page:"istakibi", perm:"istakibi-page" },
-                { icon:"<i class="fa-solid fa-coins"></i>", label:"Fatura Takip", page:"fatura-takip", perm:"fatura-takip" }
+                { icon:'<i class="fa-regular fa-file-lines"></i>', label:"Yeni Teklif", page:"teklif-olustur", perm:"teklif-olustur" },
+                { icon:'<i class="fa-solid fa-user"></i>', label:"Müşteri Ekle", page:"musteriler", perm:"musteriler-page" },
+                { icon:'<i class="fa-solid fa-handshake"></i>', label:"Partner Ekle", page:"isortaklari", perm:"isortaklari-page" },
+                { icon:'<i class="fa-solid fa-money-bill-wave"></i>', label:"Nakit Dekont", page:"nakit-dekont", perm:"nakit-dekont" },
+                { icon:'<i class="fa-regular fa-calendar"></i>', label:"İş Takibi", page:"istakibi", perm:"istakibi-page" },
+                { icon:'<i class="fa-solid fa-coins"></i>', label:"Fatura Takip", page:"fatura-takip", perm:"fatura-takip" }
             ];
         }
         function dashShortcutsOlustur() {
@@ -1846,7 +1846,7 @@ function gorevMailGonder(gorev) {
                 });
                 var menuItem = document.getElementById("sub-" + (s.page || ""));
                 h += '<div class="dash-shortcut-item" onclick="menudenSayfaAc(\'' + (s.page||"") + '\',\'' + pageId + '\',document.getElementById(\'sub-' + (s.page||"") + '\'))">';
-                h += '<span class="dash-short-icon">' + (s.icon||"<i class="fa-solid fa-thumbtack"></i>") + '</span>';
+                h += '<span class="dash-short-icon">' + (s.icon||'<i class="fa-solid fa-thumbtack"></i>') + '</span>';
                 h += '<span>' + (s.label||"Sayfa") + '</span></div>';
             });
             if (!h) {
@@ -1899,7 +1899,7 @@ function gorevMailGonder(gorev) {
             const kart = db.find(m => m.id === id);
             if(!kart) return;
 
-            document.getElementById("musteriFormTitle").innerText = "<i class="fa-solid fa-gear"></i> Müşteri Kartını Düzenle";
+            document.getElementById("musteriFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> Müşteri Kartını Düzenle';
             document.getElementById("musteriEditId").value = kart.id;
             document.getElementById("mAdi").value = kart.ad;
             document.getElementById("mSirket").value = kart.sirket;
@@ -1925,7 +1925,7 @@ function gorevMailGonder(gorev) {
         }
 
         function musteriFormTemizle() {
-            document.getElementById("musteriFormTitle").innerText = "<i class="fa-solid fa-thumbtack"></i> Yeni Müşteri Kartı Tanımla";
+            document.getElementById("musteriFormTitle").innerHTML = '<i class="fa-solid fa-thumbtack"></i> Yeni Müşteri Kartı Tanımla';
             document.getElementById("musteriEditId").value = "-1";
             document.getElementById("mAdi").value = "";
             document.getElementById("mSirket").value = "";
@@ -1939,7 +1939,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("musteriBankaKonteyner").innerHTML = "";
             bankaSatiriEkle("musteriBankaKonteyner");
             
-            document.getElementById("btnMusteriSave").innerText = "<i class="fa-solid fa-floppy-disk"></i> Profil Kartını Kaydet";
+            document.getElementById("btnMusteriSave").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Profil Kartını Kaydet';
             document.getElementById("btnMusteriCancel").style.display = "none";
         }
 
@@ -2069,7 +2069,7 @@ function gorevMailGonder(gorev) {
             const kart = db.find(io => io.id === id);
             if(!kart) return;
 
-            document.getElementById("partnerFormTitle").innerText = "<i class="fa-solid fa-gear"></i> Partner Kartını Düzenle";
+            document.getElementById("partnerFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> Partner Kartını Düzenle';
             document.getElementById("partnerEditId").value = kart.id;
             document.getElementById("ioAdi").value = kart.ad;
             document.getElementById("ioSirket").value = kart.sirket;
@@ -2096,7 +2096,7 @@ function gorevMailGonder(gorev) {
         }
 
         function partnerFormTemizle() {
-            document.getElementById("partnerFormTitle").innerText = "<i class="fa-solid fa-thumbtack"></i> Yeni İş Ortağı / Partner Kaydet";
+            document.getElementById("partnerFormTitle").innerHTML = '<i class="fa-solid fa-thumbtack"></i> Yeni İş Ortağı / Partner Kaydet';
             document.getElementById("partnerEditId").value = "-1";
             document.getElementById("ioAdi").value = "";
             document.getElementById("ioSirket").value = "";
@@ -2110,7 +2110,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("partnerBankaKonteyner").innerHTML = "";
             bankaSatiriEkle("partnerBankaKonteyner");
 
-            document.getElementById("btnPartnerSave").innerText = "<i class="fa-solid fa-floppy-disk"></i> Partner Profilini Kaydet";
+            document.getElementById("btnPartnerSave").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Partner Profilini Kaydet';
             document.getElementById("btnPartnerCancel").style.display = "none";
         }
 
@@ -2287,7 +2287,7 @@ function gorevMailGonder(gorev) {
             var kart = db.find(function(k) { return k.id === kartId; });
             var kartAdi = kart ? (kart.ad || "") : "";
             var turAdi = tur === "musteri" ? "MÜŞTERİ" : "İŞ ORTAĞI";
-            document.getElementById("pbPopupTitle").innerText = "<i class="fa-regular fa-folder"></i> DOSYALAR - " + turAdi + ": " + kartAdi;
+            document.getElementById("pbPopupTitle").innerHTML = '<i class="fa-regular fa-folder"></i> DOSYALAR - ' + turAdi + ': ' + kartAdi;
 
             pbDosyaPopupGuncelle(kartId, tur);
             popup.style.display = "flex";
@@ -2500,7 +2500,7 @@ function gorevMailGonder(gorev) {
                 a.download = 'TM-Portal_Yedek_' + simdi.toISOString().slice(0,10) + '.json';
                 a.click();
                 URL.revokeObjectURL(a.href);
-                document.getElementById("yedekMsg").textContent = "<i class="fa-solid fa-check"></i> Yedek başarıyla indirildi.";
+                document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-check"></i> Yedek başarıyla indirildi.';
                 var span = document.getElementById("sonYedekTarihi");
                 if (span) span.textContent = simdi.toLocaleString('tr-TR');
             } catch(e) { console.error("Yedek alma hatasi:", e); tmNotify("Yedek alınırken hata oluştu: " + e.message, "error"); }
@@ -2519,10 +2519,10 @@ function gorevMailGonder(gorev) {
                             sayac++;
                         }
                     });
-                    document.getElementById("yedekMsg").textContent = "<i class="fa-solid fa-check"></i> " + sayac + " veri geri yüklendi. Sayfa yenileniyor...";
+                    document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-check"></i> ' + sayac + ' veri geri yüklendi. Sayfa yenileniyor...';
                     setTimeout(function() { location.reload(); }, 1500);
                 } catch(err) {
-                    document.getElementById("yedekMsg").textContent = "<i class="fa-solid fa-xmark"></i> Hata: Geçersiz dosya.";
+                    document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-xmark"></i> Hata: Geçersiz dosya.';
                 }
             };
             reader.readAsText(file);
@@ -2805,8 +2805,8 @@ function gorevMailGonder(gorev) {
                         var renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
                         var etk = e.title;
                         if (e.time && e.type !== "note" && !e.tumGun) etk = e.time + " " + etk;
-                        else if (e.tumGun) etk = "<i class="fa-regular fa-calendar"></i> " + etk;
-                        if (e.paylas) etk = "<i class="fa-solid fa-users"></i>" + (e.paylasan || "") + " " + etk;
+                        else if (e.tumGun) etk = '<i class="fa-regular fa-calendar"></i> ' + etk;
+                        if (e.paylas) etk = '<i class="fa-solid fa-users"></i>' + (e.paylasan || "") + ' ' + etk;
                         html += '<span style="font-size:10px;color:var(--text-dark);background:rgba(255,255,255,0.06);padding:1px 6px;border-radius:3px;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis;" title="' + e.title.replace(/'/g,"&apos;") + '"><span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:' + renk + ';margin-right:3px;vertical-align:middle;"></span>' + etk + '</span>';
                     });
                     html += '</div></div>';
@@ -2844,7 +2844,7 @@ function gorevMailGonder(gorev) {
 
         function asTakvimGorunumDegistir() {
             asTakvimGorunum = asTakvimGorunum === "monthly" ? "weekly" : "monthly";
-            document.getElementById("asTakvimToggleBtn").textContent = asTakvimGorunum === "monthly" ? "<i class="fa-regular fa-calendar"></i> HAFTALIK GÖRÜNÜM" : "<i class="fa-regular fa-calendar"></i> AYLIK GÖRÜNÜM";
+            document.getElementById("asTakvimToggleBtn").innerHTML = asTakvimGorunum === "monthly" ? '<i class="fa-regular fa-calendar"></i> HAFTALIK GÖRÜNÜM' : '<i class="fa-regular fa-calendar"></i> AYLIK GÖRÜNÜM';
             asTakvimRender();
         }
         function asTakvimGeri() {
@@ -2868,10 +2868,10 @@ function gorevMailGonder(gorev) {
             return hedef < bugun ? "#C0392B" : "#F9A825";
         }
         function asGorevDurumEtiketi(durum, tarih) {
-            if (durum === "tamamlandi") return "<i class="fa-solid fa-check"></i>";
+            if (durum === "tamamlandi") return '<i class="fa-solid fa-check"></i>';
             const bugun = new Date(); bugun.setHours(23,59,59,0);
             const hedef = new Date(tarih + "T23:59:59");
-            return hedef < bugun ? "<i class="fa-solid fa-circle" style="color:#C0392B"></i>" : "<i class="fa-solid fa-list"></i>";
+            return hedef < bugun ? '<i class="fa-solid fa-circle" style="color:#C0392B"></i>' : '<i class="fa-solid fa-list"></i>';
         }
         function asGetMergedEvents() {
             const aktifUser = localStorage.getItem("tm_active_user") || "";
@@ -2957,7 +2957,7 @@ function gorevMailGonder(gorev) {
                     gunEtk.slice(0,5).forEach(function(e) {
                         const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
                         var etkLabel = e.title;
-                        if (e.paylas) etkLabel = (e.paylasan ? "<i class="fa-solid fa-users"></i>" + e.paylasan + " " : "<i class="fa-solid fa-users"></i>") + etkLabel;
+                        if (e.paylas) etkLabel = (e.paylasan ? '<i class="fa-solid fa-users"></i>' + e.paylasan + ' ' : '<i class="fa-solid fa-users"></i>') + etkLabel;
                         html += '<span class="as-event-dot" onclick="event.stopPropagation();asGosterGunBilgi(\'' + gunStr + '\')" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-dot-c" style="background:' + renk + ';"></span>' + etkLabel + '</span>';
                     });
                     if (gunEtk.length > 5) html += '<span class="as-event-dot" style="color:var(--text-light);font-size:8px;" onclick="event.stopPropagation();asGosterGunBilgi(\'' + gunStr + '\')">+' + (gunEtk.length - 5) + ' daha</span>';
@@ -3008,8 +3008,8 @@ function gorevMailGonder(gorev) {
                         const isGorev = e.type === "gorev";
                         const id = e.id || "";
                         var etkLabel = e.title;
-                        if (e.paylas) etkLabel = (e.paylasan ? "<i class="fa-solid fa-users"></i>" + e.paylasan + " " : "<i class="fa-solid fa-users"></i>") + etkLabel;
-                        if (e.tumGun) etkLabel = "<i class="fa-regular fa-calendar"></i> " + etkLabel;
+                        if (e.paylas) etkLabel = (e.paylasan ? '<i class="fa-solid fa-users"></i>' + e.paylasan + ' ' : '<i class="fa-solid fa-users"></i>') + etkLabel;
+                        if (e.tumGun) etkLabel = '<i class="fa-regular fa-calendar"></i> ' + etkLabel;
                         cell += '<span class="as-event-dot" onclick="event.stopPropagation();' + (isGorev ? 'asGosterGunBilgi(\'' + gunStr + '\')' : 'asEventDuzenle(\'' + id.replace(/'/g,"\\'") + '\')') + ';" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-dot-c" style="background:' + renk + ';"></span>' + etkLabel + '</span>';
                     });
                     cell += '</div>';
@@ -3032,7 +3032,7 @@ function gorevMailGonder(gorev) {
                             const isGorev = e.type === "gorev";
                             const id = e.id || "";
                             var etkLabel = e.title;
-                            if (e.paylas) etkLabel = (e.paylasan ? "<i class="fa-solid fa-users"></i>" + e.paylasan + " " : "<i class="fa-solid fa-users"></i>") + etkLabel;
+                            if (e.paylas) etkLabel = (e.paylasan ? '<i class="fa-solid fa-users"></i>' + e.paylasan + ' ' : '<i class="fa-solid fa-users"></i>') + etkLabel;
                             cell += '<span class="as-event-dot" onclick="event.stopPropagation();' + (isGorev ? 'asGosterGunBilgi(\'' + gunStr + '\')' : 'asEventDuzenle(\'' + id.replace(/'/g,"\\'") + '\')') + ';" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-dot-c" style="background:' + renk + ';"></span>' + etkLabel + '</span>';
                         });
                         cell += '</div>';
@@ -3081,8 +3081,8 @@ function gorevMailGonder(gorev) {
                     var renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
                     var label = e.title;
                     if (e.time && e.type !== "note" && !e.tumGun) label = e.time + " " + label;
-                    else if (e.tumGun) label = "<i class="fa-regular fa-calendar"></i> Tüm Gün " + label;
-                    if (e.paylas) label = (e.paylasan ? "<i class="fa-solid fa-users"></i>" + e.paylasan + " " : "<i class="fa-solid fa-users"></i>") + label;
+                    else if (e.tumGun) label = '<i class="fa-regular fa-calendar"></i> Tüm Gün ' + label;
+                    if (e.paylas) label = (e.paylasan ? '<i class="fa-solid fa-users"></i>' + e.paylasan + ' ' : '<i class="fa-solid fa-users"></i>') + label;
                     h += '<span class="as-takvim-ozet-event" onclick="asGosterGunBilgi(\'' + ds + '\')" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-ozet-dot" style="background:' + renk + ';"></span>' + label + '</span>';
                 });
                 h += '</div></div>';
@@ -3298,12 +3298,12 @@ function gorevMailGonder(gorev) {
         function asGosterGunBilgi(gunStr) {
             const etkinlikler = asGetMergedEvents().filter(function(e) { return e.date === gunStr; });
             if (etkinlikler.length === 0) return;
-            document.getElementById("asGunInfoTitle").textContent = "<i class="fa-regular fa-calendar"></i> " + gunStr + " - ETKİNLİKLER";
+            document.getElementById("asGunInfoTitle").innerHTML = '<i class="fa-regular fa-calendar"></i> ' + gunStr + ' - ETKİNLİKLER';
             document.getElementById("asEventFilterBar").style.display = "none";
             var h = "";
             etkinlikler.forEach(function(e) {
                 const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
-                const turAdi = e.type === "reminder" ? "<i class="fa-solid fa-bell"></i> ANIMSATICI" : (e.type === "note" ? "<i class="fa-regular fa-note-sticky"></i> NOT" : (e.type === "gorev" ? (e.durum === "tamamlandi" ? "<i class="fa-solid fa-check"></i> GÖREV (TAMAMLANDI)" : "<i class="fa-solid fa-list"></i> GÖREV") : "<i class="fa-solid fa-circle"></i> DİĞER"));
+                const turAdi = e.type === "reminder" ? '<i class="fa-solid fa-bell"></i> ANIMSATICI' : (e.type === "note" ? '<i class="fa-regular fa-note-sticky"></i> NOT' : (e.type === "gorev" ? (e.durum === "tamamlandi" ? '<i class="fa-solid fa-check"></i> GÖREV (TAMAMLANDI)' : '<i class="fa-solid fa-list"></i> GÖREV') : '<i class="fa-solid fa-circle"></i> DİĞER'));
                 const isGorev = e.type === "gorev";
                 const id = e.id || "";
                 const aktifUser = localStorage.getItem("tm_active_user") || "";
@@ -3395,13 +3395,13 @@ function gorevMailGonder(gorev) {
         }
         function asTumEtkinlikleriGoster() {
             const etkinlikler = asGetMergedEvents();
-            document.getElementById("asGunInfoTitle").textContent = "<i class="fa-solid fa-list"></i> TÜM ETKİNLİKLER";
+            document.getElementById("asGunInfoTitle").innerHTML = '<i class="fa-solid fa-list"></i> TÜM ETKİNLİKLER';
             document.getElementById("asEventFilterBar").style.display = "flex";
             var filtered = asEventFilter === "all" ? etkinlikler : etkinlikler.filter(function(e) { return e.type === asEventFilter; });
             var h = "";
             filtered.forEach(function(e) {
                 const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
-                const turAdi = e.type === "reminder" ? "<i class="fa-solid fa-bell"></i> ANIMSATICI" : (e.type === "note" ? "<i class="fa-regular fa-note-sticky"></i> NOT" : (e.type === "gorev" ? (e.durum === "tamamlandi" ? "<i class="fa-solid fa-check"></i> GÖREV (TAMAMLANDI)" : "<i class="fa-solid fa-list"></i> GÖREV") : "<i class="fa-solid fa-circle"></i> DİĞER"));
+                const turAdi = e.type === "reminder" ? '<i class="fa-solid fa-bell"></i> ANIMSATICI' : (e.type === "note" ? '<i class="fa-regular fa-note-sticky"></i> NOT' : (e.type === "gorev" ? (e.durum === "tamamlandi" ? '<i class="fa-solid fa-check"></i> GÖREV (TAMAMLANDI)' : '<i class="fa-solid fa-list"></i> GÖREV') : '<i class="fa-solid fa-circle"></i> DİĞER'));
                 const isGorev = e.type === "gorev";
                 const id = e.id || "";
                 const aktifUser = localStorage.getItem("tm_active_user") || "";
@@ -3428,7 +3428,7 @@ function gorevMailGonder(gorev) {
         function asGorevFormGoster() {
             const form = document.getElementById("asGorevAtamaFormu");
             const btn = document.getElementById("asGorevAtaBtn");
-            if (form.style.display === "block") { form.style.display = "none"; btn.textContent = "<i class="fa-solid fa-plus"></i> GÖREV ATA"; return; }
+            if (form.style.display === "block") { form.style.display = "none"; btn.innerHTML = '<i class="fa-solid fa-plus"></i> GÖREV ATA'; return; }
             const aktifUser = localStorage.getItem("tm_active_user") || "";
             const yetkiler = JSON.parse(localStorage.getItem("tm_gorev_yetkileri")) || [];
             const yetkiliAlanlar = yetkiler.filter(function(y) { return y.veren === aktifUser; }).map(function(y) { return y.alan; });
@@ -3446,7 +3446,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("asGorevAtanan").innerHTML = ops;
             document.getElementById("asGorevTarih").value = anlikTarihGetir();
             form.style.display = "block";
-            btn.textContent = "<i class="fa-solid fa-xmark"></i> İPTAL";
+            btn.innerHTML = '<i class="fa-solid fa-xmark"></i> İPTAL';
         }
         function asGorevAta() {
             const atanan = document.getElementById("asGorevAtanan").value;
@@ -3463,7 +3463,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("asGorevAtanan").selectedIndex = 0;
             asGorevListele();
             document.getElementById("asGorevAtamaFormu").style.display = "none";
-            document.getElementById("asGorevAtaBtn").textContent = "<i class="fa-solid fa-plus"></i> GÖREV ATA";
+            document.getElementById("asGorevAtaBtn").innerHTML = '<i class="fa-solid fa-plus"></i> GÖREV ATA';
             tmNotify("Görev atandı.", "success");
             aktiviteEkle("Görev atandı: " + baslik + " → " + atanan, "Dashboard");
             bildirimSesi();
@@ -4142,7 +4142,7 @@ function gorevMailGonder(gorev) {
             const kayit = db.find(k => k.id === id);
             if(!kayit) return;
 
-            document.getElementById("isMuhFormTitle").innerText = "<i class="fa-solid fa-gear"></i> İş Muhasebesi Kaydını Düzenle";
+            document.getElementById("isMuhFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> İş Muhasebesi Kaydını Düzenle';
             document.getElementById("isMuhEditId").value = kayit.id;
             document.getElementById("isMuhIsAdi").value = kayit.isAdi;
             document.getElementById("isMuhFirma").value = kayit.firma || "";
@@ -6778,12 +6778,12 @@ function gorevMailGonder(gorev) {
             document.getElementById("htAnaSayfa").style.display = "none";
             var baslik = "", detayBilgi = "";
             if(hesapId === -1) {
-                baslik = "<i class="fa-solid fa-money-bill-wave"></i> Nakit Hesabı";
+                baslik = '<i class="fa-solid fa-money-bill-wave"></i> Nakit Hesabı';
                 detayBilgi = "Fiziki Nakit Para — " + htTl(db.nakit);
             } else {
                 var hs = db.hesaplar.find(function(h){return h.id===hesapId;});
                 if(!hs) { tmNotify("Hesap bulunamadı!", "error"); return; }
-                baslik = "<i class="fa-solid fa-building-columns"></i> " + hs.bankaAdi + " - " + hs.hesapSahibi + " (Bakiye: " + htTl(hs.bakiye) + ")";
+                baslik = '<i class="fa-solid fa-building-columns"></i> ' + hs.bankaAdi + " - " + hs.hesapSahibi + " (Bakiye: " + htTl(hs.bakiye) + ")";
                 detayBilgi = "IBAN: " + htIbanGoster(hs.iban) + " &nbsp;|&nbsp; Kart Şifre: " + hs.kartSifre + " &nbsp;|&nbsp; İnternet Şifre: " + hs.internetSifre;
             }
             document.getElementById("htDetayBaslik").innerHTML = baslik;
@@ -6819,31 +6819,31 @@ function gorevMailGonder(gorev) {
                 return;
             }
             function hesapAdiBul(id) {
-                if(id === -1) return "<i class="fa-solid fa-money-bill-wave"></i> NAKİT";
-                if(id === 0) return "<i class="fa-solid fa-globe"></i> HARİCİ";
+                if(id === -1) return '<i class="fa-solid fa-money-bill-wave"></i> NAKİT';
+                if(id === 0) return '<i class="fa-solid fa-globe"></i> HARİCİ';
                 var h = db.hesaplar.find(function(hs){return hs.id===id;});
                 return h ? h.bankaAdi+" - "+h.hesapSahibi : ("ID:"+id);
             }
             var h = '<div class="ht-islem-kart-list">';
             islemler.slice().reverse().forEach(function(i) {
                 var gorunenIslem = i.islem;
-                var gorunenYon = hesapAdiBul(i.hesapId) + " → " + (i.hedefId ? hesapAdiBul(i.hedefId) : "<i class="fa-solid fa-globe"></i> HARİCİ");
-                var ikon = "<i class="fa-solid fa-paper-plane"></i>";
+                var gorunenYon = hesapAdiBul(i.hesapId) + " → " + (i.hedefId ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ');
+                var ikon = '<i class="fa-solid fa-paper-plane"></i>';
                 if(i.islem === "GELEN") {
-                    gorunenYon = "<i class="fa-solid fa-globe"></i> HARİCİ → " + hesapAdiBul(i.hesapId);
-                    ikon = "<i class="fa-solid fa-inbox"></i>";
+                    gorunenYon = '<i class="fa-solid fa-globe"></i> HARİCİ → ' + hesapAdiBul(i.hesapId);
+                    ikon = '<i class="fa-solid fa-inbox"></i>';
                 } else if(i.islem === "GİDEN") {
                     if(i.hedefId && i.hesapId !== HT_AKTIF_DETAY_HESAP) {
                         gorunenIslem = "GELEN";
-                        ikon = "<i class="fa-solid fa-inbox"></i>";
+                        ikon = '<i class="fa-solid fa-inbox"></i>';
                     }
                 } else if(i.islem === "TRANSFER") {
                     if(i.hesapId === HT_AKTIF_DETAY_HESAP) {
                         gorunenIslem = "GİDEN";
-                        ikon = "<i class="fa-solid fa-paper-plane"></i>";
+                        ikon = '<i class="fa-solid fa-paper-plane"></i>';
                     } else {
                         gorunenIslem = "GELEN";
-                        ikon = "<i class="fa-solid fa-inbox"></i>";
+                        ikon = '<i class="fa-solid fa-inbox"></i>';
                     }
                 }
                 var cls = gorunenIslem === "GELEN" ? "gelen" : "giden";
@@ -7059,8 +7059,8 @@ function gorevMailGonder(gorev) {
                 return;
             }
             function hesapAdiBul(id) {
-                if(id === -1) return "<i class="fa-solid fa-money-bill-wave"></i> NAKİT";
-                if(id === 0) return "<i class="fa-solid fa-globe"></i> HARİCİ";
+                if(id === -1) return '<i class="fa-solid fa-money-bill-wave"></i> NAKİT';
+                if(id === 0) return '<i class="fa-solid fa-globe"></i> HARİCİ';
                 var h = db.hesaplar.find(function(hs){return hs.id===id;});
                 return h ? h.bankaAdi+" - "+h.hesapSahibi : ("ID:"+id);
             }
@@ -7083,13 +7083,13 @@ function gorevMailGonder(gorev) {
                 var hAd, ikon;
                 if(i.islem === "TRANSFER") {
                     hAd = hesapAdiBul(i.hesapId) + " → " + hesapAdiBul(i.hedefId);
-                    ikon = "<i class="fa-solid fa-rotate"></i>";
+                    ikon = '<i class="fa-solid fa-rotate"></i>';
                 } else if(i.islem === "GELEN") {
                     hAd = hesapAdiBul(i.hesapId);
-                    ikon = "<i class="fa-solid fa-inbox"></i>";
+                    ikon = '<i class="fa-solid fa-inbox"></i>';
                 } else {
-                    hAd = (i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : "<i class="fa-solid fa-globe"></i> HARİCİ");
-                    ikon = "<i class="fa-solid fa-paper-plane"></i>";
+                    hAd = (i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ');
+                    ikon = '<i class="fa-solid fa-paper-plane"></i>';
                 }
                 h += '<div class="ht-islem-kart" data-search="'+(i.aciklama||"").toLowerCase()+' '+hAd.toLowerCase()+'">';
                 h += '<div class="ht-islem-kart-ust">';
@@ -7217,7 +7217,7 @@ function gorevMailGonder(gorev) {
 
             var satirlar = '';
             islemler.forEach(function(i) {
-                var ikon = i.islem === "GELEN" ? "<i class="fa-solid fa-inbox"></i>" : (i.islem === "GİDEN" ? "<i class="fa-solid fa-paper-plane"></i>" : "<i class="fa-solid fa-rotate"></i>");
+                var ikon = i.islem === "GELEN" ? '<i class="fa-solid fa-inbox"></i>' : (i.islem === "GİDEN" ? '<i class="fa-solid fa-paper-plane"></i>' : '<i class="fa-solid fa-rotate"></i>');
                 var hAd = i.islem === "TRANSFER" ? hesapAdiBul(i.hesapId)+" → "+hesapAdiBul(i.hedefId) : (i.islem === "GELEN" ? hesapAdiBul(i.hesapId) : (i.hedefId&&i.hedefId!==0?hesapAdiBul(i.hedefId):"HARİCİ"));
                 var renk = i.islem === "GELEN" ? "#2E7D32" : (i.islem === "GİDEN" ? "#9E2A2B" : "#a0b8cc");
                 satirlar += '<tr>';
@@ -7362,7 +7362,7 @@ function gorevMailGonder(gorev) {
             let h = "";
             db.kartlar.forEach(k => {
                 const tipEtiket = k.tip === "sabit" ? "Sabit" : k.tip === "birim" ? "Birim" : "Kademeli";
-                const tipIcon = k.tip === "sabit" ? "<i class="fa-solid fa-coins"></i>" : k.tip === "birim" ? "📏" : "<i class="fa-solid fa-ruler-combined"></i>";
+                const tipIcon = k.tip === "sabit" ? '<i class="fa-solid fa-coins"></i>' : k.tip === "birim" ? "📏" : '<i class="fa-solid fa-ruler-combined"></i>';
                 h += '<div class="tmf-kart" draggable="true" data-id="' + k.id + '">';
                 h += '<div class="tmf-kart-header"><h3>' + esc(k.ad) + '</h3><div class="tmf-kart-badges">';
                 h += '<span class="tmf-badge tmf-badge-' + k.tip + '">' + tipIcon + ' ' + tipEtiket + '</span>';
@@ -7687,7 +7687,7 @@ function gorevMailGonder(gorev) {
                 }
                 var ekle = document.createElement("option");
                 ekle.value = "ozel";
-                ekle.textContent = "<i class="fa-regular fa-pen-to-square"></i> Özel Yıl...";
+                ekle.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Özel Yıl...';
                 sec.appendChild(ekle);
             }
             var vtSpan = document.getElementById("ftOdenenVergiTurleri");
@@ -7750,20 +7750,20 @@ function gorevMailGonder(gorev) {
                 if (net >= 0) {
                     kdvNet = net;
                     netKart.className = "ft-ozet-card card-kdv-net kdv-odenecek";
-                    netIco.innerText = "<i class="fa-solid fa-circle" style="color:#C0392B"></i>";
+                    netIco.innerHTML = '<i class="fa-solid fa-circle" style="color:#C0392B"></i>';
                     netLbl.innerText = "KDV Ödenecek";
                     netVal.style.color = "var(--accent-red)";
                 } else {
                     kdvNet = -net;
                     netKart.className = "ft-ozet-card card-kdv-net kdv-alacak";
-                    netIco.innerText = "<i class="fa-solid fa-circle" style="color:#2E7D32"></i>";
+                    netIco.innerHTML = '<i class="fa-solid fa-circle" style="color:#2E7D32"></i>';
                     netLbl.innerText = "KDV Alacak (+ fazla ödeme)";
                     netVal.style.color = "var(--btn-green)";
                 }
             } else {
                 kdvNet = -fark;
                 netKart.className = "ft-ozet-card card-kdv-net kdv-alacak";
-                netIco.innerText = "<i class="fa-solid fa-circle" style="color:#2E7D32"></i>";
+                netIco.innerHTML = '<i class="fa-solid fa-circle" style="color:#2E7D32"></i>';
                 netLbl.innerText = "KDV Alacak";
                 netVal.style.color = "var(--btn-green)";
             }
@@ -8306,7 +8306,7 @@ function gorevMailGonder(gorev) {
                 h += '<h3 style="font-size:14px;margin-bottom:8px;"><i class="fa-regular fa-calendar"></i> Vergi Takvimi</h3><table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f5f5f5;"><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tarih</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Başlık</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tür</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Durum</th></tr></thead><tbody>';
                 etk.slice().reverse().forEach(function(e) {
                     var ta = e.tur==="kdv"?"KDV":e.tur==="gelirVergisi"?"Gelir Vergisi":e.tur==="kurumlarVergisi"?"Kurumlar Vergisi":e.tur==="stopaj"?"Stopaj":e.tur==="damgaVergisi"?"Damga Vergisi":"Diğer";
-                    h += '<tr><td style="padding:8px;border:1px solid #ddd;">'+(e.tarih?tarihStr(e.tarih):"-")+'</td><td style="padding:8px;border:1px solid #ddd;">'+esc(e.baslik)+'</td><td style="padding:8px;border:1px solid #ddd;">'+ta+'</td><td style="padding:8px;border:1px solid #ddd;">'+(e.tamamlandi?"<i class="fa-solid fa-check"></i> Tamamlandı":"⏳ Bekliyor")+'</td></tr>';
+                    h += '<tr><td style="padding:8px;border:1px solid #ddd;">'+(e.tarih?tarihStr(e.tarih):"-")+'</td><td style="padding:8px;border:1px solid #ddd;">'+esc(e.baslik)+'</td><td style="padding:8px;border:1px solid #ddd;">'+ta+'</td><td style="padding:8px;border:1px solid #ddd;">'+(e.tamamlandi?'<i class="fa-solid fa-check"></i> Tamamlandı':"⏳ Bekliyor")+'</td></tr>';
                 });
                 h += '</tbody></table>';
             }
@@ -8672,12 +8672,12 @@ function itDurumMetni(o) {
             var kartlar = document.getElementById("itAktifKartlar");
             var gantt = document.getElementById("itGanttContainer");
             if (itGanttAktif) {
-                btn.textContent = "<i class="fa-solid fa-list"></i> Liste";
+                btn.innerHTML = '<i class="fa-solid fa-list"></i> Liste';
                 kartlar.style.display = "none";
                 gantt.style.display = "block";
                 itGanttGoster();
             } else {
-                btn.textContent = "<i class="fa-solid fa-chart-simple"></i> Gantt";
+                btn.innerHTML = '<i class="fa-solid fa-chart-simple"></i> Gantt';
                 kartlar.style.display = "";
                 gantt.style.display = "none";
             }
@@ -9376,7 +9376,7 @@ function itDurumMetni(o) {
         function itFormAc(data) {
             document.getElementById("itFormPopup").classList.add("active");
             document.getElementById("itFormEditId").value = data ? data.id : "";
-            document.getElementById("itFormTitle").innerText = data ? "<i class="fa-regular fa-pen-to-square"></i> İŞ DÜZENLE" : "<i class="fa-solid fa-plus"></i> YENİ İŞ EKLE";
+            document.getElementById("itFormTitle").innerHTML = data ? '<i class="fa-regular fa-pen-to-square"></i> İŞ DÜZENLE' : '<i class="fa-solid fa-plus"></i> YENİ İŞ EKLE';
 
             var firmaSelect = document.getElementById("itFormFirma");
             var firmalar = itFirmaListesiGetir();
@@ -9493,7 +9493,7 @@ function itDurumMetni(o) {
             itDbKaydet(liste);
             itGoster();
             itAcKalanYukle(openIds);
-            tmNotify("<i class="fa-solid fa-check"></i> Tahsilat onayı verildi.", "success");
+            tmNotify('<i class="fa-solid fa-check"></i> Tahsilat onayı verildi.', 'success');
             aktiviteEkle("Tahsilat onayı verildi: " + (liste[idx].isAdi || ""), "İş Takibi");
         }
 
@@ -9939,7 +9939,7 @@ function itDurumMetni(o) {
 
         function noteYeniNot() {
             document.getElementById("noteEditorId").value = "";
-            document.getElementById("noteEditorTitle").innerText = "<i class="fa-regular fa-note-sticky"></i> Yeni Not";
+            document.getElementById("noteEditorTitle").innerHTML = '<i class="fa-regular fa-note-sticky"></i> Yeni Not';
             document.getElementById("noteEditorBaslik").value = "";
             document.getElementById("noteEditorIcerik").innerHTML = "";
             document.getElementById("noteEditorModal").style.display = "flex";
@@ -9955,7 +9955,7 @@ function itDurumMetni(o) {
             var n = notes.find(function(x) { return x.id === id; });
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
             document.getElementById("noteEditorId").value = id;
-            document.getElementById("noteEditorTitle").innerText = "<i class="fa-regular fa-pen-to-square"></i> NOTU DÜZENLE";
+            document.getElementById("noteEditorTitle").innerHTML = '<i class="fa-regular fa-pen-to-square"></i> NOTU DÜZENLE';
             document.getElementById("noteEditorBaslik").value = (n.title || "") ? trToUpper(n.title || "") : "";
             document.getElementById("noteEditorIcerik").innerHTML = n.content || "";
             document.getElementById("noteEditorModal").style.display = "flex";
