@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.19';
+        var APP_VERSION = 'V1.31.20';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9912,7 +9912,7 @@ function itDurumMetni(o) {
                 + '<style>body{margin:0;padding:0;background:#fff;}img{max-width:100%;height:auto;}table{width:100%;border-collapse:collapse;}td,th{padding:4px 6px;border:1px solid #ccc;text-align:left;}pre{white-space:pre-wrap;word-break:break-word;}*{box-sizing:border-box;}</style>';
 
             var el = document.createElement('div');
-            el.style.cssText = 'display:flex;flex-direction:column;position:fixed;left:-9999px;top:0;width:210mm;padding:25.4mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#333;';
+            el.style.cssText = 'position:fixed;left:0;top:0;width:210mm;padding:25.4mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#333;z-index:99999;';
             el.innerHTML = htm;
             document.body.appendChild(el);
 
@@ -9920,11 +9920,11 @@ function itDurumMetni(o) {
             setTimeout(function() {
                 var totalH = el.scrollHeight;
                 html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' }).then(function(cv) {
+                    el.style.display = 'none';
                     var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
                     var m = 25.4;
-                    var pw = 210, ph = 297;
-                    var iw = pw - 2 * m, ih = ph - 2 * m;
-                    var ew = el.offsetWidth;
+                    var iw = 210 - 2 * m, ih = 297 - 2 * m;
+                    var ew = el.offsetWidth || 794;
                     var r = ew / iw;
                     var pp = ih * r;
                     var pg = Math.ceil(totalH / pp);
@@ -9952,5 +9952,5 @@ function itDurumMetni(o) {
                     tmLoadingGizle();
                     tmNotify("PDF oluşturulurken hata oluştu.", "error");
                 });
-            }, 250);
+            }, 300);
         }
