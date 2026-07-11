@@ -616,25 +616,20 @@ function gorevMailGonder(gorev) {
 
         function tmIkonButtonTooltipEkle() {
             document.querySelectorAll('button, .btn, .it-btn-sil, .it-btn-tamamla, .it-btn-tahsilat, .it-btn-ruhsat, .btn-pdf-red, .btn-danger, .btn-warning').forEach(function(b){
-                var txt = b.textContent.replace(/[🔍📋📊📜✅🗑️📌📅📄➕💾🔷🚀🎨📤📥🧾⚙️📁✏️❌⭐✔️🎯🔗🔒🔓👁️🔄❓📎📩🖨️🔃🔔💳💰👤👥🏢🏠🛠️📦📝🖊️💵🔑🔧🔨🪛📐📏🖍️🎨🖼️🏗️🏘️🌳🏞️📰🗞️🗺️📍📌🔍🔎☀️🌙🔆🌓◀▶▲▼✕＋×\s]/g,'').trim();
-                if (!txt && b.textContent.trim().length > 0) {
-                    var iconText = b.textContent.trim().substring(0,2);
-                    var label = '';
-                    if (iconText.indexOf('🗑')!==-1) label = 'Sil';
-                    else if (iconText.indexOf('✏')!==-1) label = 'Düzenle';
-                    else if (iconText.indexOf('📜')!==-1) label = 'Ruhsat Onayı';
-                    else if (iconText.indexOf('✅')!==-1) label = 'Onayla';
-                    else if (iconText.indexOf('📄')!==-1) label = 'PDF';
-                    else if (iconText.indexOf('💾')!==-1) label = 'Kaydet';
-                    else if (iconText.indexOf('➕')!==-1) label = 'Ekle';
-                    else if (iconText.indexOf('🚀')!==-1) label = 'Başlat';
-                    else if (iconText.indexOf('🔷')!==-1) label = '3B Modelleme';
-                    else if (iconText.indexOf('📤')!==-1) label = 'Giden';
-                    else if (iconText.indexOf('📥')!==-1) label = 'Gelen';
-                    else if (iconText.indexOf('🔍')!==-1) label = 'Ara';
-                    else if (iconText.indexOf('📋')!==-1) label = 'Liste';
-                    else if (iconText.indexOf('📊')!==-1) label = 'Gantt';
-                    else if (iconText.indexOf('📅')!==-1) label = 'Takvim';
+                var txt = b.textContent.trim();
+                var label = '';
+                if (txt.indexOf('Sil') !== -1 || txt.indexOf('SİL') !== -1) label = 'Sil';
+                else if (txt.indexOf('Onayla') !== -1) label = 'Onayla';
+                else if (txt.indexOf('PDF') !== -1) label = 'PDF';
+                else if (txt.indexOf('Kaydet') !== -1 || txt.indexOf('KAYDET') !== -1) label = 'Kaydet';
+                else if (txt.indexOf('Ekle') !== -1 || txt.indexOf('EKLE') !== -1) label = 'Ekle';
+                else if (txt.indexOf('Başlat') !== -1 || txt.indexOf('BAŞLAT') !== -1) label = 'Başlat';
+                else if (txt.indexOf('Giden') !== -1) label = 'Giden';
+                else if (txt.indexOf('Gelen') !== -1) label = 'Gelen';
+                else if (txt.indexOf('Ara') !== -1) label = 'Ara';
+                else if (txt.indexOf('Liste') !== -1) label = 'Liste';
+                else if (txt.indexOf('Gantt') !== -1) label = 'Gantt';
+                else if (txt.indexOf('Takvim') !== -1) label = 'Takvim';
                     if (label) {
                         b.classList.add('tm-tooltip-wrap');
                         b.innerHTML = b.innerHTML + '<span class="tm-tooltip-text">' + label + '</span>';
@@ -1121,7 +1116,7 @@ function gorevMailGonder(gorev) {
             const btn = document.getElementById('sidebarToggle');
             sidebar.classList.toggle('collapsed');
             const collapsed = sidebar.classList.contains('collapsed');
-            btn.textContent = collapsed ? '▶' : '◀';
+            btn.innerHTML = collapsed ? '<i class="fa-solid fa-chevron-right"></i>' : '<i class="fa-solid fa-chevron-left"></i>';
             localStorage.setItem('tm_sidebar_collapsed', collapsed ? '1' : '0');
         }
         function sidebarMobileAc() {
@@ -1140,14 +1135,14 @@ function gorevMailGonder(gorev) {
             const sidebar = document.querySelector('.sidebar');
             if (sidebar.classList.contains('collapsed')) {
                 sidebar.classList.remove('collapsed');
-                document.getElementById('sidebarToggle').textContent = '◀';
+                document.getElementById('sidebarToggle').innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
                 localStorage.setItem('tm_sidebar_collapsed', '0');
             }
         }
         function menuyuInsaEt(yetkiler) {
             if (localStorage.getItem('tm_sidebar_collapsed') === '1') {
                 document.querySelector('.sidebar').classList.add('collapsed');
-                document.getElementById('sidebarToggle').textContent = '▶';
+                document.getElementById('sidebarToggle').innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
             }
             sayfaDegistir('anasayfa-page', document.getElementById('menu-anasayfa'));
             kullaniciListesiniYenile();
@@ -1199,13 +1194,13 @@ function gorevMailGonder(gorev) {
             if (e.key === 'Escape') {
                 e.preventDefault();
                 var btns = modal.querySelectorAll('button');
-                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === '✕' || t.startsWith('✕') || t === 'İptal' || t === 'Kapat' || t === 'Vazgeç' || t === 'Hayır'; });
+                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === '✕' || t.startsWith('✕') || t === 'İptal' || t === 'Kapat' || t === 'Vazgeç' || t === 'Hayır' || b.classList.contains('as-modal-close') || b.classList.contains('modal-close'); });
                 if (!btn) btn = btns[btns.length - 1];
                 if (btn) btn.click();
             } else if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('[contenteditable="true"]') && !e.target.closest('textarea') && !e.target.closest('input')) {
                 e.preventDefault();
                 var btns = modal.querySelectorAll('button');
-                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim().replace(/[📄🗑️✏️➕💾📁📂🔒💰📤🔍]/g, '').trim(); return t === 'Evet' || t === 'Tamam' || t === 'Kaydet' || t === 'Onayla' || t === 'PDF Oluştur' || t === 'KAYDET'; });
+                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === 'Evet' || t === 'Tamam' || t === 'Kaydet' || t === 'Onayla' || t === 'PDF Oluştur' || t === 'KAYDET'; });
                 if (btn) btn.click();
             }
         });
@@ -2157,7 +2152,7 @@ function gorevMailGonder(gorev) {
                             <span>${isSayisi}</span>
                         </div>
                         <div class="card-main-header">
-                            <h4 class="p-search-ad">${io.ad}${io.status === 'Sürekli Partner' ? ' ⭐' : ''}</h4>
+                            <h4 class="p-search-ad">${io.ad}${io.status === 'Sürekli Partner' ? ' <i class="fa-solid fa-star"></i>' : ''}</h4>
                             <div class="p-type p-search-brans" style="color:var(--btn-green)"><i class="fa-solid fa-ruler-combined"></i> ${io.brans}</div>
                         </div>
                         <div class="p-detail"><b>Firma/Kurum:</b> <span class="p-search-sirket">${io.sirket}</span></div>
@@ -7865,7 +7860,7 @@ function gorevMailGonder(gorev) {
                 h += '<td style="font-size:11px;">'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td><td style="font-size:11px;">'+(f.vadeTarihi?tarihStr(f.vadeTarihi):"-")+'</td>';
                 h += '<td style="text-align:right;">'+tmTl(f.tutar)+'</td><td style="text-align:right;">'+tmTl(f.kdvTutari)+'</td><td style="text-align:right;font-weight:700;">'+tmTl(f.toplamTutar)+'</td>';
                 h += '<td><span class="ft-badge '+dc+'">'+dt+'</span></td><td style="font-size:11px;">'+(f.odemeTarihi?tarihStr(f.odemeTarihi):"-")+'</td>';
-                h += '<td><button class="ft-btn-sm ft-btn-edit" onclick="ftGelenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGelenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i>️</button></td></tr>';
+                h += '<td><button class="ft-btn-sm ft-btn-edit" onclick="ftGelenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGelenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
             });
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
@@ -7972,7 +7967,7 @@ function gorevMailGonder(gorev) {
                 h += '<td style="font-size:11px;">'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td><td style="font-size:11px;">'+(f.vadeTarihi?tarihStr(f.vadeTarihi):"-")+'</td>';
                 h += '<td style="text-align:right;">'+tmTl(f.tutar)+'</td><td style="text-align:right;">'+tmTl(f.kdvTutari)+'</td><td style="text-align:right;font-weight:700;">'+tmTl(f.toplamTutar)+'</td>';
                 h += '<td><span class="ft-badge '+dc+'">'+dt+'</span></td><td style="font-size:11px;">'+(f.tahsilatTarihi?tarihStr(f.tahsilatTarihi):"-")+'</td>';
-                h += '<td><button class="ft-btn-sm ft-btn-edit" onclick="ftGidenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGidenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i>️</button></td></tr>';
+                h += '<td><button class="ft-btn-sm ft-btn-edit" onclick="ftGidenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGidenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
             });
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
@@ -8080,7 +8075,7 @@ function gorevMailGonder(gorev) {
                 h += '<td style="font-size:11px;">'+(v.odemeTarihi?tarihStr(v.odemeTarihi):"-")+'</td>';
                 h += '<td style="font-size:11px;">'+(v.donem||"-")+'</td>';
                 h += '<td style="font-size:11px;color:var(--text-light);">'+esc(v.aciklama||"")+'</td>';
-                h += '<td><button class="ft-btn-sm ft-btn-edit" onclick="ftOdenenVergiFormAc('+v.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftOdenenVergiSil('+v.id+')"><i class="fa-solid fa-trash-can"></i>️</button></td></tr>';
+                h += '<td><button class="ft-btn-sm ft-btn-edit" onclick="ftOdenenVergiFormAc('+v.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftOdenenVergiSil('+v.id+')"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
             });
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
@@ -8265,7 +8260,7 @@ function gorevMailGonder(gorev) {
                 if (kalanGun) h += '<div class="ft-takvim-kalan" style="'+renk+'">'+kalanGun+'</div>';
                 if (e.aciklama) h += '<div class="ft-takvim-aciklama">'+esc(e.aciklama)+'</div>';
                 h += '<button class="ft-btn-sm ft-btn-edit" onclick="ftTakvimFormAc('+e.id+')"><i class="fa-regular fa-pen-to-square"></i></button>';
-                h += '<button class="ft-btn-sm ft-btn-del" onclick="ftTakvimSil('+e.id+')"><i class="fa-solid fa-trash-can"></i>️</button></div>';
+                h += '<button class="ft-btn-sm ft-btn-del" onclick="ftTakvimSil('+e.id+')"><i class="fa-solid fa-trash-can"></i></button></div>';
             });
             h += '</div>';
             konteyner.innerHTML = h;
@@ -8611,7 +8606,7 @@ function itDurumMetni(o) {
                     (isTam && !is.tahsilatOnayi && is.tur !== "Taslak" && is.tur !== "Uygulama Proje" ? '<button class="it-btn-tahsilat" onclick="event.stopPropagation();itTahsilatOnayiVer(' + is.id + ')"><i class="fa-solid fa-check"></i> TAHSİLAT ONAYI VER</button>' : '') +
                     (isTam && !is.tahsilatOnayi && is.tur === "Uygulama Proje" ? '<button class="it-btn-tahsilat" onclick="event.stopPropagation();itTahsilatOnayiVer(' + is.id + ')"><i class="fa-solid fa-check"></i> TAHSİLAT ONAYI VER</button>' : '') +
                     (isTam && (is.tur === "Taslak" || (is.tahsilatOnayi && (is.tur !== "Uygulama Proje" || is.ruhsatOnayi))) ? '<button class="it-btn-tamamla" onclick="event.stopPropagation();itTamamla(' + is.id + ')"><i class="fa-solid fa-check"></i> İŞ TAMAMLANDI</button>' : '') +
-                    '<button class="it-btn-sil" onclick="event.stopPropagation();itSil(' + is.id + ')" style="margin-left:auto;"><i class="fa-solid fa-trash-can"></i>️ Sil</button>' +
+                    '<button class="it-btn-sil" onclick="event.stopPropagation();itSil(' + is.id + ')" style="margin-left:auto;"><i class="fa-solid fa-trash-can"></i> Sil</button>' +
                     '</div></div></td></tr>';
             });
             h += '</tbody></table></div>';
@@ -8657,7 +8652,7 @@ function itDurumMetni(o) {
                     '<td colspan="' + colSpan + '"><div class="it-detay-panel">' +
                     itOrtakSecimHtml(is.id, true) +
                     '<div class="it-detay-actions">' +
-                    '<button class="it-btn-sil" onclick="event.stopPropagation();itSil(' + is.id + ')"><i class="fa-solid fa-trash-can"></i>️ Sil</button>' +
+                    '<button class="it-btn-sil" onclick="event.stopPropagation();itSil(' + is.id + ')"><i class="fa-solid fa-trash-can"></i> Sil</button>' +
                     '</div></div></td></tr>';
             });
             h += '</tbody></table>';
@@ -9921,7 +9916,7 @@ function itDurumMetni(o) {
             klasorListe.innerHTML = '<button class="note-klasor-item' + (!noteAktifKlasorId ? ' active' : '') + '" data-id="" onclick="noteAktifKlasorDegistir(null)" ondragover="noteDragOver(event)" ondrop="noteDrop(event,null)" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)"><span class="k-name"><i class="fa-regular fa-folder-open"></i> Tüm Notlar</span><span class="k-count">' + notes.length + '</span></button>';
             klasorler.forEach(function(k) {
                 var adet = notes.filter(function(n) { return n.folderId === k.id; }).length;
-                klasorListe.innerHTML += '<button class="note-klasor-item' + (noteAktifKlasorId === k.id ? ' active' : '') + '" data-id="' + k.id + '" onclick="noteAktifKlasorDegistir(\'' + k.id + '\')" ondragover="noteDragOver(event)" ondrop="noteDrop(event,\'' + k.id + '\')" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)"><span class="k-name"><i class="fa-regular fa-folder"></i> ' + esc(k.name) + '</span><span class="k-count">' + adet + '</span><span class="k-actions"><span style="font-size:11px;cursor:pointer;color:var(--text-light);" onclick="event.stopPropagation();noteKlasorDuzenle(\'' + k.id + '\')"><i class="fa-regular fa-pen-to-square"></i></span><span style="font-size:11px;cursor:pointer;color:var(--accent-red);" onclick="event.stopPropagation();noteKlasorSil(\'' + k.id + '\')"><i class="fa-solid fa-trash-can"></i>️</span></span></button>';
+                klasorListe.innerHTML += '<button class="note-klasor-item' + (noteAktifKlasorId === k.id ? ' active' : '') + '" data-id="' + k.id + '" onclick="noteAktifKlasorDegistir(\'' + k.id + '\')" ondragover="noteDragOver(event)" ondrop="noteDrop(event,\'' + k.id + '\')" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)"><span class="k-name"><i class="fa-regular fa-folder"></i> ' + esc(k.name) + '</span><span class="k-count">' + adet + '</span><span class="k-actions"><span style="font-size:11px;cursor:pointer;color:var(--text-light);" onclick="event.stopPropagation();noteKlasorDuzenle(\'' + k.id + '\')"><i class="fa-regular fa-pen-to-square"></i></span><span style="font-size:11px;cursor:pointer;color:var(--accent-red);" onclick="event.stopPropagation();noteKlasorSil(\'' + k.id + '\')"><i class="fa-solid fa-trash-can"></i></span></span></button>';
             });
 
             if (noteAktifKlasorId) { notes = notes.filter(function(n) { return n.folderId === noteAktifKlasorId; }); }
@@ -10254,7 +10249,7 @@ function itDurumMetni(o) {
             var html = '<div style="display:flex;gap:8px;margin-bottom:14px;"><input type="text" id="noteYeniKlasorAd" placeholder="Klasör adı..." style="flex:1;padding:8px 12px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-card);color:var(--text-dark);"><button class="btn-save-green" onclick="noteKlasorEkle()" style="padding:8px 16px;">Ekle</button></div><div style="display:flex;flex-direction:column;gap:4px;" id="noteKlasorListeBody">';
             if (klasorler.length === 0) { html += '<p style="color:var(--text-light);font-size:13px;text-align:center;">Henüz klasör yok.</p>'; }
             klasorler.forEach(function(k) {
-                html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg-card);border-radius:6px;border:1px solid var(--border-color);"><span style="flex:1;font-size:13px;"><i class="fa-regular fa-folder"></i> ' + esc(k.name) + '</span><button class="btn-warning" onclick="noteKlasorAdDegistir(\'' + k.id + '\')" style="padding:3px 8px;font-size:10px;"><i class="fa-regular fa-pen-to-square"></i></button><button class="btn-danger" onclick="noteKlasorSil(\'' + k.id + '\')" style="padding:3px 8px;font-size:10px;"><i class="fa-solid fa-trash-can"></i>️</button></div>';
+                html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg-card);border-radius:6px;border:1px solid var(--border-color);"><span style="flex:1;font-size:13px;"><i class="fa-regular fa-folder"></i> ' + esc(k.name) + '</span><button class="btn-warning" onclick="noteKlasorAdDegistir(\'' + k.id + '\')" style="padding:3px 8px;font-size:10px;"><i class="fa-regular fa-pen-to-square"></i></button><button class="btn-danger" onclick="noteKlasorSil(\'' + k.id + '\')" style="padding:3px 8px;font-size:10px;"><i class="fa-solid fa-trash-can"></i></button></div>';
             });
             html += '</div>';
             body.innerHTML = html;
