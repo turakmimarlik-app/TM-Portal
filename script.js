@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.35.5';
+        var APP_VERSION = 'V1.35.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -3062,6 +3062,7 @@ function gorevMailGonder(gorev) {
                     var renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
                     var label = e.title;
                     if (e.time && e.type !== "note" && !e.tumGun) label = e.time + " " + label;
+                    else if (e.tumGun) label = "📅 Tüm Gün " + label;
                     if (e.paylas) label = (e.paylasan ? "👥" + e.paylasan + " " : "👥") + label;
                     h += '<span class="as-takvim-ozet-event" onclick="asGosterGunBilgi(\'' + ds + '\')" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-ozet-dot" style="background:' + renk + ';"></span>' + label + '</span>';
                 });
@@ -3082,7 +3083,7 @@ function gorevMailGonder(gorev) {
                 const durumEtiketi = isGorev ? asGorevDurumEtiketi(e.durum, e.tarih) + " " : "";
                 html += '<div class="as-etkinlik-item">';
                 html += '<span class="as-etkinlik-dot" style="background:' + renk + ';border-color:' + renk + ';"></span>';
-                html += '<span class="as-etkinlik-text">' + durumEtiketi + e.title + ' <small>' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : '') + (e.paylas && e.paylasan ? ' 👥' + e.paylasan : '') + '</small></span>';
+                html += '<span class="as-etkinlik-text">' + durumEtiketi + e.title + ' <small>' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : (e.tumGun ? ' 📅 Tüm Gün' : '')) + (e.paylas && e.paylasan ? ' 👥' + e.paylasan : '') + '</small></span>';
                 if (!isGorev) { html += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + e.id + '\')">✏️</button>'; }
                 html += '</div>';
             });
@@ -3094,11 +3095,18 @@ function gorevMailGonder(gorev) {
             var timeRow = document.getElementById("asEventTimeRow");
             timeRow.style.display = tip === "note" ? "none" : "block";
         }
+        function asEventTumGunDegisti() {
+            var cb = document.getElementById("asEventTumGun");
+            var timeInput = document.getElementById("asEventTime");
+            timeInput.disabled = cb.checked;
+            if (cb.checked) timeInput.value = "";
+        }
         function asEventModalAc(tarih) {
             document.getElementById("asEventEditId").value = "";
             document.getElementById("asEventDate").value = tarih;
             document.getElementById("asEventTitle").value = "";
             document.getElementById("asEventTime").value = "09:00";
+            document.getElementById("asEventTime").disabled = false;
             document.getElementById("asEventTumGun").checked = false;
             document.getElementById("asEventDesc").value = "";
             document.getElementById("asEventType").value = "reminder";
@@ -3216,7 +3224,7 @@ function gorevMailGonder(gorev) {
                 const id = e.id || "";
                 h += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-color);">';
                 h += '<span style="width:12px;height:12px;border-radius:50%;background:' + renk + ';flex-shrink:0;margin-top:5px;"></span>';
-                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);">' + turAdi + (e.time && e.type !== "note" && !e.tumGun ? ' &middot; ' + e.time : '') + (e.paylas ? (e.paylasan ? ' &middot; 👥 ' + e.paylasan : ' &middot; 👥 Paylaşılan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
+                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);">' + turAdi + (e.time && e.type !== "note" && !e.tumGun ? ' &middot; ' + e.time : (e.tumGun ? ' &middot; 📅 Tüm Gün' : '')) + (e.paylas ? (e.paylasan ? ' &middot; 👥 ' + e.paylasan : ' &middot; 👥 Paylaşılan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
                 if (!isGorev) {
                     var realId = id.replace("gorev_", "");
                     h += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + realId.replace(/'/g,"\\'") + '\');asGunInfoKapat();" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;" title="Düzenle">✏️</button>';
@@ -3258,7 +3266,7 @@ function gorevMailGonder(gorev) {
                 const id = e.id || "";
                 h += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-color);">';
                 h += '<span style="width:12px;height:12px;border-radius:50%;background:' + renk + ';flex-shrink:0;margin-top:5px;"></span>';
-                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);"><span style="color:' + renk + ';">●</span> ' + turAdi + ' &middot; ' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : '') + (e.paylas ? (e.paylasan ? ' &middot; 👥 ' + e.paylasan : ' &middot; 👥 Paylaşılan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
+                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);"><span style="color:' + renk + ';">●</span> ' + turAdi + ' &middot; ' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : (e.tumGun ? ' 📅 Tüm Gün' : '')) + (e.paylas ? (e.paylasan ? ' &middot; 👥 ' + e.paylasan : ' &middot; 👥 Paylaşılan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
                 if (!isGorev) {
                     var realId = id.replace("gorev_", "");
                     h += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + realId.replace(/'/g,"\\'") + '\');asGunInfoKapat();" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;" title="Düzenle">✏️</button>';

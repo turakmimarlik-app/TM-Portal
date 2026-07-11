@@ -124,7 +124,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.35.5</div>
+                <div class="version-tag">V1.35.6</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1611,7 +1611,7 @@
                             <label>SAAT</label>
                             <div style="display:flex;align-items:center;gap:8px;">
                                 <input type="time" id="asEventTime" value="09:00" style="flex:1;">
-                                <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--text-dark);"><input type="checkbox" id="asEventTumGun" style="width:auto;height:14px;cursor:pointer;"> Tüm Gün</label>
+                                <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--text-dark);"><input type="checkbox" id="asEventTumGun" onchange="asEventTumGunDegisti()" style="width:auto;height:14px;cursor:pointer;"> Tüm Gün</label>
                             </div>
                         </div>
                         <div class="as-modal-field">
