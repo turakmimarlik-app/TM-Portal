@@ -3110,19 +3110,6 @@ function gorevMailGonder(gorev) {
             document.getElementById("asEventModal").style.display = "flex";
             asEventTypeDegisti();
         }
-            document.getElementById("asEventEditId").value = "";
-            document.getElementById("asEventDate").value = tarih;
-            document.getElementById("asEventTitle").value = "";
-            document.getElementById("asEventTime").value = "09:00";
-            document.getElementById("asEventDesc").value = "";
-            document.getElementById("asEventType").value = "reminder";
-            document.getElementById("asEventTekrar").checked = false;
-            document.getElementById("asEventTekrarOptions").style.display = "none";
-            document.getElementById("asEventPaylas").checked = false;
-            document.getElementById("asEventModalTitle").textContent = "ETKİNLİK EKLE - " + tarih;
-            document.getElementById("asEventSilBtn").style.display = "none";
-            document.getElementById("asEventModal").style.display = "flex";
-        }
         function asEventDuzenle(id) {
             const aktifUser = localStorage.getItem("tm_active_user") || "";
             var etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
