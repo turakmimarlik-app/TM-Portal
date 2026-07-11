@@ -1583,7 +1583,9 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
 .rapor-turu-select option { color: var(--text-dark); }
 /* Font Awesome integration */
         .fa-solid, .fa-regular, .fa-brands { vertical-align:-2px; }
-        .sidebar .menu-item i, .sidebar .submenu-item i { width:18px; text-align:center; margin-right:4px; }
+        .sidebar .menu-item i, .sidebar .submenu-item i { width:18px; text-align:center; margin-right:4px; color:var(--accent-red); }
+        .sidebar .menu-item:hover i, .sidebar .submenu-item:hover i { color:#fff; }
+        .sidebar .menu-item.active i, .sidebar .submenu-item.active i { color:#fff; }
         .dash-stat-box .icon i { font-size:22px; }
         .gt-card-icon i { font-size:20px; }
         .as-event-dot i { margin-right:2px; }
