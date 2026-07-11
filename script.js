@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.34.5';
+        var APP_VERSION = 'V1.35.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2884,7 +2884,27 @@ function gorevMailGonder(gorev) {
         }
         function asGetMergedEvents() {
             const aktifUser = localStorage.getItem("tm_active_user") || "";
-            const etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+            var etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+            var expanded = [];
+            etkinlikler.forEach(function(e) {
+                if (e.tekrar && e.tekrar.tip) {
+                    var start = new Date(e.date + "T00:00:00");
+                    var now = new Date();
+                    var end = new Date(now);
+                    end.setFullYear(end.getFullYear() + 1);
+                    var cur = new Date(start);
+                    while (cur <= end) {
+                        var ds = cur.getFullYear() + "-" + String(cur.getMonth() + 1).padStart(2,"0") + "-" + String(cur.getDate()).padStart(2,"0");
+                        expanded.push({ id: e.id, date: ds, time: e.time, title: e.title, description: e.description, type: e.type, tekrar: e.tekrar });
+                        if (e.tekrar.tip === "weekly") cur.setDate(cur.getDate() + 7);
+                        else if (e.tekrar.tip === "monthly") cur.setMonth(cur.getMonth() + 1);
+                        else if (e.tekrar.tip === "yearly") cur.setFullYear(cur.getFullYear() + 1);
+                        else break;
+                    }
+                } else {
+                    expanded.push(e);
+                }
+            });
             const gorevler = JSON.parse(localStorage.getItem("tm_gorevler")) || [];
             var gorevEvents = gorevler.filter(function(g) {
                 var atananlar = Array.isArray(g.atanan) ? g.atanan : [g.atanan];
@@ -2894,7 +2914,7 @@ function gorevMailGonder(gorev) {
                 var gorevIcin = atananlar.indexOf(aktifUser) >= 0 ? "" : (" → " + atananlar.join(", "));
                 return { id: "gorev_" + g.id, date: g.tarih, time: "", title: g.baslik + (g.veren ? " (" + g.veren + gorevIcin + ")" : ""), description: g.mesaj || "", type: "gorev", durum: g.durum, tarih: g.tarih };
             });
-            return etkinlikler.concat(gorevEvents);
+            return expanded.concat(gorevEvents);
         }
         function asTakvimRender() {
             const container = document.getElementById("asTakvimIcerik");
@@ -3023,6 +3043,8 @@ function gorevMailGonder(gorev) {
             document.getElementById("asEventTime").value = "09:00";
             document.getElementById("asEventDesc").value = "";
             document.getElementById("asEventType").value = "reminder";
+            document.getElementById("asEventTekrar").checked = false;
+            document.getElementById("asEventTekrarOptions").style.display = "none";
             document.getElementById("asEventModalTitle").textContent = "ETKİNLİK EKLE - " + tarih;
             document.getElementById("asEventSilBtn").style.display = "none";
             document.getElementById("asEventModal").style.display = "flex";
@@ -3038,6 +3060,14 @@ function gorevMailGonder(gorev) {
             document.getElementById("asEventTime").value = ev.time || "09:00";
             document.getElementById("asEventDesc").value = ev.description || "";
             document.getElementById("asEventType").value = ev.type;
+            if (ev.tekrar && ev.tekrar.tip) {
+                document.getElementById("asEventTekrar").checked = true;
+                document.getElementById("asEventTekrarOptions").style.display = "block";
+                document.getElementById("asEventTekrarTip").value = ev.tekrar.tip;
+            } else {
+                document.getElementById("asEventTekrar").checked = false;
+                document.getElementById("asEventTekrarOptions").style.display = "none";
+            }
             document.getElementById("asEventModalTitle").textContent = "ETKİNLİK DÜZENLE - " + ev.date;
             document.getElementById("asEventSilBtn").style.display = "inline-block";
             document.getElementById("asEventModal").style.display = "flex";
@@ -3051,13 +3081,18 @@ function gorevMailGonder(gorev) {
             const desc = document.getElementById("asEventDesc").value.trim();
             const type = document.getElementById("asEventType").value;
             if (!title || !date) { tmNotify("Başlık ve tarih zorunludur!", "error"); return; }
+            var tekrar = null;
+            if (document.getElementById("asEventTekrar").checked) {
+                var tip = document.getElementById("asEventTekrarTip").value;
+                if (tip) tekrar = { tip: tip };
+            }
             let etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
             if (editId) {
                 const idx = etkinlikler.findIndex(function(e) { return e.id === editId; });
-                if (idx >= 0) { etkinlikler[idx] = { id: editId, date: date, time: time, title: title, description: desc, type: type }; }
+                if (idx >= 0) { etkinlikler[idx] = { id: editId, date: date, time: time, title: title, description: desc, type: type, tekrar: tekrar }; }
             } else {
                 const id = "as_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4);
-                etkinlikler.push({ id: id, date: date, time: time, title: title, description: desc, type: type });
+                etkinlikler.push({ id: id, date: date, time: time, title: title, description: desc, type: type, tekrar: tekrar });
             }
             localStorage.setItem("tm_as_etkinlikler_" + aktifUser, JSON.stringify(etkinlikler));
             asEventModalKapat();
@@ -3067,9 +3102,11 @@ function gorevMailGonder(gorev) {
         function asEventSil() {
             const id = document.getElementById("asEventEditId").value;
             if (!id) return;
-            tmConfirm("Bu etkinliği silmek istediğinize emin misiniz?", function() {
-                const aktifUser = localStorage.getItem("tm_active_user") || "";
-                let etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+            const aktifUser = localStorage.getItem("tm_active_user") || "";
+            var etkinlikler = JSON.parse(localStorage.getItem("tm_as_etkinlikler_" + aktifUser)) || [];
+            var ev = etkinlikler.find(function(e) { return e.id === id; });
+            var msg = ev && ev.tekrar ? "Bu tekrarlanan etkinliğin tümünü silmek istediğinize emin misiniz?" : "Bu etkinliği silmek istediğinize emin misiniz?";
+            tmConfirm(msg, function() {
                 etkinlikler = etkinlikler.filter(function(e) { return e.id !== id; });
                 localStorage.setItem("tm_as_etkinlikler_" + aktifUser, JSON.stringify(etkinlikler));
                 asEventModalKapat();
@@ -3079,6 +3116,10 @@ function gorevMailGonder(gorev) {
         }
         function asEventModalKapat() {
             document.getElementById("asEventModal").style.display = "none";
+        }
+        function asEventTekrarToggle() {
+            var cb = document.getElementById("asEventTekrar");
+            document.getElementById("asEventTekrarOptions").style.display = cb.checked ? "block" : "none";
         }
         function asGosterGunBilgi(gunStr) {
             const etkinlikler = asGetMergedEvents().filter(function(e) { return e.date === gunStr; });
