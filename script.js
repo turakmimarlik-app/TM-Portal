@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.34.1';
+        var APP_VERSION = 'V1.34.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2943,7 +2943,7 @@ function gorevMailGonder(gorev) {
                     html += '</div>';
                 }
                 html += '<span class="as-add-btn" onclick="asEventModalAc(\'' + gunStr + '\')">+</span>';
-                if (tatil) html += '<div class="as-tatil-etiketi" title="' + tatil.name + '">' + tatil.name.replace('Bayramı','').trim() + '</div>';
+                if (tatil) { var kisaAd = tatil.name.replace(/Bayramı.*/,'Bay.').replace(/\(.*?\)/g,'').trim(); html += '<div class="as-tatil-etiketi" title="' + tatil.name + '">' + kisaAd + '</div>'; }
                 html += '</td>';
                 if ((ilkGun === 0 ? 6 : ilkGun - 1) + g > 0 && ((ilkGun === 0 ? 6 : ilkGun - 1) + g) % 7 === 0) html += '</tr><tr>';
             }
