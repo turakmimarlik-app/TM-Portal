@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V2.0.1';
+        var APP_VERSION = 'V2.0.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -144,7 +144,7 @@ function gorevMailGonder(gorev) {
         }
         function fsLoad() {
             if (!fdb) return;
-            // Eski all_data'dan bireysel dokümanlara geçiþ (bir kere)
+            // Eski all_data'dan bireysel dokÃ¼manlara geÃ§iÅŸ (bir kere)
             fdb.collection(FS_COLLECTION).doc('all_data').get().then(function(snap) {
                 if (snap && snap.exists) {
                     var data = snap.data();
@@ -163,7 +163,7 @@ function gorevMailGonder(gorev) {
                     }
                 }
             }).catch(function(e) { console.warn('Migration okuma hatasi:', e.message); });
-            // Bireysel dokümanlardan yükle
+            // Bireysel dokÃ¼manlardan yÃ¼kle
             fdb.collection(FS_COLLECTION).get().then(function(snap) {
                 var logoChanged = false;
                 var anyChanged = false;
@@ -222,7 +222,7 @@ function gorevMailGonder(gorev) {
             });
             batch.commit().then(function() {
                 dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; });
-            }).catch(function(e){ console.error('fsSync write error', e); if (typeof tmNotify === 'function') tmNotify("Firestore sync hatasý: " + e.message, "error"); });
+            }).catch(function(e){ console.error('fsSync write error', e); if (typeof tmNotify === 'function') tmNotify("Firestore sync hatasÄ±: " + e.message, "error"); });
         }
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
@@ -236,41 +236,41 @@ function gorevMailGonder(gorev) {
         setTimeout(function() { fsReady = true; fsSync(); }, 1000);
 
         let SABIT_DALLAR = [
-            "MÝMARÝ UYGULAMA PROJE",
-            "MÝMARÝ KAT ÝRTÝFAK PROJE",
-            "MÝMARÝ TASLAK PROJE",
+            "MÄ°MARÄ° UYGULAMA PROJE",
+            "MÄ°MARÄ° KAT Ä°RTÄ°FAK PROJE",
+            "MÄ°MARÄ° TASLAK PROJE",
             "3B MODELLEME VE TASARIM",
-            "ÞANTÝYE ÞEFÝ",
-            "STATÝK PROJE",
-            "MEKANÝK PROJE",
-            "ELEKTRÝK PROJE",
-            "ZEMÝN ETÜDÜ RAPORU",
-            "MÝMARÝ AKUSTÝK RAPOR",
-            "ENERJÝ KÝMLÝK BELGESÝ ( EKB )",
-            "HARÝTA APLÝKASYON PROJESÝ",
-            "PAKET PROJE ( ZEMÝN ETÜDÜ VE HARÝTA APLÝKASYON HARÝÇ TÜMÜ )"
+            "ÅžANTÄ°YE ÅžEFÄ°",
+            "STATÄ°K PROJE",
+            "MEKANÄ°K PROJE",
+            "ELEKTRÄ°K PROJE",
+            "ZEMÄ°N ETÃœDÃœ RAPORU",
+            "MÄ°MARÄ° AKUSTÄ°K RAPOR",
+            "ENERJÄ° KÄ°MLÄ°K BELGESÄ° ( EKB )",
+            "HARÄ°TA APLÄ°KASYON PROJESÄ°",
+            "PAKET PROJE ( ZEMÄ°N ETÃœDÃœ VE HARÄ°TA APLÄ°KASYON HARÄ°Ã‡ TÃœMÃœ )"
         ];
 
         const TURKIYE_BANKALARI = [
-            "Ziraat Bankasý", "Ýþ Bankasý", "Garanti BBVA", "Yapý Kredi", "Akbank",
-            "Vakýfbank", "Halkbank", "QNB Finansbank", "DenizBank", "TEB",
+            "Ziraat BankasÄ±", "Ä°ÅŸ BankasÄ±", "Garanti BBVA", "YapÄ± Kredi", "Akbank",
+            "VakÄ±fbank", "Halkbank", "QNB Finansbank", "DenizBank", "TEB",
             "HSBC", "ING Bank", "Burgan Bank", "Fibabanka", "Alternatif Bank",
-            "Odeabank", "Turkish Bank", "Anadolubank", "Aktif Bank", "Kuveyt Türk",
-            "Albaraka Türk", "Türkiye Finans", "Ziraat Katýlým", "Vakýf Katýlým",
-            "Emlak Katýlým", "ÝCBC Turkey", "Mitsubishi UFJ Turkey", "SocGen Turkey",
+            "Odeabank", "Turkish Bank", "Anadolubank", "Aktif Bank", "Kuveyt TÃ¼rk",
+            "Albaraka TÃ¼rk", "TÃ¼rkiye Finans", "Ziraat KatÄ±lÄ±m", "VakÄ±f KatÄ±lÄ±m",
+            "Emlak KatÄ±lÄ±m", "Ä°CBC Turkey", "Mitsubishi UFJ Turkey", "SocGen Turkey",
             "Citibank", "Bank Mellat", "Habib Bank", "Intesa Sanpaolo", "JPMorgan Chase"
         ];
 
         let SABIT_ETIKETLER = [
-            "Müteahhit",
-            "Vatandaþ",
+            "MÃ¼teahhit",
+            "VatandaÅŸ",
             "Kurum"
         ];
         
         let SABIT_BIRIM_TIPLERI = [
-            "?/m²"
+            "?/mÂ²"
         ];
-        let SABIT_BIRIM_LISTESI = ["M²","ADET","KM","AY","GÜN"];
+        let SABIT_BIRIM_LISTESI = ["MÂ²","ADET","KM","AY","GÃœN"];
 
         let SABIT_VERGI_TURLERI = [
             "KDV",
@@ -278,12 +278,12 @@ function gorevMailGonder(gorev) {
             "Kurumlar Vergisi",
             "Stopaj",
             "Damga Vergisi",
-            "Diðer"
+            "DiÄŸer"
         ];
 
         function ftTurAdi(val) {
-            var map = { kdv:"KDV", gelirVergisi:"Gelir Vergisi", kurumlarVergisi:"Kurumlar Vergisi", stopaj:"Stopaj", damgaVergisi:"Damga Vergisi", diger:"Diðer" };
-            return map[val] || val || "Diðer";
+            var map = { kdv:"KDV", gelirVergisi:"Gelir Vergisi", kurumlarVergisi:"Kurumlar Vergisi", stopaj:"Stopaj", damgaVergisi:"Damga Vergisi", diger:"DiÄŸer" };
+            return map[val] || val || "DiÄŸer";
         }
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -360,7 +360,7 @@ function gorevMailGonder(gorev) {
                             document.getElementById("loginSection").style.display = "flex";
                             var errorDiv = document.getElementById("loginError");
                             if (errorDiv) {
-                                errorDiv.innerText = "? " + baskaAktif + " kullanýcýsý aktif olduðu için oturumunuz sonlandýrýldý.";
+                                errorDiv.innerText = "? " + baskaAktif + " kullanÄ±cÄ±sÄ± aktif olduÄŸu iÃ§in oturumunuz sonlandÄ±rÄ±ldÄ±.";
                                 errorDiv.style.display = "block";
                             }
                             overlayGizle();
@@ -377,7 +377,7 @@ function gorevMailGonder(gorev) {
                 document.getElementById("loginSection").style.display = "flex";
                 overlayGizle();
             }
-            function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(e){e.stopPropagation();s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eþleþme bulunamadý)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');var wr=w.getBoundingClientRect();d.classList.add('open-upward');d.style.position='absolute';d.style.left='0';d.style.width='100%';d.style.top='auto';d.style.bottom='100%';d.style.marginTop='0';d.style.marginBottom='-1px';d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;var cf=d.querySelector('.cs-birim-footer');if(cf)cf.remove();if(s.classList.contains('row-birim')){var cft=document.createElement('div');cft.className='cs-birim-footer';cft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';cft.innerHTML='<button onclick="event.stopPropagation();birimEklePrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;">+ YENÝ</button><button onclick="event.stopPropagation();birimSilPrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;">- SÝL</button>';d.appendChild(cft);}};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});
+            function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(e){e.stopPropagation();s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eÅŸleÅŸme bulunamadÄ±)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');var wr=w.getBoundingClientRect();d.classList.add('open-upward');d.style.position='absolute';d.style.left='0';d.style.width='100%';d.style.top='auto';d.style.bottom='100%';d.style.marginTop='0';d.style.marginBottom='-1px';d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;var cf=d.querySelector('.cs-birim-footer');if(cf)cf.remove();if(s.classList.contains('row-birim')){var cft=document.createElement('div');cft.className='cs-birim-footer';cft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';cft.innerHTML='<button onclick="event.stopPropagation();birimEklePrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;">+ YENÄ°</button><button onclick="event.stopPropagation();birimSilPrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;">- SÄ°L</button>';d.appendChild(cft);}};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});
 
             const loginSection = document.getElementById("loginSection");
             if (loginSection) {
@@ -388,7 +388,7 @@ function gorevMailGonder(gorev) {
             
             if (localStorage.getItem("tm_piyasa_dallari_v2")) {
                 SABIT_DALLAR = JSON.parse(localStorage.getItem("tm_piyasa_dallari_v2"));
-                var YENI_DALLAR = ["MÝMARÝ TASLAK PROJE","3B MODELLEME VE TASARIM","ÞANTÝYE ÞEFÝ"];
+                var YENI_DALLAR = ["MÄ°MARÄ° TASLAK PROJE","3B MODELLEME VE TASARIM","ÅžANTÄ°YE ÅžEFÄ°"];
                 YENI_DALLAR.forEach(function(d){ if (SABIT_DALLAR.indexOf(d) === -1) SABIT_DALLAR.push(d); });
                 localStorage.setItem("tm_piyasa_dallari_v2", JSON.stringify(SABIT_DALLAR));
             } else {
@@ -453,24 +453,24 @@ function gorevMailGonder(gorev) {
 
         const TM_YETKI_TANIMLARI = [
             { key:"anasayfa", label:'<i class="fa-solid fa-house"></i> Ana Sayfa (Dashboard)' },
-            { key:"teklif-olustur", label:'<i class="fa-regular fa-file-lines"></i> Fiyatlandýrma: Teklif Oluþtur' },
-            { key:"teklif-liste", label:'<i class="fa-solid fa-list"></i> Fiyatlandýrma: Geçmiþ Teklifler' },
-            { key:"piyasa-fiyatlari", label:'<i class="fa-solid fa-chart-simple"></i> Fiyatlandýrma: Piyasa Fiyatlarý' },
-            { key:"tm-fiyatlar", label:'<i class="fa-solid fa-chart-line"></i> Fiyatlandýrma: TM Fiyatlar' },
-            { key:"musteriler", label:'<i class="fa-regular fa-folder-open"></i> Portföy: Müþteriler' },
-            { key:"isortaklari", label:'<i class="fa-solid fa-handshake"></i> Portföy: Ýþ Ortaklarý' },
-            { key:"dilekce", label:'<i class="fa-regular fa-note-sticky"></i> Dilekçe Oluþtur' },
-            { key:"istakibi", label:'<i class="fa-regular fa-calendar"></i> Ýþ Takibi' },
-            { key:"nakit-dekont", label:'<i class="fa-regular fa-credit-card"></i> Muhasebe: Nakit Ödeme Dekontu' },
-            { key:"is-muhasebe-olustur", label:'<i class="fa-solid fa-thumbtack"></i> Muhasebe: Ýþ Muhasebesi Oluþtur' },
-            { key:"is-muhasebe", label:'<i class="fa-solid fa-coins"></i> Muhasebe: Ýþ Muhasebesi Takibi' },
-            { key:"tamamlanan-is-muhasebe", label:'<i class="fa-solid fa-check"></i> Muhasebe: Tamamlanan Ýþ Muhasebeleri' },
+            { key:"teklif-olustur", label:'<i class="fa-regular fa-file-lines"></i> FiyatlandÄ±rma: Teklif OluÅŸtur' },
+            { key:"teklif-liste", label:'<i class="fa-solid fa-list"></i> FiyatlandÄ±rma: GeÃ§miÅŸ Teklifler' },
+            { key:"piyasa-fiyatlari", label:'<i class="fa-solid fa-chart-simple"></i> FiyatlandÄ±rma: Piyasa FiyatlarÄ±' },
+            { key:"tm-fiyatlar", label:'<i class="fa-solid fa-chart-line"></i> FiyatlandÄ±rma: TM Fiyatlar' },
+            { key:"musteriler", label:'<i class="fa-regular fa-folder-open"></i> PortfÃ¶y: MÃ¼ÅŸteriler' },
+            { key:"isortaklari", label:'<i class="fa-solid fa-handshake"></i> PortfÃ¶y: Ä°ÅŸ OrtaklarÄ±' },
+            { key:"dilekce", label:'<i class="fa-regular fa-note-sticky"></i> DilekÃ§e OluÅŸtur' },
+            { key:"istakibi", label:'<i class="fa-regular fa-calendar"></i> Ä°ÅŸ Takibi' },
+            { key:"nakit-dekont", label:'<i class="fa-regular fa-credit-card"></i> Muhasebe: Nakit Ã–deme Dekontu' },
+            { key:"is-muhasebe-olustur", label:'<i class="fa-solid fa-thumbtack"></i> Muhasebe: Ä°ÅŸ Muhasebesi OluÅŸtur' },
+            { key:"is-muhasebe", label:'<i class="fa-solid fa-coins"></i> Muhasebe: Ä°ÅŸ Muhasebesi Takibi' },
+            { key:"tamamlanan-is-muhasebe", label:'<i class="fa-solid fa-check"></i> Muhasebe: Tamamlanan Ä°ÅŸ Muhasebeleri' },
             { key:"hesap-takip", label:'<i class="fa-solid fa-building-columns"></i> Muhasebe: Hesap Takip Sistemi' },
             { key:"fatura-takip", label:'<i class="fa-solid fa-receipt"></i> Muhasebe: Fatura Takip Sistemi' },
-            { key:"yillik-butce", label:'<i class="fa-solid fa-chart-simple"></i> Muhasebe: Yýllýk Bütçeler' },
-            { key:"yonetim", label:'<i class="fa-solid fa-gear"></i> Portal Yönetimi' },
+            { key:"yillik-butce", label:'<i class="fa-solid fa-chart-simple"></i> Muhasebe: YÄ±llÄ±k BÃ¼tÃ§eler' },
+            { key:"yonetim", label:'<i class="fa-solid fa-gear"></i> Portal YÃ¶netimi' },
             { key:"notlar", label:'<i class="fa-regular fa-note-sticky"></i> Notlar' },
-            { key:"gorevler-takvim", label:'<i class="fa-regular fa-calendar"></i> Görevler ve Takvim' }
+            { key:"gorevler-takvim", label:'<i class="fa-regular fa-calendar"></i> GÃ¶revler ve Takvim' }
         ];
 
         function yetkiCheckboxlariniRenderEt() {
@@ -517,11 +517,11 @@ function gorevMailGonder(gorev) {
 
         function trToUpper(text) {
             if(!text) return "";
-            return text.toString().replace(/i/g, "Ý").replace(/ý/g, "I").toUpperCase();
+            return text.toString().replace(/i/g, "Ä°").replace(/Ä±/g, "I").toUpperCase();
         }
         function trToLower(text) {
             if(!text) return "";
-            return text.toString().replace(/Ý/g, "i").replace(/I/g, "ý").replace(/Ü/g, "ü").replace(/Ö/g, "ö").replace(/Ç/g, "ç").replace(/Þ/g, "þ").replace(/Ð/g, "ð").toLowerCase();
+            return text.toString().replace(/Ä°/g, "i").replace(/I/g, "Ä±").replace(/Ãœ/g, "Ã¼").replace(/Ã–/g, "Ã¶").replace(/Ã‡/g, "Ã§").replace(/Åž/g, "ÅŸ").replace(/Äž/g, "ÄŸ").toLowerCase();
         }
         function trToTitleCase(text) {
             if(!text) return "";
@@ -585,14 +585,14 @@ function gorevMailGonder(gorev) {
                 lo = document.createElement('div');
                 lo.id = 'tmLoadingIndicator';
                 lo.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10003;justify-content:center;align-items:center;backdrop-filter:blur(2px);';
-                lo.innerHTML = '<div style="background:var(--panel-bg);padding:30px 40px;border-radius:14px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);border:1px solid var(--border-color);min-width:200px;"><div style="border:3px solid var(--border-color);border-top:3px solid var(--accent-red);border-radius:50%;width:30px;height:30px;animation:tmLoadingSpin 0.8s linear infinite;margin:0 auto 14px;"></div><div style="font-size:13px;font-weight:700;color:var(--text-dark);letter-spacing:0.3px;" id="tmLoadingMsg">Ýþlem yapýlýyor...</div></div>';
+                lo.innerHTML = '<div style="background:var(--panel-bg);padding:30px 40px;border-radius:14px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);border:1px solid var(--border-color);min-width:200px;"><div style="border:3px solid var(--border-color);border-top:3px solid var(--accent-red);border-radius:50%;width:30px;height:30px;animation:tmLoadingSpin 0.8s linear infinite;margin:0 auto 14px;"></div><div style="font-size:13px;font-weight:700;color:var(--text-dark);letter-spacing:0.3px;" id="tmLoadingMsg">Ä°ÅŸlem yapÄ±lÄ±yor...</div></div>';
                 document.body.appendChild(lo);
                 var styleEl = document.createElement('style');
                 styleEl.id = 'tmLoadingStyle';
                 styleEl.textContent = '@keyframes tmLoadingSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }';
                 document.head.appendChild(styleEl);
             }
-            document.getElementById('tmLoadingMsg').textContent = msg || 'Ýþlem yapýlýyor...';
+            document.getElementById('tmLoadingMsg').textContent = msg || 'Ä°ÅŸlem yapÄ±lÄ±yor...';
             lo.style.display = 'flex';
         }
         function tmLoadingGizle() {
@@ -601,7 +601,7 @@ function gorevMailGonder(gorev) {
         }
 
         function tmEmptyStateHTML(icon, title, desc, btn) {
-            return '<div class="tm-empty-state"><div class="tm-empty-icon">' + (icon||'<i class="fa-regular fa-inbox"></i>') + '</div><div class="tm-empty-title">' + (title||'Kayýt bulunamadý') + '</div><div class="tm-empty-desc">' + (desc||'Henüz kayýt eklenmemiþ.') + '</div>' + (btn ? btn : '') + '</div>';
+            return '<div class="tm-empty-state"><div class="tm-empty-icon">' + (icon||'<i class="fa-regular fa-inbox"></i>') + '</div><div class="tm-empty-title">' + (title||'KayÄ±t bulunamadÄ±') + '</div><div class="tm-empty-desc">' + (desc||'HenÃ¼z kayÄ±t eklenmemiÅŸ.') + '</div>' + (btn ? btn : '') + '</div>';
         }
 
         function tmScrollHintKontrol() {
@@ -618,12 +618,12 @@ function gorevMailGonder(gorev) {
             document.querySelectorAll('button, .btn, .it-btn-sil, .it-btn-tamamla, .it-btn-tahsilat, .it-btn-ruhsat, .btn-pdf-red, .btn-danger, .btn-warning').forEach(function(b){
                 var txt = b.textContent.trim();
                 var label = '';
-                if (txt.indexOf('Sil') !== -1 || txt.indexOf('SÝL') !== -1) label = 'Sil';
+                if (txt.indexOf('Sil') !== -1 || txt.indexOf('SÄ°L') !== -1) label = 'Sil';
                 else if (txt.indexOf('Onayla') !== -1) label = 'Onayla';
                 else if (txt.indexOf('PDF') !== -1) label = 'PDF';
                 else if (txt.indexOf('Kaydet') !== -1 || txt.indexOf('KAYDET') !== -1) label = 'Kaydet';
                 else if (txt.indexOf('Ekle') !== -1 || txt.indexOf('EKLE') !== -1) label = 'Ekle';
-                else if (txt.indexOf('Baþlat') !== -1 || txt.indexOf('BAÞLAT') !== -1) label = 'Baþlat';
+                else if (txt.indexOf('BaÅŸlat') !== -1 || txt.indexOf('BAÅžLAT') !== -1) label = 'BaÅŸlat';
                 else if (txt.indexOf('Giden') !== -1) label = 'Giden';
                 else if (txt.indexOf('Gelen') !== -1) label = 'Gelen';
                 else if (txt.indexOf('Ara') !== -1) label = 'Ara';
@@ -726,7 +726,7 @@ function gorevMailGonder(gorev) {
         }
 
         function yeniMusteriEtiketiEklePrompt() {
-            tmPrompt("Lütfen eklemek istediðiniz yeni Müþteri Tipi / Etiket adýný giriniz:", function(yeniEtiket) {
+            tmPrompt("LÃ¼tfen eklemek istediÄŸiniz yeni MÃ¼ÅŸteri Tipi / Etiket adÄ±nÄ± giriniz:", function(yeniEtiket) {
                 if(yeniEtiket) {
                     yeniEtiket = yeniEtiket.trim();
                     if(SABIT_ETIKETLER.some(e => e.toLowerCase() === yeniEtiket.toLowerCase())) { tmNotify("Bu etiket zaten sistemde mevcut!", "error"); return; }
@@ -741,7 +741,7 @@ function gorevMailGonder(gorev) {
         function musteriEtiketiSilPrompt() {
             const val = document.getElementById("mTipi").value;
             if(!val) return;
-            tmConfirm(`"${val}" etiketini silmek istediðinize emin misiniz?`, function() {
+            tmConfirm(`"${val}" etiketini silmek istediÄŸinize emin misiniz?`, function() {
                 SABIT_ETIKETLER = SABIT_ETIKETLER.filter(e => e !== val);
                 localStorage.setItem("tm_musteri_etiketleri_v1", JSON.stringify(SABIT_ETIKETLER));
                 musteriEtiketleriniDoldur();
@@ -751,9 +751,9 @@ function gorevMailGonder(gorev) {
 
         function getBankaRenkKodu(bankaAdi) {
             const name = trToUpper(bankaAdi);
-            if(name.includes("ZÝRAAT") || name.includes("ZIRAAT")) return "#9E2A2B"; 
-            if(name.includes("GARANTÝ") || name.includes("GARANTI") || name.includes("VAKIF")) return "#2E7D32";
-            if(name.includes("ÝÞ") || name.includes("IS ") || name.includes("YAPI") || name.includes("AKBANK")) return "#0D47A1";
+            if(name.includes("ZÄ°RAAT") || name.includes("ZIRAAT")) return "#9E2A2B"; 
+            if(name.includes("GARANTÄ°") || name.includes("GARANTI") || name.includes("VAKIF")) return "#2E7D32";
+            if(name.includes("Ä°Åž") || name.includes("IS ") || name.includes("YAPI") || name.includes("AKBANK")) return "#0D47A1";
             if(name.includes("HALK") || name.includes("TEB")) return "#00838F";
             if(name.includes("KUVEYT") || name.includes("ALBARAKA")) return "#1B5E20";
             return "inherit";
@@ -808,7 +808,7 @@ function gorevMailGonder(gorev) {
                         document.getElementById("mUnvan").value = kart.unvan || "";
                         document.getElementById("mTel").value = kart.tel || "";
                         document.getElementById("mEposta").value = kart.eposta || "";
-                        document.getElementById("mTipi").value = kart.tipi || "Vatandaþ";
+                        document.getElementById("mTipi").value = kart.tipi || "VatandaÅŸ";
                         document.getElementById("mKimlikNo").value = kart.kimlik || "";
                         document.getElementById("mVergiDairesi").value = kart.vergiDairesi || "";
                         document.getElementById("mVergiNo").value = kart.vergiNo || "";
@@ -823,12 +823,12 @@ function gorevMailGonder(gorev) {
                         document.getElementById("ndFirma").value = kart.sirket || "";
                         document.getElementById("ndTel").value = kart.tel || "";
                     } else if(inputElement.id === "ndFirma") {
-                        const secilenFirma = kart.sirket && kart.sirket !== "-" && kart.sirket !== "BÝREYSEL" ? kart.sirket : kart.ad;
+                        const secilenFirma = kart.sirket && kart.sirket !== "-" && kart.sirket !== "BÄ°REYSEL" ? kart.sirket : kart.ad;
                         document.getElementById("ndFirma").value = secilenFirma;
                         document.getElementById("ndMusteriAd").value = kart.ad;
                         document.getElementById("ndTel").value = kart.tel || "";
                     } else if(inputElement.id === "isMuhFirma") {
-                        document.getElementById("isMuhFirma").value = kart.sirket && kart.sirket !== "BÝREYSEL" ? kart.sirket : kart.ad;
+                        document.getElementById("isMuhFirma").value = kart.sirket && kart.sirket !== "BÄ°REYSEL" ? kart.sirket : kart.ad;
                     } else if(inputElement.id === "ioAdi") {
                         document.getElementById("ioSirket").value = kart.sirket || "";
                         document.getElementById("ioUnvan").value = kart.unvan || "";
@@ -838,7 +838,7 @@ function gorevMailGonder(gorev) {
                         document.getElementById("ioKimlikNo").value = kart.kimlik || "";
                         document.getElementById("ioVergiDairesi").value = kart.vergiDairesi || "";
                         document.getElementById("ioVergiNo").value = kart.vergiNo || "";
-                        document.getElementById("ioStatus").value = kart.status || "Sürekli Partner";
+                        document.getElementById("ioStatus").value = kart.status || "SÃ¼rekli Partner";
                         document.getElementById("ioAdres").value = kart.adres || "";
                         const kont = document.getElementById("partnerBankaKonteyner");
                         kont.innerHTML = "";
@@ -852,10 +852,10 @@ function gorevMailGonder(gorev) {
         }
 
         function yeniPiyasaDaliEklePrompt() {
-            tmPrompt("Lütfen eklemek istediðiniz yeni Proje / Hizmet Dalý adýný giriniz:", function(yeniDal) {
+            tmPrompt("LÃ¼tfen eklemek istediÄŸiniz yeni Proje / Hizmet DalÄ± adÄ±nÄ± giriniz:", function(yeniDal) {
                 if(yeniDal) {
                     yeniDal = trToUpper(yeniDal.trim());
-                    if(SABIT_DALLAR.includes(yeniDal)) { tmNotify("Bu hizmet dalý zaten sistemde mevcut!", "error"); return; }
+                    if(SABIT_DALLAR.includes(yeniDal)) { tmNotify("Bu hizmet dalÄ± zaten sistemde mevcut!", "error"); return; }
                     SABIT_DALLAR.push(yeniDal);
                     localStorage.setItem("tm_piyasa_dallari_v2", JSON.stringify(SABIT_DALLAR));
                     piyasaDallariSecenekleriniDoldur();
@@ -873,7 +873,7 @@ function gorevMailGonder(gorev) {
                 val = document.getElementById("ioBrans").value;
             }
             if(!val) return;
-            tmConfirm(`"${val}" dalýný ve tüm sistem eþleþmelerini silmek istediðinize emin misiniz?`, function() {
+            tmConfirm(`"${val}" dalÄ±nÄ± ve tÃ¼m sistem eÅŸleÅŸmelerini silmek istediÄŸinize emin misiniz?`, function() {
                 SABIT_DALLAR = SABIT_DALLAR.filter(d => d !== val);
                 localStorage.setItem("tm_piyasa_dallari_v2", JSON.stringify(SABIT_DALLAR));
                 piyasaDallariSecenekleriniDoldur();
@@ -883,7 +883,7 @@ function gorevMailGonder(gorev) {
         }
         
         function yeniPiyasaBirimEklePrompt() {
-            tmPrompt("Lütfen eklemek istediðiniz yeni Hesap Yöntemi / Birim Tipini giriniz:", function(yeniBirim) {
+            tmPrompt("LÃ¼tfen eklemek istediÄŸiniz yeni Hesap YÃ¶ntemi / Birim Tipini giriniz:", function(yeniBirim) {
                 if(yeniBirim) {
                     yeniBirim = yeniBirim.trim();
                     if(SABIT_BIRIM_TIPLERI.includes(yeniBirim)) { tmNotify("Bu birim tipi zaten sistemde mevcut!", "error"); return; }
@@ -898,7 +898,7 @@ function gorevMailGonder(gorev) {
         function piyasaBirimSilPrompt() {
             let val = document.getElementById("pYonetimBirimTipi").value;
             if(!val) return;
-            tmConfirm(`"${val}" birim tipini silmek istediðinize emin misiniz?`, function() {
+            tmConfirm(`"${val}" birim tipini silmek istediÄŸinize emin misiniz?`, function() {
                 SABIT_BIRIM_TIPLERI = SABIT_BIRIM_TIPLERI.filter(b => b !== val);
                 localStorage.setItem("tm_piyasa_birimleri_v1", JSON.stringify(SABIT_BIRIM_TIPLERI));
                 piyasaBirimTipiSecenekleriniDoldur();
@@ -926,7 +926,7 @@ function gorevMailGonder(gorev) {
             ).join('');
             const ibanVal = iban ? iban.replace(/(.{4})/g, '$1 ').trim() : 'TR';
             div.innerHTML = `
-                <select class="bank-adi" style="flex:1; min-width:140px; padding:6px;"><option value="">BANKA SEÇÝNÝZ</option>${bankaOptions}</select>
+                <select class="bank-adi" style="flex:1; min-width:140px; padding:6px;"><option value="">BANKA SEÃ‡Ä°NÄ°Z</option>${bankaOptions}</select>
                 <input type="text" class="bank-iban" placeholder="IBAN" maxlength="32" value="${ibanVal}" oninput="ibanFormatla(this)">
                 <button class="btn-danger" onclick="this.parentElement.remove()" style="padding: 8px 12px;">X</button>
             `;
@@ -960,8 +960,8 @@ function gorevMailGonder(gorev) {
             AKTIF_KULLANICI_YETKILERI = yetkiler;
             try { localStorage.setItem("tm_active_user", kullanici); } catch(e) { console.error("Oturum kaydetme hatasi:", e); }
             try { sessionStorage.setItem("tm_session_active", "1"); } catch(e) { console.error("Session kaydetme hatasi:", e); }
-            girisCikisLogla(kullanici, "GÝRÝÞ");
-            aktiviteEkle("Giriþ yaptý", "Sistem");
+            girisCikisLogla(kullanici, "GÄ°RÄ°Åž");
+            aktiviteEkle("GiriÅŸ yaptÄ±", "Sistem");
             try { localStorage.removeItem('tm_active_page'); } catch(e) { console.error("Sayfa temizleme hatasi:", e); }
             menuyuInsaEt(yetkiler);
             sidebarKullanicilariYenile();
@@ -982,7 +982,7 @@ function gorevMailGonder(gorev) {
                 if (aktif && aktif !== kullanici) {
                     var errorDiv = document.getElementById("loginError");
                     if (errorDiv) {
-                        errorDiv.innerText = "? " + aktif + " kullanýcýsý halen aktif. Çýkýþ yapmasýný bekleyin.";
+                        errorDiv.innerText = "? " + aktif + " kullanÄ±cÄ±sÄ± halen aktif. Ã‡Ä±kÄ±ÅŸ yapmasÄ±nÄ± bekleyin.";
                         errorDiv.style.display = "block";
                     }
                     callback(false);
@@ -998,7 +998,7 @@ function gorevMailGonder(gorev) {
             const pas = document.getElementById("setupPass").value.trim();
             const ttl = document.getElementById("setupTitle").value.trim() || "KURUCU";
             const err = document.getElementById("setupError");
-            if (!usr || !pas) { if (err) { err.textContent = "Kullanýcý adý ve þifre boþ býrakýlamaz!"; err.style.display = "block"; } return; }
+            if (!usr || !pas) { if (err) { err.textContent = "KullanÄ±cÄ± adÄ± ve ÅŸifre boÅŸ bÄ±rakÄ±lamaz!"; err.style.display = "block"; } return; }
             try { localStorage.setItem("tm_admin_creds_final", JSON.stringify({ usr: usr, pass: pas, title: ttl })); } catch(e) { console.error("Kurulum kaydetme hatasi:", e); }
             document.getElementById("loginCardKurulum").style.display = "none";
             document.getElementById("loginCardGiris").style.display = "block";
@@ -1065,7 +1065,7 @@ function gorevMailGonder(gorev) {
                     if (izin) girisBasarili(hedefKullanici, hedefYetkiler);
                 });
             } else if (fdb) {
-                if (errorDiv) { errorDiv.innerText = "Kullanýcý bulunamadý. Firebase'den senkronize ediliyor..."; errorDiv.style.display = "block"; }
+                if (errorDiv) { errorDiv.innerText = "KullanÄ±cÄ± bulunamadÄ±. Firebase'den senkronize ediliyor..."; errorDiv.style.display = "block"; }
                 fdb.collection(FS_COLLECTION).doc('tm_users_final_v8').get({ source: 'server' }).then(function(snap) {
                     if (snap && snap.exists) {
                         var data = snap.data();
@@ -1080,31 +1080,31 @@ function gorevMailGonder(gorev) {
                             if (izin) girisBasarili(bulunan.usr, bulunan.yetkiler);
                         });
                     } else {
-                        if (errorDiv) { errorDiv.innerText = "Kullanýcý adý veya þifre hatalý!"; errorDiv.style.display = "block"; }
+                        if (errorDiv) { errorDiv.innerText = "KullanÄ±cÄ± adÄ± veya ÅŸifre hatalÄ±!"; errorDiv.style.display = "block"; }
                     }
                 }).catch(function() {
-                    if (errorDiv) { errorDiv.innerText = "Kullanýcý adý veya þifre hatalý!"; errorDiv.style.display = "block"; }
+                    if (errorDiv) { errorDiv.innerText = "KullanÄ±cÄ± adÄ± veya ÅŸifre hatalÄ±!"; errorDiv.style.display = "block"; }
                 });
             } else {
-                if (errorDiv) { errorDiv.innerText = "Kullanýcý adý veya þifre hatalý!"; errorDiv.style.display = "block"; }
+                if (errorDiv) { errorDiv.innerText = "KullanÄ±cÄ± adÄ± veya ÅŸifre hatalÄ±!"; errorDiv.style.display = "block"; }
             }
         }
 
         function sistemdenCikisYap() {
-            tmConfirm("Sistemden çýkýþ yapmak istediðinize emin misiniz?", function() {
+            tmConfirm("Sistemden Ã§Ä±kÄ±ÅŸ yapmak istediÄŸinize emin misiniz?", function() {
                 document.getElementById("loginUser").value = "";
                 document.getElementById("loginPass").value = "";
                 document.getElementById("portalSection").style.display = "none";
                 document.getElementById("loginSection").style.display = "flex";
                 var cikan;
-                try { cikan = localStorage.getItem("tm_active_user") || "BÝLÝNMEYEN"; } catch(e) { cikan = "BÝLÝNMEYEN"; console.error("Aktif kullanici okuma hatasi:", e); }
+                try { cikan = localStorage.getItem("tm_active_user") || "BÄ°LÄ°NMEYEN"; } catch(e) { cikan = "BÄ°LÄ°NMEYEN"; console.error("Aktif kullanici okuma hatasi:", e); }
                 AKTIF_KULLANICI_YETKILERI = [];
                 tmOnlineCikisYap(cikan);
                 try { localStorage.removeItem("tm_active_user"); } catch(e) { console.error("Cikis temizlik hatasi:", e); }
                 try { sessionStorage.removeItem("tm_session_active"); } catch(e) { console.error("Session temizlik hatasi:", e); }
                 try { localStorage.removeItem("tm_active_page"); } catch(e) { console.error("Sayfa temizlik hatasi:", e); }
-                girisCikisLogla(cikan, "ÇIKIÞ");
-                aktiviteEkle("Çýkýþ yaptý", "Sistem");
+                girisCikisLogla(cikan, "Ã‡IKIÅž");
+                aktiviteEkle("Ã‡Ä±kÄ±ÅŸ yaptÄ±", "Sistem");
                 sidebarKullanicilariYenile();
                 tmSesCal('cikis');
             });
@@ -1160,9 +1160,9 @@ function gorevMailGonder(gorev) {
             if(!sub) return;
             const opening = !sub.classList.contains("open");
             document.querySelectorAll(".submenu").forEach(s => { if (s.id !== id) s.classList.remove("open"); });
-            document.querySelectorAll(".menu-item .arrow").forEach(a => { if (a.id !== arrowId) a.innerText = "¡"; });
+            document.querySelectorAll(".menu-item .arrow").forEach(a => { if (a.id !== arrowId) a.innerText = "Â¡"; });
             if (opening) { sub.classList.add("open"); arrow.innerText = "^"; try { origSetItem("tm_submenu_open", id); } catch(e) { console.error("Submenu acma hatasi:", e); } }
-            else { sub.classList.remove("open"); arrow.innerText = "¡"; try { origSetItem("tm_submenu_open", ""); } catch(e) { console.error("Submenu kapama hatasi:", e); } }
+            else { sub.classList.remove("open"); arrow.innerText = "Â¡"; try { origSetItem("tm_submenu_open", ""); } catch(e) { console.error("Submenu kapama hatasi:", e); } }
         }
 
         var tmFormDirty = false;
@@ -1193,13 +1193,13 @@ function gorevMailGonder(gorev) {
             if (e.key === 'Escape') {
                 e.preventDefault();
                 var btns = modal.querySelectorAll('button');
-                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === '?' || t.startsWith('?') || t === 'Ýptal' || t === 'Kapat' || t === 'Vazgeç' || t === 'Hayýr' || b.classList.contains('as-modal-close') || b.classList.contains('modal-close'); });
+                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === '?' || t.startsWith('?') || t === 'Ä°ptal' || t === 'Kapat' || t === 'VazgeÃ§' || t === 'HayÄ±r' || b.classList.contains('as-modal-close') || b.classList.contains('modal-close'); });
                 if (!btn) btn = btns[btns.length - 1];
                 if (btn) btn.click();
             } else if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('[contenteditable="true"]') && !e.target.closest('textarea') && !e.target.closest('input')) {
                 e.preventDefault();
                 var btns = modal.querySelectorAll('button');
-                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === 'Evet' || t === 'Tamam' || t === 'Kaydet' || t === 'Onayla' || t === 'PDF Oluþtur' || t === 'KAYDET'; });
+                var btn = Array.from(btns).find(function(b) { var t = b.textContent.trim(); return t === 'Evet' || t === 'Tamam' || t === 'Kaydet' || t === 'Onayla' || t === 'PDF OluÅŸtur' || t === 'KAYDET'; });
                 if (btn) btn.click();
             }
         });
@@ -1210,7 +1210,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("tmConfirmCancel").onclick = function() { document.getElementById("tmConfirmOverlay").style.display = "none"; };
         }
         function tmPrompt(msg, onTamam, defaultVal, title) {
-            document.getElementById("tmPromptTitle").textContent = title || "GÝRÝÞ";
+            document.getElementById("tmPromptTitle").textContent = title || "GÄ°RÄ°Åž";
             document.getElementById("tmPromptMsg").textContent = msg;
             document.getElementById("tmPromptInput").value = defaultVal || "";
             document.getElementById("tmPromptOverlay").style.display = "flex";
@@ -1250,7 +1250,7 @@ function gorevMailGonder(gorev) {
             var el = document.getElementById("tmAktiviteLogBody");
             if (!el) return;
             var log = JSON.parse(localStorage.getItem("tm_aktivite_log") || "[]");
-            if (log.length === 0) { el.innerHTML = "<tr><td colspan='4' style='padding:20px;text-align:center;color:var(--text-light);'>Henüz aktivite kaydý yok.</td></tr>"; return; }
+            if (log.length === 0) { el.innerHTML = "<tr><td colspan='4' style='padding:20px;text-align:center;color:var(--text-light);'>HenÃ¼z aktivite kaydÄ± yok.</td></tr>"; return; }
             var h = "";
             log.slice(0, 10).forEach(function(k) {
                 h += "<tr><td style='padding:8px 12px;font-size:12px;'>" + k.zaman + "</td><td style='padding:8px 12px;font-size:12px;font-weight:600;'>" + k.kullanici + "</td><td style='padding:8px 12px;font-size:12px;'>" + k.islem + "</td><td style='padding:8px 12px;font-size:12px;color:var(--text-light);'>" + k.sayfa + "</td></tr>";
@@ -1416,7 +1416,7 @@ function gorevMailGonder(gorev) {
             }
         });
 
-        try { if(typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') Chart.register(ChartDataLabels); } catch(e) { console.warn("Chart.js yüklenemedi:", e); }
+        try { if(typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') Chart.register(ChartDataLabels); } catch(e) { console.warn("Chart.js yÃ¼klenemedi:", e); }
 
         /* ================= ANA SAYFA DURUM MOTORU ================= */
         function dashboardVerileriniGuncelle() {
@@ -1447,7 +1447,7 @@ function gorevMailGonder(gorev) {
             const tamIsMuhDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
             const dekontDb = JSON.parse(localStorage.getItem("tm_nakit_dekont_db")) || [];
 
-            // ÜST ÝSTATÝSTÝKLER
+            // ÃœST Ä°STATÄ°STÄ°KLER
             setText("dashStatTeklif", teklifDb.length);
             setText("dashStatMusteri", musteriDb.length);
             setText("dashStatPartner", partnerDb.length);
@@ -1455,7 +1455,7 @@ function gorevMailGonder(gorev) {
             setText("dashStatTamamlanan", tamIsMuhDb.length);
             setText("dashStatDekont", dekontDb.length);
 
-            // FÝNANSAL ÖZET
+            // FÄ°NANSAL Ã–ZET
             try {
                 const htDb = JSON.parse(localStorage.getItem("tm_hesap_takip_db"));
                 let sirketBakiye = 0;
@@ -1466,7 +1466,7 @@ function gorevMailGonder(gorev) {
                 setText("dashFinBakiye", tmTl(sirketBakiye));
             } catch(e) { setText("dashFinBakiye", "0,00 ?"); }
 
-            // YILLIK BÜTÇE VERÝSÝ (gelir/gider)
+            // YILLIK BÃœTÃ‡E VERÄ°SÄ° (gelir/gider)
             try {
                 const budgetDb = ybVeriYukle();
                 const yil = budgetDb.aktifYil;
@@ -1479,7 +1479,7 @@ function gorevMailGonder(gorev) {
                 }
             } catch(e) { /* budget function not available */ }
 
-            // ÝÞ MUHASEBESÝ KALAN TAHSÝLAT / KALAN ÖDEME
+            // Ä°Åž MUHASEBESÄ° KALAN TAHSÄ°LAT / KALAN Ã–DEME
             try {
                 const imDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_db")) || [];
                 let imHacim = 0, imTahsilat = 0, imVerecek = 0, imOdenen = 0;
@@ -1494,11 +1494,11 @@ function gorevMailGonder(gorev) {
                 setText("dashFinKalanOdeme", tmTl(imVerecek - imOdenen));
             } catch(e) { setText("dashFinKalanTahsilat", "0,00 ?"); setText("dashFinKalanOdeme", "0,00 ?"); }
 
-            // SON TEKLÝFLER TABLOSU
+            // SON TEKLÄ°FLER TABLOSU
             const offerBody = document.getElementById("dashRecentOfferBody");
             if(offerBody) {
                 if(teklifDb.length === 0) {
-                    offerBody.innerHTML = '<tr><td colspan="4">'+tmEmptyStateHTML('<i class="fa-regular fa-file-lines"></i>','Kayýtlý teklif bulunmamaktadýr.','Yeni bir teklif oluþturmak için "Yeni Teklif" butonunu kullanýn.')+'</td></tr>';
+                    offerBody.innerHTML = '<tr><td colspan="4">'+tmEmptyStateHTML('<i class="fa-regular fa-file-lines"></i>','KayÄ±tlÄ± teklif bulunmamaktadÄ±r.','Yeni bir teklif oluÅŸturmak iÃ§in "Yeni Teklif" butonunu kullanÄ±n.')+'</td></tr>';
                 } else {
                     const son = [...teklifDb].sort(function(a,b){return b.id-a.id;}).slice(0,5);
                     offerBody.innerHTML = "";
@@ -1513,11 +1513,11 @@ function gorevMailGonder(gorev) {
                 }
             }
 
-            // AKTÝF ÝÞLER
+            // AKTÄ°F Ä°ÅžLER
             const jobsBody = document.getElementById("dashActiveJobsBody");
             if(jobsBody) {
                 if(isMuhDb.length === 0) {
-                    jobsBody.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-calendar"></i>','Aktif iþ bulunmamaktadýr.','Dashboard\'da görüntülenecek aktif bir iþ kaydý bulunmuyor.');
+                    jobsBody.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-calendar"></i>','Aktif iÅŸ bulunmamaktadÄ±r.','Dashboard\'da gÃ¶rÃ¼ntÃ¼lenecek aktif bir iÅŸ kaydÄ± bulunmuyor.');
                 } else {
                     const sonIsler = [...isMuhDb].sort(function(a,b){return b.id-a.id;}).slice(0,4);
                     jobsBody.innerHTML = "";
@@ -1534,15 +1534,15 @@ function gorevMailGonder(gorev) {
         }
                         const kalan = toplamVerecek - toplamOdenen;
                         jobsBody.innerHTML += '<div class="dash-mini-job">' +
-                            '<div class="job-info"><div class="name">' + esc(j.isAdi || 'ÝSÝMSÝZ') + '</div>' +
-                            '<div class="meta">' + (j.firma && j.firma !== '-' ? esc(j.firma) + ' • ' : '') + '#' + String(j.id).padStart(4,'0') + '</div></div>' +
+                            '<div class="job-info"><div class="name">' + esc(j.isAdi || 'Ä°SÄ°MSÄ°Z') + '</div>' +
+                            '<div class="meta">' + (j.firma && j.firma !== '-' ? esc(j.firma) + ' â€¢ ' : '') + '#' + String(j.id).padStart(4,'0') + '</div></div>' +
                             '<div class="job-amount"><span class="val" style="color:' + (kalan>0?'var(--accent-red)':'var(--btn-green)') + ';">' + (kalan || 0).toLocaleString('tr-TR',{minFractionDigits:2}) + ' ?</span>' +
-                            '<span class="label">Kalan Ödeme</span></div></div>';
+                            '<span class="label">Kalan Ã–deme</span></div></div>';
                     });
                 }
             }
 
-            // FATURA ÖZETÝ
+            // FATURA Ã–ZETÄ°
             const invBody = document.getElementById("dashInvoiceBody");
             if(invBody) {
                 try {
@@ -1556,15 +1556,15 @@ function gorevMailGonder(gorev) {
                         '<tr><td style="font-weight:600;"><i class="fa-solid fa-inbox"></i> Gelen</td><td style="text-align:center;">' + gelen.length + '</td><td style="text-align:right;font-weight:600;">' + tmTl(gelenT) + '</td><td style="text-align:right;font-size:12px;color:var(--accent-red);">' + tmTl(gelenK) + '</td></tr>' +
                         '<tr><td style="font-weight:600;"><i class="fa-solid fa-paper-plane"></i> Giden</td><td style="text-align:center;">' + giden.length + '</td><td style="text-align:right;font-weight:600;">' + tmTl(gidenT) + '</td><td style="text-align:right;font-size:12px;color:var(--btn-green);">' + tmTl(gidenK) + '</td></tr>';
                 } catch(e) {
-                    invBody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:15px;color:var(--text-light);font-size:13px;">Fatura verisi bulunamadý.</td></tr>';
+                    invBody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:15px;color:var(--text-light);font-size:13px;">Fatura verisi bulunamadÄ±.</td></tr>';
                 }
             }
 
-            // PÝYASA ENDEKSÝ
+            // PÄ°YASA ENDEKSÄ°
             const piyasaContainer = document.getElementById("dashPiyasaIndexList");
             if(piyasaContainer) {
                 if(piyasaDb.length === 0) {
-                    piyasaContainer.innerHTML = '<div style="text-align:center;padding:15px;color:var(--text-light);font-size:13px;">Kayýtlý piyasa verisi bulunmuyor.</div>';
+                    piyasaContainer.innerHTML = '<div style="text-align:center;padding:15px;color:var(--text-light);font-size:13px;">KayÄ±tlÄ± piyasa verisi bulunmuyor.</div>';
                 } else {
                     const sirali = [...piyasaDb].sort(function(a,b){return new Date(b.tarih)-new Date(a.tarih);}).slice(0,5);
                     piyasaContainer.innerHTML = "";
@@ -1572,13 +1572,13 @@ function gorevMailGonder(gorev) {
                         const sTarih = p.tarih ? new Date(p.tarih).toLocaleDateString("tr-TR") : "-";
                         piyasaContainer.innerHTML += '<div class="mini-list-item">' +
                             '<div><span style="font-weight:700;color:var(--text-dark);font-size:12px;">' + esc(p.dal) + '</span><br>' +
-                            '<small style="color:var(--text-light)">' + esc(p.kisi||p.firma||'-') + ' • ' + sTarih + '</small></div>' +
+                            '<small style="color:var(--text-light)">' + esc(p.kisi||p.firma||'-') + ' â€¢ ' + sTarih + '</small></div>' +
                             '<span class="mini-badge">' + (p.fiyat||0).toLocaleString('tr-TR') + ' ' + esc(p.birim||'') + '</span></div>';
                     });
                 }
             }
 
-            // VERGÝ TAKVÝMÝ
+            // VERGÄ° TAKVÄ°MÄ°
             const vTkv = document.getElementById("dashVergiTakvimi");
             if(vTkv) {
                 try {
@@ -1588,7 +1588,7 @@ function gorevMailGonder(gorev) {
                     simdi.setHours(0,0,0,0);
                     var gelecek = etk.filter(function(e){ return !e.tamamlandi; }).sort(function(a,b){ return new Date(a.tarih) - new Date(b.tarih); });
                     if(gelecek.length === 0) {
-                        vTkv.innerHTML = '<div style="text-align:center;padding:15px;color:var(--text-light);font-size:13px;"><i class="fa-regular fa-calendar"></i> Yaklaþan vergi günü bulunmuyor.</div>';
+                        vTkv.innerHTML = '<div style="text-align:center;padding:15px;color:var(--text-light);font-size:13px;"><i class="fa-regular fa-calendar"></i> YaklaÅŸan vergi gÃ¼nÃ¼ bulunmuyor.</div>';
                     } else {
                         vTkv.innerHTML = "";
                         var goster = gelecek.slice(0,5);
@@ -1599,22 +1599,22 @@ function gorevMailGonder(gorev) {
                                 var et = new Date(e.tarih);
                                 et.setHours(0,0,0,0);
                                 var fark = Math.round((et - simdi) / 86400000);
-                                if(fark > 0) { kalanGun = fark + " gün"; renk = fark <= 7 ? "color:var(--accent-red);font-weight:700;" : fark <= 30 ? "color:orange;" : "color:var(--text-light);"; }
-                                else if(fark === 0) { kalanGun = "BUGÜN!"; renk = "color:red;font-weight:700;"; }
-                                else { kalanGun = Math.abs(fark) + " gün geçti"; renk = "color:var(--text-light);"; }
+                                if(fark > 0) { kalanGun = fark + " gÃ¼n"; renk = fark <= 7 ? "color:var(--accent-red);font-weight:700;" : fark <= 30 ? "color:orange;" : "color:var(--text-light);"; }
+                                else if(fark === 0) { kalanGun = "BUGÃœN!"; renk = "color:red;font-weight:700;"; }
+                                else { kalanGun = Math.abs(fark) + " gÃ¼n geÃ§ti"; renk = "color:var(--text-light);"; }
                             } catch(ex) { console.error("Vergi tarih hesaplama hatasi:", ex); }
                             vTkv.innerHTML += '<div class="mini-list-item" style="cursor:pointer;" onclick="menudenSayfaAc(\'fatura-takip\',\'fatura-takip-page\',document.getElementById(\'sub-fatura-takip\'))">' +
                                 '<div><span style="font-weight:600;color:var(--text-dark);font-size:12px;">' + esc(e.baslik) + '</span><br>' +
-                                '<small style="color:var(--text-light)">' + turAd + ' • ' + tarihStr(e.tarih) + '</small></div>' +
+                                '<small style="color:var(--text-light)">' + turAd + ' â€¢ ' + tarihStr(e.tarih) + '</small></div>' +
                                 '<span style="' + renk + 'font-size:12px;">' + kalanGun + '</span></div>';
                         });
                     }
                 } catch(ex) {
-                    vTkv.innerHTML = '<div style="text-align:center;padding:15px;color:var(--text-light);font-size:13px;">Vergi verisi yüklenemedi.</div>';
+                    vTkv.innerHTML = '<div style="text-align:center;padding:15px;color:var(--text-light);font-size:13px;">Vergi verisi yÃ¼klenemedi.</div>';
                 }
             }
 
-            // GRAFÝK
+            // GRAFÄ°K
             try {
                 if (typeof Chart !== 'undefined') {
                     var ctx = document.getElementById('dashAylikChart');
@@ -1623,7 +1623,7 @@ function gorevMailGonder(gorev) {
                         var bd = ybVeriYukle();
                         var yil = bd.aktifYil;
                         var kayit = bd.yillar[yil];
-                        var aylar = ["Ocak","Þubat","Mart","Nisan","Mayýs","Haziran","Temmuz","Aðustos","Eylül","Ekim","Kasým","Aralýk"];
+                        var aylar = ["Ocak","Åžubat","Mart","Nisan","MayÄ±s","Haziran","Temmuz","AÄŸustos","EylÃ¼l","Ekim","KasÄ±m","AralÄ±k"];
                         var gelirAylik=[], giderAylik=[];
                         for (var i=0;i<12;i++) {
                             var ay = kayit && kayit.aylar && kayit.aylar[i];
@@ -1673,7 +1673,7 @@ function gorevMailGonder(gorev) {
             }, 300);
         }
 
-        /* ================= YENÝ DASHBOARD FONKSÝYONLARI ================= */
+        /* ================= YENÄ° DASHBOARD FONKSÄ°YONLARI ================= */
         var DASH_WIDGET_KEY = "tm_dashboard_widget_order";
         var DASH_WIDGET_HIDDEN_KEY = "tm_dashboard_widget_hidden";
 
@@ -1771,16 +1771,16 @@ function gorevMailGonder(gorev) {
             });
         }
 
-        /* Widget Ayarlarý */
+        /* Widget AyarlarÄ± */
         function dashAyarGoster() {
             var modal = document.getElementById("dashAyarModal");
             var liste = document.getElementById("dashAyarListesi");
             if (!modal || !liste) return;
             var gizli = dashWidgetGizliListesi();
             var widgetAdlari = {
-                chart:"Gelir/Gider Grafiði", shortcuts:"Hýzlý Kýsayollar", takvim:"Takvim",
-                teklifler:"Son Teklifler", isler:"Aktif Ýþler", gorevler:"Görevler",
-                fatura:"Fatura Özeti", piyasa:"Piyasa Endeksi", vergi:"Vergi Takvimi", notlar:"Ofis Notlarý"
+                chart:"Gelir/Gider GrafiÄŸi", shortcuts:"HÄ±zlÄ± KÄ±sayollar", takvim:"Takvim",
+                teklifler:"Son Teklifler", isler:"Aktif Ä°ÅŸler", gorevler:"GÃ¶revler",
+                fatura:"Fatura Ã–zeti", piyasa:"Piyasa Endeksi", vergi:"Vergi Takvimi", notlar:"Ofis NotlarÄ±"
             };
             var widgetIkonlari = {
                 chart:'<i class="fa-solid fa-chart-simple"></i>', shortcuts:'<i class="fa-solid fa-rocket"></i>', takvim:'<i class="fa-regular fa-calendar"></i>', teklifler:'<i class="fa-regular fa-file-lines"></i>',
@@ -1797,13 +1797,13 @@ function gorevMailGonder(gorev) {
                 h += '<span class="dash-ayar-icon">' + (widgetIkonlari[wid]||'<i class="fa-solid fa-box"></i>') + '</span>';
                 h += '<span class="dash-ayar-label">' + (widgetAdlari[wid]||wid) + '</span>';
                 if (gizliMi) {
-                    h += '<button class="dash-ayar-toggle dash-ayar-hidden" onclick="dashWidgetGoster(\''+wid+'\')">+ GÖSTER</button>';
+                    h += '<button class="dash-ayar-toggle dash-ayar-hidden" onclick="dashWidgetGoster(\''+wid+'\')">+ GÃ–STER</button>';
                 } else {
-                    h += '<button class="dash-ayar-toggle dash-ayar-visible" onclick="dashWidgetGizle(\''+wid+'\')">GÝZLE</button>';
+                    h += '<button class="dash-ayar-toggle dash-ayar-visible" onclick="dashWidgetGizle(\''+wid+'\')">GÄ°ZLE</button>';
                 }
                 h += '</div>';
             });
-            if (!h) h = '<div style="text-align:center;padding:20px;color:var(--text-light);font-size:13px;">Tüm widget\'lar zaten görünür durumda.</div>';
+            if (!h) h = '<div style="text-align:center;padding:20px;color:var(--text-light);font-size:13px;">TÃ¼m widget\'lar zaten gÃ¶rÃ¼nÃ¼r durumda.</div>';
             liste.innerHTML = h;
             modal.style.display = "flex";
         }
@@ -1811,15 +1811,15 @@ function gorevMailGonder(gorev) {
             document.getElementById("dashAyarModal").style.display = "none";
         }
 
-        /* Hýzlý Kýsayollar */
+        /* HÄ±zlÄ± KÄ±sayollar */
         var DASH_KISAYOL_KEY = "tm_dashboard_shortcuts";
         function dashKisayolVarsayilan() {
             return [
                 { icon:'<i class="fa-regular fa-file-lines"></i>', label:"Yeni Teklif", page:"teklif-olustur", perm:"teklif-olustur" },
-                { icon:'<i class="fa-solid fa-user"></i>', label:"Müþteri Ekle", page:"musteriler", perm:"musteriler-page" },
+                { icon:'<i class="fa-solid fa-user"></i>', label:"MÃ¼ÅŸteri Ekle", page:"musteriler", perm:"musteriler-page" },
                 { icon:'<i class="fa-solid fa-handshake"></i>', label:"Partner Ekle", page:"isortaklari", perm:"isortaklari-page" },
                 { icon:'<i class="fa-solid fa-money-bill-wave"></i>', label:"Nakit Dekont", page:"nakit-dekont", perm:"nakit-dekont" },
-                { icon:'<i class="fa-regular fa-calendar"></i>', label:"Ýþ Takibi", page:"istakibi", perm:"istakibi-page" },
+                { icon:'<i class="fa-regular fa-calendar"></i>', label:"Ä°ÅŸ Takibi", page:"istakibi", perm:"istakibi-page" },
                 { icon:'<i class="fa-solid fa-coins"></i>', label:"Fatura Takip", page:"fatura-takip", perm:"fatura-takip" }
             ];
         }
@@ -1844,16 +1844,16 @@ function gorevMailGonder(gorev) {
                 h += '<span>' + (s.label||"Sayfa") + '</span></div>';
             });
             if (!h) {
-                konteyner.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:12px;color:var(--text-light);font-size:12px;">Henüz kýsayol bulunmuyor.</div>';
+                konteyner.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:12px;color:var(--text-light);font-size:12px;">HenÃ¼z kÄ±sayol bulunmuyor.</div>';
             } else {
                 konteyner.innerHTML = h;
             }
         }
 
-        /* ================= PORTFÖY MODÜLÜ (MÜÞTERÝLER) MOTORU ================= */
+        /* ================= PORTFÃ–Y MODÃœLÃœ (MÃœÅžTERÄ°LER) MOTORU ================= */
         function musteriProfilKaydet() {
             const ad = trToUpper(document.getElementById("mAdi").value.trim());
-            const sirket = trToUpper(document.getElementById("mSirket").value.trim()) || "BÝREYSEL";
+            const sirket = trToUpper(document.getElementById("mSirket").value.trim()) || "BÄ°REYSEL";
             const unvan = trToUpper(document.getElementById("mUnvan").value.trim()) || "-";
             const tel = document.getElementById("mTel").value.trim() || "-";
             const eposta = document.getElementById("mEposta").value.trim() || "-";
@@ -1864,25 +1864,25 @@ function gorevMailGonder(gorev) {
             const adres = trToUpper(document.getElementById("mAdres").value.trim()) || "-";
             const bankalar = bankaVerileriniTopla("musteriBankaKonteyner");
 
-            if(!ad) { tmNotify("Müþteri adý boþ býrakýlamaz!", "error"); return; }
+            if(!ad) { tmNotify("MÃ¼ÅŸteri adÄ± boÅŸ bÄ±rakÄ±lamaz!", "error"); return; }
 
-            tmLoadingGoster('Müþteri kaydediliyor...');
+            tmLoadingGoster('MÃ¼ÅŸteri kaydediliyor...');
             var db, editId;
             try { db = JSON.parse(localStorage.getItem("tm_musteriler_db")) || []; } catch(e) { db = []; console.error("Musteri db yukleme hatasi:", e); }
             editId = document.getElementById("musteriEditId").value;
 
             if(editId === "-1") {
                 db.push({ id: Date.now(), ad, sirket, unvan, tel, eposta, tipi, kimlik, vergiDairesi, vergiNo, adres, bankalar });
-                tmNotify("Müþteri profil kartý baþarýyla eklendi.", "success");
-                aktiviteEkle("Müþteri eklendi: " + ad, "Portföy");
+                tmNotify("MÃ¼ÅŸteri profil kartÄ± baÅŸarÄ±yla eklendi.", "success");
+                aktiviteEkle("MÃ¼ÅŸteri eklendi: " + ad, "PortfÃ¶y");
             } else {
                 const targetId = parseInt(editId);
                 db = db.map(item => item.id === targetId ? { ...item, ad, sirket, unvan, tel, eposta, tipi, kimlik, vergiDairesi, vergiNo, adres, bankalar } : item);
-                tmNotify("Müþteri profil kartý güncellendi.", "success");
-                aktiviteEkle("Müþteri güncellendi: " + ad, "Portföy");
+                tmNotify("MÃ¼ÅŸteri profil kartÄ± gÃ¼ncellendi.", "success");
+                aktiviteEkle("MÃ¼ÅŸteri gÃ¼ncellendi: " + ad, "PortfÃ¶y");
             }
             
-            try { localStorage.setItem("tm_musteriler_db", JSON.stringify(db)); } catch(e) { console.error("Musteri db kaydetme hatasi:", e); tmNotify("Müþteri kaydedilirken hata oluþtu!", "error"); }
+            try { localStorage.setItem("tm_musteriler_db", JSON.stringify(db)); } catch(e) { console.error("Musteri db kaydetme hatasi:", e); tmNotify("MÃ¼ÅŸteri kaydedilirken hata oluÅŸtu!", "error"); }
             tmLoadingGizle();
             musteriFormTemizle();
             musteriKartlariniYenile();
@@ -1893,7 +1893,7 @@ function gorevMailGonder(gorev) {
             const kart = db.find(m => m.id === id);
             if(!kart) return;
 
-            document.getElementById("musteriFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> Müþteri Kartýný Düzenle';
+            document.getElementById("musteriFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> MÃ¼ÅŸteri KartÄ±nÄ± DÃ¼zenle';
             document.getElementById("musteriEditId").value = kart.id;
             document.getElementById("mAdi").value = kart.ad;
             document.getElementById("mSirket").value = kart.sirket;
@@ -1914,12 +1914,12 @@ function gorevMailGonder(gorev) {
                 bankaSatiriEkle("musteriBankaKonteyner");
             }
 
-            document.getElementById("btnMusteriSave").innerText = "Deðiþiklikleri Kaydet";
+            document.getElementById("btnMusteriSave").innerText = "DeÄŸiÅŸiklikleri Kaydet";
             document.getElementById("btnMusteriCancel").style.display = "inline-block";
         }
 
         function musteriFormTemizle() {
-            document.getElementById("musteriFormTitle").innerHTML = '<i class="fa-solid fa-thumbtack"></i> Yeni Müþteri Kartý Tanýmla';
+            document.getElementById("musteriFormTitle").innerHTML = '<i class="fa-solid fa-thumbtack"></i> Yeni MÃ¼ÅŸteri KartÄ± TanÄ±mla';
             document.getElementById("musteriEditId").value = "-1";
             document.getElementById("mAdi").value = "";
             document.getElementById("mSirket").value = "";
@@ -1933,7 +1933,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("musteriBankaKonteyner").innerHTML = "";
             bankaSatiriEkle("musteriBankaKonteyner");
             
-            document.getElementById("btnMusteriSave").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Profil Kartýný Kaydet';
+            document.getElementById("btnMusteriSave").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Profil KartÄ±nÄ± Kaydet';
             document.getElementById("btnMusteriCancel").style.display = "none";
         }
 
@@ -1949,11 +1949,11 @@ function gorevMailGonder(gorev) {
                     toplamIs += tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(m.ad) || trToUpper(t.firma || "") === trToUpper(m.sirket)).length;
                 });
                 musteriSummary.innerHTML = `
-                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam Müþteri</small><span style="font-weight:700; color:var(--accent-red); font-size:18px;">${db.length}</span></div>
-                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam Yapýlan Ýþ</small><span style="font-weight:700; color:var(--btn-green); font-size:18px;">${toplamIs}</span></div>
+                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam MÃ¼ÅŸteri</small><span style="font-weight:700; color:var(--accent-red); font-size:18px;">${db.length}</span></div>
+                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam YapÄ±lan Ä°ÅŸ</small><span style="font-weight:700; color:var(--btn-green); font-size:18px;">${toplamIs}</span></div>
                 `;
             }
-            if(db.length === 0) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-users"></i>','Kayýtlý müþteri bulunmamaktadýr.','Yeni bir müþteri eklemek için "Müþteri Ekle" butonunu kullanýn.'); return; }
+            if(db.length === 0) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-users"></i>','KayÄ±tlÄ± mÃ¼ÅŸteri bulunmamaktadÄ±r.','Yeni bir mÃ¼ÅŸteri eklemek iÃ§in "MÃ¼ÅŸteri Ekle" butonunu kullanÄ±n.'); return; }
             
             const tekliflerDb = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
             db.sort(function(a, b) {
@@ -1967,16 +1967,16 @@ function gorevMailGonder(gorev) {
                     m.bankalar.forEach(b => { 
                         const bankaRenk = getBankaRenkKodu(b.banka);
                         const ibanFormatted = (b.iban || '').replace(/(.{4})/g, '$1 ').trim();
-                        bankaHTML += `<div style="font-size:13px; margin-left:15px; color:${bankaRenk}; font-weight:700; letter-spacing:0.5px;">• ${b.banka}: ${ibanFormatted}</div>`; 
+                        bankaHTML += `<div style="font-size:13px; margin-left:15px; color:${bankaRenk}; font-weight:700; letter-spacing:0.5px;">â€¢ ${b.banka}: ${ibanFormatted}</div>`; 
                     });
-                } else { bankaHTML = " GÝRÝLMEMÝÞ"; }
+                } else { bankaHTML = " GÄ°RÄ°LMEMÄ°Åž"; }
 
                 const isSayisi = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(m.ad) || trToUpper(t.firma || "") === trToUpper(m.sirket)).length;
 
                 konteyner.innerHTML += `
                     <div class="portfolio-card m-card-item">
                         <div class="card-job-counter">
-                            <small>Yapýlan Ýþ</small>
+                            <small>YapÄ±lan Ä°ÅŸ</small>
                             <span>${isSayisi}</span>
                         </div>
                         <div class="card-main-header">
@@ -1984,17 +1984,17 @@ function gorevMailGonder(gorev) {
                             <div class="p-type m-search-tipi"><i class="fa-solid fa-tag"></i> ${m.tipi}</div>
                         </div>
                         <div class="p-detail"><b>Firma/Kurum:</b> <span class="m-search-sirket">${m.sirket}</span></div>
-                        <div class="p-detail"><b>Ünvan:</b> <span class="m-search-unvan">${m.unvan || '-'}</span></div>
+                        <div class="p-detail"><b>Ãœnvan:</b> <span class="m-search-unvan">${m.unvan || '-'}</span></div>
                         <div class="p-detail"><b>Telefon:</b> <span>${m.tel}</span></div>
                         <div class="p-detail"><b>E-Posta:</b> <span>${m.eposta}</span></div>
                         <div class="p-detail"><b>T.C. Kimlik:</b> <span class="m-search-kimlik">${m.kimlik || '-'}</span></div>
                         <div class="p-detail"><b>Vergi Dairesi:</b> <span>${m.vergiDairesi || '-'}</span></div>
                         <div class="p-detail"><b>Vergi No:</b> <span>${m.vergiNo || '-'}</span></div>
                         <div class="p-detail"><b>Adres:</b> <span class="m-search-adres">${m.adres}</span></div>
-                        <div class="p-detail" style="flex-direction:column; gap:2px;"><b>Banka Hesaplarý:</b>${bankaHTML}</div>
+                        <div class="p-detail" style="flex-direction:column; gap:2px;"><b>Banka HesaplarÄ±:</b>${bankaHTML}</div>
                         <div class="card-actions">
                             <button class="btn btn-primary" onclick="pbPopupAc(${m.id}, 'musteri')" style="margin-right:auto;"><i class="fa-regular fa-folder"></i> DOSYALAR</button>
-                            <button class="btn-warning" onclick="musteriDuzenle(${m.id})">Düzenle</button>
+                            <button class="btn-warning" onclick="musteriDuzenle(${m.id})">DÃ¼zenle</button>
                             <button class="btn-danger" onclick="portfolioKartSil('tm_musteriler_db', ${m.id}, 'musteri')">Sil</button>
                         </div>
                     </div>
@@ -2020,10 +2020,10 @@ function gorevMailGonder(gorev) {
             });
         }
 
-        /* ================= PORTFÖY MODÜLÜ (ÝÞ ORTAKLARI) MOTORU ================= */
+        /* ================= PORTFÃ–Y MODÃœLÃœ (Ä°Åž ORTAKLARI) MOTORU ================= */
         function isOrtagiProfilKaydet() {
             const ad = trToUpper(document.getElementById("ioAdi").value.trim());
-            const sirket = trToUpper(document.getElementById("ioSirket").value.trim()) || "BÝREYSEL";
+            const sirket = trToUpper(document.getElementById("ioSirket").value.trim()) || "BÄ°REYSEL";
             const unvan = trToUpper(document.getElementById("ioUnvan").value.trim()) || "-";
             const brans = document.getElementById("ioBrans").value;
             const tel = document.getElementById("ioTel").value.trim() || "-";
@@ -2035,24 +2035,24 @@ function gorevMailGonder(gorev) {
             const adres = trToUpper(document.getElementById("ioAdres").value.trim()) || "-";
             const bankalar = bankaVerileriniTopla("partnerBankaKonteyner");
 
-            if(!ad || !brans) { tmNotify("Partner adý ve Branþ alaný zorunludur!", "error"); return; }
+            if(!ad || !brans) { tmNotify("Partner adÄ± ve BranÅŸ alanÄ± zorunludur!", "error"); return; }
 
-            tmLoadingGoster('Ýþ ortaðý kaydediliyor...');
+            tmLoadingGoster('Ä°ÅŸ ortaÄŸÄ± kaydediliyor...');
             var db, editId;
             try { db = JSON.parse(localStorage.getItem("tm_isortaklari_db")) || []; } catch(e) { db = []; console.error("Isortagi db yukleme hatasi:", e); }
             editId = document.getElementById("partnerEditId").value;
 
             if(editId === "-1") {
                 db.push({ id: Date.now(), ad, sirket, unvan, brans, tel, eposta, kimlik, vergiDairesi, vergiNo, status, adres, bankalar });
-                tmNotify("Ýþ ortaðý baþarýyla sisteme kaydedildi.", "success");
-                aktiviteEkle("Ýþ ortaðý eklendi: " + ad, "Portföy");
+                tmNotify("Ä°ÅŸ ortaÄŸÄ± baÅŸarÄ±yla sisteme kaydedildi.", "success");
+                aktiviteEkle("Ä°ÅŸ ortaÄŸÄ± eklendi: " + ad, "PortfÃ¶y");
             } else {
                 const targetId = parseInt(editId);
                 db = db.map(item => item.id === targetId ? { ...item, ad, sirket, unvan, brans, tel, eposta, kimlik, vergiDairesi, vergiNo, status, adres, bankalar } : item);
-                tmNotify("Partner kartý baþarýyla güncellendi.", "success");
+                tmNotify("Partner kartÄ± baÅŸarÄ±yla gÃ¼ncellendi.", "success");
             }
 
-            try { localStorage.setItem("tm_isortaklari_db", JSON.stringify(db)); } catch(e) { console.error("Isortagi db kaydetme hatasi:", e); tmNotify("Ýþ ortaðý kaydedilirken hata oluþtu!", "error"); }
+            try { localStorage.setItem("tm_isortaklari_db", JSON.stringify(db)); } catch(e) { console.error("Isortagi db kaydetme hatasi:", e); tmNotify("Ä°ÅŸ ortaÄŸÄ± kaydedilirken hata oluÅŸtu!", "error"); }
             tmLoadingGizle();
             partnerFormTemizle();
             isOrtaklariKartlariniYenile();
@@ -2063,7 +2063,7 @@ function gorevMailGonder(gorev) {
             const kart = db.find(io => io.id === id);
             if(!kart) return;
 
-            document.getElementById("partnerFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> Partner Kartýný Düzenle';
+            document.getElementById("partnerFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> Partner KartÄ±nÄ± DÃ¼zenle';
             document.getElementById("partnerEditId").value = kart.id;
             document.getElementById("ioAdi").value = kart.ad;
             document.getElementById("ioSirket").value = kart.sirket;
@@ -2085,12 +2085,12 @@ function gorevMailGonder(gorev) {
                 bankaSatiriEkle("partnerBankaKonteyner");
             }
 
-            document.getElementById("btnPartnerSave").innerText = "Deðiþiklikleri Kaydet";
+            document.getElementById("btnPartnerSave").innerText = "DeÄŸiÅŸiklikleri Kaydet";
             document.getElementById("btnPartnerCancel").style.display = "inline-block";
         }
 
         function partnerFormTemizle() {
-            document.getElementById("partnerFormTitle").innerHTML = '<i class="fa-solid fa-thumbtack"></i> Yeni Ýþ Ortaðý / Partner Kaydet';
+            document.getElementById("partnerFormTitle").innerHTML = '<i class="fa-solid fa-thumbtack"></i> Yeni Ä°ÅŸ OrtaÄŸÄ± / Partner Kaydet';
             document.getElementById("partnerEditId").value = "-1";
             document.getElementById("ioAdi").value = "";
             document.getElementById("ioSirket").value = "";
@@ -2121,10 +2121,10 @@ function gorevMailGonder(gorev) {
                 });
                 partnerSummary.innerHTML = `
                     <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam Partner</small><span style="font-weight:700; color:var(--accent-red); font-size:18px;">${db.length}</span></div>
-                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam Yapýlan Ýþ</small><span style="font-weight:700; color:var(--btn-green); font-size:18px;">${toplamIs}</span></div>
+                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam YapÄ±lan Ä°ÅŸ</small><span style="font-weight:700; color:var(--btn-green); font-size:18px;">${toplamIs}</span></div>
                 `;
             }
-            if(db.length === 0) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-handshake"></i>','Kayýtlý iþ ortaðý bulunmamaktadýr.','Yeni bir iþ ortaðý eklemek için "Ýþ Ortaðý Ekle" butonunu kullanýn.'); return; }
+            if(db.length === 0) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-handshake"></i>','KayÄ±tlÄ± iÅŸ ortaÄŸÄ± bulunmamaktadÄ±r.','Yeni bir iÅŸ ortaÄŸÄ± eklemek iÃ§in "Ä°ÅŸ OrtaÄŸÄ± Ekle" butonunu kullanÄ±n.'); return; }
 
             const piyasaDb = JSON.parse(localStorage.getItem("tm_piyasa_db_v2")) || [];
             db.sort(function(a, b) {
@@ -2138,35 +2138,35 @@ function gorevMailGonder(gorev) {
                     io.bankalar.forEach(b => { 
                         const bankaRenk = getBankaRenkKodu(b.banka);
                         const ibanFormatted = (b.iban || '').replace(/(.{4})/g, '$1 ').trim();
-                        bankaHTML += `<div style="font-size:13px; margin-left:15px; color:${bankaRenk}; font-weight:700; letter-spacing:0.5px;">• ${b.banka}: ${ibanFormatted}</div>`; 
+                        bankaHTML += `<div style="font-size:13px; margin-left:15px; color:${bankaRenk}; font-weight:700; letter-spacing:0.5px;">â€¢ ${b.banka}: ${ibanFormatted}</div>`; 
                     });
-                } else { bankaHTML = " GÝRÝLMEMÝÞ"; }
+                } else { bankaHTML = " GÄ°RÄ°LMEMÄ°Åž"; }
 
                 const isSayisi = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(io.ad) || trToUpper(t.firma || "") === trToUpper(io.sirket) || (t.kalemler && t.kalemler.some(k => trToUpper(k.kisi || "") === trToUpper(io.ad) || trToUpper(k.kisi || "") === trToUpper(io.sirket)))).length;
 
                 konteyner.innerHTML += `
                     <div class="portfolio-card partner-card-item">
                         <div class="card-job-counter">
-                            <small>Yapýlan Ýþ</small>
+                            <small>YapÄ±lan Ä°ÅŸ</small>
                             <span>${isSayisi}</span>
                         </div>
                         <div class="card-main-header">
-                            <h4 class="p-search-ad">${io.ad}${io.status === 'Sürekli Partner' ? ' <i class="fa-solid fa-star"></i>' : ''}</h4>
+                            <h4 class="p-search-ad">${io.ad}${io.status === 'SÃ¼rekli Partner' ? ' <i class="fa-solid fa-star"></i>' : ''}</h4>
                             <div class="p-type p-search-brans" style="color:var(--btn-green)"><i class="fa-solid fa-ruler-combined"></i> ${io.brans}</div>
                         </div>
                         <div class="p-detail"><b>Firma/Kurum:</b> <span class="p-search-sirket">${io.sirket}</span></div>
-                        <div class="p-detail"><b>Ünvaný:</b> <span>${io.unvan || '-'}</span></div>
-                        <div class="p-detail"><b>Statü:</b> <span>${io.status}</span></div>
-                        <div class="p-detail"><b>Ýletiþim:</b> <span>${io.tel}</span></div>
+                        <div class="p-detail"><b>ÃœnvanÄ±:</b> <span>${io.unvan || '-'}</span></div>
+                        <div class="p-detail"><b>StatÃ¼:</b> <span>${io.status}</span></div>
+                        <div class="p-detail"><b>Ä°letiÅŸim:</b> <span>${io.tel}</span></div>
                         <div class="p-detail"><b>E-Posta:</b> <span>${io.eposta}</span></div>
                         <div class="p-detail"><b>T.C. Kimlik:</b> <span class="p-search-kimlik">${io.kimlik || '-'}</span></div>
                         <div class="p-detail"><b>Vergi Dairesi:</b> <span>${io.vergiDairesi || '-'}</span></div>
                         <div class="p-detail"><b>Vergi No:</b> <span>${io.vergiNo || '-'}</span></div>
                         <div class="p-detail"><b>Adres:</b> <span class="p-search-adres">${io.adres || '-'}</span></div>
-                        <div class="p-detail" style="flex-direction:column; gap:2px;"><b>Banka Hesaplarý:</b>${bankaHTML}</div>
+                        <div class="p-detail" style="flex-direction:column; gap:2px;"><b>Banka HesaplarÄ±:</b>${bankaHTML}</div>
                         <div class="card-actions">
                             <button class="btn btn-primary" onclick="pbPopupAc(${io.id}, 'partner')" style="margin-right:auto;"><i class="fa-regular fa-folder"></i> DOSYALAR</button>
-                            <button class="btn-warning" onclick="partnerDuzenle(${io.id})">Düzenle</button>
+                            <button class="btn-warning" onclick="partnerDuzenle(${io.id})">DÃ¼zenle</button>
                             <button class="btn-danger" onclick="portfolioKartSil('tm_isortaklari_db', ${io.id}, 'partner')">Sil</button>
                         </div>
                     </div>
@@ -2192,15 +2192,15 @@ function gorevMailGonder(gorev) {
         }
 
         function portfolioKartSil(dbName, id, tip) {
-            tmConfirm("Bu profil kartýný sistemden kalýcý olarak silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu profil kartÄ±nÄ± sistemden kalÄ±cÄ± olarak silmek istediÄŸinize emin misiniz?", function() {
                 var db, silinenAd = "";
                 try { db = JSON.parse(localStorage.getItem(dbName)) || []; } catch(e) { db = []; console.error("Portfolio kart yukleme hatasi:", e); }
                 var silinen = db.find(function(item) { return item.id === id; });
                 if (silinen) silinenAd = silinen.ad || "";
                 db = db.filter(item => item.id !== id);
                 try { localStorage.setItem(dbName, JSON.stringify(db)); } catch(e) { console.error("Portfolio kart silme hatasi:", e); return; }
-                if(tip === 'musteri') { musteriKartlariniYenile(); aktiviteEkle("Müþteri silindi: " + silinenAd, "Portföy"); }
-                if(tip === 'partner') { isOrtaklariKartlariniYenile(); aktiviteEkle("Ýþ ortaðý silindi: " + silinenAd, "Portföy"); }
+                if(tip === 'musteri') { musteriKartlariniYenile(); aktiviteEkle("MÃ¼ÅŸteri silindi: " + silinenAd, "PortfÃ¶y"); }
+                if(tip === 'partner') { isOrtaklariKartlariniYenile(); aktiviteEkle("Ä°ÅŸ ortaÄŸÄ± silindi: " + silinenAd, "PortfÃ¶y"); }
             });
         }
 
@@ -2224,14 +2224,14 @@ function gorevMailGonder(gorev) {
             input.onchange = function(e) {
                 var file = e.target.files[0];
                 if (!file) return;
-                if (file.name.toLowerCase().indexOf('.pdf') === -1) { tmNotify("Yalnýzca PDF dosyalarý yüklenebilir!", "error"); return; }
+                if (file.name.toLowerCase().indexOf('.pdf') === -1) { tmNotify("YalnÄ±zca PDF dosyalarÄ± yÃ¼klenebilir!", "error"); return; }
                 if (file.size > 10 * 1024 * 1024) { tmNotify("Dosya boyutu 10MB'dan buyuk olamaz! Mevcut plan nedeniyle 10MB siniri vardir.", "error"); return; }
 
                 tmLoadingGoster("Dosya yukleniyor...");
                 var fd = new FormData();
                 fd.append("file", file);
                 fd.append("upload_preset", PB_UPLOAD_PRESET);
-                var orjAd = file.name.replace(/\.pdf$/i, '').replace(/[^a-zA-Z0-9çÇðÐýÝöÖþÞüÜ\s_-]/g, '_').trim();
+                var orjAd = file.name.replace(/\.pdf$/i, '').replace(/[^a-zA-Z0-9Ã§Ã‡ÄŸÄžÄ±Ä°Ã¶Ã–ÅŸÅžÃ¼Ãœ\s_-]/g, '_').trim();
                 var uniqueId = Date.now().toString(36).slice(-4) + Math.random().toString(36).substr(2, 4);
                 fd.append("public_id", orjAd + '_' + uniqueId);
                 fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/auto/upload", {
@@ -2280,7 +2280,7 @@ function gorevMailGonder(gorev) {
             try { db = JSON.parse(localStorage.getItem(dbKey)) || []; } catch(e) { db = []; }
             var kart = db.find(function(k) { return k.id === kartId; });
             var kartAdi = kart ? (kart.ad || "") : "";
-            var turAdi = tur === "musteri" ? "MÜÞTERÝ" : "ÝÞ ORTAÐI";
+            var turAdi = tur === "musteri" ? "MÃœÅžTERÄ°" : "Ä°Åž ORTAÄžI";
             document.getElementById("pbPopupTitle").innerHTML = '<i class="fa-regular fa-folder"></i> DOSYALAR - ' + turAdi + ': ' + kartAdi;
 
             pbDosyaPopupGuncelle(kartId, tur);
@@ -2311,7 +2311,7 @@ function gorevMailGonder(gorev) {
             var kartDosyalari = dosyaDb.filter(function(f) { return f.kartId === kartId && f.tur === tur; });
 
             if (kartDosyalari.length === 0) {
-                listeEl.innerHTML = '<div style="text-align:center;padding:30px 20px;color:#888;font-size:14px;">Henüz dosya yüklenmemiþ.<br><small>PDF formatýnda belgelerinizi yüklemek için "Dosya Yükle" butonunu kullanýn.</small></div>';
+                listeEl.innerHTML = '<div style="text-align:center;padding:30px 20px;color:#888;font-size:14px;">HenÃ¼z dosya yÃ¼klenmemiÅŸ.<br><small>PDF formatÄ±nda belgelerinizi yÃ¼klemek iÃ§in "Dosya YÃ¼kle" butonunu kullanÄ±n.</small></div>';
                 return;
             }
 
@@ -2324,16 +2324,16 @@ function gorevMailGonder(gorev) {
                     + '<div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">'
                     + '<span style="font-size:22px;"><i class="fa-regular fa-file-lines"></i></span>'
                     + '<div style="min-width:0;"><div style="font-size:13px;font-weight:600;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(f.fileName) + '</div>'
-                    + '<div style="font-size:11px;color:var(--text-light);">' + boyut + ' · ' + tarih + '</div></div></div>'
+                    + '<div style="font-size:11px;color:var(--text-light);">' + boyut + ' Â· ' + tarih + '</div></div></div>'
                     + '<div style="display:flex;gap:6px;flex-shrink:0;">'
-                    + '<button class="btn btn-primary btn-sm" onclick="pbDosyaIndir(\'' + f.downloadURL.replace(/'/g, "\\'") + '\', \'' + f.fileName.replace(/'/g, "\\'") + '\')" style="padding:5px 12px;font-size:11px;"><i class="fa-solid fa-inbox"></i> Ýndir</button>'
+                    + '<button class="btn btn-primary btn-sm" onclick="pbDosyaIndir(\'' + f.downloadURL.replace(/'/g, "\\'") + '\', \'' + f.fileName.replace(/'/g, "\\'") + '\')" style="padding:5px 12px;font-size:11px;"><i class="fa-solid fa-inbox"></i> Ä°ndir</button>'
                     + '<button class="btn-danger btn-sm" onclick="pbDosyaSil(' + kartId + ', \'' + f.id + '\', \'' + tur + '\')" style="padding:5px 12px;font-size:11px;"><i class="fa-solid fa-trash-can"></i> Sil</button>'
                     + '</div></div>';
             });
             listeEl.innerHTML = html;
         }
 
-        /* ================= ÞÝRKET BÝLGÝLERÝ & LOGO ================= */
+        /* ================= ÅžÄ°RKET BÄ°LGÄ°LERÄ° & LOGO ================= */
         function sirketBilgileriYukle() {
             var aktifAlan = document.activeElement;
             var ciIds = ["ciAd","ciTelefon","ciGsm","ciVergiDaire","ciVergiNo","ciEmail","ciImzaAd","ciAdres","ciDilekceAltBilgi","newUsername","newPassword","newTitle"];
@@ -2371,7 +2371,7 @@ function gorevMailGonder(gorev) {
         function logoDosyaSecildi(ev) {
             var file = ev.target.files[0];
             if (!file) return;
-            if (file.size > 500 * 1024) { tmAlert("Dosya çok büyük! Maksimum 500KB."); return; }
+            if (file.size > 500 * 1024) { tmAlert("Dosya Ã§ok bÃ¼yÃ¼k! Maksimum 500KB."); return; }
             var reader = new FileReader();
             reader.onload = function(e) {
                 var data = e.target.result;
@@ -2383,7 +2383,7 @@ function gorevMailGonder(gorev) {
         }
         function logoyuTemizle() {
             localStorage.removeItem("tm_sirket_logo");
-            document.getElementById("logoPreview").innerHTML = '<div class="logo-placeholder">Logo yüklemek için týklayýn (PNG/JPG)</div>';
+            document.getElementById("logoPreview").innerHTML = '<div class="logo-placeholder">Logo yÃ¼klemek iÃ§in tÄ±klayÄ±n (PNG/JPG)</div>';
             sidebardaLogoyuGoster();
         }
         function sidebardaLogoyuGoster() {
@@ -2395,7 +2395,7 @@ function gorevMailGonder(gorev) {
             if (logoData) {
                 header.innerHTML = '<div style="padding:10px 5px 5px 5px;text-align:center;"><img src="' + logoData + '" class="sidebar-logo-img" alt="Logo"></div>';
             } else {
-                header.innerHTML = '<h3>TM-PORTAL</h3><p>' + (ci.ad || "TURAK MÝMARLIK") + '</p>';
+                header.innerHTML = '<h3>TM-PORTAL</h3><p>' + (ci.ad || "TURAK MÄ°MARLIK") + '</p>';
             }
         }
         function multiLogoGridRender() {
@@ -2404,13 +2404,13 @@ function gorevMailGonder(gorev) {
             var html = "";
             for (var i = 1; i <= 10; i++) {
                 var saved = localStorage.getItem("tm_multi_logo_" + i);
-                var preview = saved ? '<img src="' + saved + '" alt="Logo ' + i + '">' : '<div class="logo-placeholder">Logo #' + i + ' yüklemek için týklayýn</div>';
+                var preview = saved ? '<img src="' + saved + '" alt="Logo ' + i + '">' : '<div class="logo-placeholder">Logo #' + i + ' yÃ¼klemek iÃ§in tÄ±klayÄ±n</div>';
                 html += '<div class="multi-logo-item">';
                 html += '<div style="font-weight:700;font-size:14px;margin-bottom:8px;color:var(--accent-red);">Logo #' + i + '</div>';
                 html += '<div class="logo-upload-area" style="margin:0;" onclick="document.getElementById(\'mlFileInput' + i + '\').click()">';
                 html += '<input type="file" id="mlFileInput' + i + '" accept="image/*" style="display:none" onchange="multiLogoYukle(' + i + ', event)">';
                 html += '<div id="mlPreview' + i + '">' + preview + '</div>';
-                html += '<button type="button" class="btn btn-primary" onclick="event.stopPropagation(); multiLogoyuTemizle(' + i + ')" style="margin-top:8px; font-size:11px; padding:4px 12px;">Kaldýr</button>';
+                html += '<button type="button" class="btn btn-primary" onclick="event.stopPropagation(); multiLogoyuTemizle(' + i + ')" style="margin-top:8px; font-size:11px; padding:4px 12px;">KaldÄ±r</button>';
                 html += '</div></div>';
             }
             grid.innerHTML = html;
@@ -2439,7 +2439,7 @@ function gorevMailGonder(gorev) {
                         fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
                             tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
                         }).catch(function(e) {
-                            tmNotify("Logo #" + num + " Firestore yedekleme hatasý: " + e.message, "error");
+                            tmNotify("Logo #" + num + " Firestore yedekleme hatasÄ±: " + e.message, "error");
                         });
                     }
                 };
@@ -2449,7 +2449,7 @@ function gorevMailGonder(gorev) {
         }
         function multiLogoyuTemizle(num) {
             localStorage.removeItem("tm_multi_logo_" + num);
-            document.getElementById("mlPreview" + num).innerHTML = '<div class="logo-placeholder">Logo #' + num + ' yüklemek için týklayýn</div>';
+            document.getElementById("mlPreview" + num).innerHTML = '<div class="logo-placeholder">Logo #' + num + ' yÃ¼klemek iÃ§in tÄ±klayÄ±n</div>';
             if (num === 3) sidebardaLogoyuGoster();
         }
         function multiLogolariFirebaseCek() {
@@ -2494,10 +2494,10 @@ function gorevMailGonder(gorev) {
                 a.download = 'TM-Portal_Yedek_' + simdi.toISOString().slice(0,10) + '.json';
                 a.click();
                 URL.revokeObjectURL(a.href);
-                document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-check"></i> Yedek baþarýyla indirildi.';
+                document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-check"></i> Yedek baÅŸarÄ±yla indirildi.';
                 var span = document.getElementById("sonYedekTarihi");
                 if (span) span.textContent = simdi.toLocaleString('tr-TR');
-            } catch(e) { console.error("Yedek alma hatasi:", e); tmNotify("Yedek alýnýrken hata oluþtu: " + e.message, "error"); }
+            } catch(e) { console.error("Yedek alma hatasi:", e); tmNotify("Yedek alÄ±nÄ±rken hata oluÅŸtu: " + e.message, "error"); }
         }
         function tmYedekYukle(event) {
             var file = event.target.files[0];
@@ -2513,15 +2513,15 @@ function gorevMailGonder(gorev) {
                             sayac++;
                         }
                     });
-                    document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-check"></i> ' + sayac + ' veri geri yüklendi. Sayfa yenileniyor...';
+                    document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-check"></i> ' + sayac + ' veri geri yÃ¼klendi. Sayfa yenileniyor...';
                     setTimeout(function() { location.reload(); }, 1500);
                 } catch(err) {
-                    document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-xmark"></i> Hata: Geçersiz dosya.';
+                    document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-xmark"></i> Hata: GeÃ§ersiz dosya.';
                 }
             };
             reader.readAsText(file);
         }
-        /* ================= PORTAL YÖNETÝMÝ ================= */
+        /* ================= PORTAL YÃ–NETÄ°MÄ° ================= */
         function kullaniciKaydet() {
             try {
                 const usr = document.getElementById("newUsername").value.trim().toUpperCase();
@@ -2529,9 +2529,9 @@ function gorevMailGonder(gorev) {
                 const ttl = document.getElementById("newTitle").value.trim() || "-";
                 const editIndex = document.getElementById("editIndex").value;
 
-                if (!usr || !pas) { tmNotify("Kullanýcý adý ve þifre alanlarý boþ býrakýlamaz!", "error"); return; }
+                if (!usr || !pas) { tmNotify("KullanÄ±cÄ± adÄ± ve ÅŸifre alanlarÄ± boÅŸ bÄ±rakÄ±lamaz!", "error"); return; }
 
-                tmLoadingGoster('Kullanýcý kaydediliyor...');
+                tmLoadingGoster('KullanÄ±cÄ± kaydediliyor...');
                 const secilenYetkiler = yetkiSecilenleriTopla();
 
                 if (editIndex === "master_tugay") {
@@ -2540,8 +2540,8 @@ function gorevMailGonder(gorev) {
                     const master = { usr: mevcut.usr || "TUGAYTURAK", pass: pas, title: trToUpper(ttl), email: email };
                     localStorage.setItem("tm_admin_creds_final", JSON.stringify(master));
                     tmLoadingGizle();
-                    tmNotify("KURUCU ADMÝN PROFÝLÝ BAÞARIYLA GÜNCELLENDÝ.", "success");
-                    aktiviteEkle("Admin profili güncellendi", "Yönetim");
+                    tmNotify("KURUCU ADMÄ°N PROFÄ°LÄ° BAÅžARIYLA GÃœNCELLENDÄ°.", "success");
+                    aktiviteEkle("Admin profili gÃ¼ncellendi", "YÃ¶netim");
                     formSifirla(); kullaniciListesiniYenile(); sidebarKullanicilariYenile(); return;
                 }
 
@@ -2549,7 +2549,7 @@ function gorevMailGonder(gorev) {
                 if (editIndex === "-1") {
                     var masterAd = (JSON.parse(localStorage.getItem("tm_admin_creds_final")) || {}).usr || "TUGAYTURAK";
                     if (usr === masterAd || altKullanicilar.some(function(u){ return u.usr === usr; })) {
-                        tmNotify("Bu kullanýcý adý sistemde zaten mevcut!", "error"); return;
+                        tmNotify("Bu kullanÄ±cÄ± adÄ± sistemde zaten mevcut!", "error"); return;
                     }
                     var email = document.getElementById("newEmail").value.trim().toLowerCase() || "-";
                     altKullanicilar.push({ usr: usr, pas: pas, title: trToUpper(ttl), email: email, yetkiler: secilenYetkiler });
@@ -2566,8 +2566,8 @@ function gorevMailGonder(gorev) {
                 kullaniciListesiniYenile();
                 sidebarKullanicilariYenile();
                 tmLoadingGizle();
-                tmNotify("Kullanýcý veri kaydý baþarýyla güncellendi.", "success");
-                aktiviteEkle("Kullanýcý kaydedildi/güncellendi: " + usr, "Yönetim");
+                tmNotify("KullanÄ±cÄ± veri kaydÄ± baÅŸarÄ±yla gÃ¼ncellendi.", "success");
+                aktiviteEkle("KullanÄ±cÄ± kaydedildi/gÃ¼ncellendi: " + usr, "YÃ¶netim");
             } catch(e) { tmLoadingGizle(); tmNotify("HATA: " + e.message, "error"); }
         }
 
@@ -2575,7 +2575,7 @@ function gorevMailGonder(gorev) {
             yetkiCheckboxlariniRenderEt();
             if (index === 'master_tugay') {
                 const master = JSON.parse(localStorage.getItem("tm_admin_creds_final"));
-                document.getElementById("formTitle").innerText = `Kurucu Þifre Deðiþtir`;
+                document.getElementById("formTitle").innerText = `Kurucu Åžifre DeÄŸiÅŸtir`;
                 document.getElementById("newUsername").value = "TUGAYTURAK";
                 document.getElementById("newUsername").disabled = true;
                 document.getElementById("newPassword").value = master.pass;
@@ -2586,7 +2586,7 @@ function gorevMailGonder(gorev) {
             } else {
                 const altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
                 const seculenUser = altKullanicilar[index];
-                document.getElementById("formTitle").innerText = `Kullanýcý Bilgilerini Düzenle`;
+                document.getElementById("formTitle").innerText = `KullanÄ±cÄ± Bilgilerini DÃ¼zenle`;
                 document.getElementById("newUsername").value = seculenUser.usr;
                 document.getElementById("newUsername").disabled = true;
                 document.getElementById("newPassword").value = seculenUser.pas;
@@ -2595,19 +2595,19 @@ function gorevMailGonder(gorev) {
                 document.getElementById("editIndex").value = index;
                 yetkiSecilenleriAyarla(seculenUser.yetkiler || []);
             }
-            document.getElementById("btnSave").innerText = "DEÐÝÞÝKLÝKLERÝ UYGULA";
+            document.getElementById("btnSave").innerText = "DEÄžÄ°ÅžÄ°KLÄ°KLERÄ° UYGULA";
             document.getElementById("btnCancel").style.display = "inline-block";
         }
 
         function formSifirla() {
-            document.getElementById("formTitle").innerText = "Yeni Kullanýcý Tanýmla";
+            document.getElementById("formTitle").innerText = "Yeni KullanÄ±cÄ± TanÄ±mla";
             document.getElementById("newUsername").value = "";
             document.getElementById("newUsername").disabled = false;
             document.getElementById("newPassword").value = "";
             document.getElementById("newTitle").value = "";
             document.getElementById("newEmail").value = "";
             document.getElementById("editIndex").value = "-1";
-            document.getElementById("btnSave").innerText = "Kullanýcýyý Kaydet";
+            document.getElementById("btnSave").innerText = "KullanÄ±cÄ±yÄ± Kaydet";
             document.getElementById("btnCancel").style.display = "none";
             yetkiCheckboxlariniRenderEt();
         }
@@ -2617,15 +2617,15 @@ function gorevMailGonder(gorev) {
             if (!tbody) return; tbody.innerHTML = "";
             var master;
             try { master = JSON.parse(localStorage.getItem("tm_admin_creds_final")); } catch(e) { master = null; console.error("Admin bilgisi parse hatasi:", e); }
-            if (!master) { tbody.innerHTML = '<tr><td colspan="6">Admin bilgisi bulunamadý</td></tr>'; return; }
+            if (!master) { tbody.innerHTML = '<tr><td colspan="6">Admin bilgisi bulunamadÄ±</td></tr>'; return; }
 
-            tbody.innerHTML += '<tr><td><b>TUGAYTURAK</b></td><td>' + master.pass + '</td><td><span style="font-weight:700;color:var(--accent-red)">' + master.title + '</span></td><td>' + (master.email || "-") + '</td><td>TÜM SAYFALAR (TAM YETKÝ)</td><td><button class="btn-warning" onclick="kullaniciDuzenle(\'master_tugay\')">Düzenle</button></td></tr>';
+            tbody.innerHTML += '<tr><td><b>TUGAYTURAK</b></td><td>' + master.pass + '</td><td><span style="font-weight:700;color:var(--accent-red)">' + master.title + '</span></td><td>' + (master.email || "-") + '</td><td>TÃœM SAYFALAR (TAM YETKÄ°)</td><td><button class="btn-warning" onclick="kullaniciDuzenle(\'master_tugay\')">DÃ¼zenle</button></td></tr>';
 
             var altKullanicilar;
             try { altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || []; } catch(e) { altKullanicilar = []; console.error("Kullanicilar parse hatasi:", e); }
             altKullanicilar.forEach((user, index) => {
-                var yetkiStr = (user.yetkiler && Array.isArray(user.yetkiler)) ? user.yetkiler.join(', ').toUpperCase() : "YETKÝ YOK";
-                tbody.innerHTML += `<tr><td><b>${user.usr}</b></td><td>${user.pas}</td><td>${user.title}</td><td>${user.email || "-"}</td><td>${yetkiStr}</td><td><button class="btn-warning" onclick="kullaniciDuzenle(${index})">Düzenle</button> <button class="btn-danger" onclick="kullaniciSil(${index})">Sil</button></td></tr>`;
+                var yetkiStr = (user.yetkiler && Array.isArray(user.yetkiler)) ? user.yetkiler.join(', ').toUpperCase() : "YETKÄ° YOK";
+                tbody.innerHTML += `<tr><td><b>${user.usr}</b></td><td>${user.pas}</td><td>${user.title}</td><td>${user.email || "-"}</td><td>${yetkiStr}</td><td><button class="btn-warning" onclick="kullaniciDuzenle(${index})">DÃ¼zenle</button> <button class="btn-danger" onclick="kullaniciSil(${index})">Sil</button></td></tr>`;
             });
         }
 
@@ -2633,15 +2633,15 @@ function gorevMailGonder(gorev) {
             try {
                 let altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
                 var silinenAd = altKullanicilar[index] ? altKullanicilar[index].usr : "";
-                tmConfirm("Bu kullanýcýyý listeden tamamen silmek istediðinize emin misiniz?", function() {
+                tmConfirm("Bu kullanÄ±cÄ±yÄ± listeden tamamen silmek istediÄŸinize emin misiniz?", function() {
                     altKullanicilar.splice(index, 1);
                     localStorage.setItem("tm_users_final_v8", JSON.stringify(altKullanicilar));
                     kullaniciListesiniYenile();
                     sidebarKullanicilariYenile();
-                    tmNotify("Kullanýcý silindi.", "success");
-                    aktiviteEkle("Kullanýcý silindi: " + silinenAd, "Yönetim");
+                    tmNotify("KullanÄ±cÄ± silindi.", "success");
+                    aktiviteEkle("KullanÄ±cÄ± silindi: " + silinenAd, "YÃ¶netim");
                 });
-            } catch(e) { console.error("kullaniciSil hatasi:", e); tmNotify("Silme hatasý: " + e.message, "error"); }
+            } catch(e) { console.error("kullaniciSil hatasi:", e); tmNotify("Silme hatasÄ±: " + e.message, "error"); }
         }
 
         function girisCikisLogla(kullanici, islem) {
@@ -2659,7 +2659,7 @@ function gorevMailGonder(gorev) {
             if (!tbody) return;
             const log = JSON.parse(localStorage.getItem("tm_giris_cikis_log") || "[]");
             tbody.innerHTML = log.map(function(k) {
-                const renk = k.islem === "GÝRÝÞ" ? "var(--btn-green)" : "var(--accent-red)";
+                const renk = k.islem === "GÄ°RÄ°Åž" ? "var(--btn-green)" : "var(--accent-red)";
                 return '<tr><td>' + k.kullanici + '</td><td style="color:' + renk + ';font-weight:700;">' + k.islem + '</td><td>' + k.zaman + '</td></tr>';
             }).join("");
         }
@@ -2718,16 +2718,16 @@ function gorevMailGonder(gorev) {
             fdb.collection("tm_online").doc(kullanici).delete().catch(function(e){ console.error("Online cikis hatasi:", e); });
         }
 
-        /* ================= TÜRKÝYE RESMÝ TATÝLLER ================= */
+        /* ================= TÃœRKÄ°YE RESMÄ° TATÄ°LLER ================= */
         function asGetTatiller(yil) {
             var t = [];
-            t.push({date:yil+"-01-01",name:"Yýlbaþý"});
-            t.push({date:yil+"-04-23",name:"Ulusal Egemenlik ve Çocuk Bayramý"});
-            t.push({date:yil+"-05-01",name:"Emek ve Dayanýþma Günü"});
-            t.push({date:yil+"-05-19",name:"Atatürk'ü Anma, Gençlik ve Spor Bayramý"});
-            t.push({date:yil+"-07-15",name:"Demokrasi ve Milli Birlik Günü"});
-            t.push({date:yil+"-08-30",name:"Zafer Bayramý"});
-            t.push({date:yil+"-10-29",name:"Cumhuriyet Bayramý"});
+            t.push({date:yil+"-01-01",name:"YÄ±lbaÅŸÄ±"});
+            t.push({date:yil+"-04-23",name:"Ulusal Egemenlik ve Ã‡ocuk BayramÄ±"});
+            t.push({date:yil+"-05-01",name:"Emek ve DayanÄ±ÅŸma GÃ¼nÃ¼"});
+            t.push({date:yil+"-05-19",name:"AtatÃ¼rk'Ã¼ Anma, GenÃ§lik ve Spor BayramÄ±"});
+            t.push({date:yil+"-07-15",name:"Demokrasi ve Milli Birlik GÃ¼nÃ¼"});
+            t.push({date:yil+"-08-30",name:"Zafer BayramÄ±"});
+            t.push({date:yil+"-10-29",name:"Cumhuriyet BayramÄ±"});
             var dini = asGetDiniTatiller(yil);
             dini.forEach(function(h){ t.push(h); });
             return t;
@@ -2737,9 +2737,9 @@ function gorevMailGonder(gorev) {
             var hy = Math.floor((yil - 622) * 365.25 / 354.367) + 1;
             for (var yi = hy - 1; yi <= hy + 1; yi++) {
                 var r = asIslamiToMiladi(yi, 10, 1);
-                if (r && r.yil === yil) { for (var d=0;d<3;d++){ var dt=new Date(r.dt); dt.setDate(dt.getDate()+d); t.push({date:dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'),name:d===0?'Ramazan Bayramý (1. Gün)':d===1?'Ramazan Bayramý (2. Gün)':'Ramazan Bayramý (3. Gün)'}); } }
+                if (r && r.yil === yil) { for (var d=0;d<3;d++){ var dt=new Date(r.dt); dt.setDate(dt.getDate()+d); t.push({date:dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'),name:d===0?'Ramazan BayramÄ± (1. GÃ¼n)':d===1?'Ramazan BayramÄ± (2. GÃ¼n)':'Ramazan BayramÄ± (3. GÃ¼n)'}); } }
                 var k = asIslamiToMiladi(yi, 12, 10);
-                if (k && k.yil === yil) { for (var d=0;d<4;d++){ var dt=new Date(k.dt); dt.setDate(dt.getDate()+d); t.push({date:dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'),name:d===0?'Kurban Bayramý (1. Gün)':d===1?'Kurban Bayramý (2. Gün)':d===2?'Kurban Bayramý (3. Gün)':'Kurban Bayramý (4. Gün)'}); } }
+                if (k && k.yil === yil) { for (var d=0;d<4;d++){ var dt=new Date(k.dt); dt.setDate(dt.getDate()+d); t.push({date:dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'),name:d===0?'Kurban BayramÄ± (1. GÃ¼n)':d===1?'Kurban BayramÄ± (2. GÃ¼n)':d===2?'Kurban BayramÄ± (3. GÃ¼n)':'Kurban BayramÄ± (4. GÃ¼n)'}); } }
             }
             return t;
         }
@@ -2761,13 +2761,13 @@ function gorevMailGonder(gorev) {
             return { yil: gY, ay: gM, gun: gD, dt: new Date(gY, gM - 1, gD) };
         }
 
-        /* ================= ANA SAYFA ÖZET TAKVÝM & GÖREVLER ================= */
+        /* ================= ANA SAYFA Ã–ZET TAKVÄ°M & GÃ–REVLER ================= */
         function asOzetTakvimRender() {
             const container = document.getElementById("asOzetTakvim");
             if (!container) return;
             const bugun = new Date();
             const yil = bugun.getFullYear(), ay = bugun.getMonth();
-            const ayAdlari = ["OCAK","ÞUBAT","MART","NÝSAN","MAYIS","HAZÝRAN","TEMMUZ","AÐUSTOS","EYLÜL","EKÝM","KASIM","ARALIK"];
+            const ayAdlari = ["OCAK","ÅžUBAT","MART","NÄ°SAN","MAYIS","HAZÄ°RAN","TEMMUZ","AÄžUSTOS","EYLÃœL","EKÄ°M","KASIM","ARALIK"];
             const ayGun = new Date(yil, ay + 1, 0).getDate();
             const etkinlikler = asGetMergedEvents();
             const tatiller = asGetTatiller(yil);
@@ -2779,9 +2779,9 @@ function gorevMailGonder(gorev) {
                 if (t || e.length > 0) gunler[ds] = { tatil: t, etkinlikler: e, gunNo: g };
             }
             var keys = Object.keys(gunler).sort();
-            let html = '<div style="font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:0.5px;color:var(--text-dark);">' + yil + ' ' + ayAdlari[ay] + ' - AYLIK LÝSTE</div>';
+            let html = '<div style="font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:0.5px;color:var(--text-dark);">' + yil + ' ' + ayAdlari[ay] + ' - AYLIK LÄ°STE</div>';
             if (keys.length === 0) {
-                html += '<div style="text-align:center;padding:16px 0;font-size:11px;color:var(--text-light);">Bu ay etkinlik veya resmi tatil bulunmamaktadýr.</div>';
+                html += '<div style="text-align:center;padding:16px 0;font-size:11px;color:var(--text-light);">Bu ay etkinlik veya resmi tatil bulunmamaktadÄ±r.</div>';
             } else {
                 html += '<div style="max-height:300px;overflow-y:auto;">';
                 keys.forEach(function(ds) {
@@ -2819,7 +2819,7 @@ function gorevMailGonder(gorev) {
                 return arr.indexOf(aktifUser) >= 0 && g.durum !== "tamamlandi";
             }).slice(0, 5);
             if (benimGorevlerim.length === 0) {
-                container.innerHTML = '<div style="text-align:center;padding:16px 0;font-size:12px;color:var(--text-light);"><i class="fa-solid fa-check"></i> Bekleyen göreviniz bulunmamaktadýr.</div>';
+                container.innerHTML = '<div style="text-align:center;padding:16px 0;font-size:12px;color:var(--text-light);"><i class="fa-solid fa-check"></i> Bekleyen gÃ¶reviniz bulunmamaktadÄ±r.</div>';
                 return;
             }
             let html = '';
@@ -2827,18 +2827,18 @@ function gorevMailGonder(gorev) {
                 const renk = asGorevRenk(g.durum, g.tarih);
                 const etiket = asGorevDurumEtiketi(g.durum, g.tarih);
                 html += '<div class="as-gorev-item" style="border-left:4px solid ' + renk + ';">';
-                html += '<div class="as-gorev-text"><b>' + etiket + ' ' + g.baslik + '</b><br><small>' + g.veren + ' › ' + g.tarih + '</small></div></div>';
+                html += '<div class="as-gorev-text"><b>' + etiket + ' ' + g.baslik + '</b><br><small>' + g.veren + ' â€º ' + g.tarih + '</small></div></div>';
             });
             container.innerHTML = html;
         }
 
-        /* ================= ANA SAYFA TAKVÝM ================= */
+        /* ================= ANA SAYFA TAKVÄ°M ================= */
         let asTakvimGorunum = "monthly";
         let asTakvimTarih = new Date();
 
         function asTakvimGorunumDegistir() {
             asTakvimGorunum = asTakvimGorunum === "monthly" ? "weekly" : "monthly";
-            document.getElementById("asTakvimToggleBtn").innerHTML = asTakvimGorunum === "monthly" ? '<i class="fa-regular fa-calendar"></i> HAFTALIK GÖRÜNÜM' : '<i class="fa-regular fa-calendar"></i> AYLIK GÖRÜNÜM';
+            document.getElementById("asTakvimToggleBtn").innerHTML = asTakvimGorunum === "monthly" ? '<i class="fa-regular fa-calendar"></i> HAFTALIK GÃ–RÃœNÃœM' : '<i class="fa-regular fa-calendar"></i> AYLIK GÃ–RÃœNÃœM';
             asTakvimRender();
         }
         function asTakvimGeri() {
@@ -2902,7 +2902,7 @@ function gorevMailGonder(gorev) {
                 return atananlar.indexOf(aktifUser) >= 0 || g.veren === aktifUser;
             }).map(function(g) {
                 var atananlar = Array.isArray(g.atanan) ? g.atanan : [g.atanan];
-                var gorevIcin = atananlar.indexOf(aktifUser) >= 0 ? "" : (" › " + atananlar.join(", "));
+                var gorevIcin = atananlar.indexOf(aktifUser) >= 0 ? "" : (" â€º " + atananlar.join(", "));
                 return { id: "gorev_" + g.id, date: g.tarih, time: "", title: g.baslik + (g.veren ? " (" + g.veren + gorevIcin + ")" : ""), description: g.mesaj || "", type: "gorev", durum: g.durum, tarih: g.tarih };
             });
             return expanded.concat(gorevEvents);
@@ -2915,7 +2915,7 @@ function gorevMailGonder(gorev) {
         }
         function asTakvimAylikRender(container) {
             const yil = asTakvimTarih.getFullYear(), ay = asTakvimTarih.getMonth();
-            const ayAdlari = ["OCAK","ÞUBAT","MART","NÝSAN","MAYIS","HAZÝRAN","TEMMUZ","AÐUSTOS","EYLÜL","EKÝM","KASIM","ARALIK"];
+            const ayAdlari = ["OCAK","ÅžUBAT","MART","NÄ°SAN","MAYIS","HAZÄ°RAN","TEMMUZ","AÄžUSTOS","EYLÃœL","EKÄ°M","KASIM","ARALIK"];
             document.getElementById("asTakvimBaslik").textContent = yil + " " + ayAdlari[ay];
             const ilkGun = new Date(yil, ay, 1).getDay();
             const ayGun = new Date(yil, ay + 1, 0).getDate();
@@ -2923,7 +2923,7 @@ function gorevMailGonder(gorev) {
             const bugun = new Date();
             const etkinlikler = asGetMergedEvents();
             const tatiller = asGetTatiller(yil);
-            var gunAdlari = ["PTS","SAL","ÇAR","PER","CUM","CMT","PAZ"];
+            var gunAdlari = ["PTS","SAL","Ã‡AR","PER","CUM","CMT","PAZ"];
             let html = '<table class="as-tbl"><thead><tr>';
             for (var di = 0; di < 7; di++) {
                 var wc = di >= 5 ? ' class="as-th-weekend"' : '';
@@ -2945,7 +2945,7 @@ function gorevMailGonder(gorev) {
                 if (tatil) cls = (cls ? cls + ' ' : '') + 'as-td-tatil';
                 html += '<td' + (cls ? ' class="' + cls + '"' : '') + ' onclick="asEventModalAc(\'' + gunStr + '\')">';
                 html += '<span class="as-day-num">' + (tatil ? '?? ' : '') + g + '</span>';
-                if (tatil) { var kisaAd = tatil.name.replace(/Bayramý.*/,'Bay.').replace(/\(.*?\)/g,'').trim(); html += '<div class="as-tatil-etiketi" title="' + tatil.name + '">' + kisaAd + '</div>'; }
+                if (tatil) { var kisaAd = tatil.name.replace(/BayramÄ±.*/,'Bay.').replace(/\(.*?\)/g,'').trim(); html += '<div class="as-tatil-etiketi" title="' + tatil.name + '">' + kisaAd + '</div>'; }
                 if (gunEtk.length > 0) {
                     html += '<div class="as-event-dots">';
                     gunEtk.slice(0,5).forEach(function(e) {
@@ -2979,7 +2979,7 @@ function gorevMailGonder(gorev) {
             let html = '<table class="as-tbl"><thead><tr><th style="width:30px;"></th>';
             for (let i = 0; i < 7; i++) {
                 const d = new Date(haftaBas); d.setDate(haftaBas.getDate() + i);
-                const gnAd = ["PTS","SAL","ÇAR","PER","CUM","CMT","PAZ"][i];
+                const gnAd = ["PTS","SAL","Ã‡AR","PER","CUM","CMT","PAZ"][i];
                 const bugunMu = (new Date().getFullYear() === d.getFullYear() && new Date().getMonth() === d.getMonth() && new Date().getDate() === d.getDate());
                 var gunStr2 = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
                 var tatil = tatiller.find(function(t){ return t.date === gunStr2; });
@@ -2987,8 +2987,8 @@ function gorevMailGonder(gorev) {
                 html += '<th' + (bugunMu ? ' style="color:var(--accent-red);"' : haftaCls) + '>' + gnAd + ' ' + d.getDate() + (tatil ? ' ??' : '') + '</th>';
             }
             html += '</tr></thead><tbody>';
-            /* Tüm Gün satýrý */
-            html += '<tr><td style="padding:2px;text-align:center;font-size:7px;color:var(--text-light);border:1px solid var(--border-color);font-weight:600;background:rgba(255,255,255,0.03);"><i class="fa-regular fa-calendar"></i> TÜM GÜN</td>';
+            /* TÃ¼m GÃ¼n satÄ±rÄ± */
+            html += '<tr><td style="padding:2px;text-align:center;font-size:7px;color:var(--text-light);border:1px solid var(--border-color);font-weight:600;background:rgba(255,255,255,0.03);"><i class="fa-regular fa-calendar"></i> TÃœM GÃœN</td>';
             for (let i = 0; i < 7; i++) {
                 const d = new Date(haftaBas); d.setDate(haftaBas.getDate() + i);
                 const gunStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
@@ -3060,7 +3060,7 @@ function gorevMailGonder(gorev) {
                 d.setDate(d.getDate() + 1);
             }
             var anahtarlar = Object.keys(gunler).sort();
-            if (anahtarlar.length === 0) { ozetDiv.innerHTML = '<div class="as-takvim-ozet-bos">Bu dönemde etkinlik veya resmi tatil bulunmamaktadýr.</div>'; return; }
+            if (anahtarlar.length === 0) { ozetDiv.innerHTML = '<div class="as-takvim-ozet-bos">Bu dÃ¶nemde etkinlik veya resmi tatil bulunmamaktadÄ±r.</div>'; return; }
             var h = '<div class="as-takvim-ozet-list">';
             anahtarlar.forEach(function(ds) {
                 var g = gunler[ds];
@@ -3075,7 +3075,7 @@ function gorevMailGonder(gorev) {
                     var renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
                     var label = e.title;
                     if (e.time && e.type !== "note" && !e.tumGun) label = e.time + " " + label;
-                    else if (e.tumGun) label = '<i class="fa-regular fa-calendar"></i> Tüm Gün ' + label;
+                    else if (e.tumGun) label = '<i class="fa-regular fa-calendar"></i> TÃ¼m GÃ¼n ' + label;
                     if (e.paylas) label = (e.paylasan ? '<i class="fa-solid fa-users"></i>' + e.paylasan + ' ' : '<i class="fa-solid fa-users"></i>') + label;
                     h += '<span class="as-takvim-ozet-event" onclick="asGosterGunBilgi(\'' + ds + '\')" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-ozet-dot" style="background:' + renk + ';"></span>' + label + '</span>';
                 });
@@ -3088,7 +3088,7 @@ function gorevMailGonder(gorev) {
             const container = document.getElementById("asEtkinlikListesi");
             if (!container) return;
             const etkinlikler = asGetMergedEvents();
-            if (etkinlikler.length === 0) { container.innerHTML = '<div style="font-size:12px;color:var(--text-light);font-style:italic;padding:8px 0;">Henüz etkinlik eklenmemiþ.</div>'; return; }
+            if (etkinlikler.length === 0) { container.innerHTML = '<div style="font-size:12px;color:var(--text-light);font-style:italic;padding:8px 0;">HenÃ¼z etkinlik eklenmemiÅŸ.</div>'; return; }
             let html = '<div style="max-height:200px;overflow-y:auto;">';
             etkinlikler.forEach(function(e) {
                 const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
@@ -3096,7 +3096,7 @@ function gorevMailGonder(gorev) {
                 const durumEtiketi = isGorev ? asGorevDurumEtiketi(e.durum, e.tarih) + " " : "";
                 html += '<div class="as-etkinlik-item">';
                 html += '<span class="as-etkinlik-dot" style="background:' + renk + ';border-color:' + renk + ';"></span>';
-                html += '<span class="as-etkinlik-text">' + durumEtiketi + e.title + ' <small>' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : (e.tumGun ? ' <i class="fa-regular fa-calendar"></i> Tüm Gün' : '')) + (e.paylas && e.paylasan ? ' <i class="fa-solid fa-users"></i>' + e.paylasan : '') + '</small></span>';
+                html += '<span class="as-etkinlik-text">' + durumEtiketi + e.title + ' <small>' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : (e.tumGun ? ' <i class="fa-regular fa-calendar"></i> TÃ¼m GÃ¼n' : '')) + (e.paylas && e.paylasan ? ' <i class="fa-solid fa-users"></i>' + e.paylasan : '') + '</small></span>';
                 if (!isGorev) { html += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + e.id + '\')"><i class="fa-regular fa-pen-to-square"></i></button>'; }
                 html += '</div>';
             });
@@ -3126,7 +3126,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("asEventTekrar").checked = false;
             document.getElementById("asEventTekrarOptions").style.display = "none";
             document.getElementById("asEventPaylas").checked = false;
-            document.getElementById("asEventModalTitle").textContent = "ETKÝNLÝK EKLE - " + tarih;
+            document.getElementById("asEventModalTitle").textContent = "ETKÄ°NLÄ°K EKLE - " + tarih;
             document.getElementById("asEventSilBtn").style.display = "none";
             document.getElementById("asEventModal").style.display = "flex";
             asEventTypeDegisti();
@@ -3161,7 +3161,7 @@ function gorevMailGonder(gorev) {
                 document.getElementById("asEventTekrarOptions").style.display = "none";
             }
             document.getElementById("asEventPaylas").checked = ev.paylas || false;
-            document.getElementById("asEventModalTitle").textContent = "ETKÝNLÝK DÜZENLE - " + ev.date;
+            document.getElementById("asEventModalTitle").textContent = "ETKÄ°NLÄ°K DÃœZENLE - " + ev.date;
             document.getElementById("asEventSilBtn").style.display = yetkili ? "inline-block" : "none";
             document.querySelector("#asEventModal .as-btn-save").style.display = yetkili ? "inline-flex" : "none";
             document.getElementById("asEventPaylas").disabled = !yetkili;
@@ -3173,7 +3173,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("asEventTekrar").disabled = !yetkili;
             document.getElementById("asEventTekrarTip").disabled = !yetkili;
             if (!yetkili) {
-                document.getElementById("asEventModalTitle").textContent = "ETKÝNLÝK (SADECE GÖRÜNTÜLEME) - " + ev.date;
+                document.getElementById("asEventModalTitle").textContent = "ETKÄ°NLÄ°K (SADECE GÃ–RÃœNTÃœLEME) - " + ev.date;
             }
             document.getElementById("asEventModal").style.display = "flex";
         }
@@ -3188,7 +3188,7 @@ function gorevMailGonder(gorev) {
             if (type === "note" || tumGun) time = "";
             const desc = document.getElementById("asEventDesc").value.trim();
             const paylas = document.getElementById("asEventPaylas").checked;
-            if (!title || !date) { tmNotify("Baþlýk ve tarih zorunludur!", "error"); return; }
+            if (!title || !date) { tmNotify("BaÅŸlÄ±k ve tarih zorunludur!", "error"); return; }
             var tekrar = null;
             if (document.getElementById("asEventTekrar").checked) {
                 var tip = document.getElementById("asEventTekrarTip").value;
@@ -3230,11 +3230,11 @@ function gorevMailGonder(gorev) {
                 ev = etkinlikler2.find(function(e) { return e.id === id; });
             }
             if (!ev) return;
-            if (ev.paylasan && ev.paylasan !== aktifUser) { tmNotify("Bu paylaþýlan etkinliði yalnýzca oluþturan kullanýcý silebilir!", "error"); return; }
+            if (ev.paylasan && ev.paylasan !== aktifUser) { tmNotify("Bu paylaÅŸÄ±lan etkinliÄŸi yalnÄ±zca oluÅŸturan kullanÄ±cÄ± silebilir!", "error"); return; }
             var dateStr = document.getElementById("asEventDate").value;
             if (ev.tekrar && ev.tekrar.tip && dateStr) {
                 var el = document.createElement("div");
-                el.innerHTML = '<div style="padding:10px 0;"><p style="margin:0 0 12px 0;font-size:13px;">Bu etkinlik tekrarlanmaktadýr. Nasýl silmek istersiniz?</p><div style="display:flex;gap:10px;"><button class="tm-confirm-yes" style="flex:1;" onclick="this.closest(\'.tm-confirm-wrap\').querySelector(\'.tm-confirm-thunk\').click()">SADECE BU TEKRARI</button><button class="tm-confirm-no" style="flex:1;" onclick="var el=this.closest(\'.tm-confirm-wrap\');el.querySelector(\'.tm-confirm-thunk\').dataset.all=true;el.querySelector(\'.tm-confirm-thunk\').click()">TÜM TEKRARLARI</button></div></div>';
+                el.innerHTML = '<div style="padding:10px 0;"><p style="margin:0 0 12px 0;font-size:13px;">Bu etkinlik tekrarlanmaktadÄ±r. NasÄ±l silmek istersiniz?</p><div style="display:flex;gap:10px;"><button class="tm-confirm-yes" style="flex:1;" onclick="this.closest(\'.tm-confirm-wrap\').querySelector(\'.tm-confirm-thunk\').click()">SADECE BU TEKRARI</button><button class="tm-confirm-no" style="flex:1;" onclick="var el=this.closest(\'.tm-confirm-wrap\');el.querySelector(\'.tm-confirm-thunk\').dataset.all=true;el.querySelector(\'.tm-confirm-thunk\').click()">TÃœM TEKRARLARI</button></div></div>';
                 var wrap = document.createElement("div");
                 wrap.className = "tm-confirm-wrap";
                 wrap.appendChild(el);
@@ -3261,12 +3261,12 @@ function gorevMailGonder(gorev) {
                     }
                     asEventModalKapat();
                     asTakvimRender();
-                    tmNotify("Etkinlik güncellendi.", "success");
+                    tmNotify("Etkinlik gÃ¼ncellendi.", "success");
                 };
                 wrap.appendChild(thunk);
                 return;
             }
-            var msg = ev.paylasan ? "Bu paylaþýlan etkinliði silmek tüm ekip üyeleri için kaldýracaktýr. Emin misiniz?" : "Bu etkinliði silmek istediðinize emin misiniz?";
+            var msg = ev.paylasan ? "Bu paylaÅŸÄ±lan etkinliÄŸi silmek tÃ¼m ekip Ã¼yeleri iÃ§in kaldÄ±racaktÄ±r. Emin misiniz?" : "Bu etkinliÄŸi silmek istediÄŸinize emin misiniz?";
             tmConfirm(msg, function() { _asSilModalDelete(id, aktifUser); });
             function _asSilModalDelete(evId, user) {
                 var pl = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
@@ -3292,22 +3292,22 @@ function gorevMailGonder(gorev) {
         function asGosterGunBilgi(gunStr) {
             const etkinlikler = asGetMergedEvents().filter(function(e) { return e.date === gunStr; });
             if (etkinlikler.length === 0) return;
-            document.getElementById("asGunInfoTitle").innerHTML = '<i class="fa-regular fa-calendar"></i> ' + gunStr + ' - ETKÝNLÝKLER';
+            document.getElementById("asGunInfoTitle").innerHTML = '<i class="fa-regular fa-calendar"></i> ' + gunStr + ' - ETKÄ°NLÄ°KLER';
             document.getElementById("asEventFilterBar").style.display = "none";
             var h = "";
             etkinlikler.forEach(function(e) {
                 const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
-                const turAdi = e.type === "reminder" ? '<i class="fa-solid fa-bell"></i> ANIMSATICI' : (e.type === "note" ? '<i class="fa-regular fa-note-sticky"></i> NOT' : (e.type === "gorev" ? (e.durum === "tamamlandi" ? '<i class="fa-solid fa-check"></i> GÖREV (TAMAMLANDI)' : '<i class="fa-solid fa-list"></i> GÖREV') : '<i class="fa-solid fa-circle"></i> DÝÐER'));
+                const turAdi = e.type === "reminder" ? '<i class="fa-solid fa-bell"></i> ANIMSATICI' : (e.type === "note" ? '<i class="fa-regular fa-note-sticky"></i> NOT' : (e.type === "gorev" ? (e.durum === "tamamlandi" ? '<i class="fa-solid fa-check"></i> GÃ–REV (TAMAMLANDI)' : '<i class="fa-solid fa-list"></i> GÃ–REV') : '<i class="fa-solid fa-circle"></i> DÄ°ÄžER'));
                 const isGorev = e.type === "gorev";
                 const id = e.id || "";
                 const aktifUser = localStorage.getItem("tm_active_user") || "";
                 const canEdit = !isGorev && (!e.paylasan || e.paylasan === aktifUser);
                 h += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-color);">';
                 h += '<span style="width:12px;height:12px;border-radius:50%;background:' + renk + ';flex-shrink:0;margin-top:5px;"></span>';
-                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);">' + turAdi + (e.time && e.type !== "note" && !e.tumGun ? ' &middot; ' + e.time : (e.tumGun ? ' &middot; <i class="fa-regular fa-calendar"></i> Tüm Gün' : '')) + (e.paylas ? (e.paylasan ? ' &middot; <i class="fa-solid fa-users"></i> ' + e.paylasan : ' &middot; <i class="fa-solid fa-users"></i> Paylaþýlan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
+                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);">' + turAdi + (e.time && e.type !== "note" && !e.tumGun ? ' &middot; ' + e.time : (e.tumGun ? ' &middot; <i class="fa-regular fa-calendar"></i> TÃ¼m GÃ¼n' : '')) + (e.paylas ? (e.paylasan ? ' &middot; <i class="fa-solid fa-users"></i> ' + e.paylasan : ' &middot; <i class="fa-solid fa-users"></i> PaylaÅŸÄ±lan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
                 if (canEdit) {
                     var realId = id.replace("gorev_", "");
-                    h += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + realId.replace(/'/g,"\\'") + '\');asGunInfoKapat();" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;" title="Düzenle"><i class="fa-regular fa-pen-to-square"></i></button>';
+                    h += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + realId.replace(/'/g,"\\'") + '\');asGunInfoKapat();" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;" title="DÃ¼zenle"><i class="fa-regular fa-pen-to-square"></i></button>';
                     h += '<button class="as-etkinlik-edit" onclick="asEventSilById(\'' + realId.replace(/'/g,"\\'") + '\',\'' + (e.date || gunStr) + '\');" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;color:var(--accent-red);" title="Sil"><i class="fa-solid fa-trash-can"></i></button>';
                 }
                 h += '</div>';
@@ -3325,7 +3325,7 @@ function gorevMailGonder(gorev) {
                 ev = etkinlikler.find(function(e) { return e.id === id; });
             }
             if (!ev) return;
-            if (ev.paylasan && ev.paylasan !== aktifUser) { tmNotify("Bu paylaþýlan etkinliði yalnýzca oluþturan kullanýcý silebilir!", "error"); return; }
+            if (ev.paylasan && ev.paylasan !== aktifUser) { tmNotify("Bu paylaÅŸÄ±lan etkinliÄŸi yalnÄ±zca oluÅŸturan kullanÄ±cÄ± silebilir!", "error"); return; }
             function _deleteEventById(evId, user) {
                 var paylasilan2 = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
                 var pidx = paylasilan2.findIndex(function(e) { return e.id === evId; });
@@ -3338,7 +3338,7 @@ function gorevMailGonder(gorev) {
             }
             if (ev.tekrar && ev.tekrar.tip && dateStr) {
                 var el = document.createElement("div");
-                el.innerHTML = '<div style="padding:10px 0;"><p style="margin:0 0 12px 0;font-size:13px;">Bu etkinlik tekrarlanmaktadýr. Nasýl silmek istersiniz?</p><div style="display:flex;gap:10px;"><button class="tm-confirm-yes" style="flex:1;" onclick="this.closest(\'.tm-confirm-wrap\').querySelector(\'.tm-confirm-thunk\').click()">SADECE BU TEKRARI</button><button class="tm-confirm-no" style="flex:1;" onclick="var el=this.closest(\'.tm-confirm-wrap\');el.querySelector(\'.tm-confirm-thunk\').dataset.all=true;el.querySelector(\'.tm-confirm-thunk\').click()">TÜM TEKRARLARI</button></div></div>';
+                el.innerHTML = '<div style="padding:10px 0;"><p style="margin:0 0 12px 0;font-size:13px;">Bu etkinlik tekrarlanmaktadÄ±r. NasÄ±l silmek istersiniz?</p><div style="display:flex;gap:10px;"><button class="tm-confirm-yes" style="flex:1;" onclick="this.closest(\'.tm-confirm-wrap\').querySelector(\'.tm-confirm-thunk\').click()">SADECE BU TEKRARI</button><button class="tm-confirm-no" style="flex:1;" onclick="var el=this.closest(\'.tm-confirm-wrap\');el.querySelector(\'.tm-confirm-thunk\').dataset.all=true;el.querySelector(\'.tm-confirm-thunk\').click()">TÃœM TEKRARLARI</button></div></div>';
                 var wrap = document.createElement("div");
                 wrap.className = "tm-confirm-wrap";
                 wrap.appendChild(el);
@@ -3373,12 +3373,12 @@ function gorevMailGonder(gorev) {
                     }
                     asGunInfoKapat();
                     asTakvimRender();
-                    tmNotify("Etkinlik güncellendi.", "success");
+                    tmNotify("Etkinlik gÃ¼ncellendi.", "success");
                 };
                 wrap.appendChild(thunk);
                 return;
             }
-            var msg = ev.paylasan ? "Bu paylaþýlan etkinliði silmek tüm ekip üyeleri için kaldýracaktýr. Emin misiniz?" : "Bu etkinliði silmek istediðinize emin misiniz?";
+            var msg = ev.paylasan ? "Bu paylaÅŸÄ±lan etkinliÄŸi silmek tÃ¼m ekip Ã¼yeleri iÃ§in kaldÄ±racaktÄ±r. Emin misiniz?" : "Bu etkinliÄŸi silmek istediÄŸinize emin misiniz?";
             tmConfirm(msg, function() { _deleteEventById(id, aktifUser); asGunInfoKapat(); asTakvimRender(); tmNotify("Etkinlik silindi.", "success"); });
         }
         let asEventFilter = "all";
@@ -3389,28 +3389,28 @@ function gorevMailGonder(gorev) {
         }
         function asTumEtkinlikleriGoster() {
             const etkinlikler = asGetMergedEvents();
-            document.getElementById("asGunInfoTitle").innerHTML = '<i class="fa-solid fa-list"></i> TÜM ETKÝNLÝKLER';
+            document.getElementById("asGunInfoTitle").innerHTML = '<i class="fa-solid fa-list"></i> TÃœM ETKÄ°NLÄ°KLER';
             document.getElementById("asEventFilterBar").style.display = "flex";
             var filtered = asEventFilter === "all" ? etkinlikler : etkinlikler.filter(function(e) { return e.type === asEventFilter; });
             var h = "";
             filtered.forEach(function(e) {
                 const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
-                const turAdi = e.type === "reminder" ? '<i class="fa-solid fa-bell"></i> ANIMSATICI' : (e.type === "note" ? '<i class="fa-regular fa-note-sticky"></i> NOT' : (e.type === "gorev" ? (e.durum === "tamamlandi" ? '<i class="fa-solid fa-check"></i> GÖREV (TAMAMLANDI)' : '<i class="fa-solid fa-list"></i> GÖREV') : '<i class="fa-solid fa-circle"></i> DÝÐER'));
+                const turAdi = e.type === "reminder" ? '<i class="fa-solid fa-bell"></i> ANIMSATICI' : (e.type === "note" ? '<i class="fa-regular fa-note-sticky"></i> NOT' : (e.type === "gorev" ? (e.durum === "tamamlandi" ? '<i class="fa-solid fa-check"></i> GÃ–REV (TAMAMLANDI)' : '<i class="fa-solid fa-list"></i> GÃ–REV') : '<i class="fa-solid fa-circle"></i> DÄ°ÄžER'));
                 const isGorev = e.type === "gorev";
                 const id = e.id || "";
                 const aktifUser = localStorage.getItem("tm_active_user") || "";
                 const canEdit = !isGorev && (!e.paylasan || e.paylasan === aktifUser);
                 h += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-color);">';
                 h += '<span style="width:12px;height:12px;border-radius:50%;background:' + renk + ';flex-shrink:0;margin-top:5px;"></span>';
-                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);"><span style="color:' + renk + ';">?</span> ' + turAdi + ' &middot; ' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : (e.tumGun ? ' <i class="fa-regular fa-calendar"></i> Tüm Gün' : '')) + (e.paylas ? (e.paylasan ? ' &middot; <i class="fa-solid fa-users"></i> ' + e.paylasan : ' &middot; <i class="fa-solid fa-users"></i> Paylaþýlan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
+                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);"><span style="color:' + renk + ';">?</span> ' + turAdi + ' &middot; ' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : (e.tumGun ? ' <i class="fa-regular fa-calendar"></i> TÃ¼m GÃ¼n' : '')) + (e.paylas ? (e.paylasan ? ' &middot; <i class="fa-solid fa-users"></i> ' + e.paylasan : ' &middot; <i class="fa-solid fa-users"></i> PaylaÅŸÄ±lan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
                 if (canEdit) {
                     var realId = id.replace("gorev_", "");
-                    h += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + realId.replace(/'/g,"\\'") + '\');asGunInfoKapat();" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;" title="Düzenle"><i class="fa-regular fa-pen-to-square"></i></button>';
+                    h += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + realId.replace(/'/g,"\\'") + '\');asGunInfoKapat();" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;" title="DÃ¼zenle"><i class="fa-regular fa-pen-to-square"></i></button>';
                     h += '<button class="as-etkinlik-edit" onclick="asEventSilById(\'' + realId.replace(/'/g,"\\'") + '\',\'' + e.date + '\');" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;color:var(--accent-red);" title="Sil"><i class="fa-solid fa-trash-can"></i></button>';
                 }
                 h += '</div>';
             });
-            if (etkinlikler.length === 0) { h = tmEmptyStateHTML('<i class="fa-regular fa-calendar"></i>','Hiç etkinlik bulunmamaktadýr.','Takvimden yeni bir etkinlik ekleyebilirsiniz.'); }
+            if (etkinlikler.length === 0) { h = tmEmptyStateHTML('<i class="fa-regular fa-calendar"></i>','HiÃ§ etkinlik bulunmamaktadÄ±r.','Takvimden yeni bir etkinlik ekleyebilirsiniz.'); }
             document.getElementById("asGunInfoBody").innerHTML = h;
             document.getElementById("asGunInfoModal").style.display = "flex";
         }
@@ -3418,15 +3418,15 @@ function gorevMailGonder(gorev) {
             document.getElementById("asGunInfoModal").style.display = "none";
         }
 
-        /* ================= ANA SAYFA GÖREVLER ================= */
+        /* ================= ANA SAYFA GÃ–REVLER ================= */
         function asGorevFormGoster() {
             const form = document.getElementById("asGorevAtamaFormu");
             const btn = document.getElementById("asGorevAtaBtn");
-            if (form.style.display === "block") { form.style.display = "none"; btn.innerHTML = '<i class="fa-solid fa-plus"></i> GÖREV ATA'; return; }
+            if (form.style.display === "block") { form.style.display = "none"; btn.innerHTML = '<i class="fa-solid fa-plus"></i> GÃ–REV ATA'; return; }
             const aktifUser = localStorage.getItem("tm_active_user") || "";
             const yetkiler = JSON.parse(localStorage.getItem("tm_gorev_yetkileri")) || [];
             const yetkiliAlanlar = yetkiler.filter(function(y) { return y.veren === aktifUser; }).map(function(y) { return y.alan; });
-            if (yetkiliAlanlar.length === 0) { tmNotify("Görev atama yetkiniz bulunmamaktadýr!", "error"); return; }
+            if (yetkiliAlanlar.length === 0) { tmNotify("GÃ¶rev atama yetkiniz bulunmamaktadÄ±r!", "error"); return; }
             const master = JSON.parse(localStorage.getItem("tm_admin_creds_final")) || {};
             const altKullanicilar = JSON.parse(localStorage.getItem("tm_users_final_v8")) || [];
             let ops = "";
@@ -3440,14 +3440,14 @@ function gorevMailGonder(gorev) {
             document.getElementById("asGorevAtanan").innerHTML = ops;
             document.getElementById("asGorevTarih").value = anlikTarihGetir();
             form.style.display = "block";
-            btn.innerHTML = '<i class="fa-solid fa-xmark"></i> ÝPTAL';
+            btn.innerHTML = '<i class="fa-solid fa-xmark"></i> Ä°PTAL';
         }
         function asGorevAta() {
             const atanan = document.getElementById("asGorevAtanan").value;
             const baslik = document.getElementById("asGorevBaslik").value.trim();
             const mesaj = document.getElementById("asGorevMesaj").value.trim();
             const tarih = document.getElementById("asGorevTarih").value;
-            if (!atanan || !baslik) { tmNotify("Kullanýcý ve baþlýk zorunludur!", "error"); return; }
+            if (!atanan || !baslik) { tmNotify("KullanÄ±cÄ± ve baÅŸlÄ±k zorunludur!", "error"); return; }
             const veren = localStorage.getItem("tm_active_user") || "";
             let gorevler = JSON.parse(localStorage.getItem("tm_gorevler")) || [];
             gorevler.push({ id: "gr_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4), veren: veren, atanan: atanan, baslik: baslik, mesaj: mesaj, tarih: tarih, durum: "bekliyor" });
@@ -3457,9 +3457,9 @@ function gorevMailGonder(gorev) {
             document.getElementById("asGorevAtanan").selectedIndex = 0;
             asGorevListele();
             document.getElementById("asGorevAtamaFormu").style.display = "none";
-            document.getElementById("asGorevAtaBtn").innerHTML = '<i class="fa-solid fa-plus"></i> GÖREV ATA';
-            tmNotify("Görev atandý.", "success");
-            aktiviteEkle("Görev atandý: " + baslik + " › " + atanan, "Dashboard");
+            document.getElementById("asGorevAtaBtn").innerHTML = '<i class="fa-solid fa-plus"></i> GÃ–REV ATA';
+            tmNotify("GÃ¶rev atandÄ±.", "success");
+            aktiviteEkle("GÃ¶rev atandÄ±: " + baslik + " â€º " + atanan, "Dashboard");
             bildirimSesi();
             gorevMailGonder({ atanan: atanan, veren: veren, baslik: baslik, mesaj: mesaj, tarih: tarih });
         }
@@ -3486,29 +3486,29 @@ function gorevMailGonder(gorev) {
             }
             const benimGorevlerim = gorevler.filter(function(g) { return atananKontrol(g, aktifUser); });
             const verdigimGorevler = gorevler.filter(function(g) { return g.veren === aktifUser && !atananKontrol(g, aktifUser); });
-            let html = '<div class="as-section-label" style="color:#2e7d32;"><i class="fa-solid fa-inbox"></i> BANA ATANAN GÖREVLER</div>';
-            if (benimGorevlerim.length === 0) { html += '<div style="padding:8px 0;">'+tmEmptyStateHTML('<i class="fa-solid fa-check"></i>','Size atanmýþ görev bulunmamaktadýr.','','')+'</div>'; }
+            let html = '<div class="as-section-label" style="color:#2e7d32;"><i class="fa-solid fa-inbox"></i> BANA ATANAN GÃ–REVLER</div>';
+            if (benimGorevlerim.length === 0) { html += '<div style="padding:8px 0;">'+tmEmptyStateHTML('<i class="fa-solid fa-check"></i>','Size atanmÄ±ÅŸ gÃ¶rev bulunmamaktadÄ±r.','','')+'</div>'; }
             else {
                 benimGorevlerim.forEach(function(g) {
                     const renk = asGorevRenk(g.durum, g.tarih);
                     const etiket = asGorevDurumEtiketi(g.durum, g.tarih);
                     var atananAd = Array.isArray(g.atanan) ? g.atanan.join(", ") : g.atanan;
                     html += '<div class="as-gorev-item" style="border-left:4px solid ' + renk + ';">';
-                    html += '<div class="as-gorev-text"><b>' + etiket + ' ' + g.baslik + '</b>' + (g.mesaj ? ' — ' + g.mesaj : '') + '<br><small>' + g.veren + ' › ' + atananAd + ' | ' + g.tarih + '</small></div>';
+                    html += '<div class="as-gorev-text"><b>' + etiket + ' ' + g.baslik + '</b>' + (g.mesaj ? ' â€” ' + g.mesaj : '') + '<br><small>' + g.veren + ' â€º ' + atananAd + ' | ' + g.tarih + '</small></div>';
                     if (g.durum !== "tamamlandi") { html += '<button class="as-gorev-complete" onclick="asGorevTamamla(\'' + g.id + '\')">? TAMAMLA</button>'; }
                     else { html += '<span class="as-gorev-tamamlandi">? ' + tamamlanmaStr(g.tamamlanmaTarihi) + '</span>'; }
                     html += '</div>';
                 });
             }
-            html += '<div class="as-section-label" style="color:var(--accent-red);margin-top:14px;"><i class="fa-solid fa-paper-plane"></i> VERDÝÐÝM GÖREVLER</div>';
-            if (verdigimGorevler.length === 0) { html += '<div style="padding:8px 0;">'+tmEmptyStateHTML('<i class="fa-solid fa-list"></i>','Verdiðiniz görev bulunmamaktadýr.','','')+'</div>'; }
+            html += '<div class="as-section-label" style="color:var(--accent-red);margin-top:14px;"><i class="fa-solid fa-paper-plane"></i> VERDÄ°ÄžÄ°M GÃ–REVLER</div>';
+            if (verdigimGorevler.length === 0) { html += '<div style="padding:8px 0;">'+tmEmptyStateHTML('<i class="fa-solid fa-list"></i>','VerdiÄŸiniz gÃ¶rev bulunmamaktadÄ±r.','','')+'</div>'; }
             else {
                 verdigimGorevler.forEach(function(g) {
                     const renk = asGorevRenk(g.durum, g.tarih);
                     const etiket = asGorevDurumEtiketi(g.durum, g.tarih);
                     var atananAd = Array.isArray(g.atanan) ? g.atanan.join(", ") : g.atanan;
                     html += '<div class="as-gorev-item" style="border-left:4px solid ' + renk + ';">';
-                    html += '<div class="as-gorev-text"><b>' + etiket + ' ' + g.baslik + '</b>' + (g.mesaj ? ' — ' + g.mesaj : '') + '<br><small>› ' + atananAd + ' | ' + g.tarih + ' | <span style="color:' + renk + ';font-weight:700;">' + (g.durum === "tamamlandi" ? "TAMAMLANDI " + tamamlanmaStr(g.tamamlanmaTarihi) : (asGorevRenk(g.durum, g.tarih) === "#C0392B" ? "GECÝKMÝÞ" : "BEKLÝYOR")) + '</span></small></div>';
+                    html += '<div class="as-gorev-text"><b>' + etiket + ' ' + g.baslik + '</b>' + (g.mesaj ? ' â€” ' + g.mesaj : '') + '<br><small>â€º ' + atananAd + ' | ' + g.tarih + ' | <span style="color:' + renk + ';font-weight:700;">' + (g.durum === "tamamlandi" ? "TAMAMLANDI " + tamamlanmaStr(g.tamamlanmaTarihi) : (asGorevRenk(g.durum, g.tarih) === "#C0392B" ? "GECÄ°KMÄ°Åž" : "BEKLÄ°YOR")) + '</span></small></div>';
                     html += '<button class="as-gorev-delete" onclick="asGorevSil(\'' + g.id + '\')"><i class="fa-solid fa-trash-can"></i></button>';
                     html += '</div>';
                 });
@@ -3522,10 +3522,10 @@ function gorevMailGonder(gorev) {
             localStorage.setItem("tm_gorevler", JSON.stringify(gorevler));
             asGorevListele();
             asTakvimRender();
-            tmNotify("Görev tamamlandý olarak iþaretlendi.", "success");
+            tmNotify("GÃ¶rev tamamlandÄ± olarak iÅŸaretlendi.", "success");
         }
         function asGorevSil(id) {
-            tmConfirm("Bu görevi silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu gÃ¶revi silmek istediÄŸinize emin misiniz?", function() {
                 let gorevler = JSON.parse(localStorage.getItem("tm_gorevler")) || [];
                 gorevler = gorevler.filter(function(g) { return g.id !== id; });
                 localStorage.setItem("tm_gorevler", JSON.stringify(gorevler));
@@ -3548,10 +3548,10 @@ function gorevMailGonder(gorev) {
         function gorevYetkiEkle() {
             const veren = document.getElementById("gorevYetkiVeren").value;
             const alan = document.getElementById("gorevYetkiAlan").value;
-            if (!veren || !alan) { tmNotify("Lütfen kullanýcý seçiniz!", "error"); return; }
-            if (veren === alan) { tmNotify("Ayný kullanýcý seçilemez!", "error"); return; }
+            if (!veren || !alan) { tmNotify("LÃ¼tfen kullanÄ±cÄ± seÃ§iniz!", "error"); return; }
+            if (veren === alan) { tmNotify("AynÄ± kullanÄ±cÄ± seÃ§ilemez!", "error"); return; }
             let yetkiler = JSON.parse(localStorage.getItem("tm_gorev_yetkileri")) || [];
-            if (yetkiler.some(function(y) { return y.veren === veren && y.alan === alan; })) { tmNotify("Bu yetki zaten tanýmlý!", "error"); return; }
+            if (yetkiler.some(function(y) { return y.veren === veren && y.alan === alan; })) { tmNotify("Bu yetki zaten tanÄ±mlÄ±!", "error"); return; }
             yetkiler.push({ veren: veren, alan: alan });
             localStorage.setItem("tm_gorev_yetkileri", JSON.stringify(yetkiler));
             gorevYetkiListele();
@@ -3570,11 +3570,11 @@ function gorevMailGonder(gorev) {
             if (!tbody) return;
             const yetkiler = JSON.parse(localStorage.getItem("tm_gorev_yetkileri")) || [];
             tbody.innerHTML = yetkiler.map(function(y) {
-                return '<tr><td>' + y.veren + '</td><td>' + y.alan + '</td><td><button class="btn-danger" onclick="gorevYetkiSil(\'' + y.veren + '\',\'' + y.alan + '\')" style="padding:4px 8px;font-size:11px;">SÝL</button></td></tr>';
+                return '<tr><td>' + y.veren + '</td><td>' + y.alan + '</td><td><button class="btn-danger" onclick="gorevYetkiSil(\'' + y.veren + '\',\'' + y.alan + '\')" style="padding:4px 8px;font-size:11px;">SÄ°L</button></td></tr>';
             }).join("");
         }
 
-        /* ================= BÝRÝM LÝSTESÝ MOTORLARI ================= */
+        /* ================= BÄ°RÄ°M LÄ°STESÄ° MOTORLARI ================= */
         function birimListesiGetir() { try { return JSON.parse(localStorage.getItem("tm_birim_listesi_v1")) || SABIT_BIRIM_LISTESI; } catch(e) { return SABIT_BIRIM_LISTESI; } }
         function birimListesiniYenile() {
             var list = birimListesiGetir();
@@ -3589,7 +3589,7 @@ function gorevMailGonder(gorev) {
             });
         }
         function birimEklePrompt() {
-            tmPrompt("Yeni birim türü giriniz (örn: M², ADET, KG):", function(yeni) {
+            tmPrompt("Yeni birim tÃ¼rÃ¼ giriniz (Ã¶rn: MÂ², ADET, KG):", function(yeni) {
                 if (!yeni || yeni.trim() === "") return;
                 yeni = yeni.trim().toUpperCase();
                 var list = birimListesiGetir();
@@ -3602,12 +3602,12 @@ function gorevMailGonder(gorev) {
         }
         function birimSilPrompt() {
             var list = birimListesiGetir();
-            if (list.length === 0) { tmNotify("Silinecek birim kalmadý.", "error"); return; }
-            tmPrompt("Silmek istediðiniz birim adýný yazýn:\nMevcut: " + list.join(", "), function(sec) {
+            if (list.length === 0) { tmNotify("Silinecek birim kalmadÄ±.", "error"); return; }
+            tmPrompt("Silmek istediÄŸiniz birim adÄ±nÄ± yazÄ±n:\nMevcut: " + list.join(", "), function(sec) {
                 if (!sec || sec.trim() === "") return;
                 sec = sec.trim().toUpperCase();
                 var idx = list.indexOf(sec);
-                if (idx === -1) { tmNotify("Bu birim listede bulunamadý.", "error"); return; }
+                if (idx === -1) { tmNotify("Bu birim listede bulunamadÄ±.", "error"); return; }
                 list.splice(idx, 1);
                 localStorage.setItem("tm_birim_listesi_v1", JSON.stringify(list));
                 birimListesiniYenile();
@@ -3615,7 +3615,7 @@ function gorevMailGonder(gorev) {
             });
         }
         function birimDropdownKapat(el){var dd=el.closest('.cs-dropdown');if(dd){dd.classList.remove('open');dd.previousElementSibling.classList.remove('open');}}
-        /* ================= TEKLÝF FORMU MOTORLARI ================= */
+        /* ================= TEKLÄ°F FORMU MOTORLARI ================= */
         function teklifFormSatirEkle() {
             const tbody = document.getElementById("teklifFormRows");
             const tr = document.createElement("tr");
@@ -3663,7 +3663,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("tTarih").value = anlikTarihGetir();
             document.getElementById("teklifFormRows").innerHTML = `
                 <tr>
-                    <td><textarea class="row-servis" rows="1" style="width:100%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; box-sizing:border-box;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MÝMARÝ/STATÝK/ELEKTRÝK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
+                    <td><textarea class="row-servis" rows="1" style="width:100%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; box-sizing:border-box;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MÄ°MARÄ°/STATÄ°K/ELEKTRÄ°K/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
                     <td style="text-align:center;"><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center;"></td>
                     <td style="text-align:center;"><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
                     <td style="text-align:center;"><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center; box-sizing:border-box;"></td>
@@ -3675,7 +3675,7 @@ function gorevMailGonder(gorev) {
             canliTeklifHesapla();
         }
 
-        /* ================= GEÇMÝÞ TABLO & SIRALAMA MOTORU ================= */
+        /* ================= GEÃ‡MÄ°Åž TABLO & SIRALAMA MOTORU ================= */
         function formVerileriniTopla() {
             const musteriAd = trToUpper(document.getElementById("tMusteriAd").value);
             const firma = trToUpper(document.getElementById("tFirma").value);
@@ -3712,7 +3712,7 @@ function gorevMailGonder(gorev) {
 
         function teklifFormuKaydet() {
             const veri = formVerileriniTopla();
-            if(veri.musteriAd === "-" && veri.firma === "-") { tmNotify("Müþteri adý veya firma ünvaný alanýný doldurunuz.", "error"); return; }
+            if(veri.musteriAd === "-" && veri.firma === "-") { tmNotify("MÃ¼ÅŸteri adÄ± veya firma Ã¼nvanÄ± alanÄ±nÄ± doldurunuz.", "error"); return; }
             tmLoadingGoster('Teklif kaydediliyor...');
             const db = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
             db.push(veri);
@@ -3723,14 +3723,14 @@ function gorevMailGonder(gorev) {
             teklifListesiniYenile();
             musteriKartlariniYenile();
             
-            tmNotify("TEKLÝF HAFIZAYA BÜYÜK HARFLERLE KAYDEDÝLDÝ.", "success");
-            aktiviteEkle("Teklif oluþturuldu: #" + veri.id + " - " + (veri.musteriAd || ""), "Teklif");
+            tmNotify("TEKLÄ°F HAFIZAYA BÃœYÃœK HARFLERLE KAYDEDÄ°LDÄ°.", "success");
+            aktiviteEkle("Teklif oluÅŸturuldu: #" + veri.id + " - " + (veri.musteriAd || ""), "Teklif");
             menudenSayfaAc('teklif-liste', 'teklif-liste-page', document.getElementById('sub-teklif-liste'));
         }
 
         function teklifFormuPdfUret() {
             const veri = formVerileriniTopla();
-            if(veri.musteriAd === "-" && veri.firma === "-") { tmNotify("Müþteri adý veya firma ünvaný alanýný doldurunuz.", "error"); return; }
+            if(veri.musteriAd === "-" && veri.firma === "-") { tmNotify("MÃ¼ÅŸteri adÄ± veya firma Ã¼nvanÄ± alanÄ±nÄ± doldurunuz.", "error"); return; }
             pdfSablonunuDoldurVeIndir(veri);
         }
 
@@ -3747,14 +3747,14 @@ function gorevMailGonder(gorev) {
             try { sirket = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { sirket = {}; }
             var gsm = (sirket.gsm || "0544 235 98 32").toUpperCase();
             var email = (sirket.email || "turakmimarlik@gmail.com").toLowerCase();
-            document.getElementById("pOutIletisim").innerHTML = 'GSM: ' + gsm + ' &nbsp;|&nbsp; E-MAÝL: <span style="text-transform:lowercase">' + email + '</span>';
+            document.getElementById("pOutIletisim").innerHTML = 'GSM: ' + gsm + ' &nbsp;|&nbsp; E-MAÄ°L: <span style="text-transform:lowercase">' + email + '</span>';
 
             var logoData = localStorage.getItem("tm_sirket_logo");
             var logoArea = document.getElementById("pOutLogoArea");
             if (logoData && logoData !== "null" && logoData.length > 100) {
                 logoArea.innerHTML = '<img src="' + logoData + '" style="max-height:90px;max-width:250px;height:auto;display:block;">';
             } else {
-                logoArea.innerText = "TURAK MÝMARLIK";
+                logoArea.innerText = "TURAK MÄ°MARLIK";
             }
 
             const pBody = document.getElementById("pOutTableBody"); pBody.innerHTML = "";
@@ -3806,7 +3806,7 @@ function gorevMailGonder(gorev) {
                 if (r.style.display === "table-row") acikRows.add(r.id);
             });
             tbody.innerHTML = "";
-            if(db.length === 0) { tbody.innerHTML = '<tr><td colspan="7">'+tmEmptyStateHTML('<i class="fa-regular fa-file-lines"></i>','Henüz kayýtlý teklif bulunmuyor.','Yeni bir teklif oluþturmak için yukarýdaki butonu kullanýn.')+'</td></tr>'; return; }
+            if(db.length === 0) { tbody.innerHTML = '<tr><td colspan="7">'+tmEmptyStateHTML('<i class="fa-regular fa-file-lines"></i>','HenÃ¼z kayÄ±tlÄ± teklif bulunmuyor.','Yeni bir teklif oluÅŸturmak iÃ§in yukarÄ±daki butonu kullanÄ±n.')+'</td></tr>'; return; }
 
             db.sort((a, b) => {
                 const parseDate = (dateStr) => {
@@ -3848,8 +3848,8 @@ function gorevMailGonder(gorev) {
                         <td colspan="7">
                             <div class="detail-panel-inner">
                                 <div class="detail-grid-box">
-                                    <div style="font-weight:700; border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-bottom:12px; color:var(--accent-red); font-size:13px;"><i class="fa-solid fa-magnifying-glass-plus"></i> TEKLÝF ÝÇERÝK DETAYI</div>
-                                    <p style="margin:5px 0; font-size:13px;"><b>Müþteri Telefon:</b> ${t.telefon}</p>
+                                    <div style="font-weight:700; border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-bottom:12px; color:var(--accent-red); font-size:13px;"><i class="fa-solid fa-magnifying-glass-plus"></i> TEKLÄ°F Ä°Ã‡ERÄ°K DETAYI</div>
+                                    <p style="margin:5px 0; font-size:13px;"><b>MÃ¼ÅŸteri Telefon:</b> ${t.telefon}</p>
                                     <table style="width:100%; border-collapse:collapse; font-size:13px; margin-top:10px;">
                                         <thead>
                                             <tr style="background:var(--bg-main); font-weight:700;">
@@ -3893,7 +3893,7 @@ function gorevMailGonder(gorev) {
         }
         
         function teklifSilDbId(dbId) { 
-            tmConfirm("Bu teklifi listeden tamamen silmek istediðinize emin misiniz?", function() { 
+            tmConfirm("Bu teklifi listeden tamamen silmek istediÄŸinize emin misiniz?", function() { 
                 let db = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
                 db = db.filter(item => item.id != dbId);
                 localStorage.setItem("tm_teklifler_db_final", JSON.stringify(db)); 
@@ -3934,10 +3934,10 @@ function gorevMailGonder(gorev) {
             const birim = document.getElementById("pYonetimBirimTipi").value;
             const fiyat = tmTutarCoz(document.getElementById("pYonetimBirimFiyat").value);
 
-            if(!kisi && !firma) { tmNotify("Lütfen Kiþi veya Firma adý alanlarýndan en az birini doldurunuz.", "error"); return; }
-            if(!dal) { tmNotify("Lütfen önce bir Proje/Hizmet Dalý seçin.", "error"); return; }
+            if(!kisi && !firma) { tmNotify("LÃ¼tfen KiÅŸi veya Firma adÄ± alanlarÄ±ndan en az birini doldurunuz.", "error"); return; }
+            if(!dal) { tmNotify("LÃ¼tfen Ã¶nce bir Proje/Hizmet DalÄ± seÃ§in.", "error"); return; }
             if(!tarihInput || fiyat <= 0) {
-                tmNotify("Lütfen geçerli bir tarih ve sýfýrdan büyük bir fiyat giriniz.", "error"); return;
+                tmNotify("LÃ¼tfen geÃ§erli bir tarih ve sÄ±fÄ±rdan bÃ¼yÃ¼k bir fiyat giriniz.", "error"); return;
             }
 
             const db = JSON.parse(localStorage.getItem("tm_piyasa_db_v2")) || [];
@@ -3949,7 +3949,7 @@ function gorevMailGonder(gorev) {
             piyasaListesiniYenile();
             dashboardVerileriniGuncelle();
             isOrtaklariKartlariniYenile();
-            tmNotify("Piyasa fiyat kaydý baþarýyla eklendi.", "success");
+            tmNotify("Piyasa fiyat kaydÄ± baÅŸarÄ±yla eklendi.", "success");
         }
 
         function piyasaGrupSirala(grupAdi, sutun) {
@@ -3971,7 +3971,7 @@ function gorevMailGonder(gorev) {
             db = db.filter(item => SABIT_DALLAR.includes(item.dal));
 
             if(db.length === 0) {
-                konteyner.innerHTML = `<div style="text-align:center; padding: 20px; background: var(--bg-main); border-radius: 6px; border:1px solid var(--border-color);">Kayýtlý piyasa fiyat verisi bulunmuyor.</div>`;
+                konteyner.innerHTML = `<div style="text-align:center; padding: 20px; background: var(--bg-main); border-radius: 6px; border:1px solid var(--border-color);">KayÄ±tlÄ± piyasa fiyat verisi bulunmuyor.</div>`;
                 return;
             }
 
@@ -4004,10 +4004,10 @@ function gorevMailGonder(gorev) {
                     <table class="app-table">
                         <thead>
                             <tr>
-                                <th style="width: 35%;">Kiþi / Firma Adý</th>
-                                <th style="width: 20%;" class="th-sortable" onclick="P_GRUP_SIRALAMA['${grupAdi}_fiyat']='YOK'; piyasaGrupSirala('${grupAdi}', 'tarih')">Fiyat Alýnan Tarih ${tOk}</th>
+                                <th style="width: 35%;">KiÅŸi / Firma AdÄ±</th>
+                                <th style="width: 20%;" class="th-sortable" onclick="P_GRUP_SIRALAMA['${grupAdi}_fiyat']='YOK'; piyasaGrupSirala('${grupAdi}', 'tarih')">Fiyat AlÄ±nan Tarih ${tOk}</th>
                                 <th style="width: 25%;" class="th-sortable" onclick="piyasaGrupSirala('${grupAdi}', 'fiyat')">Hesaplanan Tutar / Hesap Tipi ${fOk}</th>
-                                <th style="width: 20%;">Ýþlem</th>
+                                <th style="width: 20%;">Ä°ÅŸlem</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -4035,7 +4035,7 @@ function gorevMailGonder(gorev) {
         }
 
         function piyasaVerisiSilDirekt(globalIndex) {
-            tmConfirm("Bu piyasa fiyat kaydýný tamamen silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu piyasa fiyat kaydÄ±nÄ± tamamen silmek istediÄŸinize emin misiniz?", function() {
                 let db = JSON.parse(localStorage.getItem("tm_piyasa_db_v2")) || [];
                 db.splice(globalIndex, 1);
                 localStorage.setItem("tm_piyasa_db_v2", JSON.stringify(db));
@@ -4045,7 +4045,7 @@ function gorevMailGonder(gorev) {
             });
         }
 
-        /* ================= ÝÞ MUHASEBESÝ MOTORU ================= */
+        /* ================= Ä°Åž MUHASEBESÄ° MOTORU ================= */
         function isMuhasebeVerileriniYukle() {
             try { return JSON.parse(localStorage.getItem("tm_is_muhasebe_db")) || []; } catch(e) { console.error("isMuhasebe veri yukleme hatasi:", e); return []; }
         }
@@ -4084,8 +4084,8 @@ function gorevMailGonder(gorev) {
             const anlasmaTarihi = document.getElementById("isMuhAnlasmaTarihi").value;
             const editId = document.getElementById("isMuhEditId").value;
 
-            if(!isAdi) { tmNotify("Ýþ adý zorunludur!", "error"); return; }
-            if(anlasmaUcreti <= 0) { tmNotify("Geçerli bir anlaþma ücreti giriniz!", "error"); return; }
+            if(!isAdi) { tmNotify("Ä°ÅŸ adÄ± zorunludur!", "error"); return; }
+            if(anlasmaUcreti <= 0) { tmNotify("GeÃ§erli bir anlaÅŸma Ã¼creti giriniz!", "error"); return; }
 
             let db = isMuhasebeVerileriniYukle();
 
@@ -4101,15 +4101,15 @@ function gorevMailGonder(gorev) {
                     anlasmaTarihi: anlasmaTarihi || anlikTarihGetir(),
                     kalemler: []
                 });
-                tmNotify("Ýþ muhasebesi kaydý baþarýyla oluþturuldu.", "success");
-                aktiviteEkle("Ýþ muhasebesi oluþturuldu: " + (isAdi || ""), "Muhasebe");
+                tmNotify("Ä°ÅŸ muhasebesi kaydÄ± baÅŸarÄ±yla oluÅŸturuldu.", "success");
+                aktiviteEkle("Ä°ÅŸ muhasebesi oluÅŸturuldu: " + (isAdi || ""), "Muhasebe");
             } else {
                 const targetId = parseInt(editId);
                 db = db.map(item => item.id === targetId ? { ...item, isAdi, firma, pafta, ada, parsel, anlasmaUcreti, anlasmaTarihi: anlasmaTarihi || anlikTarihGetir() } : item);
-                tmNotify("Ýþ muhasebesi kaydý güncellendi.", "success");
-                aktiviteEkle("Ýþ muhasebesi güncellendi: " + (isAdi || ""), "Muhasebe");
+                tmNotify("Ä°ÅŸ muhasebesi kaydÄ± gÃ¼ncellendi.", "success");
+                aktiviteEkle("Ä°ÅŸ muhasebesi gÃ¼ncellendi: " + (isAdi || ""), "Muhasebe");
                 document.getElementById("isMuhEditId").value = "-1";
-                document.getElementById("isMuhFormTitle").innerText = "Yeni Ýþ Muhasebesi Kaydý Oluþtur";
+                document.getElementById("isMuhFormTitle").innerText = "Yeni Ä°ÅŸ Muhasebesi KaydÄ± OluÅŸtur";
             }
 
             localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
@@ -4127,7 +4127,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("isMuhAnlasmaUcreti").value = "";
             document.getElementById("isMuhAnlasmaTarihi").value = anlikTarihGetir();
             document.getElementById("isMuhEditId").value = "-1";
-            document.getElementById("isMuhFormTitle").innerText = "Yeni Ýþ Muhasebesi Kaydý Oluþtur";
+            document.getElementById("isMuhFormTitle").innerText = "Yeni Ä°ÅŸ Muhasebesi KaydÄ± OluÅŸtur";
             isMuhFormIdGuncelle();
         }
 
@@ -4136,7 +4136,7 @@ function gorevMailGonder(gorev) {
             const kayit = db.find(k => k.id === id);
             if(!kayit) return;
 
-            document.getElementById("isMuhFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> Ýþ Muhasebesi Kaydýný Düzenle';
+            document.getElementById("isMuhFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> Ä°ÅŸ Muhasebesi KaydÄ±nÄ± DÃ¼zenle';
             document.getElementById("isMuhEditId").value = kayit.id;
             document.getElementById("isMuhIsAdi").value = kayit.isAdi;
             document.getElementById("isMuhFirma").value = kayit.firma || "";
@@ -4151,12 +4151,12 @@ function gorevMailGonder(gorev) {
         }
 
         function isMuhasebeSil(id) {
-            tmConfirm("Bu iþ muhasebesi kaydýný tamamen silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu iÅŸ muhasebesi kaydÄ±nÄ± tamamen silmek istediÄŸinize emin misiniz?", function() {
                 let db = isMuhasebeVerileriniYukle();
                 db = db.filter(k => k.id !== id);
                 localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
                 isMuhasebeListesiniYenile();
-                tmNotify("Ýþ muhasebesi kaydý silindi.", "success");
+                tmNotify("Ä°ÅŸ muhasebesi kaydÄ± silindi.", "success");
             });
         }
 
@@ -4167,7 +4167,7 @@ function gorevMailGonder(gorev) {
             if(content) {
                 const yeniDurum = content.style.display === "none" ? "block" : "none";
                 content.style.display = yeniDurum;
-                if(icon) icon.innerText = yeniDurum === "none" ? "?" : "¡";
+                if(icon) icon.innerText = yeniDurum === "none" ? "?" : "Â¡";
             }
         }
 
@@ -4213,18 +4213,18 @@ function gorevMailGonder(gorev) {
                 serit.innerHTML = `
                     <div style="display:flex; flex-direction:column; gap:10px; width:100%; padding:18px 10px; box-sizing:border-box;">
                         <div style="display:flex; justify-content:center; text-align:center; gap:8px; padding-bottom:8px; border-bottom:1px solid var(--border-color);">
-                            <div style="padding:0 20px;"><small style="font-size:11px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">AKTÝF ÝÞLER</small><span style="font-weight:900; color:var(--accent-red); font-size:28px;">${db.length}</span></div>
+                            <div style="padding:0 20px;"><small style="font-size:11px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">AKTÄ°F Ä°ÅžLER</small><span style="font-weight:900; color:var(--accent-red); font-size:28px;">${db.length}</span></div>
                         </div>
                         <div style="display:flex; justify-content:space-around; text-align:center; gap:8px;">
-                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL ÝÞ HACMÝ</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelHacim.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL Ä°Åž HACMÄ°</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelHacim.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                             <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR</small><span style="font-weight:900; color:${karRenk}; font-size:22px;">${genelKar.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                             <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR %</small><span style="font-weight:900; color:${karYuzdeRenk}; font-size:22px;">%${genelKarYuzde}</span></div>
-                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL TAHSÝLAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
-                            <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL ÖDENEN</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL TAHSÄ°LAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                            <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL Ã–DENEN</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                         </div>
                         <div style="display:flex; justify-content:space-around; text-align:center; gap:8px; padding-top:10px; border-top:1px solid var(--border-color);">
-                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KALAN ÖDEME</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelKalan.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
-                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">KALAN TAHSÝLAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelKalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KALAN Ã–DEME</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelKalan.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">KALAN TAHSÄ°LAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelKalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                             <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">NET</small><span style="font-weight:900; color:${netRenk}; font-size:22px;">${genelNet.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                         </div>
                     </div>
@@ -4232,7 +4232,7 @@ function gorevMailGonder(gorev) {
             }
 
             if(db.length === 0) {
-                konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-chart-simple"></i>','Henüz iþ muhasebesi kaydý bulunmamaktadýr.','Önce "Ýþ Muhasebesi Oluþtur" sayfasýndan bir kayýt oluþturun.');
+                konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-chart-simple"></i>','HenÃ¼z iÅŸ muhasebesi kaydÄ± bulunmamaktadÄ±r.','Ã–nce "Ä°ÅŸ Muhasebesi OluÅŸtur" sayfasÄ±ndan bir kayÄ±t oluÅŸturun.');
                 return;
             }
 
@@ -4272,16 +4272,16 @@ function gorevMailGonder(gorev) {
                     </tr>`;
                 });
 
-                const partnerOptions = partnerDb.map(p => '<option value="' + p.ad + '">' + p.ad + (p.sirket && p.sirket !== "BÝREYSEL" ? " (" + p.sirket + ")" : "") + '</option>').join('');
+                const partnerOptions = partnerDb.map(p => '<option value="' + p.ad + '">' + p.ad + (p.sirket && p.sirket !== "BÄ°REYSEL" ? " (" + p.sirket + ")" : "") + '</option>').join('');
 
                 let verecekHTML = "";
                 verecekKalemler.forEach(k => {
                     const odenen = k.odenenTutar || 0;
                     const kalan = k.tutar - odenen;
                     let durumRenk, durumText;
-                    if(odenen <= 0) { durumRenk = "var(--accent-red)"; durumText = "ÖDENMEDÝ"; }
-                    else if(odenen < k.tutar) { durumRenk = "#e67e22"; durumText = "KISMÝ ÖDENDÝ"; }
-                    else { durumRenk = "var(--btn-green)"; durumText = "ÖDENDÝ"; }
+                    if(odenen <= 0) { durumRenk = "var(--accent-red)"; durumText = "Ã–DENMEDÄ°"; }
+                    else if(odenen < k.tutar) { durumRenk = "#e67e22"; durumText = "KISMÄ° Ã–DENDÄ°"; }
+                    else { durumRenk = "var(--btn-green)"; durumText = "Ã–DENDÄ°"; }
 
                     const seciliKisi = k.kisi || "";
 
@@ -4294,18 +4294,18 @@ function gorevMailGonder(gorev) {
                         <td style="padding:8px 6px; font-size:12px;">${k.odemeTarihi ? new Date(k.odemeTarihi).toLocaleDateString("tr-TR") : "-"}</td>
                         <td style="padding:8px 6px; text-align:center;"><span style="font-size:11px; font-weight:700; padding:3px 8px; border-radius:4px; color:white; background:${durumRenk};">${durumText}</span></td>
                         <td style="padding:8px 6px; text-align:center; white-space:nowrap;">
-                            <button class="btn-warning" onclick="isMuhasebeFormGoster('odemeYapForm_${kayit.id}_${k.kalemId}', '${kayit.id}_${k.kalemId}')" style="padding:4px 10px; font-size:11px;">Ödeme Yap</button>
+                            <button class="btn-warning" onclick="isMuhasebeFormGoster('odemeYapForm_${kayit.id}_${k.kalemId}', '${kayit.id}_${k.kalemId}')" style="padding:4px 10px; font-size:11px;">Ã–deme Yap</button>
                             <button class="btn-danger" onclick="isMuhasebeKalemSil(${kayit.id}, ${k.kalemId})" style="padding:4px 10px; font-size:11px;">X</button>
                         </td>
                     </tr>
                     <tr id="odemeYapFormRow_${kayit.id}_${k.kalemId}" style="display:none;">
                         <td colspan="8" style="padding:0;">
                             <div id="odemeYapForm_${kayit.id}_${k.kalemId}" class="inline-form" style="display:none; margin:4px 8px;">
-                                <label>ÖDEME TUTARI (?)<br><input type="text" id="odemeYapTutar_${kayit.id}_${k.kalemId}" placeholder="0.000,00" style="text-transform:none; text-align:right; flex:1; min-width:80px;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>
-                                <label>TARÝH<br><input type="date" id="odemeYapTarih_${kayit.id}_${k.kalemId}" value="${anlikTarihGetir()}" style="flex:1; min-width:120px;"></label>
+                                <label>Ã–DEME TUTARI (?)<br><input type="text" id="odemeYapTutar_${kayit.id}_${k.kalemId}" placeholder="0.000,00" style="text-transform:none; text-align:right; flex:1; min-width:80px;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>
+                                <label>TARÄ°H<br><input type="date" id="odemeYapTarih_${kayit.id}_${k.kalemId}" value="${anlikTarihGetir()}" style="flex:1; min-width:120px;"></label>
                                 <div style="display:flex; gap:4px; align-self:flex-end;">
                                     <button class="btn-form btn-form-save" onclick="isMuhasebeOdemeYapKaydet(${kayit.id}, ${k.kalemId})">KAYDET</button>
-                                    <button class="btn-form btn-form-cancel" onclick="isMuhasebeFormKapat('odemeYapForm_${kayit.id}_${k.kalemId}', '${kayit.id}_${k.kalemId}')">ÝPTAL</button>
+                                    <button class="btn-form btn-form-cancel" onclick="isMuhasebeFormKapat('odemeYapForm_${kayit.id}_${k.kalemId}', '${kayit.id}_${k.kalemId}')">Ä°PTAL</button>
                                 </div>
                             </div>
                         </td>
@@ -4317,20 +4317,20 @@ function gorevMailGonder(gorev) {
                         }
                         if(kayitlar.length === 0) return '';
                         let gecmisHTML = '<tr><td colspan="8" style="padding:4px 8px 8px 8px;"><div style="font-size:11px; background:var(--bg-main); border-radius:4px; padding:6px 10px; border:1px solid var(--border-color);">';
-                        gecmisHTML += '<span style="font-weight:700; font-size:10px; color:var(--text-light); display:block; margin-bottom:4px;">ÖDEME GEÇMÝÞÝ</span>';
+                        gecmisHTML += '<span style="font-weight:700; font-size:10px; color:var(--text-light); display:block; margin-bottom:4px;">Ã–DEME GEÃ‡MÄ°ÅžÄ°</span>';
                         kayitlar.forEach((od, odIdx) => {
                             const odemeTarih = od.tarih ? new Date(od.tarih).toLocaleDateString("tr-TR") : "-";
                             gecmisHTML += '<div style="display:flex; align-items:center; gap:8px; margin:3px 0; flex-wrap:wrap;">';
-                            gecmisHTML += '<span style="font-size:12px;">• ' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ? <span style="color:var(--text-light);">(' + odemeTarih + ')</span></span>';
-                            gecmisHTML += '<button class="btn-warning" onclick="isMuhasebeOdemeGecmisiGosterEdit(' + kayit.id + ',' + k.kalemId + ',' + odIdx + ')" style="padding:2px 8px; font-size:10px;">Düzenle</button>';
+                            gecmisHTML += '<span style="font-size:12px;">â€¢ ' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ? <span style="color:var(--text-light);">(' + odemeTarih + ')</span></span>';
+                            gecmisHTML += '<button class="btn-warning" onclick="isMuhasebeOdemeGecmisiGosterEdit(' + kayit.id + ',' + k.kalemId + ',' + odIdx + ')" style="padding:2px 8px; font-size:10px;">DÃ¼zenle</button>';
                             gecmisHTML += '<button class="btn-danger" onclick="isMuhasebeOdemeGecmisiSil(' + kayit.id + ',' + k.kalemId + ',' + odIdx + ')" style="padding:2px 8px; font-size:10px;">Sil</button>';
                             gecmisHTML += '</div>';
                             gecmisHTML += '<div id="odemeGecmisiEdit_' + kayit.id + '_' + k.kalemId + '_' + odIdx + '" class="inline-form" style="display:none; margin:2px 0 6px 0; padding:6px 8px;">';
                             gecmisHTML += '<label>TUTAR (?)<br><input type="text" id="odemeGecEditTutar_' + kayit.id + '_' + k.kalemId + '_' + odIdx + '" value="' + od.tutar.toFixed(2) + '" style="text-transform:none; text-align:right; flex:1; min-width:80px;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>';
-                            gecmisHTML += '<label>TARÝH<br><input type="date" id="odemeGecEditTarih_' + kayit.id + '_' + k.kalemId + '_' + odIdx + '" value="' + (od.tarih || '') + '" style="flex:1; min-width:120px;"></label>';
+                            gecmisHTML += '<label>TARÄ°H<br><input type="date" id="odemeGecEditTarih_' + kayit.id + '_' + k.kalemId + '_' + odIdx + '" value="' + (od.tarih || '') + '" style="flex:1; min-width:120px;"></label>';
                             gecmisHTML += '<div style="display:flex; gap:4px; align-self:flex-end;">';
                             gecmisHTML += '<button class="btn-form btn-form-save" onclick="isMuhasebeOdemeGecmisiKaydet(' + kayit.id + ',' + k.kalemId + ',' + odIdx + ')" style="padding:4px 10px; font-size:10px;">KAYDET</button>';
-                            gecmisHTML += '<button class="btn-form btn-form-cancel" onclick="isMuhasebeOdemeGecmisiKapatEdit(' + kayit.id + ',' + k.kalemId + ',' + odIdx + ')" style="padding:4px 10px; font-size:10px;">ÝPTAL</button>';
+                            gecmisHTML += '<button class="btn-form btn-form-cancel" onclick="isMuhasebeOdemeGecmisiKapatEdit(' + kayit.id + ',' + k.kalemId + ',' + odIdx + ')" style="padding:4px 10px; font-size:10px;">Ä°PTAL</button>';
                             gecmisHTML += '</div></div>';
                         });
                         gecmisHTML += '</div></td></tr>';
@@ -4361,7 +4361,7 @@ function gorevMailGonder(gorev) {
                             <div style="display:flex; align-items:center; gap:30px;">
                                 <div style="display:flex; flex-direction:column; gap:5px; min-width:440px;">
                                     <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:13px; color:var(--btn-green); font-weight:700; min-width:54px;">Tahsilat</span><div style="flex:1; height:15px; background:var(--bg-main); border-radius:6px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,0.15);"><div style="height:100%; width:${tahsilatYuzde}%; background:linear-gradient(90deg, var(--btn-green), #4caf50); border-radius:6px; transition:width 0.4s;"></div></div><span style="font-size:13px; color:var(--text-light); font-weight:700; min-width:40px; text-align:right;">%${tahsilatYuzde}</span></div>
-                                    <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:13px; color:var(--accent-red); font-weight:700; min-width:54px;">Ödeme</span><div style="flex:1; height:15px; background:var(--bg-main); border-radius:6px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,0.15);"><div style="height:100%; width:${odemeYuzde}%; background:linear-gradient(90deg, var(--accent-red), #ff5722); border-radius:6px; transition:width 0.4s;"></div></div><span style="font-size:13px; color:var(--text-light); font-weight:700; min-width:40px; text-align:right;">%${odemeYuzde}</span></div>
+                                    <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:13px; color:var(--accent-red); font-weight:700; min-width:54px;">Ã–deme</span><div style="flex:1; height:15px; background:var(--bg-main); border-radius:6px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,0.15);"><div style="height:100%; width:${odemeYuzde}%; background:linear-gradient(90deg, var(--accent-red), #ff5722); border-radius:6px; transition:width 0.4s;"></div></div><span style="font-size:13px; color:var(--text-light); font-weight:700; min-width:40px; text-align:right;">%${odemeYuzde}</span></div>
                                 </div>
                                 <span style="font-weight:700; color:var(--accent-red); font-size:18px;">${formatliId}</span>
                             </div>
@@ -4370,17 +4370,17 @@ function gorevMailGonder(gorev) {
 
                         <div style="display:flex; flex-direction:column; gap:3px; background:var(--bg-main); padding:8px 20px; border-radius:8px; margin:5px 0 10px 0; border:1px solid var(--border-color);">
                             <div style="display:flex; justify-content:space-between; text-align:center; gap:2px;">
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAÞMA ÜCRETÝ</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAÅžMA ÃœCRETÄ°</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                                 <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM KAR</small><span style="font-weight:800; color:${karRenk}; font-size:15px; line-height:1.3;">${toplamKar.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                                 <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KAR %</small><span style="font-weight:800; color:${karYuzdeRenkKart}; font-size:15px; line-height:1.3;">%${karYuzde}</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM GÝDER</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
-                                <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAÞMA TARÝHÝ</small><span style="font-weight:700; color:var(--text-dark); font-size:15px; line-height:1.3;">${kayit.anlasmaTarihi ? new Date(kayit.anlasmaTarihi).toLocaleDateString("tr-TR") : "-"}</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM GÄ°DER</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAÅžMA TARÄ°HÄ°</small><span style="font-weight:700; color:var(--text-dark); font-size:15px; line-height:1.3;">${kayit.anlasmaTarihi ? new Date(kayit.anlasmaTarihi).toLocaleDateString("tr-TR") : "-"}</span></div>
                             </div>
                             <div style="display:flex; justify-content:space-between; text-align:center; gap:2px; padding-top:4px; border-top:1px solid var(--border-color);">
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TAHSÝLAT</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN TAHSÝLAT</small><span style="font-weight:800; color:${kalanTahsilatRenk}; font-size:15px; line-height:1.3;">${kalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ÖDENEN</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN ÖDEME</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TAHSÄ°LAT</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN TAHSÄ°LAT</small><span style="font-weight:800; color:${kalanTahsilatRenk}; font-size:15px; line-height:1.3;">${kalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">Ã–DENEN</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN Ã–DEME</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                                 <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">NET</small><span style="font-weight:800; color:${netRenkKart}; font-size:15px; line-height:1.3;">${netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                             </div>
                         </div>
@@ -4391,68 +4391,68 @@ function gorevMailGonder(gorev) {
                                 <button class="btn btn-primary" onclick="event.stopPropagation(); isMuhasebeFormGoster('tahsilatForm_${kayit.id}')" style="padding:4px 10px; font-size:11px;">+ Tahsilat Ekle</button>
                             </div>
                             <div id="tahsilatForm_${kayit.id}" class="inline-form" style="display:none;">
-                                <label>AÇIKLAMA<input type="text" id="tahsilatAciklama_${kayit.id}" placeholder="AÇIKLAMA" value="TAHSÝLAT ${alacakKalemler.length + 1}"></label>
+                                <label>AÃ‡IKLAMA<input type="text" id="tahsilatAciklama_${kayit.id}" placeholder="AÃ‡IKLAMA" value="TAHSÄ°LAT ${alacakKalemler.length + 1}"></label>
                                 <label>TUTAR (?)<input type="text" id="tahsilatTutar_${kayit.id}" placeholder="0.000,00" style="text-transform:none; text-align:right;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>
-                                <label>TARÝH<input type="date" id="tahsilatTarih_${kayit.id}" value="${anlikTarihGetir()}"></label>
+                                <label>TARÄ°H<input type="date" id="tahsilatTarih_${kayit.id}" value="${anlikTarihGetir()}"></label>
                                 <div style="display:flex; gap:4px; align-self:flex-end;">
                                     <button class="btn-form btn-form-save" onclick="isMuhasebeTahsilatKaydet(${kayit.id})">KAYDET</button>
-                                    <button class="btn-form btn-form-cancel" onclick="isMuhasebeFormGoster('tahsilatForm_${kayit.id}')">ÝPTAL</button>
+                                    <button class="btn-form btn-form-cancel" onclick="isMuhasebeFormGoster('tahsilatForm_${kayit.id}')">Ä°PTAL</button>
                                 </div>
                             </div>
                             ${alacakKalemler.length > 0 ? `
                             <table style="width:100%; border-collapse:collapse; font-size:12px;">
                                 <thead>
                                     <tr style="background:var(--bg-main);">
-                                        <th style="padding:8px 6px; text-align:left; font-size:11px;">Açýklama</th>
+                                        <th style="padding:8px 6px; text-align:left; font-size:11px;">AÃ§Ä±klama</th>
                                         <th style="padding:8px 6px; text-align:right; font-size:11px;">Tutar</th>
                                         <th style="padding:8px 6px; text-align:left; font-size:11px;">Tarih</th>
-                                        <th style="padding:8px 6px; text-align:center; font-size:11px;">Ýþlem</th>
+                                        <th style="padding:8px 6px; text-align:center; font-size:11px;">Ä°ÅŸlem</th>
                                     </tr>
                                 </thead>
                                 <tbody>${alacakHTML}</tbody>
                             </table>
-                            ` : `<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">Henüz tahsilat kalemi eklenmemiþ.</p>`}
+                            ` : `<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">HenÃ¼z tahsilat kalemi eklenmemiÅŸ.</p>`}
                         </div>
 
                         <div style="margin-top:12px;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                                <span style="font-weight:700; font-size:13px; color:var(--accent-red);"><i class="fa-solid fa-list"></i> Ödemeler</span>
-                                <button class="btn btn-primary" onclick="event.stopPropagation(); isMuhasebeFormGoster('odemeForm_${kayit.id}')" style="padding:4px 10px; font-size:11px;">+ Ödeme Ekle</button>
+                                <span style="font-weight:700; font-size:13px; color:var(--accent-red);"><i class="fa-solid fa-list"></i> Ã–demeler</span>
+                                <button class="btn btn-primary" onclick="event.stopPropagation(); isMuhasebeFormGoster('odemeForm_${kayit.id}')" style="padding:4px 10px; font-size:11px;">+ Ã–deme Ekle</button>
                             </div>
                             <div id="odemeForm_${kayit.id}" class="inline-form" style="display:none;">
-                                <label>PROJE / HÝZMET DALI<select id="odemeDal_${kayit.id}" style="flex:1; min-width:120px;"><option value="">SEÇÝNÝZ</option>${SABIT_DALLAR.map(d => '<option value="' + d + '">' + d + '</option>').join('')}</select></label>
-                                <label>KÝÞÝ / FÝRMA<select id="odemeKisi_${kayit.id}" style="flex:1; min-width:120px;"><option value="">SEÇÝNÝZ</option>${partnerOptions}</select></label>
+                                <label>PROJE / HÄ°ZMET DALI<select id="odemeDal_${kayit.id}" style="flex:1; min-width:120px;"><option value="">SEÃ‡Ä°NÄ°Z</option>${SABIT_DALLAR.map(d => '<option value="' + d + '">' + d + '</option>').join('')}</select></label>
+                                <label>KÄ°ÅžÄ° / FÄ°RMA<select id="odemeKisi_${kayit.id}" style="flex:1; min-width:120px;"><option value="">SEÃ‡Ä°NÄ°Z</option>${partnerOptions}</select></label>
                                 <label>TOPLAM TUTAR (?)<input type="text" id="odemeTutar_${kayit.id}" placeholder="0.000,00" style="text-transform:none; text-align:right;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>
-                                <label>ÖDENEN (?)<input type="text" id="odemeOdenen_${kayit.id}" placeholder="0.000,00" style="text-transform:none; text-align:right;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)" value="0"></label>
-                                <label>TARÝH<input type="date" id="odemeTarih_${kayit.id}" value="${anlikTarihGetir()}"></label>
+                                <label>Ã–DENEN (?)<input type="text" id="odemeOdenen_${kayit.id}" placeholder="0.000,00" style="text-transform:none; text-align:right;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)" value="0"></label>
+                                <label>TARÄ°H<input type="date" id="odemeTarih_${kayit.id}" value="${anlikTarihGetir()}"></label>
                                 <div style="display:flex; gap:4px; align-self:flex-end;">
                                     <button class="btn-form btn-form-save" onclick="isMuhasebeOdemeKaydet(${kayit.id})">KAYDET</button>
-                                    <button class="btn-form btn-form-cancel" onclick="isMuhasebeFormGoster('odemeForm_${kayit.id}')">ÝPTAL</button>
+                                    <button class="btn-form btn-form-cancel" onclick="isMuhasebeFormGoster('odemeForm_${kayit.id}')">Ä°PTAL</button>
                                 </div>
                             </div>
                             ${verecekKalemler.length > 0 ? `
                             <table style="width:100%; border-collapse:collapse; font-size:12px;">
                                 <thead>
                                     <tr style="background:var(--bg-main);">
-                                        <th style="padding:8px 6px; text-align:left; font-size:11px;">Proje / Hizmet Dalý</th>
-                                        <th style="padding:8px 6px; text-align:left; font-size:11px;">Kiþi / Firma</th>
+                                        <th style="padding:8px 6px; text-align:left; font-size:11px;">Proje / Hizmet DalÄ±</th>
+                                        <th style="padding:8px 6px; text-align:left; font-size:11px;">KiÅŸi / Firma</th>
                                         <th style="padding:8px 6px; text-align:right; font-size:11px;">Toplam Tutar</th>
-                                        <th style="padding:8px 6px; text-align:right; font-size:11px;">Ödenen</th>
+                                        <th style="padding:8px 6px; text-align:right; font-size:11px;">Ã–denen</th>
                                         <th style="padding:8px 6px; text-align:right; font-size:11px;">Kalan</th>
                                         <th style="padding:8px 6px; text-align:left; font-size:11px;">Tarih</th>
                                         <th style="padding:8px 6px; text-align:center; font-size:11px;">Durum</th>
-                                        <th style="padding:8px 6px; text-align:center; font-size:11px;">Ýþlem</th>
+                                        <th style="padding:8px 6px; text-align:center; font-size:11px;">Ä°ÅŸlem</th>
                                     </tr>
                                 </thead>
                                 <tbody>${verecekHTML}</tbody>
                             </table>
-                            ` : `<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">Henüz ödeme kalemi eklenmemiþ.</p>`}
+                            ` : `<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">HenÃ¼z Ã¶deme kalemi eklenmemiÅŸ.</p>`}
                         </div>
 
                         <div class="card-actions">
-                            <button class="btn-warning" onclick="event.stopPropagation(); isMuhasebeDuzenle(${kayit.id})">Düzenle</button>
+                            <button class="btn-warning" onclick="event.stopPropagation(); isMuhasebeDuzenle(${kayit.id})">DÃ¼zenle</button>
                             <button class="btn btn-pdf-red" onclick="event.stopPropagation(); isMuhasebePdfUret(${kayit.id})"><i class="fa-regular fa-file-lines"></i> PDF</button>
-                            <button class="btn-save-green" onclick="event.stopPropagation(); isMuhasebeBitirVeTasi(${kayit.id})" style="cursor:${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'not-allowed' : 'pointer'};${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'opacity:0.5;' : ''}" ${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'disabled' : ''}><i class="fa-solid fa-check"></i> ÝÞ BÝTÝRME ONAYI</button>
+                            <button class="btn-save-green" onclick="event.stopPropagation(); isMuhasebeBitirVeTasi(${kayit.id})" style="cursor:${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'not-allowed' : 'pointer'};${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'opacity:0.5;' : ''}" ${(kalanTahsilat !== 0 || kalanToplam !== 0) ? 'disabled' : ''}><i class="fa-solid fa-check"></i> Ä°Åž BÄ°TÄ°RME ONAYI</button>
                             <button class="btn-danger" onclick="event.stopPropagation(); isMuhasebeSil(${kayit.id})">Sil</button>
                         </div>
                         </div>
@@ -4465,7 +4465,7 @@ function gorevMailGonder(gorev) {
                 const icon = document.getElementById("isMuhKartIcon_" + id);
                 if(content) {
                     content.style.display = "block";
-                    if(icon) icon.innerText = "¡";
+                    if(icon) icon.innerText = "Â¡";
                 }
             });
         }
@@ -4496,9 +4496,9 @@ function gorevMailGonder(gorev) {
             const tutar = tmTutarCoz(document.getElementById("tahsilatTutar_" + dbId).value);
             const tarih = document.getElementById("tahsilatTarih_" + dbId).value;
 
-            if(!aciklama) { tmNotify("Açýklama zorunludur!", "error"); return; }
-            if(isNaN(tutar) || tutar <= 0) { tmNotify("Geçerli bir tutar giriniz!", "error"); return; }
-            if(!tarih) { tmNotify("Tarih seçiniz!", "error"); return; }
+            if(!aciklama) { tmNotify("AÃ§Ä±klama zorunludur!", "error"); return; }
+            if(isNaN(tutar) || tutar <= 0) { tmNotify("GeÃ§erli bir tutar giriniz!", "error"); return; }
+            if(!tarih) { tmNotify("Tarih seÃ§iniz!", "error"); return; }
 
             let db = isMuhasebeVerileriniYukle();
             const kayit = db.find(k => k.id === dbId);
@@ -4525,10 +4525,10 @@ function gorevMailGonder(gorev) {
             const odenen = tmTutarCoz(document.getElementById("odemeOdenen_" + dbId).value);
             const tarih = document.getElementById("odemeTarih_" + dbId).value;
 
-            if(!dal) { tmNotify("Lütfen bir Proje / Hizmet Dalý seçiniz!", "error"); return; }
-            if(isNaN(tutar) || tutar <= 0) { tmNotify("Geçerli bir toplam tutar giriniz!", "error"); return; }
-            if(odenen < 0) { tmNotify("Ödenen tutar negatif olamaz!", "error"); return; }
-            if(!tarih) { tmNotify("Tarih seçiniz!", "error"); return; }
+            if(!dal) { tmNotify("LÃ¼tfen bir Proje / Hizmet DalÄ± seÃ§iniz!", "error"); return; }
+            if(isNaN(tutar) || tutar <= 0) { tmNotify("GeÃ§erli bir toplam tutar giriniz!", "error"); return; }
+            if(odenen < 0) { tmNotify("Ã–denen tutar negatif olamaz!", "error"); return; }
+            if(!tarih) { tmNotify("Tarih seÃ§iniz!", "error"); return; }
 
             let db = isMuhasebeVerileriniYukle();
             const kayit = db.find(k => k.id === dbId);
@@ -4551,15 +4551,15 @@ function gorevMailGonder(gorev) {
             localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
             isMuhasebeFormKapat("odemeForm_" + dbId);
             isMuhasebeListesiniYenile();
-            tmNotify("Ödeme kalemi eklendi: " + tmTl(tutar), "success");
+            tmNotify("Ã–deme kalemi eklendi: " + tmTl(tutar), "success");
         }
 
         function isMuhasebeOdemeYapKaydet(dbId, kalemId) {
             const yeniOdeme = tmTutarCoz(document.getElementById("odemeYapTutar_" + dbId + "_" + kalemId).value);
             const tarih = document.getElementById("odemeYapTarih_" + dbId + "_" + kalemId).value;
 
-            if(isNaN(yeniOdeme) || yeniOdeme <= 0) { tmNotify("Geçerli bir ödeme tutarý giriniz!", "error"); return; }
-            if(!tarih) { tmNotify("Tarih seçiniz!", "error"); return; }
+            if(isNaN(yeniOdeme) || yeniOdeme <= 0) { tmNotify("GeÃ§erli bir Ã¶deme tutarÄ± giriniz!", "error"); return; }
+            if(!tarih) { tmNotify("Tarih seÃ§iniz!", "error"); return; }
 
             let db = isMuhasebeVerileriniYukle();
             const kayit = db.find(k => k.id === dbId);
@@ -4569,7 +4569,7 @@ function gorevMailGonder(gorev) {
             if(!kalem || kalem.tip !== "verecek") return;
 
             const kalan = kalem.tutar - (kalem.odenenTutar || 0);
-            if(kalan <= 0) { tmNotify("Bu ödeme kaleminin kalan tutarý bulunmamaktadýr.", "error"); return; }
+            if(kalan <= 0) { tmNotify("Bu Ã¶deme kaleminin kalan tutarÄ± bulunmamaktadÄ±r.", "error"); return; }
 
             kalem.odenenTutar = (kalem.odenenTutar || 0) + yeniOdeme;
             kalem.odemeTarihi = tarih;
@@ -4579,7 +4579,7 @@ function gorevMailGonder(gorev) {
             localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
             isMuhasebeFormKapat("odemeYapForm_" + dbId + "_" + kalemId, dbId + "_" + kalemId);
             isMuhasebeListesiniYenile();
-            tmNotify("Ödeme yapýldý: " + tmTl(yeniOdeme), "success");
+            tmNotify("Ã–deme yapÄ±ldÄ±: " + tmTl(yeniOdeme), "success");
         }
 
         function isMuhasebeOdemeGecmisiGosterEdit(dbId, kalemId, idx) {
@@ -4596,8 +4596,8 @@ function gorevMailGonder(gorev) {
             const yeniTutar = tmTutarCoz(document.getElementById("odemeGecEditTutar_" + dbId + "_" + kalemId + "_" + idx).value);
             const yeniTarih = document.getElementById("odemeGecEditTarih_" + dbId + "_" + kalemId + "_" + idx).value;
 
-            if(isNaN(yeniTutar) || yeniTutar <= 0) { tmNotify("Geçerli bir tutar giriniz!", "error"); return; }
-            if(!yeniTarih) { tmNotify("Tarih seçiniz!", "error"); return; }
+            if(isNaN(yeniTutar) || yeniTutar <= 0) { tmNotify("GeÃ§erli bir tutar giriniz!", "error"); return; }
+            if(!yeniTarih) { tmNotify("Tarih seÃ§iniz!", "error"); return; }
 
             let db = isMuhasebeVerileriniYukle();
             const kayit = db.find(k => k.id === dbId);
@@ -4608,7 +4608,7 @@ function gorevMailGonder(gorev) {
             if(idx < 0 || idx >= kalem.odemeKayitlari.length) return;
 
             const fark = yeniTutar - kalem.odemeKayitlari[idx].tutar;
-            if(kalem.odenenTutar + fark > kalem.tutar) { tmNotify("Toplam ödenen tutar, kalem tutarýný aþamaz!", "error"); return; }
+            if(kalem.odenenTutar + fark > kalem.tutar) { tmNotify("Toplam Ã¶denen tutar, kalem tutarÄ±nÄ± aÅŸamaz!", "error"); return; }
 
             kalem.odemeKayitlari[idx].tutar = yeniTutar;
             kalem.odemeKayitlari[idx].tarih = yeniTarih;
@@ -4621,7 +4621,7 @@ function gorevMailGonder(gorev) {
         }
 
         function isMuhasebeOdemeGecmisiSil(dbId, kalemId, idx) {
-            tmConfirm("Bu ödeme kaydýný silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu Ã¶deme kaydÄ±nÄ± silmek istediÄŸinize emin misiniz?", function() {
                 let db = isMuhasebeVerileriniYukle();
                 const kayit = db.find(k => k.id === dbId);
                 if(!kayit) return;
@@ -4636,12 +4636,12 @@ function gorevMailGonder(gorev) {
 
                 localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
                 isMuhasebeListesiniYenile();
-                tmNotify("Ödeme geçmiþi silindi.", "success");
+                tmNotify("Ã–deme geÃ§miÅŸi silindi.", "success");
             });
         }
 
         function isMuhasebeKalemSil(dbId, kalemId) {
-            tmConfirm("Bu kalemi silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu kalemi silmek istediÄŸinize emin misiniz?", function() {
                 let db = isMuhasebeVerileriniYukle();
                 const kayit = db.find(k => k.id === dbId);
                 if(!kayit) return;
@@ -4653,7 +4653,7 @@ function gorevMailGonder(gorev) {
         }
 
         function isMuhasebeBitirVeTasi(id) {
-            tmConfirm("Bu iþ muhasebesini 'Tamamlanan Ýþler' kategorisine taþýmak istediðinize emin misiniz?", function() {
+            tmConfirm("Bu iÅŸ muhasebesini 'Tamamlanan Ä°ÅŸler' kategorisine taÅŸÄ±mak istediÄŸinize emin misiniz?", function() {
                 let db = isMuhasebeVerileriniYukle();
                 const kayit = db.find(k => k.id === id);
                 if(!kayit) return;
@@ -4670,7 +4670,7 @@ function gorevMailGonder(gorev) {
                 tamamlananIsMuhasebeListesiniYenile();
                 musteriKartlariniYenile();
                 isOrtaklariKartlariniYenile();
-                tmNotify("Ýþ baþarýyla tamamlandý ve 'Tamamlanan Ýþ Muhasebeleri' sayfasýna taþýndý.", "success");
+                tmNotify("Ä°ÅŸ baÅŸarÄ±yla tamamlandÄ± ve 'Tamamlanan Ä°ÅŸ Muhasebeleri' sayfasÄ±na taÅŸÄ±ndÄ±.", "success");
             });
         }
 
@@ -4679,7 +4679,7 @@ function gorevMailGonder(gorev) {
         }
 
         function tamamlananIsMuhasebeGeriAl(id) {
-            tmConfirm("Bu iþi 'Tamamlanan Ýþ Muhasebeleri'nden çýkarýp tekrar 'Ýþ Muhasebesi Takibi' sayfasýna taþýmak istediðinize emin misiniz?", function() {
+            tmConfirm("Bu iÅŸi 'Tamamlanan Ä°ÅŸ Muhasebeleri'nden Ã§Ä±karÄ±p tekrar 'Ä°ÅŸ Muhasebesi Takibi' sayfasÄ±na taÅŸÄ±mak istediÄŸinize emin misiniz?", function() {
                 let tamamlananDb = tamamlananIsMuhasebeVerileriniYukle();
                 const kayit = tamamlananDb.find(k => k.id === id);
                 if(!kayit) return;
@@ -4696,12 +4696,12 @@ function gorevMailGonder(gorev) {
                 tamamlananIsMuhasebeListesiniYenile();
                 musteriKartlariniYenile();
                 isOrtaklariKartlariniYenile();
-                tmNotify("Ýþ geri alýndý ve tekrar 'Ýþ Muhasebesi Takibi' sayfasýna taþýndý.", "success");
+                tmNotify("Ä°ÅŸ geri alÄ±ndÄ± ve tekrar 'Ä°ÅŸ Muhasebesi Takibi' sayfasÄ±na taÅŸÄ±ndÄ±.", "success");
             });
         }
 
         function tamamlananIsMuhasebeSil(id) {
-            tmConfirm("Bu tamamlanan iþ kaydýný kalýcý olarak silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu tamamlanan iÅŸ kaydÄ±nÄ± kalÄ±cÄ± olarak silmek istediÄŸinize emin misiniz?", function() {
                 let db = tamamlananIsMuhasebeVerileriniYukle();
                 db = db.filter(k => k.id !== id);
                 localStorage.setItem("tm_is_muhasebe_tamamlanan_db", JSON.stringify(db));
@@ -4718,7 +4718,7 @@ function gorevMailGonder(gorev) {
 
             const db = tamamlananIsMuhasebeVerileriniYukle();
             if(db.length === 0) {
-                konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-check"></i>','Henüz tamamlanan iþ muhasebesi bulunmamaktadýr.','Tamamlanan iþ muhasebesi kayýtlarý burada görüntülenecek.');
+                konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-check"></i>','HenÃ¼z tamamlanan iÅŸ muhasebesi bulunmamaktadÄ±r.','Tamamlanan iÅŸ muhasebesi kayÄ±tlarÄ± burada gÃ¶rÃ¼ntÃ¼lenecek.');
                 return;
             }
 
@@ -4726,7 +4726,7 @@ function gorevMailGonder(gorev) {
 
             let toplamHTML = `
                 <div style="display:flex; gap:20px; background:var(--bg-main); padding:15px 20px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px; justify-content:space-around; font-weight:600;">
-                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block;">TAMAMLANAN ÝÞ SAYISI</small><span style="font-weight:700; color:var(--accent-red); font-size:18px;">${db.length}</span></div>
+                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block;">TAMAMLANAN Ä°Åž SAYISI</small><span style="font-weight:700; color:var(--accent-red); font-size:18px;">${db.length}</span></div>
                 </div>
             `;
 
@@ -4777,20 +4777,20 @@ function gorevMailGonder(gorev) {
 
                         <div style="display:flex; flex-direction:column; gap:3px; background:var(--bg-main); padding:8px 20px; border-radius:8px; margin:5px 0 10px 0; border:1px solid var(--border-color);">
                             <div style="display:flex; justify-content:space-between; text-align:center; gap:2px;">
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAÞMA ÜCRETÝ</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAÅžMA ÃœCRETÄ°</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                                 <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM KAR</small><span style="font-weight:800; color:${karRenk}; font-size:15px; line-height:1.3;">${toplamKar.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                                 <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KAR %</small><span style="font-weight:800; color:${karYuzdeRenkKart}; font-size:15px; line-height:1.3;">%${karYuzde}</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM GÝDER</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
-                                <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAÞMA TARÝHÝ</small><span style="font-weight:700; color:var(--text-dark); font-size:15px; line-height:1.3;">${basTarih ? new Date(basTarih).toLocaleDateString("tr-TR") : "-"}</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM GÄ°DER</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAÅžMA TARÄ°HÄ°</small><span style="font-weight:700; color:var(--text-dark); font-size:15px; line-height:1.3;">${basTarih ? new Date(basTarih).toLocaleDateString("tr-TR") : "-"}</span></div>
                             </div>
                             <div style="display:flex; justify-content:space-between; text-align:center; gap:2px; padding-top:4px; border-top:1px solid var(--border-color);">
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TAHSÝLAT</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ÖDENEN</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN ÖDEME</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TAHSÄ°LAT</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">Ã–DENEN</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN Ã–DEME</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                                 <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">NET</small><span style="font-weight:800; color:${netRenk}; font-size:15px; line-height:1.3;">${netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</span></div>
                             </div>
                             <div style="display:flex; justify-content:space-between; text-align:center; gap:2px; padding-top:4px; border-top:1px dashed var(--border-color);">
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">BÝTÝÞ ONAY TARÝHÝ</small><span style="font-weight:700; color:var(--btn-green); font-size:15px; line-height:1.3;">${kayit.bitisTarihi ? new Date(kayit.bitisTarihi).toLocaleDateString("tr-TR") : "-"}</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">BÄ°TÄ°Åž ONAY TARÄ°HÄ°</small><span style="font-weight:700; color:var(--btn-green); font-size:15px; line-height:1.3;">${kayit.bitisTarihi ? new Date(kayit.bitisTarihi).toLocaleDateString("tr-TR") : "-"}</span></div>
                                 <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">DURUM</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;"><i class="fa-solid fa-check"></i> TAMAMLANDI</span></div>
                             </div>
                         </div>
@@ -4801,8 +4801,8 @@ function gorevMailGonder(gorev) {
                             </div>
                             ${(() => {
                                 const alacakKalemler = kayit.kalemler.filter(k => k.tip === "alacak");
-                                if(alacakKalemler.length === 0) return '<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">Henüz tahsilat kalemi bulunmuyor.</p>';
-                                let tbl = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr style="background:var(--bg-main);"><th style="padding:8px 6px; text-align:left; font-size:11px;">Açýklama</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Tutar</th><th style="padding:8px 6px; text-align:left; font-size:11px;">Tarih</th></tr></thead><tbody>';
+                                if(alacakKalemler.length === 0) return '<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">HenÃ¼z tahsilat kalemi bulunmuyor.</p>';
+                                let tbl = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr style="background:var(--bg-main);"><th style="padding:8px 6px; text-align:left; font-size:11px;">AÃ§Ä±klama</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Tutar</th><th style="padding:8px 6px; text-align:left; font-size:11px;">Tarih</th></tr></thead><tbody>';
                                 alacakKalemler.forEach(k => {
                                     tbl += '<tr><td style="padding:6px; font-size:12px;">' + (k.aciklama || "-") + '</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:700; color:var(--btn-green);">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td><td style="padding:6px; font-size:11px;">' + (k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-") + '</td></tr>';
                                 });
@@ -4813,12 +4813,12 @@ function gorevMailGonder(gorev) {
 
                         <div style="margin-top:12px;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                                <span style="font-weight:700; font-size:13px; color:var(--accent-red);"><i class="fa-solid fa-list"></i> Ödemeler</span>
+                                <span style="font-weight:700; font-size:13px; color:var(--accent-red);"><i class="fa-solid fa-list"></i> Ã–demeler</span>
                             </div>
                             ${(() => {
                                 const verecekKalemler = kayit.kalemler.filter(k => k.tip !== "alacak");
-                                if(verecekKalemler.length === 0) return '<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">Henüz ödeme kalemi bulunmuyor.</p>';
-                                let tbl = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr style="background:var(--bg-main);"><th style="padding:8px 6px; text-align:left; font-size:11px;">Proje / Hizmet Dalý</th><th style="padding:8px 6px; text-align:left; font-size:11px;">Kiþi / Firma</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Toplam</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Ödenen</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Kalan</th></tr></thead><tbody>';
+                                if(verecekKalemler.length === 0) return '<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">HenÃ¼z Ã¶deme kalemi bulunmuyor.</p>';
+                                let tbl = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr style="background:var(--bg-main);"><th style="padding:8px 6px; text-align:left; font-size:11px;">Proje / Hizmet DalÄ±</th><th style="padding:8px 6px; text-align:left; font-size:11px;">KiÅŸi / Firma</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Toplam</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Ã–denen</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Kalan</th></tr></thead><tbody>';
                                 verecekKalemler.forEach(k => {
                                     const odenen = k.odenenTutar || 0;
                                     const kalan = k.tutar - odenen;
@@ -4848,7 +4848,7 @@ function gorevMailGonder(gorev) {
             if(content) {
                 const yeniDurum = content.style.display === "none" ? "block" : "none";
                 content.style.display = yeniDurum;
-                if(icon) icon.innerText = yeniDurum === "none" ? "?" : "¡";
+                if(icon) icon.innerText = yeniDurum === "none" ? "?" : "Â¡";
             }
         }
 
@@ -4875,7 +4875,7 @@ function gorevMailGonder(gorev) {
                 const tamDb = tamamlananIsMuhasebeVerileriniYukle();
                 kayit = tamDb.find(k => k.id === id);
             }
-            if(!kayit) { tmNotify("Kayýt bulunamadý!", "error"); return; }
+            if(!kayit) { tmNotify("KayÄ±t bulunamadÄ±!", "error"); return; }
 
             let toplamAlacak = 0, toplamVerecek = 0, toplamOdenen = 0;
             kayit.kalemler.forEach(function(k) {
@@ -4903,16 +4903,16 @@ function gorevMailGonder(gorev) {
             const fb = (function() {
                 try { return JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { return {}; }
             })();
-            const firmaAd = fb.ad || "TURAK MÝMARLIK";
-            const firmaAdres = fb.adres || "Deniz Mah. Selvi Sk. No: 14/D ÝÐNEADA / DEMÝRKÖY / KIRKLARELÝ";
+            const firmaAd = fb.ad || "TURAK MÄ°MARLIK";
+            const firmaAdres = fb.adres || "Deniz Mah. Selvi Sk. No: 14/D Ä°ÄžNEADA / DEMÄ°RKÃ–Y / KIRKLARELÄ°";
             const firmaTel = fb.gsm || fb.telefon || "0543 123 45 67";
             const firmaEposta = fb.email || "info@turakmimarlik.com";
 
             let kalemSatirlari = "";
             kayit.kalemler.forEach(function(k) {
-                const tipText = k.tip === "alacak" ? "TAHSÝLAT" : "GÝDER";
+                const tipText = k.tip === "alacak" ? "TAHSÄ°LAT" : "GÄ°DER";
                 const tipRenk = k.tip === "alacak" ? "#2E7D32" : "#9E2A2B";
-                const aciklama = k.aciklama || (k.tip === "alacak" ? "TAHSÝLAT" : "ÖDEME");
+                const aciklama = k.aciklama || (k.tip === "alacak" ? "TAHSÄ°LAT" : "Ã–DEME");
                 const kisiFirma = k.kisi || "-";
                 if(k.tip === "alacak") {
                     const tarih = k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-";
@@ -4940,41 +4940,41 @@ function gorevMailGonder(gorev) {
             const sayfaHtml = '<div style="width:297mm;min-height:210mm;padding:6mm 8mm;box-sizing:border-box;font-family:\'Segoe UI\',\'Helvetica Neue\',Arial,sans-serif;background:#fff;color:#222;text-transform:uppercase;">'
                 + '<div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:2.5mm;border-bottom:2.5px solid #1a1a2e;margin-bottom:4mm;">'
                 + '<div style="display:flex;align-items:center;gap:4mm;">' + (logoHtml ? '<div>' + logoHtml + '</div>' : '')
-                + '<div><div style="font-size:20px;font-weight:900;color:#1a1a2e;letter-spacing:3px;">' + firmaAd + '</div><div style="font-size:9px;font-weight:700;color:#9E2A2B;letter-spacing:1.5px;margin-top:0.5mm;">ÝÞ MUHASEBESÝ RAPORU</div></div>'
+                + '<div><div style="font-size:20px;font-weight:900;color:#1a1a2e;letter-spacing:3px;">' + firmaAd + '</div><div style="font-size:9px;font-weight:700;color:#9E2A2B;letter-spacing:1.5px;margin-top:0.5mm;">Ä°Åž MUHASEBESÄ° RAPORU</div></div>'
                 + '</div><div style="text-align:right;"><div style="font-size:8px;font-weight:700;color:#888;letter-spacing:1px;">RAPOR NO</div><div style="font-size:16px;font-weight:900;color:#9E2A2B;letter-spacing:1px;">' + formatliId + '</div></div></div>'
                 + '<div style="display:flex;gap:4mm;margin-bottom:4mm;">'
-                + '<div style="flex:1.3;border:1.5px solid #e0e0e0;border-radius:3px;padding:2.5mm 3.5mm;background:#fafafa;"><div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:2mm;">PROJE BÝLGÝLERÝ</div>'
+                + '<div style="flex:1.3;border:1.5px solid #e0e0e0;border-radius:3px;padding:2.5mm 3.5mm;background:#fafafa;"><div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:2mm;">PROJE BÄ°LGÄ°LERÄ°</div>'
                 + '<table style="width:100%;border-collapse:collapse;font-size:10px;">'
-                + '<tr><td style="padding:1.5px 3px;width:32%;color:#999;white-space:nowrap;">ÝÞ ADI</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + kayit.isAdi + '</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;color:#999;">MÜÞTERÝ / FÝRMA</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + (kayit.firma || "-") + '</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;width:32%;color:#999;white-space:nowrap;">Ä°Åž ADI</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + kayit.isAdi + '</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">MÃœÅžTERÄ° / FÄ°RMA</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + (kayit.firma || "-") + '</td></tr>'
                 + '<tr><td style="padding:1.5px 3px;color:#999;">PAFTA / ADA / PARSEL</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + paftaAdaParsel + '</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;color:#999;">ANLAÞMA TARÝHÝ</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + tarihStr + '</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">ANLAÅžMA TARÄ°HÄ°</td><td style="padding:1.5px 3px;font-weight:700;color:#1a1a2e;">' + tarihStr + '</td></tr>'
                 + '</table></div>'
-                + '<div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2.5mm 3.5mm;background:#fafafa;"><div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:2mm;">FÝNANSAL ÖZET</div>'
+                + '<div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2.5mm 3.5mm;background:#fafafa;"><div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:2mm;">FÄ°NANSAL Ã–ZET</div>'
                 + '<table style="width:100%;border-collapse:collapse;font-size:10px;">'
-                + '<tr><td style="padding:1.5px 3px;color:#999;">ANLAÞMA ÜCRETÝ</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#1a1a2e;">' + (kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;color:#2E7D32;font-weight:600;">TOPLAM TAHSÝLAT</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#2E7D32;">' + toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;color:#9E2A2B;font-weight:600;">TOPLAM GÝDER</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#9E2A2B;">' + toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;color:#999;">TOP. ÖDENEN</td><td style="padding:1.5px 3px;text-align:right;font-weight:700;color:#2E7D32;">' + toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">ANLAÅžMA ÃœCRETÄ°</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#1a1a2e;">' + (kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#2E7D32;font-weight:600;">TOPLAM TAHSÄ°LAT</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#2E7D32;">' + toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#9E2A2B;font-weight:600;">TOPLAM GÄ°DER</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#9E2A2B;">' + toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">TOP. Ã–DENEN</td><td style="padding:1.5px 3px;text-align:right;font-weight:700;color:#2E7D32;">' + toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
                 + '<tr><td style="padding:2.5px 3px;border-top:1.5px solid #ddd;"></td><td style="padding:2.5px 3px;border-top:1.5px solid #ddd;"></td></tr>'
-                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">KALAN ÖDEME</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:#9E2A2B;font-size:11px;">' + kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">KALAN TAHSÝLAT</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:' + (kalanTahsilat > 0 ? '#9E2A2B' : '#2E7D32') + ';font-size:11px;">' + kalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">KALAN Ã–DEME</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:#9E2A2B;font-size:11px;">' + kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">KALAN TAHSÄ°LAT</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:' + (kalanTahsilat > 0 ? '#9E2A2B' : '#2E7D32') + ';font-size:11px;">' + kalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
                 + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">NET DURUM</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:' + (netDurum >= 0 ? '#2E7D32' : '#9E2A2B') + ';font-size:11px;">' + netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ?</td></tr>'
                 + '</table></div></div>'
                 + '<div style="border:1.5px solid #e0e0e0;border-radius:3px;overflow:hidden;margin-bottom:3mm;">'
                 + '<table style="width:100%;border-collapse:collapse;font-size:10px;">'
                 + '<thead><tr style="background:#1a1a2e;color:#fff;">'
-                + '<th style="padding:2.5mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;width:24%;">AÇIKLAMA</th>'
-                + '<th style="padding:2.5mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;width:14%;">KÝÞÝ / FÝRMA</th>'
-                + '<th style="padding:2.5mm 4mm;text-align:center;font-size:8px;letter-spacing:1px;width:14%;">TARÝH</th>'
-                + '<th style="padding:2.5mm 4mm;text-align:center;font-size:8px;letter-spacing:1px;width:10%;">TÝP</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;width:24%;">AÃ‡IKLAMA</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;width:14%;">KÄ°ÅžÄ° / FÄ°RMA</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:center;font-size:8px;letter-spacing:1px;width:14%;">TARÄ°H</th>'
+                + '<th style="padding:2.5mm 4mm;text-align:center;font-size:8px;letter-spacing:1px;width:10%;">TÄ°P</th>'
                 + '<th style="padding:2.5mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:19%;">TUTAR</th>'
                 + '<th style="padding:2.5mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:19%;">KALAN</th>'
                 + '</tr></thead><tbody>'
                 + (kalemSatirlari || '<tr><td colspan="6" style="padding:3mm 4mm;text-align:center;font-size:10px;color:#999;">KALEM BULUNMAMAKTADIR</td></tr>')
                 + '</tbody></table></div>'
                 + '<div style="border-top:2px solid #1a1a2e;padding-top:1.5mm;display:flex;justify-content:space-between;align-items:center;">'
-                + '<div style="font-size:7px;color:#888;line-height:1.5;"><b>' + firmaAd + '</b> · ' + firmaAdres + '<br>Tel: ' + firmaTel + ' · E-posta: ' + firmaEposta + '</div>'
+                + '<div style="font-size:7px;color:#888;line-height:1.5;"><b>' + firmaAd + '</b> Â· ' + firmaAdres + '<br>Tel: ' + firmaTel + ' Â· E-posta: ' + firmaEposta + '</div>'
                 + '<div style="font-size:7px;color:#aaa;text-align:right;">' + new Date().toLocaleDateString("tr-TR", {day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) + '</div>'
                 + '</div></div>';
 
@@ -4983,7 +4983,7 @@ function gorevMailGonder(gorev) {
             sayfaEl.innerHTML = sayfaHtml;
             document.body.appendChild(sayfaEl);
 
-            tmLoadingGoster("PDF oluþturuluyor...");
+            tmLoadingGoster("PDF oluÅŸturuluyor...");
             html2canvas(sayfaEl, {scale:5,useCORS:true,logging:false,width:1122,height:794}).then(function(cv){
                 const dt = cv.toDataURL('image/jpeg',0.95);
                 const doc = new jspdf.jsPDF({format:'a4',orientation:'landscape',unit:'mm'});
@@ -4995,28 +4995,28 @@ function gorevMailGonder(gorev) {
                 tmLoadingGizle();
             }).catch(function(e){
                 tmLoadingGizle();
-                tmNotify("PDF oluþturulurken hata: " + (e.message||e), "error");
+                tmNotify("PDF oluÅŸturulurken hata: " + (e.message||e), "error");
                 try { document.body.removeChild(sayfaEl); } catch(ex) {}
             });
         }
 
-        /* ================= NAKÝT ÖDEMEK DEKONTU MOTORU ================= */
+        /* ================= NAKÄ°T Ã–DEMEK DEKONTU MOTORU ================= */
         function nakitDekontVerileriniYukle() {
             try { return JSON.parse(localStorage.getItem("tm_nakit_dekont_db")) || []; } catch(e) { console.error("Nakit dekont veri yukleme hatasi:", e); return []; }
         }
 
         function tutarYaziyla(tutar) {
             if (tutar === 0) return "SIFIR TL";
-            const birler = ["","BÝR","ÝKÝ","ÜÇ","DÖRT","BEÞ","ALTI","YEDÝ","SEKÝZ","DOKUZ"];
-            const onlar = ["","ON","YÝRMÝ","OTUZ","KIRK","ELLÝ","ALTMIÞ","YETMÝÞ","SEKSEN","DOKSAN"];
-            const basamaklar = ["","BÝN","MÝLYON","MÝLYAR","TRÝLYON"];
+            const birler = ["","BÄ°R","Ä°KÄ°","ÃœÃ‡","DÃ–RT","BEÅž","ALTI","YEDÄ°","SEKÄ°Z","DOKUZ"];
+            const onlar = ["","ON","YÄ°RMÄ°","OTUZ","KIRK","ELLÄ°","ALTMIÅž","YETMÄ°Åž","SEKSEN","DOKSAN"];
+            const basamaklar = ["","BÄ°N","MÄ°LYON","MÄ°LYAR","TRÄ°LYON"];
             function ucBasamakOku(n) {
                 let s = Math.floor(n);
                 if (s === 0) return "";
                 let str = "";
                 let yz = Math.floor(s / 100);
                 let kl = s % 100;
-                if (yz > 0) str += yz === 1 ? "YÜZ" : birler[yz] + "YÜZ";
+                if (yz > 0) str += yz === 1 ? "YÃœZ" : birler[yz] + "YÃœZ";
                 if (kl > 0) {
                     let on = Math.floor(kl / 10);
                     let br = kl % 10;
@@ -5033,7 +5033,7 @@ function gorevMailGonder(gorev) {
                 let uc = tl % 1000;
                 if (uc > 0) {
                     let oku = ucBasamakOku(uc);
-                    if (idx === 1 && uc === 1) result = "BÝN" + result;
+                    if (idx === 1 && uc === 1) result = "BÄ°N" + result;
                     else result = oku + basamaklar[idx] + result;
                 }
                 tl = Math.floor(tl / 1000);
@@ -5041,7 +5041,7 @@ function gorevMailGonder(gorev) {
             }
             result += "TL";
             if (kurus > 0) {
-                result += " " + ucBasamakOku(kurus) + "KURUÞ";
+                result += " " + ucBasamakOku(kurus) + "KURUÅž";
             }
             return result;
         }
@@ -5052,7 +5052,7 @@ function gorevMailGonder(gorev) {
             const yaziyla = tutarYaziyla(d.tutar);
             const tarihKisa = d.tarih ? new Date(d.tarih).toLocaleDateString("tr-TR") : "-";
             const tarihSayi = d.tarih ? new Date(d.tarih).toLocaleDateString("tr-TR", {day:'2-digit',month:'2-digit',year:'numeric'}) : "-";
-            const tipRenk = d.islemTuru === "Gelen Nakit Ödeme" ? "#2E7D32" : "#9E2A2B";
+            const tipRenk = d.islemTuru === "Gelen Nakit Ã–deme" ? "#2E7D32" : "#9E2A2B";
 
             const logoData = localStorage.getItem("tm_sirket_logo");
             let logoHtml = '';
@@ -5063,8 +5063,8 @@ function gorevMailGonder(gorev) {
             const fb = (function() {
                 try { return JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { return {}; }
             })();
-            const firmaAd = fb.ad || "TURAK MÝMARLIK";
-            const firmaAdres = fb.adres || "Deniz Mah. Selvi Sk. No: 14/D ÝÐNEADA / DEMÝRKÖY / KIRKLARELÝ";
+            const firmaAd = fb.ad || "TURAK MÄ°MARLIK";
+            const firmaAdres = fb.adres || "Deniz Mah. Selvi Sk. No: 14/D Ä°ÄžNEADA / DEMÄ°RKÃ–Y / KIRKLARELÄ°";
             const firmaTel = fb.gsm || fb.telefon || "0543 123 45 67";
             const firmaEposta = fb.email || "info@turakmimarlik.com";
 
@@ -5072,7 +5072,7 @@ function gorevMailGonder(gorev) {
                 <div style="width:210mm;min-height:297mm;padding:5mm 7mm;box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;background:#fff;position:relative;color:#222;">
 
                     <div style="position:absolute;top:2mm;left:2mm;right:2mm;top:140mm;border:none;pointer-events:none;"></div>
-                    <div style="position:absolute;bottom:70mm;right:6mm;font-size:40px;font-weight:900;color:rgba(26,26,46,0.035);letter-spacing:6px;transform:rotate(-18deg);pointer-events:none;white-space:nowrap;">${d.islemTuru === "Gelen Nakit Ödeme" ? 'TAHSÝLAT' : 'ÖDEME'}</div>
+                    <div style="position:absolute;bottom:70mm;right:6mm;font-size:40px;font-weight:900;color:rgba(26,26,46,0.035);letter-spacing:6px;transform:rotate(-18deg);pointer-events:none;white-space:nowrap;">${d.islemTuru === "Gelen Nakit Ã–deme" ? 'TAHSÄ°LAT' : 'Ã–DEME'}</div>
 
                     <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:2.5mm;border-bottom:2.5px solid #1a1a2e;margin-bottom:3mm;">
                         <div>${logoHtml ? '<div>' + logoHtml + '</div>' : ''}</div>
@@ -5084,8 +5084,8 @@ function gorevMailGonder(gorev) {
 
                     <div style="text-align:center;margin-bottom:4mm;">
                         <div style="display:inline-block;">
-                            <div style="font-size:26px;font-weight:900;color:#1a1a2e;letter-spacing:6px;">NAKÝT</div>
-                            <div style="font-size:11px;font-weight:700;color:#1a1a2e;letter-spacing:3px;padding-top:1px;">ÖDEME DEKONTU</div>
+                            <div style="font-size:26px;font-weight:900;color:#1a1a2e;letter-spacing:6px;">NAKÄ°T</div>
+                            <div style="font-size:11px;font-weight:700;color:#1a1a2e;letter-spacing:3px;padding-top:1px;">Ã–DEME DEKONTU</div>
                         </div>
                         <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:1.5mm;">
                             <div style="flex:1;max-width:25mm;height:1.5px;background:linear-gradient(to left,#9E2A2B,transparent);"></div>
@@ -5096,24 +5096,24 @@ function gorevMailGonder(gorev) {
 
                     <div style="display:flex;gap:4mm;margin-bottom:3mm;">
                         <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2.5mm 3.5mm;background:#fafafa;">
-                            <div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:1.5mm;">MÜÞTERÝ BÝLGÝLERÝ</div>
+                            <div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:1.5mm;">MÃœÅžTERÄ° BÄ°LGÄ°LERÄ°</div>
                             <table style="width:100%;border-collapse:collapse;font-size:10px;">
                                 <tr><td style="padding:1.5px 3px;width:28%;color:#999;white-space:nowrap;">ADI SOYADI</td><td style="padding:1.5px 3px;font-weight:700;">${d.musteriAd}</td></tr>
-                                <tr><td style="padding:1.5px 3px;color:#999;">FÝRMA</td><td style="padding:1.5px 3px;font-weight:700;">${d.firma}</td></tr>
+                                <tr><td style="padding:1.5px 3px;color:#999;">FÄ°RMA</td><td style="padding:1.5px 3px;font-weight:700;">${d.firma}</td></tr>
                                 <tr><td style="padding:1.5px 3px;color:#999;">TELEFON</td><td style="padding:1.5px 3px;font-weight:700;">${d.tel}</td></tr>
                             </table>
                         </div>
                         <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2.5mm 3.5mm;background:#fafafa;">
-                            <div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:1.5mm;">ÝÞLEM BÝLGÝSÝ</div>
+                            <div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:1.5mm;">Ä°ÅžLEM BÄ°LGÄ°SÄ°</div>
                             <table style="width:100%;border-collapse:collapse;font-size:10px;">
-                                <tr><td style="padding:1.5px 3px;width:32%;color:#999;white-space:nowrap;">ÝÞLEM TARÝHÝ</td><td style="padding:1.5px 3px;font-weight:700;">${tarihKisa}</td></tr>
-                                <tr><td style="padding:1.5px 3px;color:#999;">BELGE TARÝHÝ</td><td style="padding:1.5px 3px;font-weight:700;">${tarihSayi}</td></tr>
+                                <tr><td style="padding:1.5px 3px;width:32%;color:#999;white-space:nowrap;">Ä°ÅžLEM TARÄ°HÄ°</td><td style="padding:1.5px 3px;font-weight:700;">${tarihKisa}</td></tr>
+                                <tr><td style="padding:1.5px 3px;color:#999;">BELGE TARÄ°HÄ°</td><td style="padding:1.5px 3px;font-weight:700;">${tarihSayi}</td></tr>
                             </table>
                         </div>
                     </div>
 
                     <div style="border:1.5px solid #e0e0e0;border-radius:3px;padding:2.5mm 3.5mm;margin-bottom:3mm;min-height:12mm;">
-                        <div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:1.5mm;">AÇIKLAMA</div>
+                        <div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:1.5mm;">AÃ‡IKLAMA</div>
                         <div style="font-size:9.5px;color:#444;line-height:1.6;">${d.aciklama || "-"}</div>
                     </div>
 
@@ -5121,12 +5121,12 @@ function gorevMailGonder(gorev) {
                         <table style="width:100%;border-collapse:collapse;font-size:10px;">
                             <thead>
                                 <tr style="background:#1a1a2e;color:#fff;">
-                                    <th style="padding:2mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;">AÇIKLAMA</th>
+                                    <th style="padding:2mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;">AÃ‡IKLAMA</th>
                                     <th style="padding:2mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:35%;">TUTAR (TL)</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr style="background:${d.islemTuru === "Gelen Nakit Ödeme" ? 'rgba(46,125,50,0.06)' : 'rgba(158,42,43,0.06)'};">
+                                <tr style="background:${d.islemTuru === "Gelen Nakit Ã–deme" ? 'rgba(46,125,50,0.06)' : 'rgba(158,42,43,0.06)'};">
                                     <td style="padding:3mm 4mm;font-weight:800;font-size:12px;color:#1a1a2e;">TOPLAM TUTAR</td>
                                     <td style="padding:3mm 4mm;text-align:right;font-weight:900;font-size:17px;color:${tipRenk};">${formatliTutar}</td>
                                 </tr>
@@ -5142,20 +5142,20 @@ function gorevMailGonder(gorev) {
                     <div style="display:flex;justify-content:space-between;gap:10mm;margin-bottom:2.5mm;">
                         <div style="flex:1;text-align:center;">
                             <div style="height:10mm;border-bottom:1.5px solid #1a1a2e;margin-bottom:1.5mm;"></div>
-                            <div style="font-size:9px;font-weight:700;color:#1a1a2e;">ÖDEMEYÝ ALAN</div>
-                            <div style="font-size:7px;color:#999;">Ad Soyad / Ýmza / Tarih</div>
+                            <div style="font-size:9px;font-weight:700;color:#1a1a2e;">Ã–DEMEYÄ° ALAN</div>
+                            <div style="font-size:7px;color:#999;">Ad Soyad / Ä°mza / Tarih</div>
                         </div>
                         <div style="flex:1;text-align:center;">
                             <div style="height:10mm;border-bottom:1.5px solid #1a1a2e;margin-bottom:1.5mm;"></div>
-                            <div style="font-size:9px;font-weight:700;color:#1a1a2e;">ÖDEMEYÝ YAPAN</div>
-                            <div style="font-size:7px;color:#999;">Ad Soyad / Ýmza / Tarih</div>
+                            <div style="font-size:9px;font-weight:700;color:#1a1a2e;">Ã–DEMEYÄ° YAPAN</div>
+                            <div style="font-size:7px;color:#999;">Ad Soyad / Ä°mza / Tarih</div>
                         </div>
                     </div>
 
                     <div style="border-top:2px solid #1a1a2e;padding-top:1.5mm;text-align:center;">
                         <div style="font-size:7px;color:#888;line-height:1.5;">
-                            <b>${firmaAd}</b> · ${firmaAdres}<br>
-                            Tel: ${firmaTel} · E-posta: ${firmaEposta}
+                            <b>${firmaAd}</b> Â· ${firmaAdres}<br>
+                            Tel: ${firmaTel} Â· E-posta: ${firmaEposta}
                         </div>
                     </div>
                 </div>
@@ -5173,7 +5173,7 @@ function gorevMailGonder(gorev) {
                 doc.save("NAKIT_DEKONT_" + formatliId + ".pdf");
                 document.body.removeChild(sayfaEl);
             }).catch(function(e){
-                tmNotify("PDF oluþturulurken hata: " + (e.message||e), "error");
+                tmNotify("PDF oluÅŸturulurken hata: " + (e.message||e), "error");
                 try { document.body.removeChild(sayfaEl); } catch(ex) { console.error("Nakit dekont PDF DOM temizlik hatasi:", ex); }
             });
         }
@@ -5187,10 +5187,10 @@ function gorevMailGonder(gorev) {
             const aciklama = trToUpper(document.getElementById("ndAciklama").value.trim());
             const tutarStr = document.getElementById("ndTutar").value.trim();
 
-            if(!musteriAd) { tmNotify("Müþteri adý zorunludur!", "error"); return; }
+            if(!musteriAd) { tmNotify("MÃ¼ÅŸteri adÄ± zorunludur!", "error"); return; }
 
             const tutar = tmTutarCoz(tutarStr);
-            if(isNaN(tutar) || tutar <= 0) { tmNotify("Geçerli bir tutar giriniz! (Örn: 5000,00)", "error"); return; }
+            if(isNaN(tutar) || tutar <= 0) { tmNotify("GeÃ§erli bir tutar giriniz! (Ã–rn: 5000,00)", "error"); return; }
 
             tmLoadingGoster('Dekont kaydediliyor...');
             let db = nakitDekontVerileriniYukle();
@@ -5212,7 +5212,7 @@ function gorevMailGonder(gorev) {
             tmLoadingGizle();
             nakitDekontFormuTemizle();
             nakitDekontListesiniYenile();
-            tmNotify("Nakit ödeme dekontu baþarýyla kaydedildi. Dekont #" + String(yeniId).padStart(5, '0'), "success");
+            tmNotify("Nakit Ã¶deme dekontu baÅŸarÄ±yla kaydedildi. Dekont #" + String(yeniId).padStart(5, '0'), "success");
             aktiviteEkle("Dekont kaydedildi: #" + String(yeniId).padStart(5, '0'), "Muhasebe");
         }
 
@@ -5220,7 +5220,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("ndMusteriAd").value = "";
             document.getElementById("ndFirma").value = "";
             document.getElementById("ndTel").value = "";
-            document.getElementById("ndIslemTuru").value = "Gelen Nakit Ödeme";
+            document.getElementById("ndIslemTuru").value = "Gelen Nakit Ã–deme";
             nakitDekontIslemTuruRenk(document.getElementById("ndIslemTuru"));
             document.getElementById("ndAciklama").value = "";
             document.getElementById("ndTutar").value = "";
@@ -5228,7 +5228,7 @@ function gorevMailGonder(gorev) {
         }
 
         function nakitDekontSil(id) {
-            tmConfirm("Bu dekontu kalýcý olarak silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu dekontu kalÄ±cÄ± olarak silmek istediÄŸinize emin misiniz?", function() {
                 let db = nakitDekontVerileriniYukle();
                 db = db.filter(d => d.id !== id);
                 localStorage.setItem("tm_nakit_dekont_db", JSON.stringify(db));
@@ -5243,7 +5243,7 @@ function gorevMailGonder(gorev) {
             let db = nakitDekontVerileriniYukle();
 
             if(db.length === 0) {
-                konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-money-bill-wave"></i>','Henüz nakit ödeme dekontu bulunmamaktadýr.','Yeni bir nakit ödeme dekontu oluþturmak için formu doldurun.');
+                konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-money-bill-wave"></i>','HenÃ¼z nakit Ã¶deme dekontu bulunmamaktadÄ±r.','Yeni bir nakit Ã¶deme dekontu oluÅŸturmak iÃ§in formu doldurun.');
                 return;
             }
 
@@ -5269,13 +5269,13 @@ function gorevMailGonder(gorev) {
                 <table class="app-table">
                     <thead>
                         <tr>
-                            <th class="th-sortable" onclick="nakitDekontSýrala('id')">Dekont ID <span>${sortIcon('id')}</span></th>
-                            <th>Müþteri / Firma</th>
-                            <th>Ýþlem Türü</th>
-                            <th class="th-sortable" onclick="nakitDekontSýrala('tarih')">Tarih <span>${sortIcon('tarih')}</span></th>
-                            <th>Açýklama</th>
-                            <th class="th-sortable" onclick="nakitDekontSýrala('tutar')">Tutar <span>${sortIcon('tutar')}</span></th>
-                            <th>Ýþlem</th>
+                            <th class="th-sortable" onclick="nakitDekontSÄ±rala('id')">Dekont ID <span>${sortIcon('id')}</span></th>
+                            <th>MÃ¼ÅŸteri / Firma</th>
+                            <th>Ä°ÅŸlem TÃ¼rÃ¼</th>
+                            <th class="th-sortable" onclick="nakitDekontSÄ±rala('tarih')">Tarih <span>${sortIcon('tarih')}</span></th>
+                            <th>AÃ§Ä±klama</th>
+                            <th class="th-sortable" onclick="nakitDekontSÄ±rala('tutar')">Tutar <span>${sortIcon('tutar')}</span></th>
+                            <th>Ä°ÅŸlem</th>
                         </tr>
                     </thead>
                     <tbody id="ndTableBody">
@@ -5283,7 +5283,7 @@ function gorevMailGonder(gorev) {
 
             db.forEach(d => {
                 const formatliId = "#" + String(d.id).padStart(5, '0');
-                const tipRenk = d.islemTuru === "Gelen Nakit Ödeme" ? "var(--btn-green)" : "var(--accent-red)";
+                const tipRenk = d.islemTuru === "Gelen Nakit Ã–deme" ? "var(--btn-green)" : "var(--accent-red)";
                 const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " ?";
 
                 html += `
@@ -5307,11 +5307,11 @@ function gorevMailGonder(gorev) {
         }
 
         function nakitDekontIslemTuruRenk(el) {
-            const renk = el.value === "Gelen Nakit Ödeme" ? "#2E7D32" : "#9E2A2B";
+            const renk = el.value === "Gelen Nakit Ã–deme" ? "#2E7D32" : "#9E2A2B";
             el.style.color = renk;
         }
 
-        function nakitDekontSýrala(kolon) {
+        function nakitDekontSÄ±rala(kolon) {
             if(typeof ND_SIRALA === 'undefined') window.ND_SIRALA = { kolon: 'id', yon: 'azalan' };
             if(ND_SIRALA.kolon === kolon) {
                 ND_SIRALA.yon = ND_SIRALA.yon === 'azalan' ? 'artan' : 'azalan';
@@ -5325,7 +5325,7 @@ function gorevMailGonder(gorev) {
         function nakitDekontPdfUretById(id) {
             const db = nakitDekontVerileriniYukle();
             const d = db.find(item => item.id === id);
-            if(!d) { tmNotify("Dekont bulunamadý!", "error"); return; }
+            if(!d) { tmNotify("Dekont bulunamadÄ±!", "error"); return; }
             nakitDekontPdfOlustur(d);
         }
 
@@ -5340,7 +5340,7 @@ function gorevMailGonder(gorev) {
         }
 
         function nakitDekontPdfUret() {
-            const musteriAd = trToUpper(document.getElementById("ndMusteriAd").value.trim()) || "BELÝRTÝLMEMÝÞ";
+            const musteriAd = trToUpper(document.getElementById("ndMusteriAd").value.trim()) || "BELÄ°RTÄ°LMEMÄ°Åž";
             const firma = trToUpper(document.getElementById("ndFirma").value.trim()) || "-";
             const tel = document.getElementById("ndTel").value.trim() || "-";
             const islemTuru = document.getElementById("ndIslemTuru").value;
@@ -5349,7 +5349,7 @@ function gorevMailGonder(gorev) {
             const tutarStr = document.getElementById("ndTutar").value.trim();
             const tutar = tmTutarCoz(tutarStr);
 
-            if(!musteriAd || tutar <= 0) { tmNotify("Lütfen önce müþteri adý ve tutar bilgilerini giriniz!", "error"); return; }
+            if(!musteriAd || tutar <= 0) { tmNotify("LÃ¼tfen Ã¶nce mÃ¼ÅŸteri adÄ± ve tutar bilgilerini giriniz!", "error"); return; }
 
             let db = nakitDekontVerileriniYukle();
             const maxId = db.reduce((max, item) => item.id > max ? item.id : max, 0);
@@ -5367,14 +5367,14 @@ function gorevMailGonder(gorev) {
             });
         }
 
-        /* ================= YILLIK BÜTÇE MODÜLÜ ================= */
-        const YB_AY_ADI = ["Ocak","Þubat","Mart","Nisan","Mayýs","Haziran","Temmuz","Aðustos","Eylül","Ekim","Kasým","Aralýk"];
-        const YB_AY_KISA = ["Oc","Þb","Mt","Ns","My","Hz","Tz","Að","Ey","Ek","Ks","Ar"];
-        const YB_GELIR_VARSAYILAN = ["projeler","komisyonlar","faizler","kiralar","satýþlar"];
-        const YB_GIDER_VARSAYILAN = ["projeler","faturalar","vergi","komisyon","maaþ","sigorta"];
+        /* ================= YILLIK BÃœTÃ‡E MODÃœLÃœ ================= */
+        const YB_AY_ADI = ["Ocak","Åžubat","Mart","Nisan","MayÄ±s","Haziran","Temmuz","AÄŸustos","EylÃ¼l","Ekim","KasÄ±m","AralÄ±k"];
+        const YB_AY_KISA = ["Oc","Åžb","Mt","Ns","My","Hz","Tz","AÄŸ","Ey","Ek","Ks","Ar"];
+        const YB_GELIR_VARSAYILAN = ["projeler","komisyonlar","faizler","kiralar","satÄ±ÅŸlar"];
+        const YB_GIDER_VARSAYILAN = ["projeler","faturalar","vergi","komisyon","maaÅŸ","sigorta"];
         let ybChartAylik = null, ybChartGelir = null, ybChartGider = null, ybChartNet = null;
         let ybAktifSekme = "rapor";
-        function ybTrUpper(s) { return (s||'').replace(/[iÝ]/g,'Ý').replace(/[ý]/g,'I').toLocaleUpperCase('tr-TR'); }
+        function ybTrUpper(s) { return (s||'').replace(/[iÄ°]/g,'Ä°').replace(/[Ä±]/g,'I').toLocaleUpperCase('tr-TR'); }
 
         function ybVeriYukle() {
             var db;
@@ -5448,19 +5448,19 @@ function gorevMailGonder(gorev) {
                 [0,1,2,3,4,5,6,7,8,9,10,11].forEach(a => {
                     ornek.aylar[a] = {
                         gelirler: {
-                            projeler: [{id:Date.now()+a*10+1, aciklama:"Proje "+(a+1)+" danýþmanlýk", tutar:85000+Math.round(Math.random()*30000)},{id:Date.now()+a*10+2, aciklama:"Proje "+(a+1)+" uygulama", tutar:40000+Math.round(Math.random()*20000)}],
+                            projeler: [{id:Date.now()+a*10+1, aciklama:"Proje "+(a+1)+" danÄ±ÅŸmanlÄ±k", tutar:85000+Math.round(Math.random()*30000)},{id:Date.now()+a*10+2, aciklama:"Proje "+(a+1)+" uygulama", tutar:40000+Math.round(Math.random()*20000)}],
                             komisyonlar: [{id:Date.now()+a*10+3, aciklama:"Referans komisyonu", tutar:Math.round(Math.random()*8000)}],
                             faizler: [{id:Date.now()+a*10+4, aciklama:"Vadeli mevduat faizi", tutar:Math.round(1500+Math.random()*2000)}],
-                            kiralar: [{id:Date.now()+a*10+5, aciklama:"Ofis alt kiracý", tutar:5000}],
-                            satýþlar: a%3===0 ? [{id:Date.now()+a*10+6, aciklama:"Proje satýþý", tutar:20000+Math.round(Math.random()*40000)}] : []
+                            kiralar: [{id:Date.now()+a*10+5, aciklama:"Ofis alt kiracÄ±", tutar:5000}],
+                            satÄ±ÅŸlar: a%3===0 ? [{id:Date.now()+a*10+6, aciklama:"Proje satÄ±ÅŸÄ±", tutar:20000+Math.round(Math.random()*40000)}] : []
                         },
                         giderler: {
                             projeler: [{id:Date.now()+a*10+20, aciklama:"Proje maliyeti", tutar:35000+Math.round(Math.random()*15000)}],
-                            faturalar: [{id:Date.now()+a*10+21, aciklama:"Elektrik+Su+Ýnternet", tutar:Math.round(4000+Math.random()*3000)},{id:Date.now()+a*10+22, aciklama:"Kýrtasiye", tutar:Math.round(500+Math.random()*1500)}],
+                            faturalar: [{id:Date.now()+a*10+21, aciklama:"Elektrik+Su+Ä°nternet", tutar:Math.round(4000+Math.random()*3000)},{id:Date.now()+a*10+22, aciklama:"KÄ±rtasiye", tutar:Math.round(500+Math.random()*1500)}],
                             vergi: [{id:Date.now()+a*10+23, aciklama:"KDV+Stopaj", tutar:15000+Math.round(Math.random()*10000)}],
                             komisyon: [{id:Date.now()+a*10+24, aciklama:"Acenta komisyonu", tutar:Math.round(3000+Math.random()*4000)}],
-                            maaþ: [{id:Date.now()+a*10+25, aciklama:"Personel maaþlarý", tutar:42000+Math.round(Math.random()*5000)}],
-                            sigorta: [{id:Date.now()+a*10+26, aciklama:"SGK+Baðkur", tutar:9500+Math.round(Math.random()*2000)}]
+                            maaÅŸ: [{id:Date.now()+a*10+25, aciklama:"Personel maaÅŸlarÄ±", tutar:42000+Math.round(Math.random()*5000)}],
+                            sigorta: [{id:Date.now()+a*10+26, aciklama:"SGK+BaÄŸkur", tutar:9500+Math.round(Math.random()*2000)}]
                         }
                     };
                 });
@@ -5488,7 +5488,7 @@ function gorevMailGonder(gorev) {
                     '<div class="mc-ay">'+YB_AY_ADI[i]+'</div>'+
                     (gelir>0 ? '<div class="mc-gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>' : '')+
                     (gider>0 ? '<div class="mc-gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>' : '')+
-                    (gelir===0&&gider===0 ? '<div class="mc-bos">—</div>' : '')+
+                    (gelir===0&&gider===0 ? '<div class="mc-bos">â€”</div>' : '')+
                 '</div>';
             }
             grid.innerHTML = h;
@@ -5497,7 +5497,7 @@ function gorevMailGonder(gorev) {
         function ybGecmisYilGoster(yil) {
             const db = ybVeriYukle();
             const kayit = db.tamamlananYillar.find(function(y){return y.yil===yil;});
-            if(!kayit) { tmNotify("Yýl verisi bulunamadý!","error"); return; }
+            if(!kayit) { tmNotify("YÄ±l verisi bulunamadÄ±!","error"); return; }
             ybGosterilenYil = yil;
             ybGecmisYilRaporuGoster(kayit, yil);
         }
@@ -5516,8 +5516,8 @@ function gorevMailGonder(gorev) {
             const bakiye = (kayit.baslangicBakiye||0) + toplamGelir - toplamGider;
 
             let h = '<div class="yb-gecmis-container"><div class="gbaslik">'+
-                '<h3><i class="fa-regular fa-folder-open"></i> '+yil+' Yýlý Bütçe Raporu</h3>'+
-                '<button class="btn btn-primary" onclick="ybCariYilaDon()" style="padding:8px 18px;font-size:12px;">?? Cari Yýla Dön</button></div>';
+                '<h3><i class="fa-regular fa-folder-open"></i> '+yil+' YÄ±lÄ± BÃ¼tÃ§e Raporu</h3>'+
+                '<button class="btn btn-primary" onclick="ybCariYilaDon()" style="padding:8px 18px;font-size:12px;">?? Cari YÄ±la DÃ¶n</button></div>';
 
             h += '<div class="yb-graph-grid"><div class="yb-graph-box full"><canvas id="ybChartNetDurum"></canvas></div>'+
                 '<div class="yb-graph-box"><canvas id="ybChartGelirDagilim"></canvas></div>'+
@@ -5525,7 +5525,7 @@ function gorevMailGonder(gorev) {
                 '<div class="yb-graph-box full"><canvas id="ybChartAylikKarsilastirma"></canvas></div></div>';
 
             h += '<div class="yb-ozet-row">'+
-                '<div class="yb-ozet-card"><span class="oz-label">Baþlangýç Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">BaÅŸlangÄ±Ã§ Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
                 '<div class="yb-ozet-card"><span class="oz-label">Toplam Gelir</span><span class="oz-val green">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
                 '<div class="yb-ozet-card"><span class="oz-label">Toplam Gider</span><span class="oz-val red">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
                 '<div class="yb-ozet-card"><span class="oz-label">Net Bakiye</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div></div>';
@@ -5537,15 +5537,15 @@ function gorevMailGonder(gorev) {
                 const aGi = ybAylikToplam(kayit,"gider",i);
                 if(aG===0 && aGi===0) continue;
                 h += '<h4 style="margin:15px 0 6px 0;font-size:13px;color:var(--yb-text);border-left:4px solid var(--yb-accent);padding-left:10px;">'+ybTrUpper(YB_AY_ADI[i])+'</h4>'+
-                    '<table class="yb-dagilim-tablo"><thead><tr><th>Kategori</th><th>Tür</th><th>Açýklama</th><th style="text-align:right;">Tutar</th></tr></thead><tbody>';
+                    '<table class="yb-dagilim-tablo"><thead><tr><th>Kategori</th><th>TÃ¼r</th><th>AÃ§Ä±klama</th><th style="text-align:right;">Tutar</th></tr></thead><tbody>';
                 Object.entries(ay.gelirler||{}).forEach(([ktg,items]) => items.forEach(k => {
-                    h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gelir);font-weight:600;">GELÝR</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
+                    h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gelir);font-weight:600;">GELÄ°R</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
                 }));
-                if(aG>0) h += '<tr style="background:rgba(46,204,113,0.08);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-gelir);">Gelir Toplamý</td><td style="text-align:right;color:var(--yb-gelir);">+'+aG.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
+                if(aG>0) h += '<tr style="background:rgba(46,204,113,0.08);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-gelir);">Gelir ToplamÄ±</td><td style="text-align:right;color:var(--yb-gelir);">+'+aG.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
                 Object.entries(ay.giderler||{}).forEach(([ktg,items]) => items.forEach(k => {
-                    h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gider);font-weight:600;">GÝDER</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
+                    h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gider);font-weight:600;">GÄ°DER</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
                 }));
-                if(aGi>0) h += '<tr style="background:rgba(231,76,60,0.08);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-gider);">Gider Toplamý</td><td style="text-align:right;color:var(--yb-gider);">-'+aGi.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
+                if(aGi>0) h += '<tr style="background:rgba(231,76,60,0.08);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-gider);">Gider ToplamÄ±</td><td style="text-align:right;color:var(--yb-gider);">-'+aGi.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
                 h += '<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-text-light);">Net Toplam</td><td style="text-align:right;color:'+((aG-aGi)>=0?'var(--yb-gelir)':'var(--yb-gider)')+';">'+(aG-aGi).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
                 h += '</tbody></table>';
             }
@@ -5559,10 +5559,10 @@ function gorevMailGonder(gorev) {
             if(!wrap) return;
             const db = ybVeriYukle();
             const arr = db.tamamlananYillar||[];
-            if(arr.length===0) { wrap.innerHTML = '<div style="text-align:center;padding:20px;color:var(--yb-text-light);font-size:13px;">Henüz tamamlanan yýl bulunmuyor.</div>'; return; }
+            if(arr.length===0) { wrap.innerHTML = '<div style="text-align:center;padding:20px;color:var(--yb-text-light);font-size:13px;">HenÃ¼z tamamlanan yÄ±l bulunmuyor.</div>'; return; }
             const sorted = [...arr].sort((a,b)=>b.yil-a.yil);
             let h = '<table class="yb-yil-tablo"><thead><tr>'+
-                '<th>Yýl</th><th>Baþ. Bakiye</th><th>Toplam Gelir</th><th>Toplam Gider</th><th>Net Bakiye</th><th>Ýþlemler</th>'+
+                '<th>YÄ±l</th><th>BaÅŸ. Bakiye</th><th>Toplam Gelir</th><th>Toplam Gider</th><th>Net Bakiye</th><th>Ä°ÅŸlemler</th>'+
                 '</tr></thead><tbody>';
             sorted.forEach(function(y){
                 const tG = ybYilToplam(y,"gelir"), tGi = ybYilToplam(y,"gider");
@@ -5574,7 +5574,7 @@ function gorevMailGonder(gorev) {
                     '<td class="t-sayi t-gider">-'+tGi.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td>'+
                     '<td class="t-sayi '+(net>=0?'t-gelir':'t-gider')+'">'+(net>=0?'+':'')+net.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td>'+
                     '<td class="t-islem">'+
-                        '<button class="t-goruntule" onclick="ybGecmisYilGoster('+y.yil+')"><i class="fa-regular fa-folder-open"></i> Görüntüle</button>'+
+                        '<button class="t-goruntule" onclick="ybGecmisYilGoster('+y.yil+')"><i class="fa-regular fa-folder-open"></i> GÃ¶rÃ¼ntÃ¼le</button>'+
                         '<button class="t-pdf" onclick="ybPdfIndir('+y.yil+')"><i class="fa-regular fa-file-lines"></i> PDF</button></td>'+
                     '</tr>';
             });
@@ -5607,12 +5607,12 @@ function gorevMailGonder(gorev) {
             const aylikGider = ybAylikToplam(kayit,"gider",ayIdx);
             const fark = aylikGelir - aylikGider;
 
-            let h = '<h3 style="border:none;padding:0;margin:0 0 16px 0;"><i class="fa-regular fa-calendar"></i> '+YB_AY_ADI[ayIdx]+' - Bütçe Detayý</h3>';
+            let h = '<h3 style="border:none;padding:0;margin:0 0 16px 0;"><i class="fa-regular fa-calendar"></i> '+YB_AY_ADI[ayIdx]+' - BÃ¼tÃ§e DetayÄ±</h3>';
 
             // 3 separate summary cards
             h += '<div class="yb-sum-row">'+
-                '<div class="yb-sum-card sc-gelir"><div class="sc-label">Aylýk Gelir</div><div class="sc-value">'+aylikGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</div></div>'+
-                '<div class="yb-sum-card sc-gider"><div class="sc-label">Aylýk Gider</div><div class="sc-value">'+aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</div></div>'+
+                '<div class="yb-sum-card sc-gelir"><div class="sc-label">AylÄ±k Gelir</div><div class="sc-value">'+aylikGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</div></div>'+
+                '<div class="yb-sum-card sc-gider"><div class="sc-label">AylÄ±k Gider</div><div class="sc-value">'+aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</div></div>'+
                 '<div class="yb-sum-card sc-fark"><div class="sc-label">Fark</div><div class="sc-value">'+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</div></div></div>';
 
             // Gelir accordion
@@ -5625,13 +5625,13 @@ function gorevMailGonder(gorev) {
                     '<div class="yb-acc-header" onclick="document.getElementById(\''+itemId+'\').classList.toggle(\'open\');this.classList.toggle(\'open\');">'+
                     '<span class="acc-kat">'+ybTrUpper(ktg)+'</span>'+
                     '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span>'+
-                    '<span class="acc-ok">¡</span></div>'+
+                    '<span class="acc-ok">Â¡</span></div>'+
                     '<div class="yb-acc-body" id="'+itemId+'">';
                 if(items.length>0) {
                     h += '<table><tbody>';
                     items.forEach(function(k){
                         h += '<tr data-id="'+k.id+'">'+
-                            '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açýklama"></td>'+
+                            '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="AÃ§Ä±klama"></td>'+
                             '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
                                 ' <span class="acc-tl-simge">?</span></div></td>'+
@@ -5643,7 +5643,7 @@ function gorevMailGonder(gorev) {
                 h += '<button class="acc-btn-ekle" onclick="ybModalKalemAc(\'gelir\',\''+ktg+'\','+ayIdx+')"><i class="fa-solid fa-plus"></i> Kalem Ekle</button>'+
                     '</div></div>';
             });
-            h += '<button class="acc-btn-yonet" onclick="ybKategoriYonet(\'gelir\')"><i class="fa-regular fa-folder-open"></i> Kategorileri Yönet</button></div>';
+            h += '<button class="acc-btn-yonet" onclick="ybKategoriYonet(\'gelir\')"><i class="fa-regular fa-folder-open"></i> Kategorileri YÃ¶net</button></div>';
 
             // Gider accordion
             h += '<div class="yb-acc-section"><h4 class="acc-gider"><i class="fa-solid fa-chart-line fa-rotate-180"></i> Giderler</h4>';
@@ -5655,13 +5655,13 @@ function gorevMailGonder(gorev) {
                     '<div class="yb-acc-header" onclick="document.getElementById(\''+itemId+'\').classList.toggle(\'open\');this.classList.toggle(\'open\');">'+
                     '<span class="acc-kat">'+ybTrUpper(ktg)+'</span>'+
                     '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span>'+
-                    '<span class="acc-ok">¡</span></div>'+
+                    '<span class="acc-ok">Â¡</span></div>'+
                     '<div class="yb-acc-body" id="'+itemId+'">';
                 if(items.length>0) {
                     h += '<table><tbody>';
                     items.forEach(function(k){
                         h += '<tr data-id="'+k.id+'">'+
-                            '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açýklama"></td>'+
+                            '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="AÃ§Ä±klama"></td>'+
                             '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
                                 ' <span class="acc-tl-simge">?</span></div></td>'+
@@ -5673,7 +5673,7 @@ function gorevMailGonder(gorev) {
                 h += '<button class="acc-btn-ekle" onclick="ybModalKalemAc(\'gider\',\''+ktg+'\','+ayIdx+')"><i class="fa-solid fa-plus"></i> Kalem Ekle</button>'+
                     '</div></div>';
             });
-            h += '<button class="acc-btn-yonet" onclick="ybKategoriYonet(\'gider\')"><i class="fa-regular fa-folder-open"></i> Kategorileri Yönet</button></div>';
+            h += '<button class="acc-btn-yonet" onclick="ybKategoriYonet(\'gider\')"><i class="fa-regular fa-folder-open"></i> Kategorileri YÃ¶net</button></div>';
 
             icerik.innerHTML = h;
         }
@@ -5689,7 +5689,7 @@ function gorevMailGonder(gorev) {
             const toplamGider = aylikGider.reduce((s,v)=>s+v,0);
             const bakiye = (kayit.baslangicBakiye||0) + toplamGelir - toplamGider;
 
-            let h = '<h3 style="border:none;padding:0;margin:0 0 16px 0;"><i class="fa-solid fa-list"></i> Yýllýk Bütçe Raporu - '+yil+'</h3>';
+            let h = '<h3 style="border:none;padding:0;margin:0 0 16px 0;"><i class="fa-solid fa-list"></i> YÄ±llÄ±k BÃ¼tÃ§e Raporu - '+yil+'</h3>';
 
             h += '<div class="yb-graph-grid">'+
                 '<div class="yb-graph-box full"><canvas id="ybChartNetDurum"></canvas></div>'+
@@ -5698,12 +5698,12 @@ function gorevMailGonder(gorev) {
                 '<div class="yb-graph-box full"><canvas id="ybChartAylikKarsilastirma"></canvas></div></div>';
 
             h += '<div class="yb-ozet-row">'+
-                '<div class="yb-ozet-card"><span class="oz-label">Baþlangýç Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">BaÅŸlangÄ±Ã§ Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
                 '<div class="yb-ozet-card"><span class="oz-label">Toplam Gelir</span><span class="oz-val green">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
                 '<div class="yb-ozet-card"><span class="oz-label">Toplam Gider</span><span class="oz-val red">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Þirket Bakiyesi</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div></div>';
+                '<div class="yb-ozet-card"><span class="oz-label">Åžirket Bakiyesi</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div></div>';
 
-            h += '<h4 style="color:var(--yb-gelir);margin:0 0 6px 0;"><i class="fa-solid fa-chart-line"></i> Gelir Daðýlýmý</h4>'+
+            h += '<h4 style="color:var(--yb-gelir);margin:0 0 6px 0;"><i class="fa-solid fa-chart-line"></i> Gelir DaÄŸÄ±lÄ±mÄ±</h4>'+
                 '<table class="yb-dagilim-tablo"><thead><tr><th style="padding:6px 4px;text-align:left;">Kategori</th>';
             YB_AY_KISA.forEach(function(a){h+='<th style="padding:6px 2px;font-size:10px;text-align:center;">'+a+'</th>';});
             h += '<th style="padding:6px 4px;text-align:center;">Toplam</th></tr></thead><tbody>';
@@ -5716,11 +5716,11 @@ function gorevMailGonder(gorev) {
                 }
                 h+='<td style="padding:4px;text-align:center;font-weight:700;color:var(--yb-gelir);">'+katTop.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
             });
-            h+='<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td style="padding:4px;color:var(--yb-text);text-align:left;">TOPLAM GELÝR</td>';
+            h+='<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td style="padding:4px;color:var(--yb-text);text-align:left;">TOPLAM GELÄ°R</td>';
             for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:center;">'+aylikGelir[i].toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td>';
             h+='<td style="padding:4px;text-align:center;font-weight:800;font-size:12px;color:var(--yb-gelir);">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr></tbody></table>';
 
-            h += '<h4 style="color:var(--yb-gider);margin:0 0 6px 0;"><i class="fa-solid fa-chart-line fa-rotate-180"></i> Gider Daðýlýmý</h4>'+
+            h += '<h4 style="color:var(--yb-gider);margin:0 0 6px 0;"><i class="fa-solid fa-chart-line fa-rotate-180"></i> Gider DaÄŸÄ±lÄ±mÄ±</h4>'+
                 '<table class="yb-dagilim-tablo"><thead><tr><th style="padding:6px 4px;text-align:left;">Kategori</th>';
             YB_AY_KISA.forEach(function(a){h+='<th style="padding:6px 2px;font-size:10px;text-align:center;">'+a+'</th>';});
             h += '<th style="padding:6px 4px;text-align:center;">Toplam</th></tr></thead><tbody>';
@@ -5733,7 +5733,7 @@ function gorevMailGonder(gorev) {
                 }
                 h+='<td style="padding:4px;text-align:center;font-weight:700;color:var(--yb-gider);">'+katTop.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr>';
             });
-            h+='<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td style="padding:4px;color:var(--yb-text);text-align:left;">TOPLAM GÝDER</td>';
+            h+='<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td style="padding:4px;color:var(--yb-text);text-align:left;">TOPLAM GÄ°DER</td>';
             for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:center;">'+aylikGider[i].toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td>';
             h+='<td style="padding:4px;text-align:center;font-weight:800;font-size:12px;color:var(--yb-gider);">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</td></tr></tbody></table>';
             icerik.innerHTML = h;
@@ -5749,10 +5749,10 @@ function gorevMailGonder(gorev) {
             const secimEl = document.getElementById("ybKarsilastirSecim");
             const seciliYil = secimEl ? parseInt(secimEl.value) : (gecmis.length > 0 ? gecmis[0].yil : null);
 
-            let h = '<h3 style="border:none;padding:0;margin:0 0 16px 0;">?? Yýl Karþýlaþtýrmasý</h3>';
+            let h = '<h3 style="border:none;padding:0;margin:0 0 16px 0;">?? YÄ±l KarÅŸÄ±laÅŸtÄ±rmasÄ±</h3>';
 
             if(!seciliYil) {
-                h += '<p style="color:var(--yb-text-light);">Karþýlaþtýrma yapmak için tamamlanmýþ bir yýl bulunmuyor.</p>';
+                h += '<p style="color:var(--yb-text-light);">KarÅŸÄ±laÅŸtÄ±rma yapmak iÃ§in tamamlanmÄ±ÅŸ bir yÄ±l bulunmuyor.</p>';
                 icerik.innerHTML = h; return;
             }
 
@@ -5766,7 +5766,7 @@ function gorevMailGonder(gorev) {
             const sTopG = sGelir.reduce(function(s,v){return s+v;},0), sTopGi = sGider.reduce(function(s,v){return s+v;},0);
 
             h += '<div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap;">'+
-                '<label style="font-weight:600;font-size:13px;color:var(--yb-text);">Karþýlaþtýrýlacak Yýl:</label>'+
+                '<label style="font-weight:600;font-size:13px;color:var(--yb-text);">KarÅŸÄ±laÅŸtÄ±rÄ±lacak YÄ±l:</label>'+
                 '<select class="yb-kars-select" id="ybKarsilastirSecim" onchange="ybKarsilastirGoster()">'+
                 gecmis.map(function(y){return '<option value="'+y.yil+'" '+(y.yil===seciliYil?'selected':'')+'>'+y.yil+'</option>';}).join('')+
                 '</select></div>';
@@ -5811,7 +5811,7 @@ function gorevMailGonder(gorev) {
                         scales: { y:{ beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+' ?'} } }
                     }
                 });
-            } catch(e) { console.warn("Karþýlaþtýrma grafiði çizilemedi:", e); }
+            } catch(e) { console.warn("KarÅŸÄ±laÅŸtÄ±rma grafiÄŸi Ã§izilemedi:", e); }
         }
 
         function ybGrafikleriCiz(kayit, aylikGelir, aylikGider, toplamYillikGelir, toplamYillikGider) {
@@ -5857,13 +5857,13 @@ function gorevMailGonder(gorev) {
                 ybChartGelir = new Chart(ctx2, { type:'doughnut',
                     data: { labels:gelirEtiket, datasets:[{ data:gelirVeri, backgroundColor:renkPalet.slice(0,gelirVeri.length), borderWidth:2 }] },
                     options: { responsive:true, maintainAspectRatio:false,
-                        plugins: { legend:{position:'right',labels:{font:{size:11,weight:'bold'}}}, title:{display:true,text:'Gelir Daðýlýmý',font:{size:14,weight:'bold'}},
+                        plugins: { legend:{position:'right',labels:{font:{size:11,weight:'bold'}}}, title:{display:true,text:'Gelir DaÄŸÄ±lÄ±mÄ±',font:{size:14,weight:'bold'}},
                             datalabels:{ color:'#fff', font:{size:11,weight:'bold'}, formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(1)+'%':''} }
                         }
                     }
                 });
             } else if(ctx2) {
-                ybChartGelir = new Chart(ctx2, { type:'doughnut', data:{labels:['Veri Yok'],datasets:[{data:[1],backgroundColor:['#e0e0e0']}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{title:{display:true,text:'Gelir Daðýlýmý',font:{size:14,weight:'bold'}},datalabels:{display:false}}} });
+                ybChartGelir = new Chart(ctx2, { type:'doughnut', data:{labels:['Veri Yok'],datasets:[{data:[1],backgroundColor:['#e0e0e0']}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{title:{display:true,text:'Gelir DaÄŸÄ±lÄ±mÄ±',font:{size:14,weight:'bold'}},datalabels:{display:false}}} });
             }
 
             const ctx3 = document.getElementById("ybChartGiderDagilim");
@@ -5871,13 +5871,13 @@ function gorevMailGonder(gorev) {
                 ybChartGider = new Chart(ctx3, { type:'doughnut',
                     data: { labels:giderEtiket, datasets:[{ data:giderVeri, backgroundColor:renkPalet.slice(0,giderVeri.length), borderWidth:2 }] },
                     options: { responsive:true, maintainAspectRatio:false,
-                        plugins: { legend:{position:'right',labels:{font:{size:11,weight:'bold'}}}, title:{display:true,text:'Gider Daðýlýmý',font:{size:14,weight:'bold'}},
+                        plugins: { legend:{position:'right',labels:{font:{size:11,weight:'bold'}}}, title:{display:true,text:'Gider DaÄŸÄ±lÄ±mÄ±',font:{size:14,weight:'bold'}},
                             datalabels:{ color:'#fff', font:{size:11,weight:'bold'}, formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return t>0?(v/t*100).toFixed(1)+'%':''} }
                         }
                     }
                 });
             } else if(ctx3) {
-                ybChartGider = new Chart(ctx3, { type:'doughnut', data:{labels:['Veri Yok'],datasets:[{data:[1],backgroundColor:['#e0e0e0']}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{title:{display:true,text:'Gider Daðýlýmý',font:{size:14,weight:'bold'}},datalabels:{display:false}}} });
+                ybChartGider = new Chart(ctx3, { type:'doughnut', data:{labels:['Veri Yok'],datasets:[{data:[1],backgroundColor:['#e0e0e0']}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{title:{display:true,text:'Gider DaÄŸÄ±lÄ±mÄ±',font:{size:14,weight:'bold'}},datalabels:{display:false}}} });
             }
 
             const bakiye = kayit.baslangicBakiye || 0;
@@ -5890,7 +5890,7 @@ function gorevMailGonder(gorev) {
                         datasets: [
                             { label:'Gelir', data:aylikGelir, borderColor:'#2E7D32', backgroundColor:'rgba(46,125,50,0.05)', fill:false, tension:0.3, pointRadius:4, pointHoverRadius:6 },
                             { label:'Gider', data:aylikGider, borderColor:'#9E2A2B', backgroundColor:'rgba(158,42,43,0.05)', fill:false, tension:0.3, pointRadius:4, pointHoverRadius:6 },
-                            { label:'Þirket Bakiyesi', data:bakiyeAylik, borderColor:'#F57C00', backgroundColor:'rgba(245,124,0,0.08)', fill:true, tension:0.3, borderWidth:3, pointRadius:5, pointHoverRadius:7 }
+                            { label:'Åžirket Bakiyesi', data:bakiyeAylik, borderColor:'#F57C00', backgroundColor:'rgba(245,124,0,0.08)', fill:true, tension:0.3, borderWidth:3, pointRadius:5, pointHoverRadius:7 }
                         ]
                     },
                     options: { responsive:true, maintainAspectRatio:false,
@@ -5899,14 +5899,14 @@ function gorevMailGonder(gorev) {
                     }
                 });
             }
-            } catch(e) { console.warn("Grafik çizilemedi:", e); }
+            } catch(e) { console.warn("Grafik Ã§izilemedi:", e); }
         }
 
         /* Kalem ekleme now uses modal - ybModalKalemAc/Kaydet/Kapat */
 
         function ybDomSatirOlustur(item, ayIdx) {
             return '<tr data-id="'+item.id+'">'+
-                '<td style="width:45%;"><input class="acc-input" type="text" value="'+item.aciklama+'" onchange="ybKalemGuncelle('+item.id+',\'aciklama\',this.value)" placeholder="Açýklama"></td>'+
+                '<td style="width:45%;"><input class="acc-input" type="text" value="'+item.aciklama+'" onchange="ybKalemGuncelle('+item.id+',\'aciklama\',this.value)" placeholder="AÃ§Ä±klama"></td>'+
                 '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                     '<input class="acc-tutar-input" type="text" value="'+(item.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+item.id+',\'tutar\',this.value)">'+
                     ' <span class="acc-tl-simge">?</span></div></td>'+
@@ -5950,11 +5950,11 @@ function gorevMailGonder(gorev) {
             card.querySelectorAll('.mc-gelir, .mc-gider, .mc-bos').forEach(function(el){el.remove();});
             if(gelir > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>');
             if(gider > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>');
-            if(gelir===0 && gider===0) card.insertAdjacentHTML('beforeend', '<div class="mc-bos">—</div>');
+            if(gelir===0 && gider===0) card.insertAdjacentHTML('beforeend', '<div class="mc-bos">â€”</div>');
         }
 
         function ybKalemSil(id, ayIdx) {
-            tmConfirm("Bu kalemi silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu kalemi silmek istediÄŸinize emin misiniz?", function() {
                 const kayit = ybYilVerisi();
                 const ay = ybAyVerisi(ayIdx, kayit);
                 let bulunanKtg = null, bulunanTip = null;
@@ -6023,14 +6023,14 @@ function gorevMailGonder(gorev) {
                 const list = aktifTip === "gelir" ? kayit.gelirKategorileri : kayit.giderKategorileri;
                 const etiket = aktifTip === "gelir" ? "gelir" : "gider";
 
-                if(list.length===0) h += `<p style="color:var(--text-light);text-align:center;">Henüz kategori eklenmemiþ.</p>`;
+                if(list.length===0) h += `<p style="color:var(--text-light);text-align:center;">HenÃ¼z kategori eklenmemiÅŸ.</p>`;
                 list.forEach((ktg, idx) => {
                     h += `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;background:var(--bg-main);border-radius:6px;border:1px solid var(--border-color);">
                         <span style="flex:1;font-weight:600;font-size:13px;">${ktg}</span>
                         <input type="text" id="ybKatYenidenAd_${aktifTip}_${idx}" value="${ktg}" style="display:none;flex:1;padding:6px 10px;border:1px solid var(--accent-red);border-radius:4px;background:var(--input-bg);color:var(--text-dark);font-size:13px;">
                         <button class="btn btn-sm btn-warning" onclick="document.getElementById('ybKatYenidenAd_${aktifTip}_${idx}').style.display='block';this.style.display='none';document.getElementById('ybKatKaydet_${aktifTip}_${idx}').style.display='inline-flex'" style="padding:4px 10px;"><i class="fa-regular fa-pen-to-square"></i></button>
-                        <button class="btn btn-sm btn-save-green" id="ybKatKaydet_${aktifTip}_${idx}" style="display:none;padding:4px 10px;" onclick="var inp=document.getElementById('ybKatYenidenAd_${aktifTip}_${idx}');var yeni=trToUpper(inp.value.trim());if(!yeni){tmNotify('Ad boþ olamaz!','error');return;}const k=ybYilVerisi();const l=${aktifTip==='gelir'?'k.gelirKategorileri':'k.giderKategorileri'};if(l.includes(yeni)){tmNotify('Bu kategori zaten var!','error');return;}l[l.indexOf('${ktg}')]=yeni;ybVeriKaydet(Object.assign(ybVeriYukle(),{yillar:{[Object.assign(ybVeriYukle()).aktifYil]:k}}));tmNotify('Kategori adý güncellendi.','success');ybKategoriYonet('${aktifTip}');"><i class="fa-solid fa-floppy-disk"></i></button>
-                        <button class="btn btn-sm btn-danger" onclick="tmConfirm('${ktg} kategorisini silmek istediðinize emin misiniz?\\nBu kategoriye ait tüm kalemler de silinecek.',function(){const k=ybYilVerisi();const l=${aktifTip==='gelir'?'k.gelirKategorileri':'k.giderKategorileri'};const idx=l.indexOf('${ktg}');if(idx>-1){l.splice(idx,1);Object.values(k.aylar).forEach(function(ay){delete (${aktifTip==='gelir'?'ay.gelirler':'ay.giderler'})['${ktg}'];});}const db2=ybVeriYukle();db2.yillar[db2.aktifYil]=k;ybVeriKaydet(db2);tmNotify('Kategori silindi.','success');ybKategoriYonet('${aktifTip}');});" style="padding:4px 10px;"><i class="fa-solid fa-trash-can"></i></button>
+                        <button class="btn btn-sm btn-save-green" id="ybKatKaydet_${aktifTip}_${idx}" style="display:none;padding:4px 10px;" onclick="var inp=document.getElementById('ybKatYenidenAd_${aktifTip}_${idx}');var yeni=trToUpper(inp.value.trim());if(!yeni){tmNotify('Ad boÅŸ olamaz!','error');return;}const k=ybYilVerisi();const l=${aktifTip==='gelir'?'k.gelirKategorileri':'k.giderKategorileri'};if(l.includes(yeni)){tmNotify('Bu kategori zaten var!','error');return;}l[l.indexOf('${ktg}')]=yeni;ybVeriKaydet(Object.assign(ybVeriYukle(),{yillar:{[Object.assign(ybVeriYukle()).aktifYil]:k}}));tmNotify('Kategori adÄ± gÃ¼ncellendi.','success');ybKategoriYonet('${aktifTip}');"><i class="fa-solid fa-floppy-disk"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="tmConfirm('${ktg} kategorisini silmek istediÄŸinize emin misiniz?\\nBu kategoriye ait tÃ¼m kalemler de silinecek.',function(){const k=ybYilVerisi();const l=${aktifTip==='gelir'?'k.gelirKategorileri':'k.giderKategorileri'};const idx=l.indexOf('${ktg}');if(idx>-1){l.splice(idx,1);Object.values(k.aylar).forEach(function(ay){delete (${aktifTip==='gelir'?'ay.gelirler':'ay.giderler'})['${ktg}'];});}const db2=ybVeriYukle();db2.yillar[db2.aktifYil]=k;ybVeriKaydet(db2);tmNotify('Kategori silindi.','success');ybKategoriYonet('${aktifTip}');});" style="padding:4px 10px;"><i class="fa-solid fa-trash-can"></i></button>
                     </div>`;
                 });
 
@@ -6038,7 +6038,7 @@ function gorevMailGonder(gorev) {
                 h += `<div style="margin-top:12px;padding:12px;background:var(--bg-main);border-radius:6px;border:1px dashed var(--border-color);">
                     <label style="font-size:10px;font-weight:600;color:var(--text-light);display:block;margin-bottom:4px;">Yeni ${etiket} Kategorisi Ekle</label>
                     <div style="display:flex;gap:8px;">
-                        <input type="text" id="ybKatEkleInput_${aktifTip}" placeholder="Kategori adý" style="flex:1;padding:8px 12px;border:1px solid var(--border-color);border-radius:4px;background:var(--input-bg);color:var(--text-dark);font-size:13px;" onkeydown="if(event.key==='Enter')ybKatEkle('${aktifTip}')">
+                        <input type="text" id="ybKatEkleInput_${aktifTip}" placeholder="Kategori adÄ±" style="flex:1;padding:8px 12px;border:1px solid var(--border-color);border-radius:4px;background:var(--input-bg);color:var(--text-dark);font-size:13px;" onkeydown="if(event.key==='Enter')ybKatEkle('${aktifTip}')">
                         <button class="btn btn-primary" onclick="ybKatEkle('${aktifTip}')" style="padding:8px 16px;border-radius:4px;"><i class="fa-solid fa-plus"></i> Ekle</button>
                     </div>
                 </div>`;
@@ -6054,7 +6054,7 @@ function gorevMailGonder(gorev) {
             const inp = document.getElementById("ybKatEkleInput_"+tip);
             if(!inp) return;
             const ad = trToUpper(inp.value.trim());
-            if(!ad) { tmNotify("Kategori adý giriniz!","error"); return; }
+            if(!ad) { tmNotify("Kategori adÄ± giriniz!","error"); return; }
             const kayit = ybYilVerisi();
             const list = tip==="gelir"?kayit.gelirKategorileri:kayit.giderKategorileri;
             if(list.includes(ad)) { tmNotify("Bu kategori zaten mevcut!","error"); return; }
@@ -6070,7 +6070,7 @@ function gorevMailGonder(gorev) {
             ybSekmeGoster("rapor");
         }
 
-        // ===== BÜTÇE KALEM EKLEME MODAL =====
+        // ===== BÃœTÃ‡E KALEM EKLEME MODAL =====
         var ybModalAyIdx = 0, ybModalTip = "gelir", ybModalKategori = "";
         function ybModalKalemAc(tip, kategori, ayIdx) {
             ybModalAyIdx = ayIdx; ybModalTip = tip; ybModalKategori = kategori;
@@ -6088,23 +6088,23 @@ function gorevMailGonder(gorev) {
             var kategori = ybModalKategori;
             var aciklama = document.getElementById("mkAciklama").value.trim();
             var tutar = tmTutarCoz(document.getElementById("mkTutar").value);
-            if(!aciklama) { tmNotify("Açýklama zorunludur!","error"); return; }
-            if(isNaN(tutar)||tutar<=0) { tmNotify("Geçerli bir tutar giriniz!","error"); return; }
+            if(!aciklama) { tmNotify("AÃ§Ä±klama zorunludur!","error"); return; }
+            if(isNaN(tutar)||tutar<=0) { tmNotify("GeÃ§erli bir tutar giriniz!","error"); return; }
             var kayit = ybYilVerisi();
             var ay = ybAyVerisi(ybModalAyIdx, kayit);
             var yeniItem = {id:Date.now(),aciklama:aciklama,tutar:tutar};
             (tip==="gelir"?ay.gelirler:ay.giderler)[kategori].push(yeniItem);
             var db = ybVeriYukle(); db.yillar[db.aktifYil]=kayit; ybVeriKaydet(db);
             ybModalKalemKapat();
-            tmNotify("Kalem baþarýyla eklendi.","success");
-            // DOM'a yeni satýrý ekle (tam re-render yapma)
+            tmNotify("Kalem baÅŸarÄ±yla eklendi.","success");
+            // DOM'a yeni satÄ±rÄ± ekle (tam re-render yapma)
             var tipPrefix = tip==='gelir' ? 'accG' : 'accD';
             var accBodyId = tipPrefix+'_'+kategori.replace(/[^a-z0-9]/gi,'_')+'_'+ybModalAyIdx;
             var body = document.getElementById(accBodyId);
             if(body) {
                 var table = body.querySelector('table');
                 if(!table) {
-                    // Ýlk kalem, tabloyu oluþtur
+                    // Ä°lk kalem, tabloyu oluÅŸtur
                     table = document.createElement('table');
                     var tbody = document.createElement('tbody');
                     table.appendChild(tbody);
@@ -6120,13 +6120,13 @@ function gorevMailGonder(gorev) {
             }
         }
 
-        // ===== PDF Yardýmcý =====
-        function trAscii(s) { var m={'Ý':'I','ý':'i','Ð':'G','ð':'g','Þ':'S','þ':'s'}; return (s||'').replace(/[ÝýÐðÞþ]/g,function(c){return m[c]||c;}); }
+        // ===== PDF YardÄ±mcÄ± =====
+        function trAscii(s) { var m={'Ä°':'I','Ä±':'i','Äž':'G','ÄŸ':'g','Åž':'S','ÅŸ':'s'}; return (s||'').replace(/[Ä°Ä±ÄžÄŸÅžÅŸ]/g,function(c){return m[c]||c;}); }
 
         function ybPdfIndir(yil) {
             const db = ybVeriYukle();
             const kayit = db.tamamlananYillar.find(function(y){return y.yil===yil;});
-            if(!kayit) { tmNotify("Veri bulunamadý!","error"); return; }
+            if(!kayit) { tmNotify("Veri bulunamadÄ±!","error"); return; }
             const tG = ybYilToplam(kayit,"gelir"), tGi = ybYilToplam(kayit,"gider");
             const net = (kayit.baslangicBakiye||0)+tG-tGi;
 
@@ -6140,7 +6140,7 @@ function gorevMailGonder(gorev) {
             try {
                 const { jsPDF } = window.jspdf;
                 var doc = new jsPDF({ format:'a4', orientation:'portrait', unit:'mm' });
-                // tüm jsPDF metodlarina NaN korumasi (direkt doc uzerinde, autoTable icin)
+                // tÃ¼m jsPDF metodlarina NaN korumasi (direkt doc uzerinde, autoTable icin)
                 ['text','rect','roundedRect','addImage','line','setFontSize','setLineWidth','setDrawColor','setFillColor','setTextColor','setFont'].forEach(function(m){
                     var orig=doc[m]; doc[m]=function(){for(var i=0;i<arguments.length;i++){if(typeof arguments[i]==='number'&&isNaN(arguments[i])){console.error('NaN in '+m+' arg'+i,arguments,new Error().stack);if(m==='setFontSize')return orig.call(doc,10);return;}}return orig.apply(doc,arguments);};
                 });
@@ -6189,7 +6189,7 @@ function gorevMailGonder(gorev) {
 
                     function cC(w,h) { var c=document.createElement('canvas'); c.width=w; c.height=h; container.appendChild(c); return c; }
 
-                    // 1) Net Durum - yüksek çözünürlük
+                    // 1) Net Durum - yÃ¼ksek Ã§Ã¶zÃ¼nÃ¼rlÃ¼k
                     var c1 = cC(2400,500);
                     new Chart(c1, { type:'line',
                         data:{ labels:YB_AY_KISA, datasets:[
@@ -6203,7 +6203,7 @@ function gorevMailGonder(gorev) {
                         }
                     });
 
-                    // 2) Bar chart - yüksek çözünürlük
+                    // 2) Bar chart - yÃ¼ksek Ã§Ã¶zÃ¼nÃ¼rlÃ¼k
                     var c2 = cC(2400,480);
                     new Chart(c2, { type:'bar',
                         data:{ labels:YB_AY_KISA, datasets:[
@@ -6434,7 +6434,7 @@ function gorevMailGonder(gorev) {
                         doc.text(t(yil+" YILI BUTCE RAPORU"), M+W, 10, {align:"right"});
                         y = 20;
 
-                        // --- Ay Basligi (kalýn sol cubuk) ---
+                        // --- Ay Basligi (kalÄ±n sol cubuk) ---
                         doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
                         doc.rect(M, y, 3, 14, 'F');
                         doc.setFont(FN, "bold"); doc.setFontSize(14);
@@ -6542,11 +6542,11 @@ function gorevMailGonder(gorev) {
             }
         }
 
-        /* ================= HESAP TAKÝP SÝSTEMÝ ================= */
+        /* ================= HESAP TAKÄ°P SÄ°STEMÄ° ================= */
         const HT_ORNEK_HESAPLAR = [
-            { id:1, bankaAdi:"ÝÞ BANKASI", hesapSahibi:"OKAN TUGAY TURAK", bakiye:0, iban:"TR77 0006 4000 0011 4210 4058 43", kartSifre:"8998", internetSifre:"258046" },
-            { id:2, bankaAdi:"ZÝRAAT BANKASI", hesapSahibi:"OKAN TUGAY TURAK", bakiye:0, iban:"TR04 0010 0049 1575 0075 3501", kartSifre:"8998", internetSifre:"258046" },
-            { id:3, bankaAdi:"ÝÞ BANKASI", hesapSahibi:"AHSEN TURAK", bakiye:0, iban:"TR81 0006 4000 0011 4210 4057 71", kartSifre:"XXXX", internetSifre:"XXXX" }
+            { id:1, bankaAdi:"Ä°Åž BANKASI", hesapSahibi:"OKAN TUGAY TURAK", bakiye:0, iban:"TR77 0006 4000 0011 4210 4058 43", kartSifre:"8998", internetSifre:"258046" },
+            { id:2, bankaAdi:"ZÄ°RAAT BANKASI", hesapSahibi:"OKAN TUGAY TURAK", bakiye:0, iban:"TR04 0010 0049 1575 0075 3501", kartSifre:"8998", internetSifre:"258046" },
+            { id:3, bankaAdi:"Ä°Åž BANKASI", hesapSahibi:"AHSEN TURAK", bakiye:0, iban:"TR81 0006 4000 0011 4210 4057 71", kartSifre:"XXXX", internetSifre:"XXXX" }
         ];
         const HT_ORNEK_ISLEMLER = [];
         var HT_AKTIF_DETAY_HESAP = null;
@@ -6581,7 +6581,7 @@ function gorevMailGonder(gorev) {
         }
 
         function htBankaRenk(ad) {
-            var a = ad.toUpperCase().replace(/[ÝI]/g, "I");
+            var a = ad.toUpperCase().replace(/[Ä°I]/g, "I");
             if(a.indexOf("ZIRAAT") !== -1) return "#C62828";
             if(a.indexOf("IS") !== -1 && a.indexOf("BANK") !== -1) return "#003399";
             if(a.indexOf("AKBANK") !== -1) return "#D32F2F";
@@ -6651,13 +6651,13 @@ function gorevMailGonder(gorev) {
                     var bankaRenk = htBankaRenk(hs.bankaAdi);
                     var bakiyeTipi = hs.bakiye < 0 ? "negatif" : "pozitif";
                     var ibanStr = hs.iban ? htIbanGoster(hs.iban) : "";
-                    var kartSifre = hs.kartSifre || "—";
-                    var netSifre = hs.internetSifre || "—";
+                    var kartSifre = hs.kartSifre || "â€”";
+                    var netSifre = hs.internetSifre || "â€”";
                     h += '<div class="ht-kart-3d" style="--ht-kart-renk:'+bankaRenk+'" onclick="htHesapDetayGoster('+hs.id+')">';
                     h += '<div class="kart-yuz">';
                     h += '<div class="kart-top"><div class="kart-banka">'+hs.bankaAdi+'</div></div>';
                     h += '<div class="kart-actions">';
-                    h += '<button class="kart-duzenle" onclick="event.stopPropagation();htHesapModalAc('+hs.id+')" title="Düzenle">?</button>';
+                    h += '<button class="kart-duzenle" onclick="event.stopPropagation();htHesapModalAc('+hs.id+')" title="DÃ¼zenle">?</button>';
                     h += '<button class="kart-sil" onclick="event.stopPropagation();htHesapSil('+hs.id+')" title="Sil"><i class="fa-solid fa-xmark"></i></button>';
                     h += '</div>';
                     h += '<div class="kart-bakiye '+bakiyeTipi+'">'+htTl(hs.bakiye)+'</div>';
@@ -6669,15 +6669,15 @@ function gorevMailGonder(gorev) {
                     h += '</div>';
                 });
             }
-            /* Nakit kart - her zaman son sýrada */
+            /* Nakit kart - her zaman son sÄ±rada */
             var nakitBakiyeTipi = db.nakit < 0 ? "negatif" : "pozitif";
             h += '<div class="ht-kart-3d ht-kart-nakit" onclick="htHesapDetayGoster(-1)">';
             h += '<div class="kart-yuz">';
-            h += '<div class="kart-top"><div class="kart-banka">NAKÝT HESABI</div><div class="kart-actions"></div></div>';
+            h += '<div class="kart-top"><div class="kart-banka">NAKÄ°T HESABI</div><div class="kart-actions"></div></div>';
             h += '<div class="kart-bakiye '+nakitBakiyeTipi+'">'+htTl(db.nakit)+'</div>';
-            h += '<div class="kart-iban">•••• •••• •••• ••••</div>';
+            h += '<div class="kart-iban">â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢</div>';
             h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">Fiziki Nakit Para</div></div>';
-            h += '<div class="kart-alt-sag"><div class="kart-sifreler"><span>KART: —</span><span>NET: —</span></div></div></div>';
+            h += '<div class="kart-alt-sag"><div class="kart-sifreler"><span>KART: â€”</span><span>NET: â€”</span></div></div></div>';
             h += '</div>';
             h += '<div class="kart-chip"></div>';
             h += '</div>';
@@ -6685,11 +6685,11 @@ function gorevMailGonder(gorev) {
         }
 
         var HT_BANKALAR = [
-            "AKBANK", "ALTERNATÝF BANK", "ANADOLUBANK", "BANK OF CHINA TURKEY",
-            "BURGAN BANK", "DENÝZBANK", "FÝBABANKA", "GARANTÝ BBVA",
+            "AKBANK", "ALTERNATÄ°F BANK", "ANADOLUBANK", "BANK OF CHINA TURKEY",
+            "BURGAN BANK", "DENÄ°ZBANK", "FÄ°BABANKA", "GARANTÄ° BBVA",
             "HALKBANK", "HSBC", "ICBC TURKEY", "ING BANK",
-            "ÝÞ BANKASI", "ODEA BANK", "QNB FÝNANSBANK", "ÞEKERBANK",
-            "TEB", "TURKISH BANK", "VAKIFBANK", "YAPI KREDÝ", "ZÝRAAT BANKASI"
+            "Ä°Åž BANKASI", "ODEA BANK", "QNB FÄ°NANSBANK", "ÅžEKERBANK",
+            "TEB", "TURKISH BANK", "VAKIFBANK", "YAPI KREDÄ°", "ZÄ°RAAT BANKASI"
         ];
 
         function htHesapModalAc(id) {
@@ -6700,7 +6700,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("htModalId").value = id || "";
             var sec = document.getElementById("htModalBanka");
             var seciliDeger = hs ? hs.bankaAdi : "";
-            sec.innerHTML = '<option value="">— Seçiniz —</option>';
+            sec.innerHTML = '<option value="">â€” SeÃ§iniz â€”</option>';
             HT_BANKALAR.forEach(function(b) {
                 sec.innerHTML += '<option value="'+b+'" '+(b===seciliDeger?'selected':'')+'>'+b+'</option>';
             });
@@ -6719,13 +6719,13 @@ function gorevMailGonder(gorev) {
         function htHesapModalKaydet() {
             var id = document.getElementById("htModalId").value;
             var banka = document.getElementById("htModalBanka").value.trim();
-            if(!banka) { tmNotify("Banka adý zorunludur!", "error"); return; }
+            if(!banka) { tmNotify("Banka adÄ± zorunludur!", "error"); return; }
             var sahip = document.getElementById("htModalSahibi").value.trim() || "-";
             var iban = document.getElementById("htModalIban").value.trim();
             var kart = document.getElementById("htModalKart").value.trim();
             var net = document.getElementById("htModalNet").value.trim();
             var bakiye = tmTutarCoz(document.getElementById("htModalBakiye").value);
-            if(bakiye < 0) { tmNotify("Bakiye negatif olamaz! Lütfen geçerli bir bakiye giriniz.", "error"); return; }
+            if(bakiye < 0) { tmNotify("Bakiye negatif olamaz! LÃ¼tfen geÃ§erli bir bakiye giriniz.", "error"); return; }
             var db = htVeriYukle();
             if(id) {
                 id = parseInt(id);
@@ -6740,12 +6740,12 @@ function gorevMailGonder(gorev) {
             htHesapKartlariGoster();
             htNakitKartGoster();
             htDurumGuncelle();
-            tmNotify(id ? "Hesap güncellendi." : "Hesap eklendi.", "success");
-            aktiviteEkle((id ? "Hesap güncellendi: " : "Hesap eklendi: ") + banka, "Muhasebe");
+            tmNotify(id ? "Hesap gÃ¼ncellendi." : "Hesap eklendi.", "success");
+            aktiviteEkle((id ? "Hesap gÃ¼ncellendi: " : "Hesap eklendi: ") + banka, "Muhasebe");
         }
 
         function htHesapSil(id) {
-            tmConfirm("Bu hesabý silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu hesabÄ± silmek istediÄŸinize emin misiniz?", function() {
                 var db = htVeriYukle();
                 var silinen = db.hesaplar.find(function(h){return h.id===id;});
                 db.hesaplar = db.hesaplar.filter(function(h){return h.id!==id;});
@@ -6772,13 +6772,13 @@ function gorevMailGonder(gorev) {
             document.getElementById("htAnaSayfa").style.display = "none";
             var baslik = "", detayBilgi = "";
             if(hesapId === -1) {
-                baslik = '<i class="fa-solid fa-money-bill-wave"></i> Nakit Hesabý';
-                detayBilgi = "Fiziki Nakit Para — " + htTl(db.nakit);
+                baslik = '<i class="fa-solid fa-money-bill-wave"></i> Nakit HesabÄ±';
+                detayBilgi = "Fiziki Nakit Para â€” " + htTl(db.nakit);
             } else {
                 var hs = db.hesaplar.find(function(h){return h.id===hesapId;});
-                if(!hs) { tmNotify("Hesap bulunamadý!", "error"); return; }
+                if(!hs) { tmNotify("Hesap bulunamadÄ±!", "error"); return; }
                 baslik = '<i class="fa-solid fa-building-columns"></i> ' + hs.bankaAdi + " - " + hs.hesapSahibi + " (Bakiye: " + htTl(hs.bakiye) + ")";
-                detayBilgi = "IBAN: " + htIbanGoster(hs.iban) + " &nbsp;|&nbsp; Kart Þifre: " + hs.kartSifre + " &nbsp;|&nbsp; Ýnternet Þifre: " + hs.internetSifre;
+                detayBilgi = "IBAN: " + htIbanGoster(hs.iban) + " &nbsp;|&nbsp; Kart Åžifre: " + hs.kartSifre + " &nbsp;|&nbsp; Ä°nternet Åžifre: " + hs.internetSifre;
             }
             document.getElementById("htDetayBaslik").innerHTML = baslik;
             document.getElementById("htDetayBilgi").innerHTML = detayBilgi;
@@ -6809,31 +6809,31 @@ function gorevMailGonder(gorev) {
                 return i.hesapId === HT_AKTIF_DETAY_HESAP || i.hedefId === HT_AKTIF_DETAY_HESAP;
             });
             if(islemler.length === 0) {
-                konteyner.innerHTML = "<p style='color:var(--text-light); padding:15px;'>Bu hesaba ait iþlem bulunamadý.</p>";
+                konteyner.innerHTML = "<p style='color:var(--text-light); padding:15px;'>Bu hesaba ait iÅŸlem bulunamadÄ±.</p>";
                 return;
             }
             function hesapAdiBul(id) {
-                if(id === -1) return '<i class="fa-solid fa-money-bill-wave"></i> NAKÝT';
-                if(id === 0) return '<i class="fa-solid fa-globe"></i> HARÝCÝ';
+                if(id === -1) return '<i class="fa-solid fa-money-bill-wave"></i> NAKÄ°T';
+                if(id === 0) return '<i class="fa-solid fa-globe"></i> HARÄ°CÄ°';
                 var h = db.hesaplar.find(function(hs){return hs.id===id;});
                 return h ? h.bankaAdi+" - "+h.hesapSahibi : ("ID:"+id);
             }
             var h = '<div class="ht-islem-kart-list">';
             islemler.slice().reverse().forEach(function(i) {
                 var gorunenIslem = i.islem;
-                var gorunenYon = hesapAdiBul(i.hesapId) + " › " + (i.hedefId ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARÝCÝ');
+                var gorunenYon = hesapAdiBul(i.hesapId) + " â€º " + (i.hedefId ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARÄ°CÄ°');
                 var ikon = '<i class="fa-solid fa-paper-plane"></i>';
                 if(i.islem === "GELEN") {
-                    gorunenYon = '<i class="fa-solid fa-globe"></i> HARÝCÝ › ' + hesapAdiBul(i.hesapId);
+                    gorunenYon = '<i class="fa-solid fa-globe"></i> HARÄ°CÄ° â€º ' + hesapAdiBul(i.hesapId);
                     ikon = '<i class="fa-solid fa-inbox"></i>';
-                } else if(i.islem === "GÝDEN") {
+                } else if(i.islem === "GÄ°DEN") {
                     if(i.hedefId && i.hesapId !== HT_AKTIF_DETAY_HESAP) {
                         gorunenIslem = "GELEN";
                         ikon = '<i class="fa-solid fa-inbox"></i>';
                     }
                 } else if(i.islem === "TRANSFER") {
                     if(i.hesapId === HT_AKTIF_DETAY_HESAP) {
-                        gorunenIslem = "GÝDEN";
+                        gorunenIslem = "GÄ°DEN";
                         ikon = '<i class="fa-solid fa-paper-plane"></i>';
                     } else {
                         gorunenIslem = "GELEN";
@@ -6866,7 +6866,7 @@ function gorevMailGonder(gorev) {
         }
 
         function htYeniIslemFormuDoldur() {
-            var opts = '<option value="0"><i class="fa-solid fa-globe"></i> HARÝCÝ</option><option value="-1"><i class="fa-solid fa-money-bill-wave"></i> NAKÝT</option>';
+            var opts = '<option value="0"><i class="fa-solid fa-globe"></i> HARÄ°CÄ°</option><option value="-1"><i class="fa-solid fa-money-bill-wave"></i> NAKÄ°T</option>';
             var db = htVeriYukle();
             db.hesaplar.forEach(function(h) {
                 opts += '<option value="'+h.id+'">'+h.bankaAdi+' - '+h.hesapSahibi+'</option>';
@@ -6890,7 +6890,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("htModalIslemTur").value = islem ? islem.islem : "GELEN";
             var selectNereden = document.getElementById("htModalNereden");
             var selectNereye = document.getElementById("htModalNereye");
-            var opts = '<option value="0"><i class="fa-solid fa-globe"></i> HARÝCÝ</option><option value="-1"><i class="fa-solid fa-money-bill-wave"></i> NAKÝT</option>';
+            var opts = '<option value="0"><i class="fa-solid fa-globe"></i> HARÄ°CÄ°</option><option value="-1"><i class="fa-solid fa-money-bill-wave"></i> NAKÄ°T</option>';
             db.hesaplar.forEach(function(h) {
                 opts += '<option value="'+h.id+'">'+h.bankaAdi+' - '+h.hesapSahibi+'</option>';
             });
@@ -6919,7 +6919,7 @@ function gorevMailGonder(gorev) {
                 document.getElementById("htModalNereden").value = "0";
                 neredenDiv.style.display = "none";
                 nereyeDiv.style.display = "";
-            } else if(tur === "GÝDEN") {
+            } else if(tur === "GÄ°DEN") {
                 document.getElementById("htModalNereye").value = "0";
                 neredenDiv.style.display = "";
                 nereyeDiv.style.display = "none";
@@ -6930,8 +6930,8 @@ function gorevMailGonder(gorev) {
         }
 
         function htIslemTersineCevir(db, islem) {
-            if(islem.islem === "TRANSFER" || (islem.islem === "GÝDEN" && islem.hedefId)) {
-                htBakiyeGuncelle(db, islem.hesapId, islem.tutar, "GÝDEN", true);
+            if(islem.islem === "TRANSFER" || (islem.islem === "GÄ°DEN" && islem.hedefId)) {
+                htBakiyeGuncelle(db, islem.hesapId, islem.tutar, "GÄ°DEN", true);
                 if(islem.hedefId && (islem.hedefId === 1 || islem.hedefId === -1)) htBakiyeGuncelle(db, islem.hedefId, islem.tutar, "GELEN", true);
             } else {
                 htBakiyeGuncelle(db, islem.hesapId, islem.tutar, islem.islem, true);
@@ -6939,14 +6939,14 @@ function gorevMailGonder(gorev) {
         }
 
         function htEksiBakiyeKontrol(db, hesapId, tutar, islem) {
-            if(islem !== "GÝDEN" && islem !== "TRANSFER") return true;
+            if(islem !== "GÄ°DEN" && islem !== "TRANSFER") return true;
             if(hesapId === 0) return true;
             var bakiye = (hesapId === -1) ? (db.nakit||0) : (function(){
                 var h = db.hesaplar.find(function(x){return x.id===hesapId;});
                 return h ? (h.bakiye||0) : 999999;
             })();
             if(bakiye < tutar) {
-                tmNotify("Yetersiz bakiye! Hesap bakiyesi: " + htTl(bakiye) + ", çekilmek istenen: " + htTl(tutar), "error");
+                tmNotify("Yetersiz bakiye! Hesap bakiyesi: " + htTl(bakiye) + ", Ã§ekilmek istenen: " + htTl(tutar), "error");
                 return false;
             }
             return true;
@@ -6955,20 +6955,20 @@ function gorevMailGonder(gorev) {
         function htIslemModalKaydet() {
             var id = document.getElementById("htModalIslemId").value;
             var aciklama = document.getElementById("htModalIslemAciklama").value.trim();
-            if(!aciklama) { tmNotify("Açýklama zorunludur!", "error"); return; }
+            if(!aciklama) { tmNotify("AÃ§Ä±klama zorunludur!", "error"); return; }
             var tur = document.getElementById("htModalIslemTur").value;
             var fromId = parseInt(document.getElementById("htModalNereden").value);
             var toId = parseInt(document.getElementById("htModalNereye").value);
             if(tur === "TRANSFER") {
-                if(fromId === toId || fromId === 0 || toId === 0) { tmNotify("Transfer için geçerli iki hesap seçin!", "error"); return; }
+                if(fromId === toId || fromId === 0 || toId === 0) { tmNotify("Transfer iÃ§in geÃ§erli iki hesap seÃ§in!", "error"); return; }
             } else if(tur === "GELEN") {
-                if(toId === 0) { tmNotify("GELEN iþleminde alýcý hesap seçilmelidir!", "error"); return; }
+                if(toId === 0) { tmNotify("GELEN iÅŸleminde alÄ±cÄ± hesap seÃ§ilmelidir!", "error"); return; }
             } else {
-                if(fromId === 0) { tmNotify("GÝDEN iþleminde gönderen hesap seçilmelidir!", "error"); return; }
+                if(fromId === 0) { tmNotify("GÄ°DEN iÅŸleminde gÃ¶nderen hesap seÃ§ilmelidir!", "error"); return; }
             }
             var tarih = document.getElementById("htModalTarih").value;
             var tutar = tmTutarCoz(document.getElementById("htModalTutar").value);
-            if(tutar <= 0) { tmNotify("Geçerli bir tutar giriniz!", "error"); return; }
+            if(tutar <= 0) { tmNotify("GeÃ§erli bir tutar giriniz!", "error"); return; }
             var db = htVeriYukle();
             if(id) {
                 id = parseInt(id);
@@ -6987,19 +6987,19 @@ function gorevMailGonder(gorev) {
                 if(tur === "TRANSFER") {
                     if(!htEksiBakiyeKontrol(db, fromId, tutar, "TRANSFER")) return;
                     db.islemler.push({ id:yeniId, hesapId:fromId, hedefId:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"TRANSFER" });
-                    htBakiyeGuncelle(db, fromId, tutar, "GÝDEN");
+                    htBakiyeGuncelle(db, fromId, tutar, "GÄ°DEN");
                     htBakiyeGuncelle(db, toId, tutar, "GELEN");
                 } else if(tur === "GELEN") {
                     db.islemler.push({ id:yeniId, hesapId:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GELEN" });
                     htBakiyeGuncelle(db, toId, tutar, "GELEN");
                 } else {
-                    var gidenKayit = { id:yeniId, hesapId:fromId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GÝDEN" };
+                    var gidenKayit = { id:yeniId, hesapId:fromId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GÄ°DEN" };
                     if(toId !== 0) {
                         gidenKayit.hedefId = toId;
                         if(toId === 1 || toId === -1) htBakiyeGuncelle(db, toId, tutar, "GELEN");
                     }
                     db.islemler.push(gidenKayit);
-                    htBakiyeGuncelle(db, fromId, tutar, "GÝDEN");
+                    htBakiyeGuncelle(db, fromId, tutar, "GÄ°DEN");
                 }
             }
             htVeriKaydet(db);
@@ -7009,15 +7009,15 @@ function gorevMailGonder(gorev) {
             htIslemleriGoster();
             if(HT_AKTIF_DETAY_HESAP !== null) htDetayIslemleriGoster();
             htDurumGuncelle();
-            tmNotify(id ? "Hareket güncellendi." : "Hareket eklendi.", "success");
-            aktiviteEkle((id ? "Hareket güncellendi: " : "Hareket eklendi: ") + aciklama, "Muhasebe");
+            tmNotify(id ? "Hareket gÃ¼ncellendi." : "Hareket eklendi.", "success");
+            aktiviteEkle((id ? "Hareket gÃ¼ncellendi: " : "Hareket eklendi: ") + aciklama, "Muhasebe");
         }
 
         function htBakiyeGuncelle(db, hesapId, tutar, islem, geriAl) {
             var carp = geriAl ? -1 : 1;
             var etki = 0;
             if(islem === "GELEN") etki = tutar * carp;
-            else if(islem === "GÝDEN") etki = -tutar * carp;
+            else if(islem === "GÄ°DEN") etki = -tutar * carp;
             else if(islem === "TRANSFER") return;
             if(hesapId === -1) { db.nakit = (db.nakit||0) + etki; return; }
             var hs = db.hesaplar.find(function(h){return h.id===hesapId;});
@@ -7025,7 +7025,7 @@ function gorevMailGonder(gorev) {
         }
 
         function htIslemSil(id) {
-            tmConfirm("Bu hareketi silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu hareketi silmek istediÄŸinize emin misiniz?", function() {
                 var db = htVeriYukle();
                 var sil = db.islemler.find(function(i){return i.id===id;});
                 if(sil) htIslemTersineCevir(db, sil);
@@ -7049,12 +7049,12 @@ function gorevMailGonder(gorev) {
             if(!konteyner) return;
             var db = htVeriYukle();
             if(!db.islemler || db.islemler.length === 0) {
-                konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-credit-card"></i>','Henüz hesap hareketi bulunmamaktadýr.','Hesap hareketi eklemek için "Hareket Ekle" butonunu kullanýn.');
+                konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-credit-card"></i>','HenÃ¼z hesap hareketi bulunmamaktadÄ±r.','Hesap hareketi eklemek iÃ§in "Hareket Ekle" butonunu kullanÄ±n.');
                 return;
             }
             function hesapAdiBul(id) {
-                if(id === -1) return '<i class="fa-solid fa-money-bill-wave"></i> NAKÝT';
-                if(id === 0) return '<i class="fa-solid fa-globe"></i> HARÝCÝ';
+                if(id === -1) return '<i class="fa-solid fa-money-bill-wave"></i> NAKÄ°T';
+                if(id === 0) return '<i class="fa-solid fa-globe"></i> HARÄ°CÄ°';
                 var h = db.hesaplar.find(function(hs){return hs.id===id;});
                 return h ? h.bankaAdi+" - "+h.hesapSahibi : ("ID:"+id);
             }
@@ -7063,7 +7063,7 @@ function gorevMailGonder(gorev) {
                 var va, vb;
                 if(HT_SIRALAMA.anahtar === "id") { va = a.id; vb = b.id; }
                 else if(HT_SIRALAMA.anahtar === "aciklama") { va = (a.aciklama||"").toLowerCase(); vb = (b.aciklama||"").toLowerCase(); }
-                else if(HT_SIRALAMA.anahtar === "hesap") { va = hesapAdiBul(a.hesapId).toLowerCase()+(a.hedefId?" › "+hesapAdiBul(a.hedefId).toLowerCase():""); vb = hesapAdiBul(b.hesapId).toLowerCase()+(b.hedefId?" › "+hesapAdiBul(b.hedefId).toLowerCase():""); }
+                else if(HT_SIRALAMA.anahtar === "hesap") { va = hesapAdiBul(a.hesapId).toLowerCase()+(a.hedefId?" â€º "+hesapAdiBul(a.hedefId).toLowerCase():""); vb = hesapAdiBul(b.hesapId).toLowerCase()+(b.hedefId?" â€º "+hesapAdiBul(b.hedefId).toLowerCase():""); }
                 else if(HT_SIRALAMA.anahtar === "tarih") { va = a.tarih||""; vb = b.tarih||""; }
                 else if(HT_SIRALAMA.anahtar === "tutar") { va = a.tutar; vb = b.tutar; }
                 else if(HT_SIRALAMA.anahtar === "islem") { va = a.islem; vb = b.islem; }
@@ -7073,16 +7073,16 @@ function gorevMailGonder(gorev) {
             });
             var h = '<div class="ht-islem-kart-list">';
             sirali.forEach(function(i) {
-                var cls = i.islem === "GELEN" ? "gelen" : (i.islem === "GÝDEN" ? "giden" : "transfer");
+                var cls = i.islem === "GELEN" ? "gelen" : (i.islem === "GÄ°DEN" ? "giden" : "transfer");
                 var hAd, ikon;
                 if(i.islem === "TRANSFER") {
-                    hAd = hesapAdiBul(i.hesapId) + " › " + hesapAdiBul(i.hedefId);
+                    hAd = hesapAdiBul(i.hesapId) + " â€º " + hesapAdiBul(i.hedefId);
                     ikon = '<i class="fa-solid fa-rotate"></i>';
                 } else if(i.islem === "GELEN") {
                     hAd = hesapAdiBul(i.hesapId);
                     ikon = '<i class="fa-solid fa-inbox"></i>';
                 } else {
-                    hAd = (i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARÝCÝ');
+                    hAd = (i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARÄ°CÄ°');
                     ikon = '<i class="fa-solid fa-paper-plane"></i>';
                 }
                 h += '<div class="ht-islem-kart" data-search="'+(i.aciklama||"").toLowerCase()+' '+hAd.toLowerCase()+'">';
@@ -7096,7 +7096,7 @@ function gorevMailGonder(gorev) {
                 h += '<span class="ht-islem-kart-islem '+cls+'">'+i.islem+'</span>';
                 h += '</div>';
                 h += '<div class="ht-islem-kart-aksiyon">';
-                h += '<button class="ht-islem-btn ht-islem-btn-edit" onclick="htIslemModalAc('+i.id+')">Düzenle</button>';
+                h += '<button class="ht-islem-btn ht-islem-btn-edit" onclick="htIslemModalAc('+i.id+')">DÃ¼zenle</button>';
                 h += '<button class="ht-islem-btn ht-islem-btn-del" onclick="htIslemSil('+i.id+')">Sil</button>';
                 h += '</div></div>';
             });
@@ -7127,7 +7127,7 @@ function gorevMailGonder(gorev) {
             });
         }
 
-        /* ================= HESAP TAKÝBÝ PDF RAPOR SÝSTEMÝ ================= */
+        /* ================= HESAP TAKÄ°BÄ° PDF RAPOR SÄ°STEMÄ° ================= */
         function htPdfDonemDegisti() {
             var donem = document.getElementById("htPdfDonem").value;
             document.getElementById("htPdfOzelTarih").style.display = donem === "ozel" ? "" : "none";
@@ -7139,11 +7139,11 @@ function gorevMailGonder(gorev) {
             document.getElementById("htPdfHesapId").value = hesapId || "";
             var sec = document.getElementById("htPdfHesap");
             var db = htVeriYukle();
-            sec.innerHTML = '<option value="0"><i class="fa-solid fa-building-columns"></i> Tüm Hesaplar</option>';
+            sec.innerHTML = '<option value="0"><i class="fa-solid fa-building-columns"></i> TÃ¼m Hesaplar</option>';
             db.hesaplar.forEach(function(h) {
                 sec.innerHTML += '<option value="'+h.id+'" '+(hesapId===h.id?'selected':'')+'><i class="fa-solid fa-building-columns"></i> '+h.bankaAdi+' - '+h.hesapSahibi+'</option>';
             });
-            sec.innerHTML += '<option value="-1" '+(hesapId===-1?'selected':'')+'><i class="fa-solid fa-money-bill-wave"></i> NAKÝT</option>';
+            sec.innerHTML += '<option value="-1" '+(hesapId===-1?'selected':'')+'><i class="fa-solid fa-money-bill-wave"></i> NAKÄ°T</option>';
             document.getElementById("htPdfBaslangic").value = "";
             document.getElementById("htPdfBitis").value = "";
             document.getElementById("htPdfDonem").value = "aylik";
@@ -7169,9 +7169,9 @@ function gorevMailGonder(gorev) {
                 bas = new Date(document.getElementById("htPdfBaslangic").value);
                 bitis = new Date(document.getElementById("htPdfBitis").value);
                 if(isNaN(bas.getTime()) || isNaN(bitis.getTime())) {
-                    tmNotify("Lütfen geçerli bir tarih aralýðý seçin!", "error"); return null;
+                    tmNotify("LÃ¼tfen geÃ§erli bir tarih aralÄ±ÄŸÄ± seÃ§in!", "error"); return null;
                 }
-                if(bas > bitis) { tmNotify("Baþlangýç tarihi bitiþ tarihinden sonra olamaz!", "error"); return null; }
+                if(bas > bitis) { tmNotify("BaÅŸlangÄ±Ã§ tarihi bitiÅŸ tarihinden sonra olamaz!", "error"); return null; }
             }
             return { bas: bas, bitis: bitis };
         }
@@ -7192,28 +7192,28 @@ function gorevMailGonder(gorev) {
             islemler.sort(function(a,b){ return (a.tarih||"").localeCompare(b.tarih||""); });
 
             function hesapAdiBul(id) {
-                if(id === -1) return "NAKÝT";
-                if(id === 0) return "HARÝCÝ";
+                if(id === -1) return "NAKÄ°T";
+                if(id === 0) return "HARÄ°CÄ°";
                 var h = db.hesaplar.find(function(hs){return hs.id===id;});
                 return h ? h.bankaAdi+" - "+h.hesapSahibi : ("ID:"+id);
             }
 
             var toplamGelir = 0, toplamGider = 0;
             islemler.forEach(function(i) {
-                if(i.islem === "GELEN" || (i.islem === "GÝDEN" && i.hedefId && (i.hedefId === 1 || i.hedefId === -1))) toplamGelir += i.tutar;
-                else if(i.islem === "GÝDEN" || i.islem === "TRANSFER") toplamGider += i.tutar;
+                if(i.islem === "GELEN" || (i.islem === "GÄ°DEN" && i.hedefId && (i.hedefId === 1 || i.hedefId === -1))) toplamGelir += i.tutar;
+                else if(i.islem === "GÄ°DEN" || i.islem === "TRANSFER") toplamGider += i.tutar;
             });
             var netDegisim = toplamGelir - toplamGider;
 
             var baslik = "HESAP HAREKET RAPORU";
             var donemStr = aralik.bas.toLocaleDateString("tr-TR") + " - " + aralik.bitis.toLocaleDateString("tr-TR");
-            var hesapStr = hesapId === 0 ? "TÜM HESAPLAR" : hesapAdiBul(hesapId);
+            var hesapStr = hesapId === 0 ? "TÃœM HESAPLAR" : hesapAdiBul(hesapId);
 
             var satirlar = '';
             islemler.forEach(function(i) {
-                var ikon = i.islem === "GELEN" ? '<i class="fa-solid fa-inbox"></i>' : (i.islem === "GÝDEN" ? '<i class="fa-solid fa-paper-plane"></i>' : '<i class="fa-solid fa-rotate"></i>');
-                var hAd = i.islem === "TRANSFER" ? hesapAdiBul(i.hesapId)+" › "+hesapAdiBul(i.hedefId) : (i.islem === "GELEN" ? hesapAdiBul(i.hesapId) : (i.hedefId&&i.hedefId!==0?hesapAdiBul(i.hedefId):"HARÝCÝ"));
-                var renk = i.islem === "GELEN" ? "#2E7D32" : (i.islem === "GÝDEN" ? "#9E2A2B" : "#a0b8cc");
+                var ikon = i.islem === "GELEN" ? '<i class="fa-solid fa-inbox"></i>' : (i.islem === "GÄ°DEN" ? '<i class="fa-solid fa-paper-plane"></i>' : '<i class="fa-solid fa-rotate"></i>');
+                var hAd = i.islem === "TRANSFER" ? hesapAdiBul(i.hesapId)+" â€º "+hesapAdiBul(i.hedefId) : (i.islem === "GELEN" ? hesapAdiBul(i.hesapId) : (i.hedefId&&i.hedefId!==0?hesapAdiBul(i.hedefId):"HARÄ°CÄ°"));
+                var renk = i.islem === "GELEN" ? "#2E7D32" : (i.islem === "GÄ°DEN" ? "#9E2A2B" : "#a0b8cc");
                 satirlar += '<tr>';
                 satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;text-align:center;font-size:9px;">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</td>';
                 satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;font-size:9px;">'+i.aciklama+'</td>';
@@ -7228,7 +7228,7 @@ function gorevMailGonder(gorev) {
                 ? '<img src="'+logoData+'" style="height:12mm;width:auto;vertical-align:middle;" alt="Logo">' : '';
 
             var fb = (function(){ try{return JSON.parse(localStorage.getItem("tm_sirket_bilgileri"))||{};}catch(e){return {};} })();
-            var firmaAd = fb.ad || "TURAK MÝMARLIK";
+            var firmaAd = fb.ad || "TURAK MÄ°MARLIK";
 
             var sayfaHtml = `
                 <div style="width:210mm;min-height:297mm;padding:5mm 7mm;box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;background:#fff;color:#222;">
@@ -7245,21 +7245,21 @@ function gorevMailGonder(gorev) {
                             <div style="font-size:12px;font-weight:800;color:#1a1a2e;">`+hesapStr+`</div>
                         </div>
                         <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;background:#fafafa;text-align:center;">
-                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM ÝÞLEM</div>
+                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM Ä°ÅžLEM</div>
                             <div style="font-size:12px;font-weight:800;color:#1a1a2e;">`+islemler.length+` adet</div>
                         </div>
                     </div>
                     <div style="display:flex;gap:4mm;margin-bottom:3mm;">
                         <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;">
-                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM GELÝR</div>
+                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM GELÄ°R</div>
                             <div style="font-size:16px;font-weight:900;color:#2E7D32;">`+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+` ?</div>
                         </div>
                         <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;">
-                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM GÝDER</div>
+                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM GÄ°DER</div>
                             <div style="font-size:16px;font-weight:900;color:#9E2A2B;">`+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+` ?</div>
                         </div>
                         <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;background:`+(netDegisim>=0?'rgba(46,125,50,0.06)':'rgba(158,42,43,0.06)')+`;">
-                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">NET DEÐÝÞÝM</div>
+                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">NET DEÄžÄ°ÅžÄ°M</div>
                             <div style="font-size:16px;font-weight:900;color:`+(netDegisim>=0?'#2E7D32':'#9E2A2B')+`;">`+netDegisim.toLocaleString('tr-TR',{minFractionDigits:2})+` ?</div>
                         </div>
                     </div>
@@ -7267,10 +7267,10 @@ function gorevMailGonder(gorev) {
                         <table style="width:100%;border-collapse:collapse;font-size:9px;">
                             <thead>
                                 <tr style="background:#1a1a2e;color:#fff;">
-                                    <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;width:14%;">TARÝH</th>
-                                    <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;">AÇIKLAMA</th>
+                                    <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;width:14%;">TARÄ°H</th>
+                                    <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;">AÃ‡IKLAMA</th>
                                     <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;width:22%;">HESAP</th>
-                                    <th style="padding:2mm 3mm;text-align:center;font-size:8px;letter-spacing:0.5px;width:10%;">TÜR</th>
+                                    <th style="padding:2mm 3mm;text-align:center;font-size:8px;letter-spacing:0.5px;width:10%;">TÃœR</th>
                                     <th style="padding:2mm 3mm;text-align:right;font-size:8px;letter-spacing:0.5px;width:18%;">TUTAR</th>
                                 </tr>
                             </thead>
@@ -7278,7 +7278,7 @@ function gorevMailGonder(gorev) {
                         </table>
                     </div>
                     <div style="border-top:2px solid #1a1a2e;padding-top:1.5mm;margin-top:4mm;text-align:center;">
-                        <div style="font-size:7px;color:#888;line-height:1.5;">TM-Portal Hesap Takip Sistemi · Rapor: `+donemStr+` · `+hesapStr+`</div>
+                        <div style="font-size:7px;color:#888;line-height:1.5;">TM-Portal Hesap Takip Sistemi Â· Rapor: `+donemStr+` Â· `+hesapStr+`</div>
                     </div>
                 </div>
             `;
@@ -7288,7 +7288,7 @@ function gorevMailGonder(gorev) {
             sayfaEl.innerHTML = sayfaHtml;
             document.body.appendChild(sayfaEl);
 
-            tmLoadingGoster("Rapor oluþturuluyor...");
+            tmLoadingGoster("Rapor oluÅŸturuluyor...");
             html2canvas(sayfaEl, {scale:4,useCORS:true,logging:false,width:793,height:1122}).then(function(cv){
                 var dt = cv.toDataURL('image/jpeg',0.92);
                 var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
@@ -7300,11 +7300,11 @@ function gorevMailGonder(gorev) {
                 tmNotify("Rapor PDF olarak kaydedildi.", "success");
             }).catch(function(e){
                 tmLoadingGizle();
-                tmNotify("PDF oluþturulurken hata: " + (e.message||e), "error");
+                tmNotify("PDF oluÅŸturulurken hata: " + (e.message||e), "error");
                 try { document.body.removeChild(sayfaEl); } catch(ex) { console.error(ex); }
             });
         }
-        /* ================= TM FÝYAT LÝSTESÝ — FÝYAT KARTLARI ================= */
+        /* ================= TM FÄ°YAT LÄ°STESÄ° â€” FÄ°YAT KARTLARI ================= */
         const TMF_KART_KEY = 'tm_kategorili_fiyatlar';
         let tmfEditId = null;
 
@@ -7313,17 +7313,17 @@ function gorevMailGonder(gorev) {
             if (!db || !db.kartlar) {
                 db = {
                     kartlar: [
-                        { id: 1, ad: "Uygulama Proje", tip: "kademeli", birim: "m²", not: "Konut projeleri için geçerlidir.", kademeler: [
+                        { id: 1, ad: "Uygulama Proje", tip: "kademeli", birim: "mÂ²", not: "Konut projeleri iÃ§in geÃ§erlidir.", kademeler: [
                             { min: "0", max: "100", fiyat: "1100" }, { min: "101", max: "200", fiyat: "570" }, { min: "201", max: "250", fiyat: "460" }, { min: "251", max: "500", fiyat: "240" }, { min: "501", max: "750", fiyat: "170" }, { min: "751", max: "1000", fiyat: "155" }, { min: "1001", max: "+", fiyat: "130" }
                         ] },
-                        { id: 2, ad: "3B Modelleme ve Tasarým", tip: "birim", birim: "m²", not: "", birimFiyat: "500" },
-                        { id: 3, ad: "Þantiye Þefliði", tip: "kademeli", birim: "ay", not: "Toplam inþaat alanýna göre aylýk ücret.", kademeler: [
+                        { id: 2, ad: "3B Modelleme ve TasarÄ±m", tip: "birim", birim: "mÂ²", not: "", birimFiyat: "500" },
+                        { id: 3, ad: "Åžantiye ÅžefliÄŸi", tip: "kademeli", birim: "ay", not: "Toplam inÅŸaat alanÄ±na gÃ¶re aylÄ±k Ã¼cret.", kademeler: [
                             { min: "0", max: "500", fiyat: "8000" }, { min: "501", max: "1000", fiyat: "12000" }, { min: "1001", max: "+", fiyat: "15000" }
                         ] },
-                        { id: 4, ad: "Kat Ýrtifaký/Mülkiyeti", tip: "birim", birim: "adet", not: "Her bir baðýmsýz bölüm için.", birimFiyat: "5000" },
-                        { id: 5, ad: "Danýþmanlýk", tip: "birim", birim: "saat", not: "", birimFiyat: "750" },
-                        { id: 6, ad: "Rölöve", tip: "birim", birim: "m²", not: "", birimFiyat: "200" },
-                        { id: 7, ad: "Keþif", tip: "sabit", birim: "adet", not: "Anahtar teslim keþif bedeli.", sabitFiyat: "3000" }
+                        { id: 4, ad: "Kat Ä°rtifakÄ±/MÃ¼lkiyeti", tip: "birim", birim: "adet", not: "Her bir baÄŸÄ±msÄ±z bÃ¶lÃ¼m iÃ§in.", birimFiyat: "5000" },
+                        { id: 5, ad: "DanÄ±ÅŸmanlÄ±k", tip: "birim", birim: "saat", not: "", birimFiyat: "750" },
+                        { id: 6, ad: "RÃ¶lÃ¶ve", tip: "birim", birim: "mÂ²", not: "", birimFiyat: "200" },
+                        { id: 7, ad: "KeÅŸif", tip: "sabit", birim: "adet", not: "Anahtar teslim keÅŸif bedeli.", sabitFiyat: "3000" }
                     ],
                     sonrakiId: 8
                 };
@@ -7350,7 +7350,7 @@ function gorevMailGonder(gorev) {
             const grid = document.getElementById("tmfKartGrid");
             if (!grid) return;
             if (db.kartlar.length === 0) {
-                grid.innerHTML = '<div class="tmf-bos-durum"><div class="tmf-bos-icon">??</div><div class="tmf-bos-title">Henüz fiyat kartý yok</div><div class="tmf-bos-desc">"Yeni Kart" butonuna týklayarak ilk fiyatlandýrma kartýnýzý oluþturun.</div></div>';
+                grid.innerHTML = '<div class="tmf-bos-durum"><div class="tmf-bos-icon">??</div><div class="tmf-bos-title">HenÃ¼z fiyat kartÄ± yok</div><div class="tmf-bos-desc">"Yeni Kart" butonuna tÄ±klayarak ilk fiyatlandÄ±rma kartÄ±nÄ±zÄ± oluÅŸturun.</div></div>';
                 return;
             }
             let h = "";
@@ -7360,7 +7360,7 @@ function gorevMailGonder(gorev) {
                 h += '<div class="tmf-kart" draggable="true" data-id="' + k.id + '">';
                 h += '<div class="tmf-kart-header"><h3>' + esc(k.ad) + '</h3><div class="tmf-kart-badges">';
                 h += '<span class="tmf-badge tmf-badge-' + k.tip + '">' + tipIcon + ' ' + tipEtiket + '</span>';
-                h += '<span class="tmf-badge tmf-badge-unit">' + esc(k.birim || "—") + '</span>';
+                h += '<span class="tmf-badge tmf-badge-unit">' + esc(k.birim || "â€”") + '</span>';
                 h += '</div></div>';
                 h += '<div class="tmf-kart-body">';
                 if (k.tip === "sabit") {
@@ -7380,7 +7380,7 @@ function gorevMailGonder(gorev) {
                 h += '<div class="tmf-kart-hesapla">';
                 h += '<div class="tmf-hesap-row"><input type="text" class="tmf-hesap-input" id="tmfHesapInput_' + k.id + '" oninput="tmfKartHesapla(' + k.id + ')" placeholder="Miktar girin..." value=""><span class="tmf-hesap-unit">' + esc(k.birim) + '</span></div>';
                 h += '<div class="tmf-hesap-islem" id="tmfHesapIslem_' + k.id + '"></div>';
-                h += '<div class="tmf-hesap-sonuc"><span class="tmf-hesap-label">Toplam</span><span id="tmfHesapSonuc_' + k.id + '">—</span></div>';
+                h += '<div class="tmf-hesap-sonuc"><span class="tmf-hesap-label">Toplam</span><span id="tmfHesapSonuc_' + k.id + '">â€”</span></div>';
                 h += '</div>';
                 if (k.not) { h += '<div class="tmf-kart-not"><i class="fa-solid fa-thumbtack"></i> ' + esc(k.not) + '</div>'; }
                 h += '<div class="tmf-kart-actions">';
@@ -7430,7 +7430,7 @@ function gorevMailGonder(gorev) {
             if (!miktarStr) {
                 const sEl = document.getElementById("tmfHesapSonuc_" + id);
                 const iEl = document.getElementById("tmfHesapIslem_" + id);
-                if (sEl) sEl.textContent = "—";
+                if (sEl) sEl.textContent = "â€”";
                 if (iEl) iEl.textContent = "";
                 return;
             }
@@ -7447,12 +7447,12 @@ function gorevMailGonder(gorev) {
             if (kart.tip === "sabit") {
                 const f = tmfDegerCoz(kart.sabitFiyat);
                 if (sEl) sEl.textContent = tmfFmt(f) + ' ?';
-                if (iEl) iEl.textContent = "Sabit fiyat × 1";
+                if (iEl) iEl.textContent = "Sabit fiyat Ã— 1";
             } else if (kart.tip === "birim") {
                 const bf = tmfDegerCoz(kart.birimFiyat);
                 const t = miktar * bf;
                 if (sEl) sEl.textContent = tmfFmt(t) + ' ?';
-                if (iEl) iEl.textContent = tmfFmt(bf) + ' ? × ' + tmfFmt(miktar) + ' ' + kart.birim;
+                if (iEl) iEl.textContent = tmfFmt(bf) + ' ? Ã— ' + tmfFmt(miktar) + ' ' + kart.birim;
             } else if (kart.tip === "kademeli" && kart.kademeler) {
                 let eslesen = null;
                 for (let i = 0; i < kart.kademeler.length; i++) {
@@ -7465,9 +7465,9 @@ function gorevMailGonder(gorev) {
                     const bf = tmfDegerCoz(eslesen.fiyat);
                     const t = miktar * bf;
                     if (sEl) sEl.textContent = tmfFmt(t) + ' ?';
-                    if (iEl) iEl.textContent = tmfFmt(bf) + ' ? × ' + tmfFmt(miktar) + ' ' + kart.birim;
+                    if (iEl) iEl.textContent = tmfFmt(bf) + ' ? Ã— ' + tmfFmt(miktar) + ' ' + kart.birim;
                 } else {
-                    if (sEl) sEl.textContent = '<i class="fa-solid fa-triangle-exclamation"></i> Aralýk dýþý';
+                    if (sEl) sEl.textContent = '<i class="fa-solid fa-triangle-exclamation"></i> AralÄ±k dÄ±ÅŸÄ±';
                     if (iEl) iEl.textContent = "";
                 }
             }
@@ -7475,11 +7475,11 @@ function gorevMailGonder(gorev) {
 
         function tmfKartEkle() {
             const db = tmfVeriYukle();
-            tmPrompt("Kart adý:", function(ad) {
+            tmPrompt("Kart adÄ±:", function(ad) {
                 if (!ad || ad.trim() === "") return;
                 ad = ad.trim();
                 const yeniId = db.sonrakiId++;
-                db.kartlar.push({ id: yeniId, ad: ad, tip: "birim", birim: "m²", not: "", birimFiyat: "" });
+                db.kartlar.push({ id: yeniId, ad: ad, tip: "birim", birim: "mÂ²", not: "", birimFiyat: "" });
                 tmfVeriKaydet(db);
                 tmfSayfayiYukle();
                 tmNotify("Kart eklendi: " + ad, "success");
@@ -7490,7 +7490,7 @@ function gorevMailGonder(gorev) {
             const db = tmfVeriYukle();
             const kart = db.kartlar.find(k => k.id === id);
             if (!kart) return;
-            tmConfirm('"' + kart.ad + '" kartýný silmek istediðinize emin misiniz?', function() {
+            tmConfirm('"' + kart.ad + '" kartÄ±nÄ± silmek istediÄŸinize emin misiniz?', function() {
                 db.kartlar = db.kartlar.filter(k => k.id !== id);
                 tmfVeriKaydet(db);
                 tmfSayfayiYukle();
@@ -7506,15 +7506,15 @@ function gorevMailGonder(gorev) {
             const modal = document.getElementById("tmfKartModal");
             const icerik = document.getElementById("tmfKartModalIcerik");
             if (!modal || !icerik) return;
-            let h = '<div class="tmf-modal-header"><h3><i class="fa-regular fa-pen-to-square"></i> Kart Düzenle</h3><button class="tmf-modal-close" onclick="tmfKartModalKapat()"><i class="fa-solid fa-xmark"></i></button></div>';
+            let h = '<div class="tmf-modal-header"><h3><i class="fa-regular fa-pen-to-square"></i> Kart DÃ¼zenle</h3><button class="tmf-modal-close" onclick="tmfKartModalKapat()"><i class="fa-solid fa-xmark"></i></button></div>';
             h += '<div class="tmf-modal-body">';
-            h += '<div class="tmf-modal-field"><label>Kart Adý</label><input type="text" id="tmfModalAd" value="' + esc(kart.ad) + '"></div>';
-            h += '<div class="tmf-modal-field"><label>Fiyat Türü</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>?? Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '><i class="fa-solid fa-ruler-combined"></i> Kademeli Fiyat</option></select></div>';
-            h += '<div class="tmf-modal-field"><label>Birim Türü</label><input type="text" id="tmfModalBirim" value="' + esc(kart.birim) + '" placeholder="m², adet, ay, saat..."></div>';
+            h += '<div class="tmf-modal-field"><label>Kart AdÄ±</label><input type="text" id="tmfModalAd" value="' + esc(kart.ad) + '"></div>';
+            h += '<div class="tmf-modal-field"><label>Fiyat TÃ¼rÃ¼</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>?? Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '><i class="fa-solid fa-ruler-combined"></i> Kademeli Fiyat</option></select></div>';
+            h += '<div class="tmf-modal-field"><label>Birim TÃ¼rÃ¼</label><input type="text" id="tmfModalBirim" value="' + esc(kart.birim) + '" placeholder="mÂ², adet, ay, saat..."></div>';
             h += '<div id="tmfModalDinamikAlan"></div>';
-            h += '<div class="tmf-modal-field"><label>Not (isteðe baðlý)</label><textarea id="tmfModalNot" placeholder="Bu kartla ilgili notlar...">' + esc(kart.not || "") + '</textarea></div>';
+            h += '<div class="tmf-modal-field"><label>Not (isteÄŸe baÄŸlÄ±)</label><textarea id="tmfModalNot" placeholder="Bu kartla ilgili notlar...">' + esc(kart.not || "") + '</textarea></div>';
             h += '</div>';
-            h += '<div class="tmf-modal-actions"><button class="tmf-modal-btn tmf-modal-btn-save" onclick="tmfKartModalKaydet()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button><button class="tmf-modal-btn tmf-modal-btn-cancel" onclick="tmfKartModalKapat()">Ýptal</button></div>';
+            h += '<div class="tmf-modal-actions"><button class="tmf-modal-btn tmf-modal-btn-save" onclick="tmfKartModalKaydet()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button><button class="tmf-modal-btn tmf-modal-btn-cancel" onclick="tmfKartModalKapat()">Ä°ptal</button></div>';
             icerik.innerHTML = h;
             modal.style.display = "flex";
             tmfModalTipDegisti();
@@ -7529,9 +7529,9 @@ function gorevMailGonder(gorev) {
             if (!kart) return;
             let h = "";
             if (tip === "sabit") {
-                h += '<div class="tmf-modal-field"><label>Sabit Fiyat (?)</label><input type="text" id="tmfModalSabit" value="' + esc(kart.sabitFiyat || "") + '" placeholder="Örn: 5000"></div>';
+                h += '<div class="tmf-modal-field"><label>Sabit Fiyat (?)</label><input type="text" id="tmfModalSabit" value="' + esc(kart.sabitFiyat || "") + '" placeholder="Ã–rn: 5000"></div>';
             } else if (tip === "birim") {
-                h += '<div class="tmf-modal-field"><label>Birim Fiyat (?)</label><input type="text" id="tmfModalBirimFiyat" value="' + esc(kart.birimFiyat || "") + '" placeholder="Örn: 500"></div>';
+                h += '<div class="tmf-modal-field"><label>Birim Fiyat (?)</label><input type="text" id="tmfModalBirimFiyat" value="' + esc(kart.birimFiyat || "") + '" placeholder="Ã–rn: 500"></div>';
             } else if (tip === "kademeli") {
                 const kd = kart.kademeler && kart.kademeler.length > 0 ? kart.kademeler : [{ min: "", max: "", fiyat: "" }];
                 h += '<div class="tmf-modal-kademeler"><label style="font-size:9px; font-weight:700; color:#7a94ad; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; display:block;">Fiyat Kademeleri</label>';
@@ -7568,10 +7568,10 @@ function gorevMailGonder(gorev) {
             const birim = document.getElementById("tmfModalBirim");
             const notEl = document.getElementById("tmfModalNot");
             if (!ad || !tip || !birim) return;
-            if (!ad.value.trim()) { tmNotify("Kart adý boþ olamaz.", "error"); return; }
+            if (!ad.value.trim()) { tmNotify("Kart adÄ± boÅŸ olamaz.", "error"); return; }
             kart.ad = ad.value.trim();
             kart.tip = tip.value;
-            kart.birim = birim.value.trim() || "—";
+            kart.birim = birim.value.trim() || "â€”";
             kart.not = notEl ? notEl.value : "";
             if (kart.tip === "sabit") {
                 const s = document.getElementById("tmfModalSabit");
@@ -7610,8 +7610,8 @@ function gorevMailGonder(gorev) {
             tmfEditId = null;
         }
 
-        /* ==================== FATURA TAKÝP SÝSTEMÝ ==================== */
-        /* ==================== FATURA TAKÝP SÝSTEMÝ ==================== */
+        /* ==================== FATURA TAKÄ°P SÄ°STEMÄ° ==================== */
+        /* ==================== FATURA TAKÄ°P SÄ°STEMÄ° ==================== */
         const FT_DB_KEY = "tm_fatura_takip_db";
 
         function ftDbYukle() {
@@ -7644,24 +7644,24 @@ function gorevMailGonder(gorev) {
             var maxId = 0;
             etkinlikler.forEach(function(e){ if (typeof e.id === "number" && e.id > maxId) maxId = e.id; });
             var yeni = [];
-            var aylar = ["Ocak","Þubat","Mart","Nisan","Mayýs","Haziran","Temmuz","Aðustos","Eylül","Ekim","Kasým","Aralýk"];
+            var aylar = ["Ocak","Åžubat","Mart","Nisan","MayÄ±s","Haziran","Temmuz","AÄŸustos","EylÃ¼l","Ekim","KasÄ±m","AralÄ±k"];
             for (var a = 0; a < 11; a++) {
                 maxId++;
                 yeni.push({ id: maxId, baslik: "KDV Beyannamesi (" + aylar[a] + ")", tur: "KDV", tarih: yil + "-" + (a<9?"0":"") + (a+2) + "-26", aciklama: "KDV beyannamesi verilecek", tamamlandi: false, otomatik: true });
             }
             var gv = [
-                { baslik:"Geçici Vergi 1. Dönem (Ocak-Þubat-Mart)", ay:5, gun:14 },
-                { baslik:"Geçici Vergi 2. Dönem (Nisan-Mayýs-Haziran)", ay:8, gun:14 },
-                { baslik:"Geçici Vergi 3. Dönem (Temmuz-Aðustos-Eylül)", ay:11, gun:14 }
+                { baslik:"GeÃ§ici Vergi 1. DÃ¶nem (Ocak-Åžubat-Mart)", ay:5, gun:14 },
+                { baslik:"GeÃ§ici Vergi 2. DÃ¶nem (Nisan-MayÄ±s-Haziran)", ay:8, gun:14 },
+                { baslik:"GeÃ§ici Vergi 3. DÃ¶nem (Temmuz-AÄŸustos-EylÃ¼l)", ay:11, gun:14 }
             ];
             gv.forEach(function(g) {
                 maxId++;
-                yeni.push({ id: maxId, baslik: g.baslik, tur: "Kurumlar Vergisi", tarih: yil + "-" + (g.ay<10?"0":"") + g.ay + "-" + (g.gun<10?"0":"") + g.gun, aciklama: "Geçici vergi beyannamesi verilecek", tamamlandi: false, otomatik: true });
+                yeni.push({ id: maxId, baslik: g.baslik, tur: "Kurumlar Vergisi", tarih: yil + "-" + (g.ay<10?"0":"") + g.ay + "-" + (g.gun<10?"0":"") + g.gun, aciklama: "GeÃ§ici vergi beyannamesi verilecek", tamamlandi: false, otomatik: true });
             });
             maxId++;
-            yeni.push({ id: maxId, baslik: "Yýllýk Gelir Vergisi Beyannamesi", tur: "Gelir Vergisi", tarih: yil + "-03-31", aciklama: "Bir önceki yýlýn gelir vergisi beyannamesi verilecek", tamamlandi: false, otomatik: true });
+            yeni.push({ id: maxId, baslik: "YÄ±llÄ±k Gelir Vergisi Beyannamesi", tur: "Gelir Vergisi", tarih: yil + "-03-31", aciklama: "Bir Ã¶nceki yÄ±lÄ±n gelir vergisi beyannamesi verilecek", tamamlandi: false, otomatik: true });
             maxId++;
-            yeni.push({ id: maxId, baslik: "Kurumlar Vergisi Beyannamesi", tur: "Kurumlar Vergisi", tarih: yil + "-04-30", aciklama: "Bir önceki yýlýn kurumlar vergisi beyannamesi verilecek", tamamlandi: false, otomatik: true });
+            yeni.push({ id: maxId, baslik: "Kurumlar Vergisi Beyannamesi", tur: "Kurumlar Vergisi", tarih: yil + "-04-30", aciklama: "Bir Ã¶nceki yÄ±lÄ±n kurumlar vergisi beyannamesi verilecek", tamamlandi: false, otomatik: true });
             db.yillar[y].vergiEtkinlikleri = etkinlikler.concat(yeni);
             db.yillar[y]._otomatikEklendi = true;
             origSetItem(FT_DB_KEY, JSON.stringify(db));
@@ -7681,13 +7681,13 @@ function gorevMailGonder(gorev) {
                 }
                 var ekle = document.createElement("option");
                 ekle.value = "ozel";
-                ekle.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Özel Yýl...';
+                ekle.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Ã–zel YÄ±l...';
                 sec.appendChild(ekle);
             }
             var vtSpan = document.getElementById("ftOdenenVergiTurleri");
             if (vtSpan) vtSpan.innerText = "(" + SABIT_VERGI_TURLERI.join(", ") + ")";
             var tg = document.getElementById("ftTarihGoster");
-            if (tg) { var n = new Date(); tg.innerText = n.getDate() + " " + ["Ocak","Þubat","Mart","Nisan","Mayýs","Haziran","Temmuz","Aðustos","Eylül","Ekim","Kasým","Aralýk"][n.getMonth()] + " " + n.getFullYear(); }
+            if (tg) { var n = new Date(); tg.innerText = n.getDate() + " " + ["Ocak","Åžubat","Mart","Nisan","MayÄ±s","Haziran","Temmuz","AÄŸustos","EylÃ¼l","Ekim","KasÄ±m","AralÄ±k"][n.getMonth()] + " " + n.getFullYear(); }
             ftOtomatikEtkinlikleriEkle(parseInt(yv.yil));
             ftGelenGoster(); ftGidenGoster(); ftKdvGoster(); ftOdenenVergiGoster(); ftTakvimGoster(); faturaOzetGuncelle();
         }
@@ -7713,7 +7713,7 @@ function gorevMailGonder(gorev) {
                 faturaSayfayiYukle();
             }
             if (yil === "ozel") {
-                tmPrompt("Gitmek istediðiniz yýlý giriniz (ör: 2025):", function(girilen) {
+                tmPrompt("Gitmek istediÄŸiniz yÄ±lÄ± giriniz (Ã¶r: 2025):", function(girilen) {
                     if (!girilen || isNaN(parseInt(girilen))) { faturaSayfayiYukle(); return; }
                     _faturaYilAyarla(parseInt(girilen));
                 });
@@ -7745,13 +7745,13 @@ function gorevMailGonder(gorev) {
                     kdvNet = net;
                     netKart.className = "ft-ozet-card card-kdv-net kdv-odenecek";
                     netIco.innerHTML = '<i class="fa-solid fa-circle" style="color:#C0392B"></i>';
-                    netLbl.innerText = "KDV Ödenecek";
+                    netLbl.innerText = "KDV Ã–denecek";
                     netVal.style.color = "var(--accent-red)";
                 } else {
                     kdvNet = -net;
                     netKart.className = "ft-ozet-card card-kdv-net kdv-alacak";
                     netIco.innerHTML = '<i class="fa-solid fa-circle" style="color:#2E7D32"></i>';
-                    netLbl.innerText = "KDV Alacak (+ fazla ödeme)";
+                    netLbl.innerText = "KDV Alacak (+ fazla Ã¶deme)";
                     netVal.style.color = "var(--btn-green)";
                 }
             } else {
@@ -7779,7 +7779,7 @@ function gorevMailGonder(gorev) {
             form.style.display = "flex";
             form.innerHTML = '<div style="width:100%;">' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
-                '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Firma Adý</label><input type="text" id="ftGelenFirma" value="'+(f?f.firmaAdi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
+                '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Firma AdÄ±</label><input type="text" id="ftGelenFirma" value="'+(f?f.firmaAdi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Fatura No</label><input type="text" id="ftGelenFaturaNo" value="'+(f?f.faturaNo:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Fatura Tarihi</label><input type="date" id="ftGelenTarih" value="'+(f?f.faturaTarihi:anlikTarihGetir())+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vade</label><input type="date" id="ftGelenVade" value="'+(f?f.vadeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
@@ -7789,17 +7789,17 @@ function gorevMailGonder(gorev) {
                 '<div style="flex:0 0 90px;text-align:center;"><label style="display:block;text-align:center;width:100%;">KDV %</label><select id="ftGelenKdvOran" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"><option value="0"'+(f&&f.kdvOrani==0?" selected":"")+'>%0</option><option value="10"'+(f&&f.kdvOrani==10?" selected":"")+'>%10</option><option value="20"'+(f&&f.kdvOrani==20?" selected":"")+'>%20</option></select></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi D.</label><input type="text" id="ftGelenVergiD" value="'+(f?f.vergiDairesi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
                 '<div style="flex:1;min-width:100px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi No</label><input type="text" id="ftGelenVergiNo" value="'+(f?f.vergiNo:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
-                '<div style="flex:1;min-width:110px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Durum</label><select id="ftGelenDurum" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"><option value="odenmedi"'+(f&&f.odemeDurumu=="odenmedi"?" selected":"")+'>Ödenmedi</option><option value="kismi"'+(f&&f.odemeDurumu=="kismi"?" selected":"")+'>Kýsmi</option><option value="odendi"'+(f&&f.odemeDurumu=="odendi"?" selected":"")+'>Ödendi</option></select></div>' +
-                '<div style="flex:1;min-width:110px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Ödeme T.</label><input type="date" id="ftGelenOdemeTarih" value="'+(f?f.odemeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
+                '<div style="flex:1;min-width:110px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Durum</label><select id="ftGelenDurum" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"><option value="odenmedi"'+(f&&f.odemeDurumu=="odenmedi"?" selected":"")+'>Ã–denmedi</option><option value="kismi"'+(f&&f.odemeDurumu=="kismi"?" selected":"")+'>KÄ±smi</option><option value="odendi"'+(f&&f.odemeDurumu=="odendi"?" selected":"")+'>Ã–dendi</option></select></div>' +
+                '<div style="flex:1;min-width:110px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Ã–deme T.</label><input type="date" id="ftGelenOdemeTarih" value="'+(f?f.odemeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
                 '<div style="display:flex;gap:8px;justify-content:center;padding-top:6px;">' +
-                '<button class="btn-form btn-form-save" onclick="'+fn+'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-floppy-disk"></i> '+(isEdit?"Güncelle":"Ekle")+'</button>' +
-                '<button class="btn-form btn-form-cancel" onclick="document.getElementById(\'ftGelenForm\').style.display=\'none\'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-xmark"></i> Ýptal</button></div></div>';
+                '<button class="btn-form btn-form-save" onclick="'+fn+'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-floppy-disk"></i> '+(isEdit?"GÃ¼ncelle":"Ekle")+'</button>' +
+                '<button class="btn-form btn-form-cancel" onclick="document.getElementById(\'ftGelenForm\').style.display=\'none\'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-xmark"></i> Ä°ptal</button></div></div>';
         }
 
         function ftGelenKaydet(id) {
             var firma = (document.getElementById("ftGelenFirma").value || "").trim();
-            if (!firma) { tmNotify("Firma adý giriniz!", "error"); return; }
+            if (!firma) { tmNotify("Firma adÄ± giriniz!", "error"); return; }
             var f = {
                 firmaAdi: firma,
                 faturaNo: document.getElementById("ftGelenFaturaNo").value.trim(),
@@ -7812,7 +7812,7 @@ function gorevMailGonder(gorev) {
                 odemeDurumu: document.getElementById("ftGelenDurum").value,
                 odemeTarihi: document.getElementById("ftGelenOdemeTarih").value
             };
-            if (f.tutar <= 0) { tmNotify("Geçerli tutar giriniz!", "error"); return; }
+            if (f.tutar <= 0) { tmNotify("GeÃ§erli tutar giriniz!", "error"); return; }
             f.kdvTutari = f.tutar * f.kdvOrani / 100;
             f.toplamTutar = f.tutar + f.kdvTutari;
             var yv = ftYilVerisi();
@@ -7826,12 +7826,12 @@ function gorevMailGonder(gorev) {
             ftDbKaydet(yv.db);
             document.getElementById("ftGelenForm").style.display = "none";
             ftGelenGoster(); ftKdvGoster(); faturaOzetGuncelle();
-            tmNotify(id ? "Gelen fatura güncellendi." : "Gelen fatura eklendi.", "success");
-            aktiviteEkle((id ? "Gelen fatura güncellendi: " : "Gelen fatura eklendi: ") + firma, "Muhasebe");
+            tmNotify(id ? "Gelen fatura gÃ¼ncellendi." : "Gelen fatura eklendi.", "success");
+            aktiviteEkle((id ? "Gelen fatura gÃ¼ncellendi: " : "Gelen fatura eklendi: ") + firma, "Muhasebe");
         }
 
         function ftGelenSil(id) {
-            tmConfirm("Bu faturayý silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu faturayÄ± silmek istediÄŸinize emin misiniz?", function() {
                 var yv = ftYilVerisi();
                 var silinen = yv.data.gelenFaturalar.find(function(x){return x.id === id;});
                 yv.data.gelenFaturalar = yv.data.gelenFaturalar.filter(function(x){return x.id !== id;});
@@ -7848,11 +7848,11 @@ function gorevMailGonder(gorev) {
             var konteyner = document.getElementById("ftGelenTablosu");
             if (!konteyner) return;
             var sayac = document.getElementById("ftGelenSayac");
-            if (sayac) sayac.innerText = liste.length + " kayýt";
-            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-inbox"></i>','Henüz gelen fatura bulunmamaktadýr.','Yeni bir gelen fatura eklemek için "Fatura Ekle" butonunu kullanýn.'); return; }
-            var h = '<div class="ft-tbl-wrap"><table class="ft-table"><thead><tr><th>Firma</th><th>Fatura No</th><th>Vergi D.</th><th>Vergi No</th><th>Tarih</th><th>Vade</th><th>Tutar</th><th>KDV</th><th>Toplam</th><th>Durum</th><th>Ödeme T.</th><th></th></tr></thead><tbody>';
+            if (sayac) sayac.innerText = liste.length + " kayÄ±t";
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-inbox"></i>','HenÃ¼z gelen fatura bulunmamaktadÄ±r.','Yeni bir gelen fatura eklemek iÃ§in "Fatura Ekle" butonunu kullanÄ±n.'); return; }
+            var h = '<div class="ft-tbl-wrap"><table class="ft-table"><thead><tr><th>Firma</th><th>Fatura No</th><th>Vergi D.</th><th>Vergi No</th><th>Tarih</th><th>Vade</th><th>Tutar</th><th>KDV</th><th>Toplam</th><th>Durum</th><th>Ã–deme T.</th><th></th></tr></thead><tbody>';
             liste.slice().reverse().forEach(function(f) {
-                var dc = f.odemeDurumu, dt = dc==="odendi"?"Ödendi":dc==="kismi"?"Kýsmi":"Ödenmedi";
+                var dc = f.odemeDurumu, dt = dc==="odendi"?"Ã–dendi":dc==="kismi"?"KÄ±smi":"Ã–denmedi";
                 h += '<tr data-ftgelen="'+(f.firmaAdi||"").toLowerCase()+' '+(f.faturaNo||"").toLowerCase()+'">';
                 h += '<td style="font-weight:600;">'+esc(f.firmaAdi)+'</td><td>'+esc(f.faturaNo)+'</td>';
                 h += '<td style="font-size:11px;color:var(--text-light);">'+esc(f.vergiDairesi)+'</td><td style="font-size:11px;">'+esc(f.vergiNo)+'</td>';
@@ -7886,7 +7886,7 @@ function gorevMailGonder(gorev) {
             form.style.display = "flex";
             form.innerHTML = '<div style="width:100%;">' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
-                '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Firma Adý</label><input type="text" id="ftGidenFirma" value="'+(f?f.firmaAdi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
+                '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Firma AdÄ±</label><input type="text" id="ftGidenFirma" value="'+(f?f.firmaAdi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Fatura No</label><input type="text" id="ftGidenFaturaNo" value="'+(f?f.faturaNo:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Fatura Tarihi</label><input type="date" id="ftGidenTarih" value="'+(f?f.faturaTarihi:anlikTarihGetir())+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vade</label><input type="date" id="ftGidenVade" value="'+(f?f.vadeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
@@ -7896,17 +7896,17 @@ function gorevMailGonder(gorev) {
                 '<div style="flex:0 0 90px;text-align:center;"><label style="display:block;text-align:center;width:100%;">KDV %</label><select id="ftGidenKdvOran" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"><option value="0"'+(f&&f.kdvOrani==0?" selected":"")+'>%0</option><option value="10"'+(f&&f.kdvOrani==10?" selected":"")+'>%10</option><option value="20"'+(f&&f.kdvOrani==20?" selected":"")+'>%20</option></select></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi D.</label><input type="text" id="ftGidenVergiD" value="'+(f?f.vergiDairesi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
                 '<div style="flex:1;min-width:100px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi No</label><input type="text" id="ftGidenVergiNo" value="'+(f?f.vergiNo:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
-                '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Durum</label><select id="ftGidenDurum" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"><option value="tahsilEdilmedi"'+(f&&f.tahsilatDurumu=="tahsilEdilmedi"?" selected":"")+'>Tahsil Edilmedi</option><option value="kismi"'+(f&&f.tahsilatDurumu=="kismi"?" selected":"")+'>Kýsmi</option><option value="tahsilEdildi"'+(f&&f.tahsilatDurumu=="tahsilEdildi"?" selected":"")+'>Tahsil Edildi</option></select></div>' +
+                '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Durum</label><select id="ftGidenDurum" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"><option value="tahsilEdilmedi"'+(f&&f.tahsilatDurumu=="tahsilEdilmedi"?" selected":"")+'>Tahsil Edilmedi</option><option value="kismi"'+(f&&f.tahsilatDurumu=="kismi"?" selected":"")+'>KÄ±smi</option><option value="tahsilEdildi"'+(f&&f.tahsilatDurumu=="tahsilEdildi"?" selected":"")+'>Tahsil Edildi</option></select></div>' +
                 '<div style="flex:1;min-width:110px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Tahsilat T.</label><input type="date" id="ftGidenTahsilatTarih" value="'+(f?f.tahsilatTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
                 '<div style="display:flex;gap:8px;justify-content:center;padding-top:6px;">' +
-                '<button class="btn-form btn-form-save" onclick="'+fn+'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-floppy-disk"></i> '+(isEdit?"Güncelle":"Ekle")+'</button>' +
-                '<button class="btn-form btn-form-cancel" onclick="document.getElementById(\'ftGidenForm\').style.display=\'none\'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-xmark"></i> Ýptal</button></div></div>';
+                '<button class="btn-form btn-form-save" onclick="'+fn+'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-floppy-disk"></i> '+(isEdit?"GÃ¼ncelle":"Ekle")+'</button>' +
+                '<button class="btn-form btn-form-cancel" onclick="document.getElementById(\'ftGidenForm\').style.display=\'none\'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-xmark"></i> Ä°ptal</button></div></div>';
         }
 
         function ftGidenKaydet(id) {
             var firma = (document.getElementById("ftGidenFirma").value || "").trim();
-            if (!firma) { tmNotify("Firma adý giriniz!", "error"); return; }
+            if (!firma) { tmNotify("Firma adÄ± giriniz!", "error"); return; }
             var f = {
                 firmaAdi: firma,
                 faturaNo: document.getElementById("ftGidenFaturaNo").value.trim(),
@@ -7919,7 +7919,7 @@ function gorevMailGonder(gorev) {
                 tahsilatDurumu: document.getElementById("ftGidenDurum").value,
                 tahsilatTarihi: document.getElementById("ftGidenTahsilatTarih").value
             };
-            if (f.tutar <= 0) { tmNotify("Geçerli tutar giriniz!", "error"); return; }
+            if (f.tutar <= 0) { tmNotify("GeÃ§erli tutar giriniz!", "error"); return; }
             f.kdvTutari = f.tutar * f.kdvOrani / 100;
             f.toplamTutar = f.tutar + f.kdvTutari;
             var yv = ftYilVerisi();
@@ -7933,12 +7933,12 @@ function gorevMailGonder(gorev) {
             ftDbKaydet(yv.db);
             document.getElementById("ftGidenForm").style.display = "none";
             ftGidenGoster(); ftKdvGoster(); faturaOzetGuncelle();
-            tmNotify(id ? "Giden fatura güncellendi." : "Giden fatura eklendi.", "success");
-            aktiviteEkle((id ? "Giden fatura güncellendi: " : "Giden fatura eklendi: ") + firma, "Muhasebe");
+            tmNotify(id ? "Giden fatura gÃ¼ncellendi." : "Giden fatura eklendi.", "success");
+            aktiviteEkle((id ? "Giden fatura gÃ¼ncellendi: " : "Giden fatura eklendi: ") + firma, "Muhasebe");
         }
 
         function ftGidenSil(id) {
-            tmConfirm("Bu faturayý silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu faturayÄ± silmek istediÄŸinize emin misiniz?", function() {
                 var yv = ftYilVerisi();
                 var silinen = yv.data.gidenFaturalar.find(function(x){return x.id === id;});
                 yv.data.gidenFaturalar = yv.data.gidenFaturalar.filter(function(x){return x.id !== id;});
@@ -7955,11 +7955,11 @@ function gorevMailGonder(gorev) {
             var konteyner = document.getElementById("ftGidenTablosu");
             if (!konteyner) return;
             var sayac = document.getElementById("ftGidenSayac");
-            if (sayac) sayac.innerText = liste.length + " kayýt";
-            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-paper-plane"></i>','Henüz giden fatura bulunmamaktadýr.','Yeni bir giden fatura eklemek için "Fatura Ekle" butonunu kullanýn.'); return; }
+            if (sayac) sayac.innerText = liste.length + " kayÄ±t";
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-paper-plane"></i>','HenÃ¼z giden fatura bulunmamaktadÄ±r.','Yeni bir giden fatura eklemek iÃ§in "Fatura Ekle" butonunu kullanÄ±n.'); return; }
             var h = '<div class="ft-tbl-wrap"><table class="ft-table"><thead><tr><th>Firma</th><th>Fatura No</th><th>Vergi D.</th><th>Vergi No</th><th>Tarih</th><th>Vade</th><th>Tutar</th><th>KDV</th><th>Toplam</th><th>Durum</th><th>Tahsilat T.</th><th></th></tr></thead><tbody>';
             liste.slice().reverse().forEach(function(f) {
-                var dc = f.tahsilatDurumu, dt = dc==="tahsilEdildi"?"Tah.Edildi":dc==="kismi"?"Kýsmi":"Tah.Edilmedi";
+                var dc = f.tahsilatDurumu, dt = dc==="tahsilEdildi"?"Tah.Edildi":dc==="kismi"?"KÄ±smi":"Tah.Edilmedi";
                 h += '<tr data-ftgiden="'+(f.firmaAdi||"").toLowerCase()+' '+(f.faturaNo||"").toLowerCase()+'">';
                 h += '<td style="font-weight:600;">'+esc(f.firmaAdi)+'</td><td>'+esc(f.faturaNo)+'</td>';
                 h += '<td style="font-size:11px;color:var(--text-light);">'+esc(f.vergiDairesi)+'</td><td style="font-size:11px;">'+esc(f.vergiNo)+'</td>';
@@ -7981,20 +7981,20 @@ function gorevMailGonder(gorev) {
             });
         }
 
-        /* ---------- Ödenen Vergiler ---------- */
+        /* ---------- Ã–denen Vergiler ---------- */
         function ftDonemSecenekleri(yil, secili) {
-            var aylar = ["Ocak","Þubat","Mart","Nisan","Mayýs","Haziran","Temmuz","Aðustos","Eylül","Ekim","Kasým","Aralýk"];
-            var h = '<option value="">Seçiniz</option>';
+            var aylar = ["Ocak","Åžubat","Mart","Nisan","MayÄ±s","Haziran","Temmuz","AÄŸustos","EylÃ¼l","Ekim","KasÄ±m","AralÄ±k"];
+            var h = '<option value="">SeÃ§iniz</option>';
             aylar.forEach(function(a) {
                 var v = yil + "/" + a;
-                h += '<option value="'+v+'"'+(v===secili?" selected":"")+'>'+v+' (Aylýk)</option>';
+                h += '<option value="'+v+'"'+(v===secili?" selected":"")+'>'+v+' (AylÄ±k)</option>';
             });
-            var donemAd = ["1. Dönem (Ocak-Þubat-Mart)","2. Dönem (Nisan-Mayýs-Haziran)","3. Dönem (Temmuz-Aðustos-Eylül)","4. Dönem (Ekim-Kasým-Aralýk)"];
+            var donemAd = ["1. DÃ¶nem (Ocak-Åžubat-Mart)","2. DÃ¶nem (Nisan-MayÄ±s-Haziran)","3. DÃ¶nem (Temmuz-AÄŸustos-EylÃ¼l)","4. DÃ¶nem (Ekim-KasÄ±m-AralÄ±k)"];
             donemAd.forEach(function(d) {
                 var v = yil + "/" + d;
-                h += '<option value="'+v+'"'+(v===secili?" selected":"")+'>'+v+' (Geçici Vergi)</option>';
+                h += '<option value="'+v+'"'+(v===secili?" selected":"")+'>'+v+' (GeÃ§ici Vergi)</option>';
             });
-            var v = yil + " Yýllýk";
+            var v = yil + " YÄ±llÄ±k";
             h += '<option value="'+v+'"'+(v===secili?" selected":"")+'>'+v+'</option>';
             return h;
         }
@@ -8015,17 +8015,17 @@ function gorevMailGonder(gorev) {
             form.style.display = "flex";
             form.innerHTML = '<div style="width:100%;">' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
-                '<div style="flex:2;min-width:160px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi Adý</label><div style="display:flex;gap:4px;"><select id="ftOdenenVergiAdi" style="flex:1;padding:10px;box-sizing:border-box;text-align:center;">'+turOpts+'</select>' +
-                '<button class="btn btn-save-green" title="Tür Ekle" onclick="yeniVergiTuruEklePrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;"><i class="fa-solid fa-plus"></i></button>' +
-                '<button class="btn btn-danger btn-sm" title="Tür Sil" onclick="vergiTuruSilPrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;">?</button></div></div>' +
+                '<div style="flex:2;min-width:160px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi AdÄ±</label><div style="display:flex;gap:4px;"><select id="ftOdenenVergiAdi" style="flex:1;padding:10px;box-sizing:border-box;text-align:center;">'+turOpts+'</select>' +
+                '<button class="btn btn-save-green" title="TÃ¼r Ekle" onclick="yeniVergiTuruEklePrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;"><i class="fa-solid fa-plus"></i></button>' +
+                '<button class="btn btn-danger btn-sm" title="TÃ¼r Sil" onclick="vergiTuruSilPrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;">?</button></div></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Tutar (?)</label><input type="text" id="ftOdenenVergiTutar" value="'+tutarVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></div>' +
-                '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Ödeme Tarihi</label><input type="date" id="ftOdenenVergiTarih" value="'+(v?v.odemeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
-                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Dönem</label><select id="ftOdenenVergiDonem" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;">'+donemOpts+'</select></div>' +
-                '<div style="flex:2;min-width:150px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Açýklama</label><input type="text" id="ftOdenenVergiAciklama" value="'+(v?v.aciklama:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
+                '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Ã–deme Tarihi</label><input type="date" id="ftOdenenVergiTarih" value="'+(v?v.odemeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
+                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">DÃ¶nem</label><select id="ftOdenenVergiDonem" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;">'+donemOpts+'</select></div>' +
+                '<div style="flex:2;min-width:150px;text-align:center;"><label style="display:block;text-align:center;width:100%;">AÃ§Ä±klama</label><input type="text" id="ftOdenenVergiAciklama" value="'+(v?v.aciklama:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
                 '<div style="display:flex;gap:8px;justify-content:center;padding-top:6px;">' +
-                '<button class="btn-form btn-form-save" onclick="'+fn+'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-floppy-disk"></i> '+(isEdit?"Güncelle":"Ekle")+'</button>' +
-                '<button class="btn-form btn-form-cancel" onclick="document.getElementById(\'ftOdenenVergiForm\').style.display=\'none\'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-xmark"></i> Ýptal</button></div></div>';
+                '<button class="btn-form btn-form-save" onclick="'+fn+'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-floppy-disk"></i> '+(isEdit?"GÃ¼ncelle":"Ekle")+'</button>' +
+                '<button class="btn-form btn-form-cancel" onclick="document.getElementById(\'ftOdenenVergiForm\').style.display=\'none\'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-xmark"></i> Ä°ptal</button></div></div>';
         }
 
         function ftOdenenVergiKaydet(id) {
@@ -8034,7 +8034,7 @@ function gorevMailGonder(gorev) {
             var odemeTarihi = document.getElementById("ftOdenenVergiTarih").value;
             var donem = document.getElementById("ftOdenenVergiDonem").value.trim();
             var aciklama = document.getElementById("ftOdenenVergiAciklama").value.trim();
-            if (tutar <= 0) { tmNotify("Geçerli tutar giriniz!", "error"); return; }
+            if (tutar <= 0) { tmNotify("GeÃ§erli tutar giriniz!", "error"); return; }
             var yv = ftYilVerisi();
             if (id) {
                 var idx = yv.data.odenmisVergiler.findIndex(function(x){return x.id===id;});
@@ -8046,15 +8046,15 @@ function gorevMailGonder(gorev) {
             ftDbKaydet(yv.db);
             document.getElementById("ftOdenenVergiForm").style.display = "none";
             ftOdenenVergiGoster(); faturaOzetGuncelle();
-            tmNotify(id ? "Vergi güncellendi." : "Vergi eklendi.", "success");
+            tmNotify(id ? "Vergi gÃ¼ncellendi." : "Vergi eklendi.", "success");
         }
 
         function ftOdenenVergiSil(id) {
-            tmConfirm("Bu vergi kaydýný silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu vergi kaydÄ±nÄ± silmek istediÄŸinize emin misiniz?", function() {
                 var yv = ftYilVerisi();
                 yv.data.odenmisVergiler = yv.data.odenmisVergiler.filter(function(x){return x.id !== id;});
                 ftDbKaydet(yv.db); ftOdenenVergiGoster(); faturaOzetGuncelle();
-                tmNotify("Vergi kaydý silindi.", "success");
+                tmNotify("Vergi kaydÄ± silindi.", "success");
             });
         }
 
@@ -8064,9 +8064,9 @@ function gorevMailGonder(gorev) {
             var konteyner = document.getElementById("ftOdenenVergiTablosu");
             if (!konteyner) return;
             var sayac = document.getElementById("ftOdenenVergiSayac");
-            if (sayac) sayac.innerText = liste.length + " kayýt";
-            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-receipt"></i>','Henüz ödenen vergi kaydý bulunmamaktadýr.','Ödenen vergi kaydý eklemek için formu kullanýn.'); return; }
-            var h = '<div class="ft-tbl-wrap"><table class="ft-table"><thead><tr><th>Vergi Adý</th><th>Tutar</th><th>Ödeme Tarihi</th><th>Dönem</th><th>Açýklama</th><th></th></tr></thead><tbody>';
+            if (sayac) sayac.innerText = liste.length + " kayÄ±t";
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-receipt"></i>','HenÃ¼z Ã¶denen vergi kaydÄ± bulunmamaktadÄ±r.','Ã–denen vergi kaydÄ± eklemek iÃ§in formu kullanÄ±n.'); return; }
+            var h = '<div class="ft-tbl-wrap"><table class="ft-table"><thead><tr><th>Vergi AdÄ±</th><th>Tutar</th><th>Ã–deme Tarihi</th><th>DÃ¶nem</th><th>AÃ§Ä±klama</th><th></th></tr></thead><tbody>';
             liste.slice().reverse().forEach(function(v) {
                 h += '<tr data-ftodenenv="'+(v.vergiAdi||"").toLowerCase()+'">';
                 h += '<td style="font-weight:600;">'+esc(v.vergiAdi)+'</td>';
@@ -8093,11 +8093,11 @@ function gorevMailGonder(gorev) {
         function ftKdvGoster() {
             var yv = ftYilVerisi();
             var gelen = yv.data.gelenFaturalar || [], giden = yv.data.gidenFaturalar || [];
-            var aylar = [["Ocak","Þubat","Mart"],["Nisan","Mayýs","Haziran"],["Temmuz","Aðustos","Eylül"],["Ekim","Kasým","Aralýk"]];
+            var aylar = [["Ocak","Åžubat","Mart"],["Nisan","MayÄ±s","Haziran"],["Temmuz","AÄŸustos","EylÃ¼l"],["Ekim","KasÄ±m","AralÄ±k"]];
             var ceyrekAdi = function(d) {
                 var p = d.split("-"), y = p[0], m = parseInt(p[1], 10);
                 var q = Math.ceil(m / 3);
-                return q + ". Dönem (" + aylar[q-1].join(", ") + ")";
+                return q + ". DÃ¶nem (" + aylar[q-1].join(", ") + ")";
             };
             var harita = {};
             function ekle(dizi, tur) {
@@ -8117,8 +8117,8 @@ function gorevMailGonder(gorev) {
             var donemler = Object.keys(harita).sort();
             var konteyner = document.getElementById("ftKdvTablosu");
             if (!konteyner) return;
-            if (!donemler.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-chart-simple"></i>','Henüz KDV verisi bulunmamaktadýr.','KDV verisi eklemek için formu kullanýn.'); return; }
-            var h = '<table class="ft-table"><thead><tr class="ft-kdv-header"><th>Dönem</th><th>Gelen</th><th>Giden</th><th>Gelen KDV</th><th>Giden KDV</th><th>KDV Farký</th></tr></thead><tbody>';
+            if (!donemler.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-chart-simple"></i>','HenÃ¼z KDV verisi bulunmamaktadÄ±r.','KDV verisi eklemek iÃ§in formu kullanÄ±n.'); return; }
+            var h = '<table class="ft-table"><thead><tr class="ft-kdv-header"><th>DÃ¶nem</th><th>Gelen</th><th>Giden</th><th>Gelen KDV</th><th>Giden KDV</th><th>KDV FarkÄ±</th></tr></thead><tbody>';
             donemler.forEach(function(key) {
                 var dm = harita[key], fark = dm.gidenKdv - dm.gelenKdv;
                 var r = fark >= 0 ? 'var(--accent-red)' : 'var(--btn-green)';
@@ -8144,23 +8144,23 @@ function gorevMailGonder(gorev) {
             form.style.display = "flex";
             form.innerHTML = '<div style="width:100%;">' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
-                '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Baþlýk</label><input type="text" id="ftTakvimBaslik" value="'+(e?e.baslik:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
+                '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">BaÅŸlÄ±k</label><input type="text" id="ftTakvimBaslik" value="'+(e?e.baslik:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
                 '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Tarih</label><input type="date" id="ftTakvimTarih" value="'+(e?e.tarih:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
-                '<div style="flex:1;min-width:140px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Tür</label><div style="display:flex;gap:4px;"><select id="ftTakvimTur" style="flex:1;padding:10px;box-sizing:border-box;text-align:center;">'+turOpts+'</select>' +
-                '<button class="btn btn-save-green" title="Tür Ekle" onclick="yeniVergiTuruEklePrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;"><i class="fa-solid fa-plus"></i></button>' +
-                '<button class="btn btn-danger btn-sm" title="Tür Sil" onclick="vergiTuruSilPrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;">?</button></div></div>' +
-                '<div style="flex:2;min-width:150px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Açýklama</label><input type="text" id="ftTakvimAciklama" value="'+(e?e.aciklama:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
+                '<div style="flex:1;min-width:140px;text-align:center;"><label style="display:block;text-align:center;width:100%;">TÃ¼r</label><div style="display:flex;gap:4px;"><select id="ftTakvimTur" style="flex:1;padding:10px;box-sizing:border-box;text-align:center;">'+turOpts+'</select>' +
+                '<button class="btn btn-save-green" title="TÃ¼r Ekle" onclick="yeniVergiTuruEklePrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;"><i class="fa-solid fa-plus"></i></button>' +
+                '<button class="btn btn-danger btn-sm" title="TÃ¼r Sil" onclick="vergiTuruSilPrompt()" style="min-width:36px;height:42px;font-size:18px;line-height:1;">?</button></div></div>' +
+                '<div style="flex:2;min-width:150px;text-align:center;"><label style="display:block;text-align:center;width:100%;">AÃ§Ä±klama</label><input type="text" id="ftTakvimAciklama" value="'+(e?e.aciklama:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
                 '<div style="display:flex;gap:8px;justify-content:center;padding-top:6px;">' +
-                '<button class="btn-form btn-form-save" onclick="'+fn+'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-floppy-disk"></i> '+(isEdit?"Güncelle":"Ekle")+'</button>' +
-                '<button class="btn-form btn-form-cancel" onclick="document.getElementById(\'ftTakvimForm\').style.display=\'none\'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-xmark"></i> Ýptal</button></div></div>';
+                '<button class="btn-form btn-form-save" onclick="'+fn+'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-floppy-disk"></i> '+(isEdit?"GÃ¼ncelle":"Ekle")+'</button>' +
+                '<button class="btn-form btn-form-cancel" onclick="document.getElementById(\'ftTakvimForm\').style.display=\'none\'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-xmark"></i> Ä°ptal</button></div></div>';
         }
 
         function ftTakvimKaydet(id) {
             var baslik = (document.getElementById("ftTakvimBaslik").value || "").trim();
-            if (!baslik) { tmNotify("Baþlýk giriniz!", "error"); return; }
+            if (!baslik) { tmNotify("BaÅŸlÄ±k giriniz!", "error"); return; }
             var tarih = document.getElementById("ftTakvimTarih").value;
-            if (!tarih) { tmNotify("Tarih seçiniz!", "error"); return; }
+            if (!tarih) { tmNotify("Tarih seÃ§iniz!", "error"); return; }
             var tur = document.getElementById("ftTakvimTur").value;
             var aciklama = document.getElementById("ftTakvimAciklama").value.trim();
             var yv = ftYilVerisi();
@@ -8174,11 +8174,11 @@ function gorevMailGonder(gorev) {
             ftDbKaydet(yv.db);
             document.getElementById("ftTakvimForm").style.display = "none";
             ftTakvimGoster();
-            tmNotify(id ? "Etkinlik güncellendi." : "Etkinlik eklendi.", "success");
+            tmNotify(id ? "Etkinlik gÃ¼ncellendi." : "Etkinlik eklendi.", "success");
         }
 
         function ftTakvimSil(id) {
-            tmConfirm("Bu etkinliði silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu etkinliÄŸi silmek istediÄŸinize emin misiniz?", function() {
                 var yv = ftYilVerisi();
                 yv.data.vergiEtkinlikleri = yv.data.vergiEtkinlikleri.filter(function(x){return x.id !== id;});
                 ftDbKaydet(yv.db); ftTakvimGoster();
@@ -8193,16 +8193,16 @@ function gorevMailGonder(gorev) {
         }
 
         function yeniVergiTuruEklePrompt() {
-            tmPrompt("Yeni vergi türü adýný giriniz:", function(yeni) {
+            tmPrompt("Yeni vergi tÃ¼rÃ¼ adÄ±nÄ± giriniz:", function(yeni) {
             if (!yeni || !yeni.trim()) return;
             yeni = yeni.trim().toUpperCase();
             if (SABIT_VERGI_TURLERI.some(function(t){return t.toUpperCase() === yeni;})) {
-                tmNotify("Bu vergi türü zaten mevcut!", "error"); return;
+                tmNotify("Bu vergi tÃ¼rÃ¼ zaten mevcut!", "error"); return;
             }
             SABIT_VERGI_TURLERI.push(yeni);
             localStorage.setItem("tm_vergi_turleri_v1", JSON.stringify(SABIT_VERGI_TURLERI));
             ftTakvimFormAc();
-            tmNotify("Vergi türü eklendi: " + yeni, "success");
+            tmNotify("Vergi tÃ¼rÃ¼ eklendi: " + yeni, "success");
             });
         }
 
@@ -8210,14 +8210,14 @@ function gorevMailGonder(gorev) {
             var secili = document.getElementById("ftTakvimTur");
             if (!secili || !secili.value) return;
             var val = secili.value;
-            if (["KDV","Gelir Vergisi","Kurumlar Vergisi","Stopaj","Damga Vergisi","Diðer"].indexOf(val) !== -1) {
-                tmNotify("Varsayýlan türler silinemez!", "error"); return;
+            if (["KDV","Gelir Vergisi","Kurumlar Vergisi","Stopaj","Damga Vergisi","DiÄŸer"].indexOf(val) !== -1) {
+                tmNotify("VarsayÄ±lan tÃ¼rler silinemez!", "error"); return;
             }
-            tmConfirm('"' + val + '" türünü silmek istediðinize emin misiniz?', function() {
+            tmConfirm('"' + val + '" tÃ¼rÃ¼nÃ¼ silmek istediÄŸinize emin misiniz?', function() {
                 SABIT_VERGI_TURLERI = SABIT_VERGI_TURLERI.filter(function(t){return t !== val;});
                 localStorage.setItem("tm_vergi_turleri_v1", JSON.stringify(SABIT_VERGI_TURLERI));
                 ftTakvimFormAc();
-                tmNotify("Vergi türü silindi: " + val, "success");
+                tmNotify("Vergi tÃ¼rÃ¼ silindi: " + val, "success");
             });
         }
 
@@ -8226,17 +8226,17 @@ function gorevMailGonder(gorev) {
             var liste = yv.data.vergiEtkinlikleri || [];
             var konteyner = document.getElementById("ftTakvimListesi");
             if (!konteyner) return;
-            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-calendar"></i>','Henüz vergi etkinliði bulunmamaktadýr.','Vergi takvimine yeni bir etkinlik ekleyin.'); return; }
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-calendar"></i>','HenÃ¼z vergi etkinliÄŸi bulunmamaktadÄ±r.','Vergi takvimine yeni bir etkinlik ekleyin.'); return; }
             var simdi = new Date();
             simdi.setHours(0,0,0,0);
             var h = '<div class="ft-takvim-list">';
             h += '<div class="ft-takvim-header">' +
                 '<span class="ft-takvim-h-chk"></span>' +
                 '<span class="ft-takvim-h-tarih">Tarih</span>' +
-                '<span class="ft-takvim-h-baslik">Baþlýk</span>' +
-                '<span class="ft-takvim-h-tur">Tür</span>' +
-                '<span class="ft-takvim-h-kalan">Kalan Süre</span>' +
-                '<span class="ft-takvim-h-aciklama">Açýklama</span>' +
+                '<span class="ft-takvim-h-baslik">BaÅŸlÄ±k</span>' +
+                '<span class="ft-takvim-h-tur">TÃ¼r</span>' +
+                '<span class="ft-takvim-h-kalan">Kalan SÃ¼re</span>' +
+                '<span class="ft-takvim-h-aciklama">AÃ§Ä±klama</span>' +
                 '<span class="ft-takvim-h-aksiyon"></span></div>';
             liste.slice().reverse().forEach(function(e) {
                 var turAd = ftTurAdi(e.tur);
@@ -8247,9 +8247,9 @@ function gorevMailGonder(gorev) {
                         var et = new Date(e.tarih);
                         et.setHours(0,0,0,0);
                         var fark = Math.round((et - simdi) / 86400000);
-                        if (fark > 0) { kalanGun = fark + " gün kaldý"; renk = fark <= 7 ? "color:var(--accent-red);font-weight:700;" : fark <= 30 ? "color:orange;" : "color:var(--text-light);"; }
-                        else if (fark === 0) { kalanGun = "BUGÜN!"; renk = "color:red;font-weight:700;"; }
-                        else { kalanGun = Math.abs(fark) + " gün geçti"; renk = "color:var(--text-light);"; }
+                        if (fark > 0) { kalanGun = fark + " gÃ¼n kaldÄ±"; renk = fark <= 7 ? "color:var(--accent-red);font-weight:700;" : fark <= 30 ? "color:orange;" : "color:var(--text-light);"; }
+                        else if (fark === 0) { kalanGun = "BUGÃœN!"; renk = "color:red;font-weight:700;"; }
+                        else { kalanGun = Math.abs(fark) + " gÃ¼n geÃ§ti"; renk = "color:var(--text-light);"; }
                     } catch(e) { console.error("Fatura takvim tarih hatasi:", e); }
                 }
                 h += '<div class="ft-takvim-item'+(e.tamamlandi?" tamamlandi":"")+'">';
@@ -8275,81 +8275,81 @@ function gorevMailGonder(gorev) {
             giden.forEach(function(f){ gk2T += f.kdvTutari||0; g2T += f.toplamTutar||0; });
 
             function satir(f, tip) {
-                var d = tip==="gelen" ? (f.odemeDurumu==="odendi"?"Ödendi":f.odemeDurumu==="kismi"?"Kýsmi":"Ödenmedi") : (f.tahsilatDurumu==="tahsilEdildi"?"Tah.Edildi":f.tahsilatDurumu==="kismi"?"Kýsmi":"Tah.Edilmedi");
+                var d = tip==="gelen" ? (f.odemeDurumu==="odendi"?"Ã–dendi":f.odemeDurumu==="kismi"?"KÄ±smi":"Ã–denmedi") : (f.tahsilatDurumu==="tahsilEdildi"?"Tah.Edildi":f.tahsilatDurumu==="kismi"?"KÄ±smi":"Tah.Edilmedi");
                 var t = f.tutar||0, k = f.kdvTutari||0, tp = f.toplamTutar||0;
                 return '<tr><td>'+esc(f.firmaAdi)+'</td><td>'+esc(f.faturaNo)+'</td><td>'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td><td style="text-align:right;">'+t.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="text-align:right;">'+k.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="text-align:right;font-weight:700;">'+tp.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td>'+d+'</td></tr>';
             }
 
             var h = '<div style="width:210mm;padding:20mm;font-family:Arial,sans-serif;font-size:12px;">';
-            h += '<div style="text-align:center;border-bottom:2px solid #000;padding-bottom:15px;margin-bottom:25px;"><h1 style="margin:0;font-size:22px;">FATURA TAKÝP RAPORU</h1><p style="margin:5px 0 0 0;font-size:13px;color:#555;">Turak Mimarlýk — '+yil+' Yýlý</p></div>';
+            h += '<div style="text-align:center;border-bottom:2px solid #000;padding-bottom:15px;margin-bottom:25px;"><h1 style="margin:0;font-size:22px;">FATURA TAKÄ°P RAPORU</h1><p style="margin:5px 0 0 0;font-size:13px;color:#555;">Turak MimarlÄ±k â€” '+yil+' YÄ±lÄ±</p></div>';
             h += '<div style="display:flex;justify-content:space-between;margin-bottom:25px;gap:10px;">';
             h += '<div style="flex:1;border:1px solid #ddd;padding:12px;text-align:center;border-radius:6px;"><div style="font-size:11px;color:#555;font-weight:600;">Gelen Fatura</div><div style="font-size:18px;font-weight:700;color:#1565C0;">'+gelen.length+' adet</div><div style="font-size:13px;">'+gTT.toLocaleString("tr-TR",{minFractionDigits:2})+' ?</div></div>';
             h += '<div style="flex:1;border:1px solid #ddd;padding:12px;text-align:center;border-radius:6px;"><div style="font-size:11px;color:#555;font-weight:600;">Giden Fatura</div><div style="font-size:18px;font-weight:700;color:#1565C0;">'+giden.length+' adet</div><div style="font-size:13px;">'+g2T.toLocaleString("tr-TR",{minFractionDigits:2})+' ?</div></div>';
-            h += '<div style="flex:1;border:1px solid #ddd;padding:12px;text-align:center;border-radius:6px;"><div style="font-size:11px;color:#555;font-weight:600;">KDV Ödenecek</div><div style="font-size:18px;font-weight:700;color:#c62828;">'+(gk2T>gkT?(gk2T-gkT).toLocaleString("tr-TR",{minFractionDigits:2}):"0,00")+' ?</div></div>';
+            h += '<div style="flex:1;border:1px solid #ddd;padding:12px;text-align:center;border-radius:6px;"><div style="font-size:11px;color:#555;font-weight:600;">KDV Ã–denecek</div><div style="font-size:18px;font-weight:700;color:#c62828;">'+(gk2T>gkT?(gk2T-gkT).toLocaleString("tr-TR",{minFractionDigits:2}):"0,00")+' ?</div></div>';
             h += '<div style="flex:1;border:1px solid #ddd;padding:12px;text-align:center;border-radius:6px;"><div style="font-size:11px;color:#555;font-weight:600;">KDV Alacak</div><div style="font-size:18px;font-weight:700;color:#2e7d32;">'+(gkT>gk2T?(gkT-gk2T).toLocaleString("tr-TR",{minFractionDigits:2}):"0,00")+' ?</div></div></div>';
 
             h += '<h3 style="font-size:14px;margin-bottom:8px;"><i class="fa-solid fa-inbox"></i> Gelen Faturalar</h3>';
             if (gelen.length) { h += '<table style="width:100%;border-collapse:collapse;margin-bottom:25px;"><thead><tr style="background:#f5f5f5;"><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Firma</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Fatura No</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tarih</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">Tutar</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">KDV</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">Toplam</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Durum</th></tr></thead><tbody>'; gelen.slice().reverse().forEach(function(f){h+=satir(f,"gelen");}); h += '</tbody></table>'; }
-            else h += '<div style="padding:16px;">'+tmEmptyStateHTML('<i class="fa-solid fa-inbox"></i>','Gelen fatura bulunmamaktadýr.','','')+'</div>';
+            else h += '<div style="padding:16px;">'+tmEmptyStateHTML('<i class="fa-solid fa-inbox"></i>','Gelen fatura bulunmamaktadÄ±r.','','')+'</div>';
 
             h += '<h3 style="font-size:14px;margin-bottom:8px;"><i class="fa-solid fa-paper-plane"></i> Giden Faturalar</h3>';
             if (giden.length) { h += '<table style="width:100%;border-collapse:collapse;margin-bottom:25px;"><thead><tr style="background:#f5f5f5;"><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Firma</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Fatura No</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tarih</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">Tutar</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">KDV</th><th style="padding:8px;border:1px solid #ddd;text-align:right;font-size:11px;">Toplam</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Durum</th></tr></thead><tbody>'; giden.slice().reverse().forEach(function(f){h+=satir(f,"giden");}); h += '</tbody></table>'; }
-            else h += '<div style="padding:16px;">'+tmEmptyStateHTML('<i class="fa-solid fa-paper-plane"></i>','Giden fatura bulunmamaktadýr.','','')+'</div>';
+            else h += '<div style="padding:16px;">'+tmEmptyStateHTML('<i class="fa-solid fa-paper-plane"></i>','Giden fatura bulunmamaktadÄ±r.','','')+'</div>';
 
             if (etk.length) {
-                h += '<h3 style="font-size:14px;margin-bottom:8px;"><i class="fa-regular fa-calendar"></i> Vergi Takvimi</h3><table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f5f5f5;"><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tarih</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Baþlýk</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tür</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Durum</th></tr></thead><tbody>';
+                h += '<h3 style="font-size:14px;margin-bottom:8px;"><i class="fa-regular fa-calendar"></i> Vergi Takvimi</h3><table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f5f5f5;"><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Tarih</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">BaÅŸlÄ±k</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">TÃ¼r</th><th style="padding:8px;border:1px solid #ddd;text-align:left;font-size:11px;">Durum</th></tr></thead><tbody>';
                 etk.slice().reverse().forEach(function(e) {
-                    var ta = e.tur==="kdv"?"KDV":e.tur==="gelirVergisi"?"Gelir Vergisi":e.tur==="kurumlarVergisi"?"Kurumlar Vergisi":e.tur==="stopaj"?"Stopaj":e.tur==="damgaVergisi"?"Damga Vergisi":"Diðer";
-                    h += '<tr><td style="padding:8px;border:1px solid #ddd;">'+(e.tarih?tarihStr(e.tarih):"-")+'</td><td style="padding:8px;border:1px solid #ddd;">'+esc(e.baslik)+'</td><td style="padding:8px;border:1px solid #ddd;">'+ta+'</td><td style="padding:8px;border:1px solid #ddd;">'+(e.tamamlandi?'<i class="fa-solid fa-check"></i> Tamamlandý':"? Bekliyor")+'</td></tr>';
+                    var ta = e.tur==="kdv"?"KDV":e.tur==="gelirVergisi"?"Gelir Vergisi":e.tur==="kurumlarVergisi"?"Kurumlar Vergisi":e.tur==="stopaj"?"Stopaj":e.tur==="damgaVergisi"?"Damga Vergisi":"DiÄŸer";
+                    h += '<tr><td style="padding:8px;border:1px solid #ddd;">'+(e.tarih?tarihStr(e.tarih):"-")+'</td><td style="padding:8px;border:1px solid #ddd;">'+esc(e.baslik)+'</td><td style="padding:8px;border:1px solid #ddd;">'+ta+'</td><td style="padding:8px;border:1px solid #ddd;">'+(e.tamamlandi?'<i class="fa-solid fa-check"></i> TamamlandÄ±':"? Bekliyor")+'</td></tr>';
                 });
                 h += '</tbody></table>';
             }
-            h += '<div style="margin-top:35px;padding-top:15px;border-top:1px solid #ddd;font-size:10px;color:#999;text-align:center;">Turak Mimarlýk Portal — Rapor: '+new Date().toLocaleDateString("tr-TR")+'</div></div>';
+            h += '<div style="margin-top:35px;padding-top:15px;border-top:1px solid #ddd;font-size:10px;color:#999;text-align:center;">Turak MimarlÄ±k Portal â€” Rapor: '+new Date().toLocaleDateString("tr-TR")+'</div></div>';
 
             var el = document.createElement("div"); el.innerHTML = h; document.body.appendChild(el);
-            html2canvas(el,{scale:6,useCORS:true}).then(function(c){var doc=new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});var imgW=190;var imgH=c.height*imgW/c.width;doc.addImage(c.toDataURL('image/png'),'PNG',10,10,imgW,imgH);doc.save('Fatura_Takip_Raporu_'+yil+'.pdf');try{document.body.removeChild(el)}catch(ex){console.error("Fatura PDF DOM temizlik:",ex);}}).catch(function(e){console.error("Fatura PDF hatasi:",e);tmNotify("Fatura PDF oluþturulurken hata: "+e.message,"error");try{document.body.removeChild(el)}catch(ex){}});
+            html2canvas(el,{scale:6,useCORS:true}).then(function(c){var doc=new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});var imgW=190;var imgH=c.height*imgW/c.width;doc.addImage(c.toDataURL('image/png'),'PNG',10,10,imgW,imgH);doc.save('Fatura_Takip_Raporu_'+yil+'.pdf');try{document.body.removeChild(el)}catch(ex){console.error("Fatura PDF DOM temizlik:",ex);}}).catch(function(e){console.error("Fatura PDF hatasi:",e);tmNotify("Fatura PDF oluÅŸturulurken hata: "+e.message,"error");try{document.body.removeChild(el)}catch(ex){}});
         }
 
-        /* ---------- Ýþ Takibi ---------- */
+        /* ---------- Ä°ÅŸ Takibi ---------- */
         var IT_DB_KEY = "tm_is_takibi_v2";
-        var IT_TUR_LIST = ["Taslak", "Uygulama Proje", "3B Modelleme ve Tasarým", "Diðer"];
+        var IT_TUR_LIST = ["Taslak", "Uygulama Proje", "3B Modelleme ve TasarÄ±m", "DiÄŸer"];
         var IT_ASAMALAR = [
-            { field: 'fiyatOnayTarihi', label: 'FÝYAT ANLAÞMASI ONAYI' },
-            { field: 'isVerildiTarihi', label: 'ÝÞ VERÝLDÝ' },
-            { field: 'belgelerTarihi', label: 'GEREKLÝ BELGELER GÖNDERÝLDÝ' },
-            { field: 'cizimTarihi', label: 'ÇÝZÝM TAMAMLANDI' },
-            { field: 'baskiTarihi', label: 'BASKI ÝÞLEMÝ TAMAMLANDI' },
-            { field: 'imzaTarihi', label: 'YD VE MÜELLÝF ÝMZALARI TAMAMLANDI' },
-            { field: 'projeTeslimTarihi', label: 'PROJE TESLÝM ALINDI' }
+            { field: 'fiyatOnayTarihi', label: 'FÄ°YAT ANLAÅžMASI ONAYI' },
+            { field: 'isVerildiTarihi', label: 'Ä°Åž VERÄ°LDÄ°' },
+            { field: 'belgelerTarihi', label: 'GEREKLÄ° BELGELER GÃ–NDERÄ°LDÄ°' },
+            { field: 'cizimTarihi', label: 'Ã‡Ä°ZÄ°M TAMAMLANDI' },
+            { field: 'baskiTarihi', label: 'BASKI Ä°ÅžLEMÄ° TAMAMLANDI' },
+            { field: 'imzaTarihi', label: 'YD VE MÃœELLÄ°F Ä°MZALARI TAMAMLANDI' },
+            { field: 'projeTeslimTarihi', label: 'PROJE TESLÄ°M ALINDI' }
         ];
         var IT_ASAMALAR_TASLAK = [
-            { field: 'isVerildiTarihi', label: 'ÝÞ VERÝLDÝ' },
-            { field: 'belgelerTarihi', label: 'GEREKLÝ BELGELER GÖNDERÝLDÝ' },
-            { field: 'cizimTarihi', label: 'ÇÝZÝM TAMAMLANDI' }
+            { field: 'isVerildiTarihi', label: 'Ä°Åž VERÄ°LDÄ°' },
+            { field: 'belgelerTarihi', label: 'GEREKLÄ° BELGELER GÃ–NDERÄ°LDÄ°' },
+            { field: 'cizimTarihi', label: 'Ã‡Ä°ZÄ°M TAMAMLANDI' }
         ];
         var IT_ASAMALAR_3B = [
-            { field: 'fiyatOnayTarihi', label: 'FÝYAT ANLAÞMASI ONAYI' },
-            { field: 'isVerildiTarihi', label: 'ÝÞ VERÝLDÝ' },
-            { field: 'belgelerTarihi', label: 'GEREKLÝ BELGELER GÖNDERÝLDÝ' },
-            { field: 'cizimTarihi', label: 'ÇÝZÝM TAMAMLANDI' },
-            { field: 'projeTeslimTarihi', label: 'PROJE TESLÝM ALINDI' }
+            { field: 'fiyatOnayTarihi', label: 'FÄ°YAT ANLAÅžMASI ONAYI' },
+            { field: 'isVerildiTarihi', label: 'Ä°Åž VERÄ°LDÄ°' },
+            { field: 'belgelerTarihi', label: 'GEREKLÄ° BELGELER GÃ–NDERÄ°LDÄ°' },
+            { field: 'cizimTarihi', label: 'Ã‡Ä°ZÄ°M TAMAMLANDI' },
+            { field: 'projeTeslimTarihi', label: 'PROJE TESLÄ°M ALINDI' }
         ];
         var IT_ASAMALAR_DIGER = [
-            { field: 'fiyatOnayTarihi', label: 'FÝYAT ANLAÞMASI ONAYI' },
-            { field: 'isVerildiTarihi', label: 'ÝÞ VERÝLDÝ' },
-            { field: 'belgelerTarihi', label: 'GEREKLÝ BELGELER GÖNDERÝLDÝ' },
-            { field: 'cizimTarihi', label: 'ÝÞ TAMAMLANDI' },
-            { field: 'projeTeslimTarihi', label: 'ÝÞ TESLÝM ALINDI' }
+            { field: 'fiyatOnayTarihi', label: 'FÄ°YAT ANLAÅžMASI ONAYI' },
+            { field: 'isVerildiTarihi', label: 'Ä°Åž VERÄ°LDÄ°' },
+            { field: 'belgelerTarihi', label: 'GEREKLÄ° BELGELER GÃ–NDERÄ°LDÄ°' },
+            { field: 'cizimTarihi', label: 'Ä°Åž TAMAMLANDI' },
+            { field: 'projeTeslimTarihi', label: 'Ä°Åž TESLÄ°M ALINDI' }
         ];
         function itAsamaList(tur) {
             if (tur === "Taslak") return IT_ASAMALAR_TASLAK;
-            if (tur === "3B Modelleme ve Tasarým") return IT_ASAMALAR_3B;
-            if (tur === "Diðer") return IT_ASAMALAR_DIGER;
+            if (tur === "3B Modelleme ve TasarÄ±m") return IT_ASAMALAR_3B;
+            if (tur === "DiÄŸer") return IT_ASAMALAR_DIGER;
             return IT_ASAMALAR;
         }
         function itAsamaRenkler(tur) {
             if (tur === "Taslak") return ['#e53935','#ef6c00','#2e7d32'];
-            if (tur === "3B Modelleme ve Tasarým" || tur === "Diðer") return ['#c62828','#e53935','#ef6c00','#f9a825','#2e7d32'];
+            if (tur === "3B Modelleme ve TasarÄ±m" || tur === "DiÄŸer") return ['#c62828','#e53935','#ef6c00','#f9a825','#2e7d32'];
             return ['#c62828','#e53935','#ef6c00','#f9a825','#7cb342','#43a047','#2e7d32'];
         }
 
@@ -8393,10 +8393,10 @@ function itJobOrtalamaPct(is) {
 }
 function itDurumMetni(o) {
             if (o.projeTeslimTarihi) return 'TAMAMLANDI';
-            if (o.baskiTarihi) return 'imza aþamasýnda';
-            if (o.cizimTarihi) return 'Baský Aþamasýnda';
-            if (o.belgelerTarihi || o.isVerildiTarihi) return 'çizim aþamasýnda';
-            if (o.fiyatOnayTarihi) return 'Ýþ Verilmeyi Bekliyor';
+            if (o.baskiTarihi) return 'imza aÅŸamasÄ±nda';
+            if (o.cizimTarihi) return 'BaskÄ± AÅŸamasÄ±nda';
+            if (o.belgelerTarihi || o.isVerildiTarihi) return 'Ã§izim aÅŸamasÄ±nda';
+            if (o.fiyatOnayTarihi) return 'Ä°ÅŸ Verilmeyi Bekliyor';
             return '';
         }
 
@@ -8447,7 +8447,7 @@ function itDurumMetni(o) {
             return 0;
         }
 
-        function itTurkcely(s) { return (s||"").replace(/Ý/g,'i').replace(/Ü/g,'ü').replace(/Ö/g,'ö').replace(/Ç/g,'ç').replace(/Þ/g,'þ').replace(/Ð/g,'ð'); }
+        function itTurkcely(s) { return (s||"").replace(/Ä°/g,'i').replace(/Ãœ/g,'Ã¼').replace(/Ã–/g,'Ã¶').replace(/Ã‡/g,'Ã§').replace(/Åž/g,'ÅŸ').replace(/Äž/g,'ÄŸ'); }
         function itFiltreVeSirala(liste, arama, sort) {
             if (arama) {
                 var q = itTurkcely(arama.toLowerCase());
@@ -8465,7 +8465,7 @@ function itDurumMetni(o) {
 
         function itSortOk(col, sort) {
             if (sort.col !== col) return "";
-            return sort.dir === "asc" ? " ^" : " ¡";
+            return sort.dir === "asc" ? " ^" : " Â¡";
         }
 
         function itJobDurumMetni(is) {
@@ -8487,16 +8487,16 @@ function itDurumMetni(o) {
             });
             if (maxStage === -1) return { text: 'BEKLEMEDE', color: '#fff', bg: '#e53935' };
             if (is.tur === "Taslak") {
-                return maxStage < 2 ? { text: 'ÇÝZÝM AÞAMASINDA', color: '#fff', bg: '#e53935' } : { text: 'TAMAMLANDI', color: '#fff', bg: '#2e7d32' };
+                return maxStage < 2 ? { text: 'Ã‡Ä°ZÄ°M AÅžAMASINDA', color: '#fff', bg: '#e53935' } : { text: 'TAMAMLANDI', color: '#fff', bg: '#2e7d32' };
             }
             var tablo = [
-                { text: 'ÝÞ VERÝLMEYÝ BEKLÝYOR', color: '#fff', bg: '#c62828' },
-                { text: 'ÇÝZÝM AÞAMASINDA', color: '#fff', bg: '#e53935' },
-                { text: 'ÇÝZÝM AÞAMASINDA', color: '#222', bg: '#f9a825' },
-                { text: 'BASKI AÞAMASINDA', color: '#fff', bg: '#ef6c00' },
-                { text: 'ÝMZA AÞAMASINDA', color: '#fff', bg: '#7cb342' },
-                { text: 'ÝMZA AÞAMASINDA', color: '#fff', bg: '#43a047' },
-                { text: 'TESLÝME HAZIR', color: '#fff', bg: '#2e7d32' }
+                { text: 'Ä°Åž VERÄ°LMEYÄ° BEKLÄ°YOR', color: '#fff', bg: '#c62828' },
+                { text: 'Ã‡Ä°ZÄ°M AÅžAMASINDA', color: '#fff', bg: '#e53935' },
+                { text: 'Ã‡Ä°ZÄ°M AÅžAMASINDA', color: '#222', bg: '#f9a825' },
+                { text: 'BASKI AÅžAMASINDA', color: '#fff', bg: '#ef6c00' },
+                { text: 'Ä°MZA AÅžAMASINDA', color: '#fff', bg: '#7cb342' },
+                { text: 'Ä°MZA AÅžAMASINDA', color: '#fff', bg: '#43a047' },
+                { text: 'TESLÄ°ME HAZIR', color: '#fff', bg: '#2e7d32' }
             ];
             return tablo[maxStage];
         }
@@ -8537,7 +8537,7 @@ function itDurumMetni(o) {
             itDbKaydet(liste);
             itGoster();
             document.querySelector('#itAktifSekmeBar .it-sekme[data-tur="Uygulama Proje"]').click();
-            tmNotify("Taslak iþ Uygulama Proje'ye kopyalandý.", "success");
+            tmNotify("Taslak iÅŸ Uygulama Proje'ye kopyalandÄ±.", "success");
         }
 
         function it3bModellemeyeGec(id) {
@@ -8547,15 +8547,15 @@ function itDurumMetni(o) {
             var maxId = liste.reduce(function(m,x){return Math.max(m,x.id);},0);
             var yeni = JSON.parse(JSON.stringify(is));
             yeni.id = maxId + 1;
-            yeni.tur = "3B Modelleme ve Tasarým";
+            yeni.tur = "3B Modelleme ve TasarÄ±m";
             yeni.tamamlandi = false;
             yeni.bitisTarihi = "";
             yeni.ortaklar = [];
             liste.push(yeni);
             itDbKaydet(liste);
             itGoster();
-            document.querySelector('#itAktifSekmeBar .it-sekme[data-tur="3B Modelleme ve Tasarým"]').click();
-            tmNotify("Ýþ 3B Modelleme ve Tasarým'a kopyalandý.", "success");
+            document.querySelector('#itAktifSekmeBar .it-sekme[data-tur="3B Modelleme ve TasarÄ±m"]').click();
+            tmNotify("Ä°ÅŸ 3B Modelleme ve TasarÄ±m'a kopyalandÄ±.", "success");
         }
 
         function itAktifKartlariGoster(tur) {
@@ -8568,14 +8568,14 @@ function itDurumMetni(o) {
             var arama = (document.getElementById("itAktifAra")||{}).value||"";
             liste = itFiltreVeSirala(liste, arama, itAktifSort);
             var konteyner = document.getElementById("itAktifKartlar");
-            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-folder-open"></i>','Bu bölümde aktif iþ bulunmamaktadýr.','Farklý bir sekme seçin veya yeni bir iþ ekleyin.'); return; }
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-folder-open"></i>','Bu bÃ¶lÃ¼mde aktif iÅŸ bulunmamaktadÄ±r.','FarklÄ± bir sekme seÃ§in veya yeni bir iÅŸ ekleyin.'); return; }
             var h = '<div class="it-tablo-wrapper"><table class="it-tablo"><thead><tr>' +
                 '<th style="width:32px;"></th>' +
                 '<th class="th-sortable" onclick="itAktifSortGuncelle(\'id\')" style="width:40px;">#<span id="itAktifSortId">'+itSortOk("id",itAktifSort)+'</span></th>' +
-                '<th>Ýþ Adý</th>' +
+                '<th>Ä°ÅŸ AdÄ±</th>' +
                 '<th>Firma</th>' +
                 '<th>PAFTA/ADA/PARSEL</th>' +
-                '<th class="th-sortable" onclick="itAktifSortGuncelle(\'tarih\')">Baþlama<span id="itAktifSortTarih">'+itSortOk("tarih",itAktifSort)+'</span></th>' +
+                '<th class="th-sortable" onclick="itAktifSortGuncelle(\'tarih\')">BaÅŸlama<span id="itAktifSortTarih">'+itSortOk("tarih",itAktifSort)+'</span></th>' +
                 '<th style="width:130px;">Durum</th>' +
                 '</tr></thead><tbody>';
             liste.forEach(function(is, idx) {
@@ -8587,9 +8587,9 @@ function itDurumMetni(o) {
                 var rowBg = itPctColor(avgPct);
                 var acik = acikIds.indexOf(String(is.id)) >= 0;
                 h += '<tr class="it-row-clickable" id="itRow_' + is.id + '" style="background:' + rowBg + ';" onclick="itRowToggle(' + is.id + ')">' +
-                    '<td style="text-align:center;"><span class="it-expand-icon" id="itExpandIcon_' + is.id + '" style="font-size:10px;color:var(--text-light);user-select:none;">' + (acik ? '¡' : '?') + '</span></td>' +
+                    '<td style="text-align:center;"><span class="it-expand-icon" id="itExpandIcon_' + is.id + '" style="font-size:10px;color:var(--text-light);user-select:none;">' + (acik ? 'Â¡' : '?') + '</span></td>' +
                     '<td style="text-align:center;font-weight:700;color:var(--text-light);font-size:12px;">' + sira + '</td>' +
-                    '<td style="font-weight:600;">' + esc(is.isAdi || "ÝSÝMSÝZ") + '</td>' +
+                    '<td style="font-weight:600;">' + esc(is.isAdi || "Ä°SÄ°MSÄ°Z") + '</td>' +
                     '<td style="color:var(--text-dark);">' + esc(is.firma || "-") + '</td>' +
                     '<td style="color:var(--text-dark);">' + esc(is.pafta || is.ada || is.parsel ? [is.pafta, is.ada, is.parsel].filter(Boolean).join("/") : "-") + '</td>' +
                     '<td>' + (is.tarih ? tarihStr(is.tarih) : "-") + '</td>' +
@@ -8601,10 +8601,10 @@ function itDurumMetni(o) {
                     '<div class="it-detay-actions">' +
                     (isTam && is.tur === "Uygulama Proje" && !is.ruhsatOnayi ? '<button class="it-btn-ruhsat" onclick="event.stopPropagation();itRuhsatOnayiVer(' + is.id + ')">?? RUHSAT ONAYI ALINDI</button>' : '') +
                     (isTam && is.tur === "Uygulama Proje" && is.ruhsatOnayi ? '<span class="it-ruhsat-badge">?? RUHSAT ONAYI ALINDI</span>' : '') +
-                    (isTam && is.tahsilatOnayi && is.tur !== "Taslak" ? '<span class="it-tahsilat-badge"><i class="fa-solid fa-check"></i> ÝÞÝN TAHSÝLATI ONAYLANDI</span>' : '') +
-                    (isTam && !is.tahsilatOnayi && is.tur !== "Taslak" && is.tur !== "Uygulama Proje" ? '<button class="it-btn-tahsilat" onclick="event.stopPropagation();itTahsilatOnayiVer(' + is.id + ')"><i class="fa-solid fa-check"></i> TAHSÝLAT ONAYI VER</button>' : '') +
-                    (isTam && !is.tahsilatOnayi && is.tur === "Uygulama Proje" ? '<button class="it-btn-tahsilat" onclick="event.stopPropagation();itTahsilatOnayiVer(' + is.id + ')"><i class="fa-solid fa-check"></i> TAHSÝLAT ONAYI VER</button>' : '') +
-                    (isTam && (is.tur === "Taslak" || (is.tahsilatOnayi && (is.tur !== "Uygulama Proje" || is.ruhsatOnayi))) ? '<button class="it-btn-tamamla" onclick="event.stopPropagation();itTamamla(' + is.id + ')"><i class="fa-solid fa-check"></i> ÝÞ TAMAMLANDI</button>' : '') +
+                    (isTam && is.tahsilatOnayi && is.tur !== "Taslak" ? '<span class="it-tahsilat-badge"><i class="fa-solid fa-check"></i> Ä°ÅžÄ°N TAHSÄ°LATI ONAYLANDI</span>' : '') +
+                    (isTam && !is.tahsilatOnayi && is.tur !== "Taslak" && is.tur !== "Uygulama Proje" ? '<button class="it-btn-tahsilat" onclick="event.stopPropagation();itTahsilatOnayiVer(' + is.id + ')"><i class="fa-solid fa-check"></i> TAHSÄ°LAT ONAYI VER</button>' : '') +
+                    (isTam && !is.tahsilatOnayi && is.tur === "Uygulama Proje" ? '<button class="it-btn-tahsilat" onclick="event.stopPropagation();itTahsilatOnayiVer(' + is.id + ')"><i class="fa-solid fa-check"></i> TAHSÄ°LAT ONAYI VER</button>' : '') +
+                    (isTam && (is.tur === "Taslak" || (is.tahsilatOnayi && (is.tur !== "Uygulama Proje" || is.ruhsatOnayi))) ? '<button class="it-btn-tamamla" onclick="event.stopPropagation();itTamamla(' + is.id + ')"><i class="fa-solid fa-check"></i> Ä°Åž TAMAMLANDI</button>' : '') +
                     '<button class="it-btn-sil" onclick="event.stopPropagation();itSil(' + is.id + ')" style="margin-left:auto;"><i class="fa-solid fa-trash-can"></i> Sil</button>' +
                     '</div></div></td></tr>';
             });
@@ -8622,29 +8622,29 @@ function itDurumMetni(o) {
             var arama = (document.getElementById("itTamamlananAra")||{}).value||"";
             liste = itFiltreVeSirala(liste, arama, itTamamlananSort);
             var konteyner = document.getElementById("itTamamlananTablo");
-            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-check"></i>','Bu bölümde tamamlanan iþ bulunmamaktadýr.','Tamamlanan iþ kayýtlarý burada görüntülenecek.'); return; }
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-check"></i>','Bu bÃ¶lÃ¼mde tamamlanan iÅŸ bulunmamaktadÄ±r.','Tamamlanan iÅŸ kayÄ±tlarÄ± burada gÃ¶rÃ¼ntÃ¼lenecek.'); return; }
             var isTaslak = tur === "Taslak";
             var isUygulamaProje = tur === "Uygulama Proje";
             var showActionCol = isTaslak || isUygulamaProje;
             var colSpan = showActionCol ? 8 : 7;
             var h = '<table class="it-tablo"><thead><tr>' +
-                '<th></th><th class="th-sortable" onclick="itTamamlananSortGuncelle(\'id\')">#<span id="itTamSortId">'+itSortOk("id",itTamamlananSort)+'</span></th><th>Ýþ Adý</th><th>Firma</th><th>PAFTA/ADA/PARSEL</th><th class="th-sortable" onclick="itTamamlananSortGuncelle(\'tarih\')">Baþlama<span id="itTamSortTarih">'+itSortOk("tarih",itTamamlananSort)+'</span></th><th class="th-sortable" onclick="itTamamlananSortGuncelle(\'bitisTarihi\')">Bitiþ<span id="itTamSortBitis">'+itSortOk("bitisTarihi",itTamamlananSort)+'</span></th>' +
+                '<th></th><th class="th-sortable" onclick="itTamamlananSortGuncelle(\'id\')">#<span id="itTamSortId">'+itSortOk("id",itTamamlananSort)+'</span></th><th>Ä°ÅŸ AdÄ±</th><th>Firma</th><th>PAFTA/ADA/PARSEL</th><th class="th-sortable" onclick="itTamamlananSortGuncelle(\'tarih\')">BaÅŸlama<span id="itTamSortTarih">'+itSortOk("tarih",itTamamlananSort)+'</span></th><th class="th-sortable" onclick="itTamamlananSortGuncelle(\'bitisTarihi\')">BitiÅŸ<span id="itTamSortBitis">'+itSortOk("bitisTarihi",itTamamlananSort)+'</span></th>' +
                 (showActionCol ? '<th></th>' : '') +
                 '</tr></thead><tbody>';
             liste.forEach(function(is, idx) {
                 var sira = itTamamlananSort.dir === "asc" ? idx+1 : liste.length-idx;
                 var acik = acikIds.indexOf(String(is.id)) >= 0;
                 h += '<tr class="it-row-clickable" onclick="itRowToggle(' + is.id + ')">' +
-                    '<td style="width:28px;text-align:center;"><span class="it-expand-icon" id="itTamExpandIcon_' + is.id + '">' + (acik ? '¡' : '?') + '</span></td>' +
+                    '<td style="width:28px;text-align:center;"><span class="it-expand-icon" id="itTamExpandIcon_' + is.id + '">' + (acik ? 'Â¡' : '?') + '</span></td>' +
                     '<td style="text-align:center;font-weight:700;color:var(--text-light);font-size:12px;">' + sira + '</td>' +
-                    '<td style="font-weight:600;">' + esc(is.isAdi || "ÝSÝMSÝZ") + '</td>' +
+                    '<td style="font-weight:600;">' + esc(is.isAdi || "Ä°SÄ°MSÄ°Z") + '</td>' +
                     '<td>' + esc(is.firma || "-") + '</td>' +
                     '<td>' + esc(is.pafta || is.ada || is.parsel ? [is.pafta, is.ada, is.parsel].filter(Boolean).join("/") : "-") + '</td>' +
                     '<td>' + (is.tarih ? tarihStr(is.tarih) : "-") + '</td>' +
                     '<td>' + (is.bitisTarihi ? tarihStr(is.bitisTarihi) : "-") + '</td>' +
                     (showActionCol ? '<td style="text-align:center;"><div style="display:flex;gap:4px;justify-content:center;">' +
-                        (isTaslak ? '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();itTaslakUygulamayaGec(' + is.id + ')" style="white-space:nowrap;"><i class="fa-solid fa-rocket"></i> UYGULAMA PROJEYE BAÞLA</button>' : '') +
-                        '<button class="btn btn-sm" onclick="event.stopPropagation();it3bModellemeyeGec(' + is.id + ')" style="background:#d68910;color:white;border:none;white-space:nowrap;border-radius:6px;">?? 3B MODELLEMEYE BAÞLA</button>' +
+                        (isTaslak ? '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();itTaslakUygulamayaGec(' + is.id + ')" style="white-space:nowrap;"><i class="fa-solid fa-rocket"></i> UYGULAMA PROJEYE BAÅžLA</button>' : '') +
+                        '<button class="btn btn-sm" onclick="event.stopPropagation();it3bModellemeyeGec(' + is.id + ')" style="background:#d68910;color:white;border:none;white-space:nowrap;border-radius:6px;">?? 3B MODELLEMEYE BAÅžLA</button>' +
                         '</div></td>' : '') +
                     '</tr>' +
                     '<tr class="it-row-detail' + (acik ? ' open' : '') + '" id="itTamDetayRow_' + is.id + '">' +
@@ -8658,7 +8658,7 @@ function itDurumMetni(o) {
             konteyner.innerHTML = h;
         }
 
-        /* ================= GANTT ÞEMASI ================= */
+        /* ================= GANTT ÅžEMASI ================= */
         var itGanttAktif = false;
         function itGanttToggleGoruntu() {
             itGanttAktif = !itGanttAktif;
@@ -8679,8 +8679,8 @@ function itDurumMetni(o) {
         function itGanttGoster() {
             var konteyner = document.getElementById("itGanttContainer");
             var liste = itDbYukle().filter(function(x){return !x.tamamlandi;});
-            if (!liste.length) { konteyner.innerHTML = '<div class="it-gantt-notice"><div style="font-size:32px;margin-bottom:6px;"><i class="fa-solid fa-chart-simple"></i></div>Gantt þemasý gösterilecek aktif iþ bulunmamaktadýr.<p>Yeni iþ ekleyerek baþlayýn.</p></div>'; return; }
-            var aylar = ["Ocak","Þubat","Mart","Nisan","Mayýs","Haziran","Temmuz","Aðustos","Eylül","Ekim","Kasým","Aralýk"];
+            if (!liste.length) { konteyner.innerHTML = '<div class="it-gantt-notice"><div style="font-size:32px;margin-bottom:6px;"><i class="fa-solid fa-chart-simple"></i></div>Gantt ÅŸemasÄ± gÃ¶sterilecek aktif iÅŸ bulunmamaktadÄ±r.<p>Yeni iÅŸ ekleyerek baÅŸlayÄ±n.</p></div>'; return; }
+            var aylar = ["Ocak","Åžubat","Mart","Nisan","MayÄ±s","Haziran","Temmuz","AÄŸustos","EylÃ¼l","Ekim","KasÄ±m","AralÄ±k"];
             var minDate = Infinity, maxDate = -Infinity;
             liste.forEach(function(is){
                 var d = new Date(is.tarih || Date.now());
@@ -8696,7 +8696,7 @@ function itDurumMetni(o) {
             var totalDays = (maxD - minD) / (1000*60*60*24);
             var today = new Date();
             today.setHours(0,0,0,0);
-            var h = '<div class="it-gantt-wrap"><table class="it-gantt-table"><thead><tr><th style="width:180px;text-align:left;padding:6px 10px;">Ýþ Adý</th>';
+            var h = '<div class="it-gantt-wrap"><table class="it-gantt-table"><thead><tr><th style="width:180px;text-align:left;padding:6px 10px;">Ä°ÅŸ AdÄ±</th>';
             for (var m = 0; m < totalMonths; m++) {
                 var dt = new Date(minD); dt.setMonth(dt.getMonth() + m);
                 h += '<th style="width:' + (100/totalMonths) + '%"><span class="it-gantt-month-label">' + aylar[dt.getMonth()] + ' ' + dt.getFullYear() + '</span></th>';
@@ -8717,9 +8717,9 @@ function itDurumMetni(o) {
                 if (widthPct < 2) widthPct = 2;
                 var avgPct = itJobOrtalamaPct(is);
                 var durum = itJobDurumMetni(is);
-                var turKisaltma = is.tur === "Uygulama Proje" ? "UygulamaProje" : (is.tur === "3B Modelleme ve Tasarým" ? "3B" : is.tur);
+                var turKisaltma = is.tur === "Uygulama Proje" ? "UygulamaProje" : (is.tur === "3B Modelleme ve TasarÄ±m" ? "3B" : is.tur);
                 var firmaBilgi = (is.firma || "").toUpperCase();
-                h += '<tr><td class="it-gantt-job-cell">' + esc(is.isAdi || "ÝSÝMSÝZ") + '<span class="it-gantt-meta">' + esc(firmaBilgi || "-") + ' <span class="it-gantt-tur-tag it-gantt-tur-' + turKisaltma + '">' + esc(is.tur) + '</span></span></td>';
+                h += '<tr><td class="it-gantt-job-cell">' + esc(is.isAdi || "Ä°SÄ°MSÄ°Z") + '<span class="it-gantt-meta">' + esc(firmaBilgi || "-") + ' <span class="it-gantt-tur-tag it-gantt-tur-' + turKisaltma + '">' + esc(is.tur) + '</span></span></td>';
                 h += '<td colspan="' + totalMonths + '" style="position:relative;padding:0;">';
                 h += '<div class="it-gantt-bar-wrap">';
                 h += '<div class="it-gantt-bar" style="left:' + leftPct + '%;width:' + widthPct + '%;background:' + durum.bg + ';" title="' + esc(is.isAdi) + ' - ' + durum.text + ' (' + avgPct + '%)">';
@@ -8764,11 +8764,11 @@ function itDurumMetni(o) {
             var tamIcon = document.getElementById("itTamExpandIcon_" + id);
             if (aktifRow) {
                 aktifRow.classList.toggle("open");
-                if (aktifIcon) aktifIcon.innerText = aktifRow.classList.contains("open") ? "¡" : "?";
+                if (aktifIcon) aktifIcon.innerText = aktifRow.classList.contains("open") ? "Â¡" : "?";
             }
             if (tamRow) {
                 tamRow.classList.toggle("open");
-                if (tamIcon) tamIcon.innerText = tamRow.classList.contains("open") ? "¡" : "?";
+                if (tamIcon) tamIcon.innerText = tamRow.classList.contains("open") ? "Â¡" : "?";
             }
         }
 
@@ -8777,16 +8777,16 @@ function itDurumMetni(o) {
             if (!bolum) return;
             bolum.classList.toggle("it-bolum-kapali");
             var ok = document.getElementById(id + "Ok");
-            if (ok) ok.innerText = bolum.classList.contains("it-bolum-kapali") ? "?" : "¡";
+            if (ok) ok.innerText = bolum.classList.contains("it-bolum-kapali") ? "?" : "Â¡";
         }
 
         function itSayaciGuncelle() {
             var sayac = document.getElementById("itSayac");
             var liste = itDbYukle();
-            if (sayac) sayac.innerText = liste.length + " kayýt";
+            if (sayac) sayac.innerText = liste.length + " kayÄ±t";
             var aktif = liste.filter(function(x){return !x.tamamlandi;});
             var tamam = liste.filter(function(x){return x.tamamlandi;});
-            var turler = ["Taslak","Uygulama Proje","3B Modelleme ve Tasarým","Diðer"];
+            var turler = ["Taslak","Uygulama Proje","3B Modelleme ve TasarÄ±m","DiÄŸer"];
             var aktifIds = ["itAktifTaslak","itAktifUP","itAktif3B","itAktifDiger"];
             var tamamIds = ["itTamamTaslak","itTamamUP","itTamam3B","itTamamDiger"];
             document.getElementById("itAktifToplam").innerText = aktif.length;
@@ -8819,7 +8819,7 @@ function itDurumMetni(o) {
                     el.style.display = 'block';
                     var jobId = id.replace('itOrtakEkleBody_', '');
                     var icon = document.getElementById("itOrtakEkleIcon_" + jobId);
-                    if (icon) icon.innerText = '¡';
+                    if (icon) icon.innerText = 'Â¡';
                 }
             });
         }
@@ -8847,8 +8847,8 @@ function itDurumMetni(o) {
             var branslar = itBransListesiGetir();
             var h = '<div class="it-detay-ortaklar" style="margin-top:8px;">';
             var isTaslak = job.tur === "Taslak";
-            var is3B = job.tur === "3B Modelleme ve Tasarým";
-            var isDiger = job.tur === "Diðer";
+            var is3B = job.tur === "3B Modelleme ve TasarÄ±m";
+            var isDiger = job.tur === "DiÄŸer";
             var ASAMA_LIST = itAsamaList(job.tur);
             var ASAMA_RENKLER = itAsamaRenkler(job.tur);
             (job.ortaklar||[]).forEach(function(o,i){
@@ -8857,23 +8857,23 @@ function itDurumMetni(o) {
                     var _d2r = ''; var _r2r = '#e53935';
                     if (isTaslak) {
                         if (o.cizimTarihi) { _d2r = 'TAMAMLANDI'; _r2r = '#2e7d32'; }
-                        else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2r = 'çizim aþamasýnda'; _r2r = '#e53935'; }
+                        else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2r = 'Ã§izim aÅŸamasÄ±nda'; _r2r = '#e53935'; }
                     } else if (is3B) {
                         if (o.projeTeslimTarihi) { _d2r = 'TAMAMLANDI'; _r2r = '#2e7d32'; }
-                        else if (o.cizimTarihi) { _d2r = 'PROJE TESLÝM AÞAMASINDA'; _r2r = '#f9a825'; }
-                        else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2r = 'ÇÝZÝM AÞAMASINDA'; _r2r = '#ef6c00'; }
-                        else if (o.fiyatOnayTarihi) { _d2r = 'ÝÞ VERÝLMEYÝ BEKLÝYOR'; _r2r = '#e53935'; }
+                        else if (o.cizimTarihi) { _d2r = 'PROJE TESLÄ°M AÅžAMASINDA'; _r2r = '#f9a825'; }
+                        else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2r = 'Ã‡Ä°ZÄ°M AÅžAMASINDA'; _r2r = '#ef6c00'; }
+                        else if (o.fiyatOnayTarihi) { _d2r = 'Ä°Åž VERÄ°LMEYÄ° BEKLÄ°YOR'; _r2r = '#e53935'; }
                     } else if (isDiger) {
                         if (o.projeTeslimTarihi) { _d2r = 'TAMAMLANDI'; _r2r = '#2e7d32'; }
-                        else if (o.cizimTarihi) { _d2r = 'ÝÞ TESLÝM AÞAMASINDA'; _r2r = '#f9a825'; }
-                        else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2r = 'ÇÝZÝM AÞAMASINDA'; _r2r = '#ef6c00'; }
-                        else if (o.fiyatOnayTarihi) { _d2r = 'ÝÞ VERÝLMEYÝ BEKLÝYOR'; _r2r = '#e53935'; }
+                        else if (o.cizimTarihi) { _d2r = 'Ä°Åž TESLÄ°M AÅžAMASINDA'; _r2r = '#f9a825'; }
+                        else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2r = 'Ã‡Ä°ZÄ°M AÅžAMASINDA'; _r2r = '#ef6c00'; }
+                        else if (o.fiyatOnayTarihi) { _d2r = 'Ä°Åž VERÄ°LMEYÄ° BEKLÄ°YOR'; _r2r = '#e53935'; }
                     } else {
                         if (o.projeTeslimTarihi) { _d2r = 'TAMAMLANDI'; _r2r = '#2e7d32'; }
-                        else if (o.baskiTarihi) { _d2r = 'imza aþamasýnda'; _r2r = '#7cb342'; }
-                        else if (o.cizimTarihi) { _d2r = 'Baský Aþamasýnda'; _r2r = '#f9a825'; }
-                        else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2r = 'çizim aþamasýnda'; _r2r = '#ef6c00'; }
-                        else if (o.fiyatOnayTarihi) { _d2r = 'Ýþ Verilmeyi Bekliyor'; _r2r = '#e53935'; }
+                        else if (o.baskiTarihi) { _d2r = 'imza aÅŸamasÄ±nda'; _r2r = '#7cb342'; }
+                        else if (o.cizimTarihi) { _d2r = 'BaskÄ± AÅŸamasÄ±nda'; _r2r = '#f9a825'; }
+                        else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2r = 'Ã§izim aÅŸamasÄ±nda'; _r2r = '#ef6c00'; }
+                        else if (o.fiyatOnayTarihi) { _d2r = 'Ä°ÅŸ Verilmeyi Bekliyor'; _r2r = '#e53935'; }
                     }
                     h += '<div style="border:1px solid var(--border-color);border-radius:8px;padding:8px 12px;margin-top:4px;display:flex;align-items:center;gap:8px;">';
                     h += '<span style="font-weight:700;flex:1;">' + esc(o.ortakAdi||'') + ' - ' + esc(o.brans||'') + '</span>';
@@ -8897,23 +8897,23 @@ function itDurumMetni(o) {
                 var _r2 = '#e53935';
                 if (isTaslak) {
                     if (o.cizimTarihi) { _d2 = 'TAMAMLANDI'; _r2 = '#2e7d32'; }
-                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'çizim aþamasýnda'; _r2 = '#e53935'; }
+                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'Ã§izim aÅŸamasÄ±nda'; _r2 = '#e53935'; }
                 } else if (is3B) {
                     if (o.projeTeslimTarihi) { _d2 = 'TAMAMLANDI'; _r2 = '#2e7d32'; }
-                    else if (o.cizimTarihi) { _d2 = 'PROJE TESLÝM AÞAMASINDA'; _r2 = '#f9a825'; }
-                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'ÇÝZÝM AÞAMASINDA'; _r2 = '#ef6c00'; }
-                    else if (o.fiyatOnayTarihi) { _d2 = 'ÝÞ VERÝLMEYÝ BEKLÝYOR'; _r2 = '#e53935'; }
+                    else if (o.cizimTarihi) { _d2 = 'PROJE TESLÄ°M AÅžAMASINDA'; _r2 = '#f9a825'; }
+                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'Ã‡Ä°ZÄ°M AÅžAMASINDA'; _r2 = '#ef6c00'; }
+                    else if (o.fiyatOnayTarihi) { _d2 = 'Ä°Åž VERÄ°LMEYÄ° BEKLÄ°YOR'; _r2 = '#e53935'; }
                 } else if (isDiger) {
                     if (o.projeTeslimTarihi) { _d2 = 'TAMAMLANDI'; _r2 = '#2e7d32'; }
-                    else if (o.cizimTarihi) { _d2 = 'ÝÞ TESLÝM AÞAMASINDA'; _r2 = '#f9a825'; }
-                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'ÇÝZÝM AÞAMASINDA'; _r2 = '#ef6c00'; }
-                    else if (o.fiyatOnayTarihi) { _d2 = 'ÝÞ VERÝLMEYÝ BEKLÝYOR'; _r2 = '#e53935'; }
+                    else if (o.cizimTarihi) { _d2 = 'Ä°Åž TESLÄ°M AÅžAMASINDA'; _r2 = '#f9a825'; }
+                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'Ã‡Ä°ZÄ°M AÅžAMASINDA'; _r2 = '#ef6c00'; }
+                    else if (o.fiyatOnayTarihi) { _d2 = 'Ä°Åž VERÄ°LMEYÄ° BEKLÄ°YOR'; _r2 = '#e53935'; }
                 } else {
                     if (o.projeTeslimTarihi) { _d2 = 'TAMAMLANDI'; _r2 = '#2e7d32'; }
-                    else if (o.baskiTarihi) { _d2 = 'imza aþamasýnda'; _r2 = '#7cb342'; }
-                    else if (o.cizimTarihi) { _d2 = 'Baský Aþamasýnda'; _r2 = '#f9a825'; }
-                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'çizim aþamasýnda'; _r2 = '#ef6c00'; }
-                    else if (o.fiyatOnayTarihi) { _d2 = 'Ýþ Verilmeyi Bekliyor'; _r2 = '#e53935'; }
+                    else if (o.baskiTarihi) { _d2 = 'imza aÅŸamasÄ±nda'; _r2 = '#7cb342'; }
+                    else if (o.cizimTarihi) { _d2 = 'BaskÄ± AÅŸamasÄ±nda'; _r2 = '#f9a825'; }
+                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'Ã§izim aÅŸamasÄ±nda'; _r2 = '#ef6c00'; }
+                    else if (o.fiyatOnayTarihi) { _d2 = 'Ä°ÅŸ Verilmeyi Bekliyor'; _r2 = '#e53935'; }
                 }
                 h += '<span id="itDurumText_' + jobId + '_' + i + '" style="font-size:10px;font-weight:700;text-transform:uppercase;color:#fff;background:' + _r2 + ';padding:2px 8px;border-radius:4px;white-space:nowrap;">' + _d2 + '</span>';
                 h += '<span style="display:flex;align-items:center;gap:6px;">';
@@ -8923,7 +8923,7 @@ function itDurumMetni(o) {
                 h += '<span onclick="event.stopPropagation();itOrtakKaldir(' + jobId + ',' + i + ')" style="cursor:pointer;color:#e53935;font-weight:700;font-size:16px;"><i class="fa-solid fa-xmark"></i></span>';
                 h += '</span></div>';
                 h += '<div class="it-ortak-card-body closed" id="itOrtakBody_' + jobId + '_' + i + '">';
-                h += '<div class="it-asama-bar-container"><div class="it-asama-bar-title"><i class="fa-solid fa-chart-simple"></i> Ýþin Tamamlanma Durumu</div><div class="it-asama-bar-track"><div class="it-asama-bar-fill" id="itOrtakBar_' + jobId + '_' + i + '" style="width:' + pct + '%;background:linear-gradient(90deg,#e53935,' + (isTaslak ? '#2e7d32' : '#f9a825,#4caf50') + ');"></div><span class="it-asama-bar-text" id="itOrtakBarText_' + jobId + '_' + i + '">' + pct + '%</span></div></div>';
+                h += '<div class="it-asama-bar-container"><div class="it-asama-bar-title"><i class="fa-solid fa-chart-simple"></i> Ä°ÅŸin Tamamlanma Durumu</div><div class="it-asama-bar-track"><div class="it-asama-bar-fill" id="itOrtakBar_' + jobId + '_' + i + '" style="width:' + pct + '%;background:linear-gradient(90deg,#e53935,' + (isTaslak ? '#2e7d32' : '#f9a825,#4caf50') + ');"></div><span class="it-asama-bar-text" id="itOrtakBarText_' + jobId + '_' + i + '">' + pct + '%</span></div></div>';
                 h += '<div class="it-asama-steps">';
                 var nextAc = true;
                 ASAMA_LIST.forEach(function(a, ai){
@@ -8954,19 +8954,19 @@ function itDurumMetni(o) {
             if (!readonly) {
                 h += '<div class="it-ortak-ekle-panel" style="margin-top:10px;border:1px dashed var(--border-color);border-radius:8px;background:var(--bg-main);">';
                 h += '<div onclick="event.stopPropagation();itOrtakEkleToggle(\'' + jobId + '\')" style="cursor:pointer;padding:12px;font-size:12px;font-weight:700;text-transform:uppercase;color:var(--text-light);display:flex;align-items:center;gap:6px;">';
-                h += '<span id="itOrtakEkleIcon_' + jobId + '" style="font-size:10px;">?</span> <i class="fa-solid fa-plus"></i> YENÝ ÝÞ ORTAÐI EKLE</div>';
+                h += '<span id="itOrtakEkleIcon_' + jobId + '" style="font-size:10px;">?</span> <i class="fa-solid fa-plus"></i> YENÄ° Ä°Åž ORTAÄžI EKLE</div>';
                 h += '<div id="itOrtakEkleBody_' + jobId + '" style="display:none;padding:0 12px 12px;">';
                 h += '<div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">';
-                h += '<div style="flex:1;min-width:160px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text-light);margin-bottom:2px;">ÝÞ ORTAÐI</div>';
+                h += '<div style="flex:1;min-width:160px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text-light);margin-bottom:2px;">Ä°Åž ORTAÄžI</div>';
                 h += '<select id="itOrtakEkleSec_' + jobId + '" style="width:100%;padding:7px 8px;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-main);font-size:12px;text-transform:uppercase;">';
-                h += '<option value="">-- SEÇÝNÝZ --</option>';
+                h += '<option value="">-- SEÃ‡Ä°NÄ°Z --</option>';
                 ortaklar.forEach(function(o){
-                    h += '<option value="' + esc(o.ad) + '">' + esc(o.ad) + (o.sirket && o.sirket !== "BÝREYSEL" ? ' (' + esc(o.sirket) + ')' : '') + '</option>';
+                    h += '<option value="' + esc(o.ad) + '">' + esc(o.ad) + (o.sirket && o.sirket !== "BÄ°REYSEL" ? ' (' + esc(o.sirket) + ')' : '') + '</option>';
                 });
                 h += '</select></div>';
-                h += '<div style="flex:1;min-width:160px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text-light);margin-bottom:2px;">HÝZMET BRANÞI</div>';
+                h += '<div style="flex:1;min-width:160px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text-light);margin-bottom:2px;">HÄ°ZMET BRANÅžI</div>';
                 h += '<select id="itOrtakBransSec_' + jobId + '" style="width:100%;padding:7px 8px;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-main);font-size:12px;text-transform:uppercase;">';
-                h += '<option value="">-- SEÇÝNÝZ --</option>';
+                h += '<option value="">-- SEÃ‡Ä°NÄ°Z --</option>';
                 branslar.forEach(function(b){
                     h += '<option value="' + esc(b) + '">' + esc(b) + '</option>';
                 });
@@ -8992,7 +8992,7 @@ function itDurumMetni(o) {
                 if (!el) return;
                 el.classList.add('open');
                 var icon = document.getElementById(id.indexOf('itDetayRow_')===0 ? id.replace('itDetayRow_','itExpandIcon_') : id.replace('itTamDetayRow_','itTamExpandIcon_'));
-                if (icon) icon.innerText = '¡';
+                if (icon) icon.innerText = 'Â¡';
             });
         }
 
@@ -9002,12 +9002,12 @@ function itDurumMetni(o) {
             if (!body) return;
             var shown = body.style.display !== 'none';
             body.style.display = shown ? 'none' : 'block';
-            if (icon) icon.innerText = shown ? '?' : '¡';
+            if (icon) icon.innerText = shown ? '?' : 'Â¡';
         }
         function itOrtakEkleDetay(jobId) {
             var ortakAd = document.getElementById("itOrtakEkleSec_" + jobId).value;
             var brans = document.getElementById("itOrtakBransSec_" + jobId).value;
-            if (!ortakAd || !brans) { tmNotify("Lütfen ortak ve branþ seçin!", "error"); return; }
+            if (!ortakAd || !brans) { tmNotify("LÃ¼tfen ortak ve branÅŸ seÃ§in!", "error"); return; }
             var liste = itDbYukle();
             var idx = liste.findIndex(function(x){return x.id===jobId;});
             if (idx === -1) return;
@@ -9039,7 +9039,7 @@ function itDurumMetni(o) {
             var icon = document.getElementById("itOrtakToggleIcon_" + key);
             if (!body) return;
             body.classList.toggle("closed");
-            if (icon) icon.innerText = body.classList.contains("closed") ? "?" : "¡";
+            if (icon) icon.innerText = body.classList.contains("closed") ? "?" : "Â¡";
         }
 
         function itAsamaToggle(jobId, index, field) {
@@ -9055,7 +9055,7 @@ function itDurumMetni(o) {
             if (!o[field] && asamaIdx > 0) {
                 var prev = ASAMA_LIST[asamaIdx - 1];
                 if (!o[prev.field]) {
-                    tmNotify("Önce " + prev.label + " adýmýný tamamlayýn!", "error"); return;
+                    tmNotify("Ã–nce " + prev.label + " adÄ±mÄ±nÄ± tamamlayÄ±n!", "error"); return;
                 }
             }
             if (o[field]) { o[field] = ""; } else { o[field] = anlikTarihGetir(); }
@@ -9080,7 +9080,7 @@ function itDurumMetni(o) {
                 var label = btn.querySelector('.it-asama-seg-label');
                 if (label) label.innerText = (completed ? '? ' : '') + a.label;
             });
-            // Dinamik olarak TAHSÝLAT ONAYI ve ÝÞ TAMAMLANDI butonlarýný göster/gizle
+            // Dinamik olarak TAHSÄ°LAT ONAYI ve Ä°Åž TAMAMLANDI butonlarÄ±nÄ± gÃ¶ster/gizle
             var is_ = liste[idx];
             var isTam2 = itJobOrtalamaPct(is_) === 100 && (is_.ortaklar||[]).length > 0;
             var actionsDiv = document.querySelector('#itDetayRow_' + jobId + ' .it-detay-actions');
@@ -9100,7 +9100,7 @@ function itDurumMetni(o) {
                 // Add appropriate elements
                 if (isTam2 && is_.tur === "Taslak") {
                     var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; btn.style.background = '#2e7d32';
-                    btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '<i class="fa-solid fa-check"></i> ÝÞ TAMAMLANDI';
+                    btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '<i class="fa-solid fa-check"></i> Ä°Åž TAMAMLANDI';
                     if (silBtn) actionsDiv.insertBefore(btn, silBtn); else actionsDiv.appendChild(btn);
                 } else if (isTam2 && is_.tur === "Uygulama Proje") {
                     if (!is_.ruhsatOnayi) {
@@ -9113,26 +9113,26 @@ function itDurumMetni(o) {
                     }
                     if (!is_.tahsilatOnayi) {
                         var tBtn = document.createElement('button'); tBtn.className = 'it-btn-tahsilat';
-                        tBtn.onclick = function(e) { e.stopPropagation(); itTahsilatOnayiVer(jobId); }; tBtn.innerText = '<i class="fa-solid fa-check"></i> TAHSÝLAT ONAYI VER';
+                        tBtn.onclick = function(e) { e.stopPropagation(); itTahsilatOnayiVer(jobId); }; tBtn.innerText = '<i class="fa-solid fa-check"></i> TAHSÄ°LAT ONAYI VER';
                         if (silBtn) actionsDiv.insertBefore(tBtn, silBtn); else actionsDiv.appendChild(tBtn);
                     } else {
-                        var tSp = document.createElement('span'); tSp.className = 'it-tahsilat-badge'; tSp.innerText = '<i class="fa-solid fa-check"></i> ÝÞÝN TAHSÝLATI ONAYLANDI';
+                        var tSp = document.createElement('span'); tSp.className = 'it-tahsilat-badge'; tSp.innerText = '<i class="fa-solid fa-check"></i> Ä°ÅžÄ°N TAHSÄ°LATI ONAYLANDI';
                         if (silBtn) actionsDiv.insertBefore(tSp, silBtn); else actionsDiv.appendChild(tSp);
                     }
                     if (is_.ruhsatOnayi && is_.tahsilatOnayi) {
                         var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; btn.style.background = '#2e7d32';
-                        btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '<i class="fa-solid fa-check"></i> ÝÞ TAMAMLANDI';
+                        btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '<i class="fa-solid fa-check"></i> Ä°Åž TAMAMLANDI';
                         if (silBtn) actionsDiv.insertBefore(btn, silBtn); else actionsDiv.appendChild(btn);
                     }
                 } else if (isTam2 && is_.tahsilatOnayi) {
-                    var sp = document.createElement('span'); sp.className = 'it-tahsilat-badge'; sp.innerText = '<i class="fa-solid fa-check"></i> ÝÞÝN TAHSÝLATI ONAYLANDI';
+                    var sp = document.createElement('span'); sp.className = 'it-tahsilat-badge'; sp.innerText = '<i class="fa-solid fa-check"></i> Ä°ÅžÄ°N TAHSÄ°LATI ONAYLANDI';
                     if (silBtn) actionsDiv.insertBefore(sp, silBtn); else actionsDiv.appendChild(sp);
                     var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; btn.style.background = '#2e7d32';
-                    btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '<i class="fa-solid fa-check"></i> ÝÞ TAMAMLANDI';
+                    btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '<i class="fa-solid fa-check"></i> Ä°Åž TAMAMLANDI';
                     if (silBtn) actionsDiv.insertBefore(btn, silBtn); else actionsDiv.appendChild(btn);
                 } else if (isTam2 && !is_.tahsilatOnayi) {
                     var btn2 = document.createElement('button'); btn2.className = 'it-btn-tahsilat';
-                    btn2.onclick = function(e) { e.stopPropagation(); itTahsilatOnayiVer(jobId); }; btn2.innerText = '<i class="fa-solid fa-check"></i> TAHSÝLAT ONAYI VER';
+                    btn2.onclick = function(e) { e.stopPropagation(); itTahsilatOnayiVer(jobId); }; btn2.innerText = '<i class="fa-solid fa-check"></i> TAHSÄ°LAT ONAYI VER';
                     if (silBtn) actionsDiv.insertBefore(btn2, silBtn); else actionsDiv.appendChild(btn2);
                 }
             }
@@ -9145,7 +9145,7 @@ function itDurumMetni(o) {
             var durumClass = '';
             if (tur === "Taslak") {
                 durumClass = o.cizimTarihi ? 'it-ortak-durum-teslim' : (pct > 0 ? 'it-ortak-durum-gonder' : 'it-ortak-durum-none');
-            } else if (tur === "3B Modelleme ve Tasarým" || tur === "Diðer") {
+            } else if (tur === "3B Modelleme ve TasarÄ±m" || tur === "DiÄŸer") {
                 durumClass = o.projeTeslimTarihi ? 'it-ortak-durum-teslim' : (pct > 0 ? 'it-ortak-durum-gonder' : 'it-ortak-durum-none');
             } else {
                 durumClass = o.projeTeslimTarihi ? 'it-ortak-durum-teslim' : (pct > 0 ? 'it-ortak-durum-gonder' : 'it-ortak-durum-none');
@@ -9165,23 +9165,23 @@ function itDurumMetni(o) {
                 var _d2 = ''; var _r2 = '#e53935';
                 if (tur === "Taslak") {
                     if (o.cizimTarihi) { _d2 = 'TAMAMLANDI'; _r2 = '#2e7d32'; }
-                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'çizim aþamasýnda'; _r2 = '#e53935'; }
-                } else if (tur === "3B Modelleme ve Tasarým") {
+                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'Ã§izim aÅŸamasÄ±nda'; _r2 = '#e53935'; }
+                } else if (tur === "3B Modelleme ve TasarÄ±m") {
                     if (o.projeTeslimTarihi) { _d2 = 'TAMAMLANDI'; _r2 = '#2e7d32'; }
-                    else if (o.cizimTarihi) { _d2 = 'PROJE TESLÝM AÞAMASINDA'; _r2 = '#f9a825'; }
-                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'ÇÝZÝM AÞAMASINDA'; _r2 = '#ef6c00'; }
-                    else if (o.fiyatOnayTarihi) { _d2 = 'ÝÞ VERÝLMEYÝ BEKLÝYOR'; _r2 = '#e53935'; }
-                } else if (tur === "Diðer") {
+                    else if (o.cizimTarihi) { _d2 = 'PROJE TESLÄ°M AÅžAMASINDA'; _r2 = '#f9a825'; }
+                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'Ã‡Ä°ZÄ°M AÅžAMASINDA'; _r2 = '#ef6c00'; }
+                    else if (o.fiyatOnayTarihi) { _d2 = 'Ä°Åž VERÄ°LMEYÄ° BEKLÄ°YOR'; _r2 = '#e53935'; }
+                } else if (tur === "DiÄŸer") {
                     if (o.projeTeslimTarihi) { _d2 = 'TAMAMLANDI'; _r2 = '#2e7d32'; }
-                    else if (o.cizimTarihi) { _d2 = 'ÝÞ TESLÝM AÞAMASINDA'; _r2 = '#f9a825'; }
-                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'ÇÝZÝM AÞAMASINDA'; _r2 = '#ef6c00'; }
-                    else if (o.fiyatOnayTarihi) { _d2 = 'ÝÞ VERÝLMEYÝ BEKLÝYOR'; _r2 = '#e53935'; }
+                    else if (o.cizimTarihi) { _d2 = 'Ä°Åž TESLÄ°M AÅžAMASINDA'; _r2 = '#f9a825'; }
+                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'Ã‡Ä°ZÄ°M AÅžAMASINDA'; _r2 = '#ef6c00'; }
+                    else if (o.fiyatOnayTarihi) { _d2 = 'Ä°Åž VERÄ°LMEYÄ° BEKLÄ°YOR'; _r2 = '#e53935'; }
                 } else {
                     if (o.projeTeslimTarihi) { _d2 = 'TAMAMLANDI'; _r2 = '#2e7d32'; }
-                    else if (o.baskiTarihi) { _d2 = 'imza aþamasýnda'; _r2 = '#7cb342'; }
-                    else if (o.cizimTarihi) { _d2 = 'Baský Aþamasýnda'; _r2 = '#f9a825'; }
-                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'çizim aþamasýnda'; _r2 = '#ef6c00'; }
-                    else if (o.fiyatOnayTarihi) { _d2 = 'Ýþ Verilmeyi Bekliyor'; _r2 = '#e53935'; }
+                    else if (o.baskiTarihi) { _d2 = 'imza aÅŸamasÄ±nda'; _r2 = '#7cb342'; }
+                    else if (o.cizimTarihi) { _d2 = 'BaskÄ± AÅŸamasÄ±nda'; _r2 = '#f9a825'; }
+                    else if (o.belgelerTarihi || o.isVerildiTarihi) { _d2 = 'Ã§izim aÅŸamasÄ±nda'; _r2 = '#ef6c00'; }
+                    else if (o.fiyatOnayTarihi) { _d2 = 'Ä°ÅŸ Verilmeyi Bekliyor'; _r2 = '#e53935'; }
                 }
                 durumSpan.innerText = _d2;
                 durumSpan.style.background = _r2;
@@ -9324,12 +9324,12 @@ function itDurumMetni(o) {
             var sirketler = [];
             db.forEach(function(m) {
                 var s = (m.sirket || "").toUpperCase().trim();
-                if (s && s !== "-" && s !== "BÝREYSEL") {
+                if (s && s !== "-" && s !== "BÄ°REYSEL") {
                     if (sirketler.indexOf(s) === -1) sirketler.push(s);
                 } else {
                     var ad = (m.ad || "").toUpperCase().trim();
                     if (ad) {
-                        var label = "MÜÞTERÝ ADI SOYADI: " + ad;
+                        var label = "MÃœÅžTERÄ° ADI SOYADI: " + ad;
                         if (sirketler.indexOf(label) === -1) sirketler.push(label);
                     }
                 }
@@ -9340,7 +9340,7 @@ function itDurumMetni(o) {
         function itFormAdiGuncelle() {
             var tur = document.getElementById("itFormTur").value;
             var ad = document.getElementById("itFormAd");
-            if (tur === "Diðer") {
+            if (tur === "DiÄŸer") {
                 ad.removeAttribute("readonly");
                 ad.style.background = "";
                 ad.style.color = "";
@@ -9370,11 +9370,11 @@ function itDurumMetni(o) {
         function itFormAc(data) {
             document.getElementById("itFormPopup").classList.add("active");
             document.getElementById("itFormEditId").value = data ? data.id : "";
-            document.getElementById("itFormTitle").innerHTML = data ? '<i class="fa-regular fa-pen-to-square"></i> ÝÞ DÜZENLE' : '<i class="fa-solid fa-plus"></i> YENÝ ÝÞ EKLE';
+            document.getElementById("itFormTitle").innerHTML = data ? '<i class="fa-regular fa-pen-to-square"></i> Ä°Åž DÃœZENLE' : '<i class="fa-solid fa-plus"></i> YENÄ° Ä°Åž EKLE';
 
             var firmaSelect = document.getElementById("itFormFirma");
             var firmalar = itFirmaListesiGetir();
-            firmaSelect.innerHTML = '<option value="">-- SEÇÝNÝZ --</option>';
+            firmaSelect.innerHTML = '<option value="">-- SEÃ‡Ä°NÄ°Z --</option>';
             firmalar.forEach(function(f) {
                 var opt = document.createElement("option");
                 opt.value = f;
@@ -9433,7 +9433,7 @@ function itDurumMetni(o) {
                 var div = panel.querySelector('div');
                 if (div) div.innerHTML = '<i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:#1565C0;">?</span>' : '');
             }
-            tmNotify("Notlar güncellendi.", "success");
+            tmNotify("Notlar gÃ¼ncellendi.", "success");
         }
 
         function itKaydet() {
@@ -9448,8 +9448,8 @@ function itDurumMetni(o) {
             var not = document.getElementById("itFormNot").value.trim().toUpperCase();
             itFormAdiGuncelle();
             var isAdi = trToUpper(document.getElementById("itFormAd").value.trim());
-            tmLoadingGoster('Ýþ kaydediliyor...');
-            if (!isAdi) { tmNotify("Ýþ adý zorunludur!", "error"); return; }
+            tmLoadingGoster('Ä°ÅŸ kaydediliyor...');
+            if (!isAdi) { tmNotify("Ä°ÅŸ adÄ± zorunludur!", "error"); return; }
             if (id) {
                 var idx = liste.findIndex(function(x){return x.id == id;});
                 if (idx !== -1) { liste[idx].tur = tur; liste[idx].isAdi = isAdi; liste[idx].firma = firma; liste[idx].pafta = pafta; liste[idx].ada = ada; liste[idx].parsel = parsel; liste[idx].tarih = tarih; liste[idx].not = not; }
@@ -9461,8 +9461,8 @@ function itDurumMetni(o) {
             tmLoadingGizle();
             itFormKapat();
             itGoster();
-            tmNotify(id ? "Ýþ güncellendi." : "Ýþ eklendi.", "success");
-            aktiviteEkle((id ? "Ýþ güncellendi: " : "Ýþ eklendi: ") + isAdi, "Ýþ Takibi");
+            tmNotify(id ? "Ä°ÅŸ gÃ¼ncellendi." : "Ä°ÅŸ eklendi.", "success");
+            aktiviteEkle((id ? "Ä°ÅŸ gÃ¼ncellendi: " : "Ä°ÅŸ eklendi: ") + isAdi, "Ä°ÅŸ Takibi");
         }
 
         function itRuhsatOnayiVer(id) {
@@ -9474,8 +9474,8 @@ function itDurumMetni(o) {
             itDbKaydet(liste);
             itGoster();
             itAcKalanYukle(openIds);
-            tmNotify("?? Ruhsat onayý alýndý.", "success");
-            aktiviteEkle("Ruhsat onayý verildi: " + (liste[idx].isAdi || ""), "Ýþ Takibi");
+            tmNotify("?? Ruhsat onayÄ± alÄ±ndÄ±.", "success");
+            aktiviteEkle("Ruhsat onayÄ± verildi: " + (liste[idx].isAdi || ""), "Ä°ÅŸ Takibi");
         }
 
         function itTahsilatOnayiVer(id) {
@@ -9487,23 +9487,23 @@ function itDurumMetni(o) {
             itDbKaydet(liste);
             itGoster();
             itAcKalanYukle(openIds);
-            tmNotify('<i class="fa-solid fa-check"></i> Tahsilat onayý verildi.', 'success');
-            aktiviteEkle("Tahsilat onayý verildi: " + (liste[idx].isAdi || ""), "Ýþ Takibi");
+            tmNotify('<i class="fa-solid fa-check"></i> Tahsilat onayÄ± verildi.', 'success');
+            aktiviteEkle("Tahsilat onayÄ± verildi: " + (liste[idx].isAdi || ""), "Ä°ÅŸ Takibi");
         }
 
         function itTamamla(id) {
             var liste = itDbYukle();
             var idx = liste.findIndex(function(x){return x.id === id;});
             if (idx === -1) return;
-            if (liste[idx].tur !== "Taslak" && !liste[idx].tahsilatOnayi) { tmNotify("Önce tahsilat onayý verilmelidir!", "error"); return; }
-            if (liste[idx].tur === "Uygulama Proje" && !liste[idx].ruhsatOnayi) { tmNotify("Önce ruhsat onayý alýnmalýdýr!", "error"); return; }
-            tmConfirm("Bu iþi tamamlandý olarak iþaretlemek istediðinize emin misiniz?", function() {
+            if (liste[idx].tur !== "Taslak" && !liste[idx].tahsilatOnayi) { tmNotify("Ã–nce tahsilat onayÄ± verilmelidir!", "error"); return; }
+            if (liste[idx].tur === "Uygulama Proje" && !liste[idx].ruhsatOnayi) { tmNotify("Ã–nce ruhsat onayÄ± alÄ±nmalÄ±dÄ±r!", "error"); return; }
+            tmConfirm("Bu iÅŸi tamamlandÄ± olarak iÅŸaretlemek istediÄŸinize emin misiniz?", function() {
                 liste[idx].tamamlandi = true;
                 liste[idx].bitisTarihi = anlikTarihGetir();
                 itDbKaydet(liste);
                 itGoster();
-                tmNotify("Ýþ tamamlandý olarak iþaretlendi.", "success");
-                aktiviteEkle("Ýþ tamamlandý: " + (liste[idx].isAdi || ""), "Ýþ Takibi");
+                tmNotify("Ä°ÅŸ tamamlandÄ± olarak iÅŸaretlendi.", "success");
+                aktiviteEkle("Ä°ÅŸ tamamlandÄ±: " + (liste[idx].isAdi || ""), "Ä°ÅŸ Takibi");
             });
         }
 
@@ -9514,19 +9514,19 @@ function itDurumMetni(o) {
         }
 
         function itSil(id) {
-            tmConfirm("Bu kaydý silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu kaydÄ± silmek istediÄŸinize emin misiniz?", function() {
                 var liste = itDbYukle();
                 var silinen = liste.find(function(x){return x.id === id;});
                 liste = liste.filter(function(x){return x.id !== id;});
                 itDbKaydet(liste);
                 itGoster();
-                tmNotify("Kayýt silindi.", "success");
-                aktiviteEkle("Ýþ takibi kaydý silindi: " + (silinen ? silinen.isAdi : ""), "Ýþ Takibi");
+                tmNotify("KayÄ±t silindi.", "success");
+                aktiviteEkle("Ä°ÅŸ takibi kaydÄ± silindi: " + (silinen ? silinen.isAdi : ""), "Ä°ÅŸ Takibi");
             });
         }
 
 
-        /* ================= DÝLEKÇE MODÜLÜ ================= */
+        /* ================= DÄ°LEKÃ‡E MODÃœLÃœ ================= */
         const DLK_DB_KEY = "tm_dilekceler_db";
 
         function dlkDbYukle() {
@@ -9535,7 +9535,7 @@ function itDurumMetni(o) {
             if (!db || !Array.isArray(db)) db = [];
             return db;
         }
-        function dlkDbKaydet(db) { try { localStorage.setItem(DLK_DB_KEY, JSON.stringify(db)); } catch(e) { console.error("Dilekce db kaydetme hatasi:", e); tmNotify("Dilekçe kaydedilirken hata oluþtu!", "error"); } }
+        function dlkDbKaydet(db) { try { localStorage.setItem(DLK_DB_KEY, JSON.stringify(db)); } catch(e) { console.error("Dilekce db kaydetme hatasi:", e); tmNotify("DilekÃ§e kaydedilirken hata oluÅŸtu!", "error"); } }
 
         function dlkYeniId() {
             var db = dlkDbYukle();
@@ -9577,7 +9577,7 @@ function itDurumMetni(o) {
         function dlkKaydet() {
             var v = dlkFormdakiVeri();
             if (!v.konu || !v.metin || !v.gonderilecekYer) {
-                tmNotify("Lütfen en az Konu, Metin ve Gönderilecek Yer alanlarýný doldurun.", "error");
+                tmNotify("LÃ¼tfen en az Konu, Metin ve GÃ¶nderilecek Yer alanlarÄ±nÄ± doldurun.", "error");
                 return;
             }
             var db = dlkDbYukle();
@@ -9586,8 +9586,8 @@ function itDurumMetni(o) {
             dlkDbKaydet(db);
             dlkListele();
             dlkFormTemizle();
-            tmNotify("Dilekçe " + dlkIdStr(id, anlikTarihGetir()) + " kaydedildi.", "success");
-            aktiviteEkle("Dilekçe kaydedildi: " + dlkIdStr(id, anlikTarihGetir()) + " - " + (v.konu || ""), "Dilekçe");
+            tmNotify("DilekÃ§e " + dlkIdStr(id, anlikTarihGetir()) + " kaydedildi.", "success");
+            aktiviteEkle("DilekÃ§e kaydedildi: " + dlkIdStr(id, anlikTarihGetir()) + " - " + (v.konu || ""), "DilekÃ§e");
         }
 
         function dlkPdfGoster(mod, id) {
@@ -9595,7 +9595,7 @@ function itDurumMetni(o) {
             if (mod === 'yeni') {
                 v = dlkFormdakiVeri();
                 if (!v.konu || !v.metin || !v.gonderilecekYer) {
-                    tmNotify("Lütfen en az Konu, Metin ve Gönderilecek Yer alanlarýný doldurun.", "error");
+                    tmNotify("LÃ¼tfen en az Konu, Metin ve GÃ¶nderilecek Yer alanlarÄ±nÄ± doldurun.", "error");
                     return;
                 }
                 v.id = "TASLAK";
@@ -9603,7 +9603,7 @@ function itDurumMetni(o) {
             } else {
                 var db = dlkDbYukle();
                 var bul = db.find(function(d) { return d.id === id; });
-                if (!bul) { tmNotify("Dilekçe bulunamadý.", "error"); return; }
+                if (!bul) { tmNotify("DilekÃ§e bulunamadÄ±.", "error"); return; }
                 v = bul;
             }
             var idStr = typeof v.id === 'number' ? dlkIdStr(v.id, v.tarih) : "TASLAK";
@@ -9612,7 +9612,7 @@ function itDurumMetni(o) {
             var logoData = localStorage.getItem("tm_sirket_logo");
             var ci = {};
             try { ci = JSON.parse(localStorage.getItem("tm_sirket_bilgileri")) || {}; } catch(e) { ci = {}; }
-            var firmaAd = ci.ad || "TURAK MÝMARLIK";
+            var firmaAd = ci.ad || "TURAK MÄ°MARLIK";
             var imzaAd = ci.imzaAd || "OKAN TUGAY TURAK";
 
             var footerStr;
@@ -9620,7 +9620,7 @@ function itDurumMetni(o) {
                 footerStr = ci.dilekceAltBilgi;
             } else {
                 var line1 = ci.adres || '';
-                if (!line1) line1 = "Adres: Deniz Mah. Selvi Sk. No: 14/D &nbsp;&nbsp;|&nbsp;&nbsp; ÝÐNEADA | DEMÝRKÖY | KIRKLARELÝ";
+                if (!line1) line1 = "Adres: Deniz Mah. Selvi Sk. No: 14/D &nbsp;&nbsp;|&nbsp;&nbsp; Ä°ÄžNEADA | DEMÄ°RKÃ–Y | KIRKLARELÄ°";
                 var line2Parts = [];
                 var telNo = ci.gsm || ci.telefon || "";
                 if (telNo) line2Parts.push("Tel: " + telNo);
@@ -9642,7 +9642,7 @@ function itDurumMetni(o) {
 
                 var etiketGen = 'display:inline-block;width:50px;';
                 var bilgiKisim = '<div style="overflow:hidden;font-size:10pt;padding-bottom:1mm;">' +
-                    '<span style="float:left;"><span style="' + etiketGen + '"><b>Sayý</b></span> : ' + idStr + '</span>' +
+                    '<span style="float:left;"><span style="' + etiketGen + '"><b>SayÄ±</b></span> : ' + idStr + '</span>' +
                     '<span style="float:right;"><span style="' + etiketGen + '"><b>Tarih</b></span> : ' + trh + '</span>' +
                     '</div>' +
                     '<div style="clear:both;font-size:10pt;padding-bottom:2mm;"><span style="' + etiketGen + '"><b>Konu</b></span> : ' + esc(v.konu) + '</div>';
@@ -9654,7 +9654,7 @@ function itDurumMetni(o) {
 
                 var ilgiKisim = '';
                 if (v.ilgi) {
-                    ilgiKisim = '<div style="font-size:10pt;padding-bottom:2mm;"><span style="' + etiketGen + '"><b>Ýlgi</b></span> : ' + esc(v.ilgi) + '</div>';
+                    ilgiKisim = '<div style="font-size:10pt;padding-bottom:2mm;"><span style="' + etiketGen + '"><b>Ä°lgi</b></span> : ' + esc(v.ilgi) + '</div>';
                 }
 
                 var baslikHtml = logoKisim + bilgiKisim + yerKisim + ilgiKisim;
@@ -9776,12 +9776,12 @@ function itDurumMetni(o) {
         function dlkNormalize(text) {
             if (!text) return "";
             var s = text.toString();
-            s = s.replace(/Ý/g, "i").replace(/ý/g, "i").replace(/I/g, "i");
-            s = s.replace(/Ü/g, "u").replace(/ü/g, "u");
-            s = s.replace(/Ö/g, "o").replace(/ö/g, "o");
-            s = s.replace(/Ç/g, "c").replace(/ç/g, "c");
-            s = s.replace(/Þ/g, "s").replace(/þ/g, "s");
-            s = s.replace(/Ð/g, "g").replace(/ð/g, "g");
+            s = s.replace(/Ä°/g, "i").replace(/Ä±/g, "i").replace(/I/g, "i");
+            s = s.replace(/Ãœ/g, "u").replace(/Ã¼/g, "u");
+            s = s.replace(/Ã–/g, "o").replace(/Ã¶/g, "o");
+            s = s.replace(/Ã‡/g, "c").replace(/Ã§/g, "c");
+            s = s.replace(/Åž/g, "s").replace(/ÅŸ/g, "s");
+            s = s.replace(/Äž/g, "g").replace(/ÄŸ/g, "g");
             return s.toLowerCase();
         }
 
@@ -9826,20 +9826,20 @@ function itDurumMetni(o) {
             });
 
             if (filtrelenmis.length === 0) {
-                konteyner.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);background:var(--bg-main);border-radius:8px;border:1px dashed var(--border-color);">' + (arama ? 'Aramanýzla eþleþen dilekçe bulunamadý.' : 'Henüz kaydedilmiþ dilekçe bulunmuyor.') + '</div>';
+                konteyner.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);background:var(--bg-main);border-radius:8px;border:1px dashed var(--border-color);">' + (arama ? 'AramanÄ±zla eÅŸleÅŸen dilekÃ§e bulunamadÄ±.' : 'HenÃ¼z kaydedilmiÅŸ dilekÃ§e bulunmuyor.') + '</div>';
                 return;
             }
 
             function sortOk(column) {
-                return dlkSortColumn === column ? (dlkSortDir === "asc" ? " ^" : " ¡") : "";
+                return dlkSortColumn === column ? (dlkSortDir === "asc" ? " ^" : " Â¡") : "";
             }
 
             var h = '<table class="app-table"><thead><tr>' +
-                '<th onclick="dlkSortTikla(\'id\')" style="cursor:pointer;user-select:none;">Dilekçe No' + sortOk('id') + '</th>' +
+                '<th onclick="dlkSortTikla(\'id\')" style="cursor:pointer;user-select:none;">DilekÃ§e No' + sortOk('id') + '</th>' +
                 '<th onclick="dlkSortTikla(\'konu\')" style="cursor:pointer;user-select:none;">Konu' + sortOk('konu') + '</th>' +
-                '<th onclick="dlkSortTikla(\'yer\')" style="cursor:pointer;user-select:none;">Gönderilen Yer' + sortOk('gonderilecekYer') + '</th>' +
+                '<th onclick="dlkSortTikla(\'yer\')" style="cursor:pointer;user-select:none;">GÃ¶nderilen Yer' + sortOk('gonderilecekYer') + '</th>' +
                 '<th onclick="dlkSortTikla(\'tarih\')" style="cursor:pointer;user-select:none;">Tarih' + sortOk('tarih') + '</th>' +
-                '<th>Ýþlemler</th></tr></thead><tbody>';
+                '<th>Ä°ÅŸlemler</th></tr></thead><tbody>';
             filtrelenmis.forEach(function(d) {
                 var t = d.tarih ? new Date(d.tarih).toLocaleDateString("tr-TR") : "-";
                 h += '<tr><td style="font-weight:700;">' + dlkIdStr(d.id, d.tarih) + '</td>' +
@@ -9868,18 +9868,18 @@ function itDurumMetni(o) {
         }
 
         function dlkSil(id) {
-            tmConfirm("Bu dilekçeyi silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu dilekÃ§eyi silmek istediÄŸinize emin misiniz?", function() {
                 var db = dlkDbYukle();
                 var silinen = db.find(function(d) { return d.id === id; });
                 db = db.filter(function(d) { return d.id !== id; });
                 dlkDbKaydet(db);
                 dlkListele();
-                tmNotify("Dilekçe silindi.", "success");
-                aktiviteEkle("Dilekçe silindi: " + (silinen ? silinen.konu : ""), "Dilekçe");
+                tmNotify("DilekÃ§e silindi.", "success");
+                aktiviteEkle("DilekÃ§e silindi: " + (silinen ? silinen.konu : ""), "DilekÃ§e");
             });
         }
 
-        /* ---------- Ortak Yardýmcýlar ---------- */
+        /* ---------- Ortak YardÄ±mcÄ±lar ---------- */
         function esc(s) { return (s||"").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
         function tarihStr(d) { try { return new Date(d).toLocaleDateString("tr-TR"); } catch(e) { return d||"-"; } }
         function formatPhone(el) { var v=el.value.replace(/\D/g,'').substring(0,11); if(v.length>0){var p=[];p.push(v.substring(0,4));if(v.length>4)p.push(v.substring(4,7));if(v.length>7)p.push(v.substring(7,9));if(v.length>9)p.push(v.substring(9,11));el.value=p.join(' ');} }
@@ -9900,8 +9900,8 @@ function itDurumMetni(o) {
         function noteAktifKlasorDegistir(klasorId) {
             noteAktifKlasorId = klasorId;
             document.querySelectorAll('.note-klasor-item').forEach(function(el) { el.classList.toggle('active', el.dataset.id === String(klasorId)); });
-            var ad = klasorId ? (noteKlasorDbYukle().find(function(k) { return k.id === klasorId; }) || {}).name : "Tüm Notlar";
-            document.getElementById("noteKlasorAdi").innerText = ad || "Tüm Notlar";
+            var ad = klasorId ? (noteKlasorDbYukle().find(function(k) { return k.id === klasorId; }) || {}).name : "TÃ¼m Notlar";
+            document.getElementById("noteKlasorAdi").innerText = ad || "TÃ¼m Notlar";
             noteListele();
         }
 
@@ -9912,7 +9912,7 @@ function itDurumMetni(o) {
             if (!liste || !klasorListe) return;
 
             var klasorler = noteKlasorDbYukle();
-            klasorListe.innerHTML = '<button class="note-klasor-item' + (!noteAktifKlasorId ? ' active' : '') + '" data-id="" onclick="noteAktifKlasorDegistir(null)" ondragover="noteDragOver(event)" ondrop="noteDrop(event,null)" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)"><span class="k-name"><i class="fa-regular fa-folder-open"></i> Tüm Notlar</span><span class="k-count">' + notes.length + '</span></button>';
+            klasorListe.innerHTML = '<button class="note-klasor-item' + (!noteAktifKlasorId ? ' active' : '') + '" data-id="" onclick="noteAktifKlasorDegistir(null)" ondragover="noteDragOver(event)" ondrop="noteDrop(event,null)" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)"><span class="k-name"><i class="fa-regular fa-folder-open"></i> TÃ¼m Notlar</span><span class="k-count">' + notes.length + '</span></button>';
             klasorler.forEach(function(k) {
                 var adet = notes.filter(function(n) { return n.folderId === k.id; }).length;
                 klasorListe.innerHTML += '<button class="note-klasor-item' + (noteAktifKlasorId === k.id ? ' active' : '') + '" data-id="' + k.id + '" onclick="noteAktifKlasorDegistir(\'' + k.id + '\')" ondragover="noteDragOver(event)" ondrop="noteDrop(event,\'' + k.id + '\')" ondragenter="noteDragEnter(event)" ondragleave="noteDragLeave(event)"><span class="k-name"><i class="fa-regular fa-folder"></i> ' + esc(k.name) + '</span><span class="k-count">' + adet + '</span><span class="k-actions"><span style="font-size:11px;cursor:pointer;color:var(--text-light);" onclick="event.stopPropagation();noteKlasorDuzenle(\'' + k.id + '\')"><i class="fa-regular fa-pen-to-square"></i></span><span style="font-size:11px;cursor:pointer;color:var(--accent-red);" onclick="event.stopPropagation();noteKlasorSil(\'' + k.id + '\')"><i class="fa-solid fa-trash-can"></i></span></span></button>';
@@ -9921,13 +9921,13 @@ function itDurumMetni(o) {
             if (noteAktifKlasorId) { notes = notes.filter(function(n) { return n.folderId === noteAktifKlasorId; }); }
 
             if (notes.length === 0) {
-                liste.innerHTML = '<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;color:var(--text-light);font-size:14px;text-align:center;">Henüz not eklenmemiþ.<br><small>Yeni bir not oluþturmak için "Yeni Not Oluþtur" butonunu kullanýn.</small></div>';
+                liste.innerHTML = '<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;color:var(--text-light);font-size:14px;text-align:center;">HenÃ¼z not eklenmemiÅŸ.<br><small>Yeni bir not oluÅŸturmak iÃ§in "Yeni Not OluÅŸtur" butonunu kullanÄ±n.</small></div>';
                 return;
             }
 
             notes.sort(function(a, b) { return (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0); });
             liste.innerHTML = notes.map(function(n) {
-                return '<div class="note-kart" draggable="true" ondragstart="noteDragStart(event,\'' + n.id + '\')" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-icon"><span class="note-kart-icon-title">' + esc(trToUpper(n.title || "BAÞLIKSIZ")) + '</span></div><div class="note-kart-tarih"><i class="fa-regular fa-calendar"></i> ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div>';
+                return '<div class="note-kart" draggable="true" ondragstart="noteDragStart(event,\'' + n.id + '\')" onclick="noteAc(\'' + n.id + '\')"><div class="note-kart-icon"><span class="note-kart-icon-title">' + esc(trToUpper(n.title || "BAÅžLIKSIZ")) + '</span></div><div class="note-kart-tarih"><i class="fa-regular fa-calendar"></i> ' + tarihStr(n.updatedAt || n.createdAt) + '</div></div>';
             }).join('');
         }
 
@@ -9949,7 +9949,7 @@ function itDurumMetni(o) {
             var n = notes.find(function(x) { return x.id === id; });
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
             document.getElementById("noteEditorId").value = id;
-            document.getElementById("noteEditorTitle").innerHTML = '<i class="fa-regular fa-pen-to-square"></i> NOTU DÜZENLE';
+            document.getElementById("noteEditorTitle").innerHTML = '<i class="fa-regular fa-pen-to-square"></i> NOTU DÃœZENLE';
             document.getElementById("noteEditorBaslik").value = (n.title || "") ? trToUpper(n.title || "") : "";
             document.getElementById("noteEditorIcerik").innerHTML = n.content || "";
             document.getElementById("noteEditorModal").style.display = "flex";
@@ -9965,16 +9965,16 @@ function itDurumMetni(o) {
         }
 
         function noteEditorKaydet() {
-            var baslik = trToUpper(document.getElementById("noteEditorBaslik").value.trim()) || "BAÞLKSZ";
+            var baslik = trToUpper(document.getElementById("noteEditorBaslik").value.trim()) || "BAÅžLKSZ";
             var icerikEl = document.getElementById("noteEditorIcerik");
             var icerik = icerikEl.innerHTML;
-            if (!baslik) { tmNotify("Not baþlýðý gerekli!", "error"); return; }
+            if (!baslik) { tmNotify("Not baÅŸlÄ±ÄŸÄ± gerekli!", "error"); return; }
             var txt = icerikEl.innerText.replace(/\s+/g,' ').trim();
             if (txt === '' && icerikEl.querySelectorAll('img, table, iframe, video').length === 0) {
                 icerik = '';
             }
             var id = document.getElementById("noteEditorId").value;
-            if (!baslik) { tmNotify("Not baþlýðý gerekli!", "error"); return; }
+            if (!baslik) { tmNotify("Not baÅŸlÄ±ÄŸÄ± gerekli!", "error"); return; }
 
             var notes = noteDbYukle();
             if (id) {
@@ -10162,13 +10162,13 @@ function itDurumMetni(o) {
             var n = notes.find(function(x) { return x.id === id; });
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
             noteViewerId = id;
-            document.getElementById("noteViewerTitle").innerText = n.title ? trToUpper(n.title) : "BAÞLIKSIZ";
+            document.getElementById("noteViewerTitle").innerText = n.title ? trToUpper(n.title) : "BAÅžLIKSIZ";
             var icerikEl = document.getElementById("noteViewerIcerik");
             var icerikHtml = n.content || '';
             icerikEl.innerHTML = icerikHtml;
             var txt = icerikEl.innerText.replace(/\s+/g,' ').trim();
             if (txt === '' && icerikEl.querySelectorAll('img, table, iframe, video').length === 0) {
-                icerikEl.innerHTML = '<p style="color:#999;font-style:italic;">Ýçerik yok.</p>';
+                icerikEl.innerHTML = '<p style="color:#999;font-style:italic;">Ä°Ã§erik yok.</p>';
             }
             document.getElementById("noteViewerModal").style.display = "flex";
         }
@@ -10182,7 +10182,7 @@ function itDurumMetni(o) {
             var id = noteViewerId;
             if (!id) return;
             noteViewerKapat();
-            tmConfirm("Bu notu silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu notu silmek istediÄŸinize emin misiniz?", function() {
                 var notes = noteDbYukle().filter(function(x) { return x.id !== id; });
                 noteDbKaydet(notes);
                 noteListele();
@@ -10191,7 +10191,7 @@ function itDurumMetni(o) {
         }
 
         function noteSil(id) {
-            tmConfirm("Bu notu silmek istediðinize emin misiniz?", function() {
+            tmConfirm("Bu notu silmek istediÄŸinize emin misiniz?", function() {
                 var notes = noteDbYukle().filter(function(x) { return x.id !== id; });
                 noteDbKaydet(notes);
                 noteListele();
@@ -10239,14 +10239,14 @@ function itDurumMetni(o) {
             n.updatedAt = Date.now();
             noteDbKaydet(notes);
             noteListele();
-            tmNotify("Not taþýndý.", "success");
+            tmNotify("Not taÅŸÄ±ndÄ±.", "success");
         }
 
         function noteKlasorDialog() {
             var body = document.getElementById("noteKlasorBody");
             var klasorler = noteKlasorDbYukle();
-            var html = '<div style="display:flex;gap:8px;margin-bottom:14px;"><input type="text" id="noteYeniKlasorAd" placeholder="Klasör adý..." style="flex:1;padding:8px 12px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-card);color:var(--text-dark);"><button class="btn-save-green" onclick="noteKlasorEkle()" style="padding:8px 16px;">Ekle</button></div><div style="display:flex;flex-direction:column;gap:4px;" id="noteKlasorListeBody">';
-            if (klasorler.length === 0) { html += '<p style="color:var(--text-light);font-size:13px;text-align:center;">Henüz klasör yok.</p>'; }
+            var html = '<div style="display:flex;gap:8px;margin-bottom:14px;"><input type="text" id="noteYeniKlasorAd" placeholder="KlasÃ¶r adÄ±..." style="flex:1;padding:8px 12px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-card);color:var(--text-dark);"><button class="btn-save-green" onclick="noteKlasorEkle()" style="padding:8px 16px;">Ekle</button></div><div style="display:flex;flex-direction:column;gap:4px;" id="noteKlasorListeBody">';
+            if (klasorler.length === 0) { html += '<p style="color:var(--text-light);font-size:13px;text-align:center;">HenÃ¼z klasÃ¶r yok.</p>'; }
             klasorler.forEach(function(k) {
                 html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg-card);border-radius:6px;border:1px solid var(--border-color);"><span style="flex:1;font-size:13px;"><i class="fa-regular fa-folder"></i> ' + esc(k.name) + '</span><button class="btn-warning" onclick="noteKlasorAdDegistir(\'' + k.id + '\')" style="padding:3px 8px;font-size:10px;"><i class="fa-regular fa-pen-to-square"></i></button><button class="btn-danger" onclick="noteKlasorSil(\'' + k.id + '\')" style="padding:3px 8px;font-size:10px;"><i class="fa-solid fa-trash-can"></i></button></div>';
             });
@@ -10260,45 +10260,45 @@ function itDurumMetni(o) {
 
         function noteKlasorEkle() {
             var ad = document.getElementById("noteYeniKlasorAd").value.trim().toUpperCase();
-            if (!ad) { tmNotify("Klasör adý gerekli!", "error"); return; }
+            if (!ad) { tmNotify("KlasÃ¶r adÄ± gerekli!", "error"); return; }
             var klasorler = noteKlasorDbYukle();
-            if (klasorler.some(function(k) { return k.name.toLowerCase() === ad.toLowerCase(); })) { tmNotify("Bu adla klasör zaten var!", "error"); return; }
+            if (klasorler.some(function(k) { return k.name.toLowerCase() === ad.toLowerCase(); })) { tmNotify("Bu adla klasÃ¶r zaten var!", "error"); return; }
             klasorler.push({ id: noteIdUret(), name: ad, createdAt: Date.now() });
             noteKlasorDbKaydet(klasorler);
             noteKlasorDialog();
             noteListele();
-            tmNotify("Klasör oluþturuldu: " + ad, "success");
+            tmNotify("KlasÃ¶r oluÅŸturuldu: " + ad, "success");
         }
 
         function noteKlasorAdDegistir(id) {
-            tmPrompt("Yeni klasör adý:", function(yeniAd) {
+            tmPrompt("Yeni klasÃ¶r adÄ±:", function(yeniAd) {
                 if (!yeniAd || !yeniAd.trim()) return;
                 var klasorler = noteKlasorDbYukle();
                 var k = klasorler.find(function(x) { return x.id === id; });
-                if (k) { k.name = yeniAd.trim().toUpperCase(); noteKlasorDbKaydet(klasorler); noteKlasorDialog(); noteListele(); tmNotify("Klasör adý deðiþtirildi.", "success"); }
+                if (k) { k.name = yeniAd.trim().toUpperCase(); noteKlasorDbKaydet(klasorler); noteKlasorDialog(); noteListele(); tmNotify("KlasÃ¶r adÄ± deÄŸiÅŸtirildi.", "success"); }
             }, (noteKlasorDbYukle().find(function(x) { return x.id === id; }) || {}).name || "");
         }
 
         function noteKlasorDuzenle(id) { noteKlasorAdDegistir(id); }
 
         function noteKlasorSil(id) {
-            tmConfirm("Bu klasörü silmek istediðinize emin misiniz? (Ýçindeki notlar silinmez, klasörsüz kalýr.)", function() {
+            tmConfirm("Bu klasÃ¶rÃ¼ silmek istediÄŸinize emin misiniz? (Ä°Ã§indeki notlar silinmez, klasÃ¶rsÃ¼z kalÄ±r.)", function() {
                 var klasorler = noteKlasorDbYukle().filter(function(x) { return x.id !== id; });
                 noteKlasorDbKaydet(klasorler);
                 var notes = noteDbYukle().map(function(x) { if (x.folderId === id) x.folderId = null; return x; });
                 noteDbKaydet(notes);
                 if (noteAktifKlasorId === id) noteAktifKlasorDegistir(null);
                 noteListele();
-                tmNotify("Klasör silindi, notlar korundu.", "success");
+                tmNotify("KlasÃ¶r silindi, notlar korundu.", "success");
             });
         }
 
         function noteTasi(id) {
             var body = document.getElementById("noteTasiBody");
             var klasorler = noteKlasorDbYukle();
-            var html = '<p style="font-size:13px;margin-bottom:10px;">Notu taþýmak için bir klasör seçin:</p>';
+            var html = '<p style="font-size:13px;margin-bottom:10px;">Notu taÅŸÄ±mak iÃ§in bir klasÃ¶r seÃ§in:</p>';
             html += '<div style="display:flex;flex-direction:column;gap:4px;">';
-            html += '<button class="note-klasor-item" onclick="noteTasiSec(\'' + id + '\', null)" style="width:100%;"><i class="fa-regular fa-folder-open"></i> Tüm Notlar (Klasörsüz)</button>';
+            html += '<button class="note-klasor-item" onclick="noteTasiSec(\'' + id + '\', null)" style="width:100%;"><i class="fa-regular fa-folder-open"></i> TÃ¼m Notlar (KlasÃ¶rsÃ¼z)</button>';
             klasorler.forEach(function(k) {
                 html += '<button class="note-klasor-item" onclick="noteTasiSec(\'' + id + '\', \'' + k.id + '\')" style="width:100%;"><i class="fa-regular fa-folder"></i> ' + esc(k.name) + '</button>';
             });
@@ -10313,7 +10313,7 @@ function itDurumMetni(o) {
             if (n) { n.folderId = klasorId; n.updatedAt = Date.now(); noteDbKaydet(notes); }
             noteTasiKapat();
             noteListele();
-            tmNotify("Not taþýndý.", "success");
+            tmNotify("Not taÅŸÄ±ndÄ±.", "success");
         }
 
         function noteTasiKapat() { document.getElementById("noteTasiModal").style.display = "none"; }
@@ -10325,7 +10325,7 @@ function itDurumMetni(o) {
             var n = notes.find(function(x) { return x.id === id; });
             if (!n) { tmNotify("Not bulunamadi!", "error"); return; }
 
-            var baslik = esc(trToUpper(n.title || "BAÞLIKSIZ"));
+            var baslik = esc(trToUpper(n.title || "BAÅžLIKSIZ"));
 
             var icerik = (n.content || '')
                 .replace(/<font\s+([^>]*)>/gi, function(m, a) {
@@ -10350,7 +10350,7 @@ function itDurumMetni(o) {
             el.innerHTML = htm;
             document.body.appendChild(el);
 
-            tmLoadingGoster("PDF oluþturuluyor...");
+            tmLoadingGoster("PDF oluÅŸturuluyor...");
             setTimeout(function() {
                 try {
                     var totalH = el.scrollHeight;
