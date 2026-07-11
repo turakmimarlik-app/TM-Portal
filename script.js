@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.33.3';
+        var APP_VERSION = 'V1.33.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9932,6 +9932,7 @@ function itDurumMetni(o) {
                     var totalH = el.scrollHeight;
                     if (!totalH || totalH < 10) { throw new Error("Eleman yuksekligi alinamadi: " + totalH); }
                     html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' }).then(function(cv) {
+                        var ew = el.offsetWidth || 794;
                         el.style.display = 'none';
                         if (!cv || cv.width < 10 || cv.height < 10) { throw new Error("Canvas gorsel icerigi bos"); }
                         var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
