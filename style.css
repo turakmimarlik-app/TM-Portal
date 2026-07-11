@@ -1544,7 +1544,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .note-kart:hover { border-color:var(--accent-red); transform:translateY(-3px); box-shadow:0 6px 16px rgba(0,0,0,0.15); }
         .note-kart-icon { width:100%; height:130px; border-radius:8px; background:linear-gradient(145deg, #f5f5f0, #e8e8e0); border:1px solid #ccc; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 6px; box-sizing:border-box; position:relative; overflow:hidden; }
         .note-kart-icon:before { content:''; position:absolute; top:0; right:0; width:28px; height:28px; background:linear-gradient(135deg, transparent 50%, #d0d0c8 50%); border-radius:0 8px 0 0; }
-        .note-kart-icon:after { content:'📄'; position:absolute; top:4px; left:6px; font-size:18px; opacity:0.25; }
+        .note-kart-icon:after { content:'\f15c'; font-family:'Font Awesome 6 Free'; font-weight:400; position:absolute; top:4px; left:6px; font-size:18px; opacity:0.25; }
         .note-kart-icon-title { font-size:14px; font-weight:700; color:#333; width:100%; overflow:hidden; text-overflow:ellipsis; word-break:break-word; line-height:1.2; z-index:1; display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; }
         .note-kart-tarih { font-size:10px; color:var(--text-light); }
         .note-kart-actions { display:flex; gap:2px; }
@@ -1576,3 +1576,15 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         #noteViewerIcerik font[size="5"] { font-size:20px !important; }
         #noteViewerIcerik font[size="6"] { font-size:28px !important; line-height:1.5 !important; }
         #noteViewerIcerik font[size="7"] { font-size:40px !important; line-height:1.4 !important; }
+        /* Font Awesome integration */
+        .fa-solid, .fa-regular, .fa-brands { vertical-align:-2px; }
+        .sidebar .menu-item i, .sidebar .submenu-item i { width:18px; text-align:center; margin-right:4px; }
+        .dash-stat-box .icon i { font-size:22px; }
+        .gt-card-icon i { font-size:20px; }
+        .as-event-dot i { margin-right:2px; }
+        .dash-widget-title i { margin-right:4px; }
+        .gt-card-header i { margin-right:4px; }
+        .as-modal-actions i, .as-btn-save i, .as-btn-cancel i, .as-btn-delete i { margin-right:3px; }
+        .btn-logout i { margin-right:4px; }
+        .dash-settings-btn i { vertical-align:middle; }
+        .as-filter-btn i { margin-right:3px; }

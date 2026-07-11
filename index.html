@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="pdf.css">
     <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div id="loginSection" class="login-wrapper">
@@ -65,66 +66,66 @@
             <div class="sidebar-header">
         <h3>TM-PORTAL</h3>
         <p>TURAK MİMARLIK</p>
-        <button class="sidebar-mobile-close" onclick="sidebarMobileKapat()">✕</button>
+        <button class="sidebar-mobile-close" onclick="sidebarMobileKapat()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="sidebar-toggle" id="sidebarToggle" onclick="sidebarToggle()">◀</div>
+            <div class="sidebar-toggle" id="sidebarToggle" onclick="sidebarToggle()"><i class="fa-solid fa-chevron-left"></i></div>
             <ul class="menu-list">
-                <li id="menu-anasayfa" class="menu-item" onclick="menudenSayfaAc('anasayfa', 'anasayfa-page', this)"><span>🏠 <span class="menu-text">Ana Sayfa</span></span></li>
-                <li id="menu-gorevler-takvim" class="menu-item" onclick="menudenSayfaAc('gorevler-takvim', 'gorevler-takvim-page', this)"><span>📅 <span class="menu-text">Görevler ve Takvim</span></span></li>
+                <li id="menu-anasayfa" class="menu-item" onclick="menudenSayfaAc('anasayfa', 'anasayfa-page', this)"><span><i class="fa-solid fa-house"></i> <span class="menu-text">Ana Sayfa</span></span></li>
+                <li id="menu-gorevler-takvim" class="menu-item" onclick="menudenSayfaAc('gorevler-takvim', 'gorevler-takvim-page', this)"><span><i class="fa-regular fa-calendar"></i> <span class="menu-text">Görevler ve Takvim</span></span></li>
                 
                 <li id="menu-teklif-root" class="menu-item" onclick="toggleSubmenu('teklif-submenu', 'arrow-icon')">
-                    <span>📄 <span class="menu-text">Fiyatlandırma</span></span>
-                    <span id="arrow-icon">▼</span>
+                    <span><i class="fa-regular fa-file-lines"></i> <span class="menu-text">Fiyatlandırma</span></span>
+                    <span id="arrow-icon"><i class="fa-solid fa-chevron-down"></i></span>
                 </li>
                 <div id="teklif-submenu" class="submenu-list">
-                    <div id="sub-teklif-olustur" class="submenu-item" onclick="menudenSayfaAc('teklif-olustur', 'teklif-olustur-page', this)">↳ <span class="menu-text">Teklif Oluştur</span></div>
-                    <div id="sub-teklif-liste" class="submenu-item" onclick="menudenSayfaAc('teklif-liste', 'teklif-liste-page', this)">↳ <span class="menu-text">Geçmiş Teklifler</span></div>
-                    <div id="sub-piyasa-fiyatlari" class="submenu-item" onclick="menudenSayfaAc('piyasa-fiyatlari', 'piyasa-fiyatlari-page', this)">↳ <span class="menu-text">Piyasa Fiyatları</span></div>
-                    <div id="sub-tm-fiyatlar" class="submenu-item" onclick="menudenSayfaAc('tm-fiyatlar', 'tm-fiyatlar-page', this)">↳ <span class="menu-text">TM Fiyatlar</span></div>
+                    <div id="sub-teklif-olustur" class="submenu-item" onclick="menudenSayfaAc('teklif-olustur', 'teklif-olustur-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Teklif Oluştur</span></div>
+                    <div id="sub-teklif-liste" class="submenu-item" onclick="menudenSayfaAc('teklif-liste', 'teklif-liste-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Geçmiş Teklifler</span></div>
+                    <div id="sub-piyasa-fiyatlari" class="submenu-item" onclick="menudenSayfaAc('piyasa-fiyatlari', 'piyasa-fiyatlari-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Piyasa Fiyatları</span></div>
+                    <div id="sub-tm-fiyatlar" class="submenu-item" onclick="menudenSayfaAc('tm-fiyatlar', 'tm-fiyatlar-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">TM Fiyatlar</span></div>
 
                 </div>
 
-                <li id="menu-dilekce" class="menu-item" onclick="menudenSayfaAc('dilekce', 'dilekce-page', this)"><span>📝 <span class="menu-text">Dilekçe Oluştur</span></span></li>
-                <li id="menu-istakibi" class="menu-item" onclick="menudenSayfaAc('istakibi', 'istakibi-page', this)"><span>📅 <span class="menu-text">İş Takibi</span></span></li>
+                <li id="menu-dilekce" class="menu-item" onclick="menudenSayfaAc('dilekce', 'dilekce-page', this)"><span><i class="fa-regular fa-file-lines"></i> <span class="menu-text">Dilekçe Oluştur</span></span></li>
+                <li id="menu-istakibi" class="menu-item" onclick="menudenSayfaAc('istakibi', 'istakibi-page', this)"><span><i class="fa-solid fa-chart-gantt"></i> <span class="menu-text">İş Takibi</span></span></li>
 
                 <li id="menu-portfoy-root" class="menu-item" onclick="toggleSubmenu('portfoy-submenu', 'arrow-portfoy-icon')">
-                    <span>🗂️ <span class="menu-text">Portföy</span></span>
-                    <span id="arrow-portfoy-icon">▼</span>
+                    <span><i class="fa-regular fa-folder"></i> <span class="menu-text">Portföy</span></span>
+                    <span id="arrow-portfoy-icon"><i class="fa-solid fa-chevron-down"></i></span>
                 </li>
                 <div id="portfoy-submenu" class="submenu-list">
-                    <div id="sub-musteriler" class="submenu-item" onclick="menudenSayfaAc('musteriler', 'musteriler-page', this)">↳ <span class="menu-text">Müşteriler</span></div>
-                    <div id="sub-isortaklari" class="submenu-item" onclick="menudenSayfaAc('isortaklari', 'isortaklari-page', this)">↳ <span class="menu-text">İş Ortakları</span></div>
+                    <div id="sub-musteriler" class="submenu-item" onclick="menudenSayfaAc('musteriler', 'musteriler-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Müşteriler</span></div>
+                    <div id="sub-isortaklari" class="submenu-item" onclick="menudenSayfaAc('isortaklari', 'isortaklari-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">İş Ortakları</span></div>
                 </div>
 
                 <li id="menu-muhasebe-root" class="menu-item" onclick="toggleSubmenu('muhasebe-submenu', 'arrow-muhasebe-icon')">
-                    <span>💰 <span class="menu-text">Muhasebe</span></span>
-                    <span id="arrow-muhasebe-icon">▼</span>
+                    <span><i class="fa-solid fa-coins"></i> <span class="menu-text">Muhasebe</span></span>
+                    <span id="arrow-muhasebe-icon"><i class="fa-solid fa-chevron-down"></i></span>
                 </li>
                 <div id="muhasebe-submenu" class="submenu-list">
-                    <div id="sub-nakit-dekont" class="submenu-item" onclick="menudenSayfaAc('nakit-dekont', 'nakit-dekont-page', this)">↳ <span class="menu-text">Nakit Ödeme Dekontu</span></div>
-                    <div id="sub-is-muhasebe-olustur" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe-olustur', 'is-muhasebe-olustur-page', this)">↳ <span class="menu-text">İş Muhasebesi Oluştur</span></div>
-                    <div id="sub-is-muhasebe" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe', 'is-muhasebe-page', this)">↳ <span class="menu-text">İş Muhasebesi Takibi</span></div>
-                    <div id="sub-tamamlanan-is-muhasebe" class="submenu-item" onclick="menudenSayfaAc('tamamlanan-is-muhasebe', 'tamamlanan-is-muhasebeleri-page', this)">↳ <span class="menu-text">Tamamlanan İş Muhasebeleri</span></div>
-                    <div id="sub-hesap-takip" class="submenu-item" onclick="menudenSayfaAc('hesap-takip', 'hesap-takip-page', this)">↳ <span class="menu-text">Hesap Takip Sistemi</span></div>
-                    <div id="sub-fatura-takip" class="submenu-item" onclick="menudenSayfaAc('fatura-takip', 'fatura-takip-page', this)">↳ <span class="menu-text">Fatura Takip Sistemi</span></div>
-                    <div id="sub-yillik-butce" class="submenu-item" onclick="menudenSayfaAc('yillik-butce', 'yillik-butce-page', this)">↳ <span class="menu-text">Yıllık Bütçeler</span></div>
+                    <div id="sub-nakit-dekont" class="submenu-item" onclick="menudenSayfaAc('nakit-dekont', 'nakit-dekont-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Nakit Ödeme Dekontu</span></div>
+                    <div id="sub-is-muhasebe-olustur" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe-olustur', 'is-muhasebe-olustur-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">İş Muhasebesi Oluştur</span></div>
+                    <div id="sub-is-muhasebe" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe', 'is-muhasebe-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">İş Muhasebesi Takibi</span></div>
+                    <div id="sub-tamamlanan-is-muhasebe" class="submenu-item" onclick="menudenSayfaAc('tamamlanan-is-muhasebe', 'tamamlanan-is-muhasebeleri-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Tamamlanan İş Muhasebeleri</span></div>
+                    <div id="sub-hesap-takip" class="submenu-item" onclick="menudenSayfaAc('hesap-takip', 'hesap-takip-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Hesap Takip Sistemi</span></div>
+                    <div id="sub-fatura-takip" class="submenu-item" onclick="menudenSayfaAc('fatura-takip', 'fatura-takip-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Fatura Takip Sistemi</span></div>
+                    <div id="sub-yillik-butce" class="submenu-item" onclick="menudenSayfaAc('yillik-butce', 'yillik-butce-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Yıllık Bütçeler</span></div>
                 </div>
 
-                <li id="menu-notlar" class="menu-item" onclick="menudenSayfaAc('notlar', 'notlar-page', this)"><span>📝 <span class="menu-text">Notlar</span></span></li>
+                <li id="menu-notlar" class="menu-item" onclick="menudenSayfaAc('notlar', 'notlar-page', this)"><span><i class="fa-regular fa-note-sticky"></i> <span class="menu-text">Notlar</span></span></li>
 
-                <li id="menu-yonetim" class="menu-item" onclick="menudenSayfaAc('yonetim', 'yonetim-page', this)"><span>⚙️ <span class="menu-text">Portal Yönetimi</span></span></li>
+                <li id="menu-yonetim" class="menu-item" onclick="menudenSayfaAc('yonetim', 'yonetim-page', this)"><span><i class="fa-solid fa-sliders"></i> <span class="menu-text">Portal Yönetimi</span></span></li>
             </ul>
 
             <div class="sidebar-users-section">
-                <div class="sidebar-section-title">👥 Kullanıcılar</div>
+                <div class="sidebar-section-title"><i class="fa-solid fa-users"></i> Kullanıcılar</div>
                 <div id="sidebarKullanicilar" class="sidebar-users-list"></div>
             </div>
             
             <div class="sidebar-footer">
-                <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 Çıkış</button>
+                <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.36.0</div>
+                <div class="version-tag">V2.0.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -133,27 +134,27 @@
         <div class="main-content">
             <div class="sidebar-overlay" id="sidebarOverlay" onclick="sidebarMobileKapat()"></div>
             <div class="hamburger-btn" id="hamburgerBtn" onclick="sidebarMobileAc()">☰</div>
-            <div id="tmNotif" class="tm-notif"><span id="tmNotifText"></span><button class="tm-notif-close" onclick="tmNotifKapat()">✕</button></div>
+            <div id="tmNotif" class="tm-notif"><span id="tmNotifText"></span><button class="tm-notif-close" onclick="tmNotifKapat()"><i class="fa-solid fa-xmark"></i></button></div>
             <div id="pageLoadingBar" class="page-loading-bar"></div>
             
             <div id="anasayfa-page" class="page">
     <div id="lock-anasayfa" class="page-lock-overlay"></div>
     <div class="dash-header">
         <div class="dash-header-left">
-            <h2>🏠 Ana Sayfa</h2>
+            <h2><i class="fa-solid fa-house"></i> Ana Sayfa</h2>
             <span class="dash-header-date" id="dashHeaderDate"></span>
         </div>
         <div class="dash-header-right">
-            <button class="dash-settings-btn" onclick="dashAyarGoster()" title="Widget Ayarları">⚙️</button>
+            <button class="dash-settings-btn" onclick="dashAyarGoster()" title="Widget Ayarları"><i class="fa-solid fa-sliders"></i></button>
         </div>
     </div>
     <div id="dashStatsSection" class="dash-stat-row" data-perm="anasayfa">
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('teklif-liste')?'':menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null" style="cursor:pointer;" data-perm='["teklif-liste","teklif-olustur"]'><div class="icon">📄</div><div class="num" id="dashStatTeklif">0</div><div class="lbl">TEKLİF</div></div>
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('musteriler-page')?menudenSayfaAc('musteriler','musteriler-page',document.getElementById('sub-musteriler')):null" style="cursor:pointer;" data-perm="musteriler-page"><div class="icon">🗂️</div><div class="num" id="dashStatMusteri">0</div><div class="lbl">MÜŞTERİ</div></div>
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('isortaklari-page')?menudenSayfaAc('isortaklari','isortaklari-page',document.getElementById('sub-isortaklari')):null" style="cursor:pointer;" data-perm="isortaklari-page"><div class="icon">🤝</div><div class="num" id="dashStatPartner">0</div><div class="lbl">İŞ ORTAĞI</div></div>
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null" style="cursor:pointer;" data-perm='["is-muhasebe","tamamlanan-is-muhasebe"]'><div class="icon">🏗️</div><div class="num" id="dashStatAktifIs">0</div><div class="lbl">AKTİF İŞ</div></div>
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('tamamlanan-is-muhasebeleri')?menudenSayfaAc('tamamlanan-is-muhasebeleri','tamamlanan-is-muhasebeleri-page',document.getElementById('sub-tamamlanan-is-muhasebeleri')):null" style="cursor:pointer;" data-perm='["tamamlanan-is-muhasebeleri","is-muhasebe"]'><div class="icon">✅</div><div class="num" id="dashStatTamamlanan">0</div><div class="lbl">TAMAMLANAN</div></div>
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('nakit-dekont')?menudenSayfaAc('nakit-dekont','nakit-dekont-page',document.getElementById('sub-nakit-dekont')):null" style="cursor:pointer;" data-perm="nakit-dekont"><div class="icon">💳</div><div class="num" id="dashStatDekont">0</div><div class="lbl">DEKONT</div></div>
+        <div class="dash-stat-box" onclick="yetkiSayfaAc('teklif-liste')?'':menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null" style="cursor:pointer;" data-perm='["teklif-liste","teklif-olustur"]'><div class="icon"><i class="fa-regular fa-file-lines"></i></div><div class="num" id="dashStatTeklif">0</div><div class="lbl">TEKLİF</div></div>
+        <div class="dash-stat-box" onclick="yetkiSayfaAc('musteriler-page')?menudenSayfaAc('musteriler','musteriler-page',document.getElementById('sub-musteriler')):null" style="cursor:pointer;" data-perm="musteriler-page"><div class="icon"><i class="fa-solid fa-user-group"></i></div><div class="num" id="dashStatMusteri">0</div><div class="lbl">MÜŞTERİ</div></div>
+        <div class="dash-stat-box" onclick="yetkiSayfaAc('isortaklari-page')?menudenSayfaAc('isortaklari','isortaklari-page',document.getElementById('sub-isortaklari')):null" style="cursor:pointer;" data-perm="isortaklari-page"><div class="icon"><i class="fa-solid fa-handshake"></i></div><div class="num" id="dashStatPartner">0</div><div class="lbl">İŞ ORTAĞI</div></div>
+        <div class="dash-stat-box" onclick="yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null" style="cursor:pointer;" data-perm='["is-muhasebe","tamamlanan-is-muhasebe"]'><div class="icon"><i class="fa-solid fa-helmet-safety"></i></div><div class="num" id="dashStatAktifIs">0</div><div class="lbl">AKTİF İŞ</div></div>
+        <div class="dash-stat-box" onclick="yetkiSayfaAc('tamamlanan-is-muhasebeleri')?menudenSayfaAc('tamamlanan-is-muhasebeleri','tamamlanan-is-muhasebeleri-page',document.getElementById('sub-tamamlanan-is-muhasebeleri')):null" style="cursor:pointer;" data-perm='["tamamlanan-is-muhasebeleri","is-muhasebe"]'><div class="icon"><i class="fa-solid fa-circle-check"></i></div><div class="num" id="dashStatTamamlanan">0</div><div class="lbl">TAMAMLANAN</div></div>
+        <div class="dash-stat-box" onclick="yetkiSayfaAc('nakit-dekont')?menudenSayfaAc('nakit-dekont','nakit-dekont-page',document.getElementById('sub-nakit-dekont')):null" style="cursor:pointer;" data-perm="nakit-dekont"><div class="icon"><i class="fa-regular fa-credit-card"></i></div><div class="num" id="dashStatDekont">0</div><div class="lbl">DEKONT</div></div>
     </div>
     <div id="dashFinSection" class="dash-fin-row" data-perm='["hesap-takip","yillik-butce"]'>
         <div class="dash-fin-card dfc-bakiye"><div class="dash-fin-label">ŞİRKET BAKİYESİ</div><div class="dash-fin-val green" id="dashFinBakiye">0,00 ₺</div></div>
@@ -170,9 +171,9 @@
     <div id="dashChartSection" class="dash-modern-card" data-perm='["yillik-butce","hesap-takip"]' data-widget="chart" draggable="true">
         <div class="dash-widget-head">
             <span class="dash-drag-handle" draggable="true">⠿</span>
-            <span class="dash-widget-title">📊 GELİR / GİDER GRAFİĞİ</span>
+            <span class="dash-widget-title"><i class="fa-solid fa-chart-simple"></i> GELİR / GİDER GRAFİĞİ</span>
             <span class="dash-widget-actions">
-                <span class="dash-widget-hide" onclick="dashWidgetGizle('chart')" title="Gizle">✕</span>
+                <span class="dash-widget-hide" onclick="dashWidgetGizle('chart')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
             </span>
         </div>
         <div class="dash-widget-body">
@@ -184,9 +185,9 @@
         <div class="dash-modern-card" data-widget="shortcuts" draggable="true">
             <div class="dash-widget-head">
                 <span class="dash-drag-handle">⠿</span>
-                <span class="dash-widget-title">🚀 HIZLI KISAYOLLAR</span>
+                <span class="dash-widget-title"><i class="fa-solid fa-bolt"></i> HIZLI KISAYOLLAR</span>
                 <span class="dash-widget-actions">
-                    <span class="dash-widget-hide" onclick="dashWidgetGizle('shortcuts')" title="Gizle">✕</span>
+                    <span class="dash-widget-hide" onclick="dashWidgetGizle('shortcuts')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
                 </span>
             </div>
             <div class="dash-widget-body">
@@ -197,10 +198,10 @@
         <div class="dash-modern-card" data-widget="takvim" data-perm="anasayfa.takvim" draggable="true">
             <div class="dash-widget-head">
                 <span class="dash-drag-handle">⠿</span>
-                <span class="dash-widget-title">📅 TAKVİM</span>
+                <span class="dash-widget-title"><i class="fa-regular fa-calendar"></i> TAKVİM</span>
                 <span class="dash-widget-actions">
                     <span class="dash-widget-link" onclick="menudenSayfaAc('gorevler-takvim','gorevler-takvim-page',document.getElementById('menu-gorevler-takvim'))">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="dashWidgetGizle('takvim')" title="Gizle">✕</span>
+                    <span class="dash-widget-hide" onclick="dashWidgetGizle('takvim')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
                 </span>
             </div>
             <div class="dash-widget-body" id="asOzetTakvim"></div>
@@ -209,10 +210,10 @@
         <div class="dash-modern-card" data-widget="teklifler" data-perm='["teklif-liste","teklif-olustur"]' draggable="true">
             <div class="dash-widget-head" onclick="yetkiSayfaAc('teklif-liste')?menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null" style="cursor:pointer;">
                 <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
-                <span class="dash-widget-title">📄 SON TEKLİFLER</span>
+                <span class="dash-widget-title"><i class="fa-regular fa-file-lines"></i> SON TEKLİFLER</span>
                 <span class="dash-widget-actions">
                     <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('teklif-liste')?menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('teklifler')" title="Gizle">✕</span>
+                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('teklifler')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
                 </span>
             </div>
             <div class="dash-widget-body" style="padding:0;">
@@ -226,10 +227,10 @@
         <div class="dash-modern-card" data-widget="isler" data-perm='["is-muhasebe","tamamlanan-is-muhasebe"]' draggable="true">
             <div class="dash-widget-head" onclick="yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null" style="cursor:pointer;">
                 <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
-                <span class="dash-widget-title">🏗️ AKTİF İŞLER</span>
+                <span class="dash-widget-title"><i class="fa-solid fa-helmet-safety"></i> AKTİF İŞLER</span>
                 <span class="dash-widget-actions">
                     <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('isler')" title="Gizle">✕</span>
+                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('isler')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
                 </span>
             </div>
             <div id="dashActiveJobsBody" class="dash-widget-body"></div>
@@ -238,10 +239,10 @@
         <div class="dash-modern-card" data-widget="gorevler" data-perm="anasayfa.gorev" draggable="true">
             <div class="dash-widget-head">
                 <span class="dash-drag-handle">⠿</span>
-                <span class="dash-widget-title">📋 GÖREVLER</span>
+                <span class="dash-widget-title"><i class="fa-solid fa-list"></i> GÖREVLER</span>
                 <span class="dash-widget-actions">
                     <span class="dash-widget-link" onclick="menudenSayfaAc('gorevler-takvim','gorevler-takvim-page',document.getElementById('menu-gorevler-takvim'))">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="dashWidgetGizle('gorevler')" title="Gizle">✕</span>
+                    <span class="dash-widget-hide" onclick="dashWidgetGizle('gorevler')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
                 </span>
             </div>
             <div class="dash-widget-body" id="asOzetGorev"></div>
@@ -250,10 +251,10 @@
         <div class="dash-modern-card" data-widget="fatura" data-perm="fatura-takip" draggable="true">
             <div class="dash-widget-head" onclick="yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null" style="cursor:pointer;">
                 <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
-                <span class="dash-widget-title">💰 FATURA ÖZETİ</span>
+                <span class="dash-widget-title"><i class="fa-solid fa-coins"></i> FATURA ÖZETİ</span>
                 <span class="dash-widget-actions">
                     <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('fatura')" title="Gizle">✕</span>
+                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('fatura')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
                 </span>
             </div>
             <div class="dash-widget-body" style="padding:0;">
@@ -267,10 +268,10 @@
         <div class="dash-modern-card" data-widget="piyasa" data-perm="piyasa-fiyatlari" draggable="true">
             <div class="dash-widget-head" onclick="yetkiSayfaAc('piyasa-fiyatlari')?menudenSayfaAc('piyasa-fiyatlari','piyasa-fiyatlari-page',document.getElementById('sub-piyasa-fiyatlari')):null" style="cursor:pointer;">
                 <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
-                <span class="dash-widget-title">📊 PİYASA ENDEKSİ</span>
+                <span class="dash-widget-title"><i class="fa-solid fa-chart-simple"></i> PİYASA ENDEKSİ</span>
                 <span class="dash-widget-actions">
                     <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('piyasa-fiyatlari')?menudenSayfaAc('piyasa-fiyatlari','piyasa-fiyatlari-page',document.getElementById('sub-piyasa-fiyatlari')):null">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('piyasa')" title="Gizle">✕</span>
+                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('piyasa')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
                 </span>
             </div>
             <div id="dashPiyasaIndexList" class="dash-widget-body"></div>
@@ -279,10 +280,10 @@
         <div class="dash-modern-card" data-widget="vergi" data-perm="fatura-takip" draggable="true">
             <div class="dash-widget-head" onclick="yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null" style="cursor:pointer;">
                 <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
-                <span class="dash-widget-title">📅 VERGİ TAKVİMİ</span>
+                <span class="dash-widget-title"><i class="fa-regular fa-calendar"></i> VERGİ TAKVİMİ</span>
                 <span class="dash-widget-actions">
                     <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('vergi')" title="Gizle">✕</span>
+                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('vergi')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
                 </span>
             </div>
             <div id="dashVergiTakvimi" class="dash-widget-body"></div>
@@ -291,9 +292,9 @@
         <div class="dash-modern-card" data-widget="notlar" draggable="true">
             <div class="dash-widget-head">
                 <span class="dash-drag-handle">⠿</span>
-                <span class="dash-widget-title">📝 OFİS NOTLARI</span>
+                <span class="dash-widget-title"><i class="fa-regular fa-note-sticky"></i> OFİS NOTLARI</span>
                 <span class="dash-widget-actions">
-                    <span class="dash-widget-hide" onclick="dashWidgetGizle('notlar')" title="Gizle">✕</span>
+                    <span class="dash-widget-hide" onclick="dashWidgetGizle('notlar')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
                 </span>
             </div>
             <div class="dash-widget-body" style="padding:12px 16px;">
@@ -306,25 +307,25 @@
     <div id="lock-gorevler-takvim" class="page-lock-overlay"></div>
     <div class="gt-header">
         <div class="gt-header-text">
-            <h2>📅 Görevler ve Takvim</h2>
+            <h2><i class="fa-regular fa-calendar"></i> Görevler ve Takvim</h2>
             <p>Etkinliklerinizi ve görevlerinizi tek bir ekranda yönetin</p>
         </div>
     </div>
     <div class="gt-grid">
         <div class="gt-card">
             <div class="gt-card-header">
-                <span class="gt-card-icon">📅</span>
+                <span class="gt-card-icon"><i class="fa-regular fa-calendar"></i></span>
                 <span class="gt-card-title">TAKVİM</span>
                 <div class="gt-card-actions">
-                    <button class="gt-btn-toggle" onclick="asTakvimGorunumDegistir()" id="asTakvimToggleBtn">📅 HAFTALIK</button>
-                    <button class="gt-btn-outline" onclick="asTumEtkinlikleriGoster()">📋 ETKİNLİKLER</button>
+                    <button class="gt-btn-toggle" onclick="asTakvimGorunumDegistir()" id="asTakvimToggleBtn"><i class="fa-regular fa-calendar"></i> HAFTALIK</button>
+                    <button class="gt-btn-outline" onclick="asTumEtkinlikleriGoster()"><i class="fa-solid fa-list"></i> ETKİNLİKLER</button>
                 </div>
             </div>
             <div class="gt-card-body">
                 <div class="gt-takvim-nav">
-                    <button class="gt-btn-nav" onclick="asTakvimGeri()">◀</button>
+                    <button class="gt-btn-nav" onclick="asTakvimGeri()"><i class="fa-solid fa-chevron-left"></i></button>
                     <span class="gt-takvim-baslik" id="asTakvimBaslik" onclick="asTakvimBugun()" title="Bugüne git"></span>
-                    <button class="gt-btn-nav" onclick="asTakvimIleri()">▶</button>
+                    <button class="gt-btn-nav" onclick="asTakvimIleri()"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
                 <div id="asTakvimIcerik"></div>
                 <div id="asTakvimOzet" class="as-takvim-ozet"></div>
@@ -332,7 +333,7 @@
         </div>
         <div class="gt-card">
             <div class="gt-card-header">
-                <span class="gt-card-icon">📋</span>
+                <span class="gt-card-icon"><i class="fa-solid fa-list"></i></span>
                 <span class="gt-card-title">GÖREVLER</span>
             </div>
             <div class="gt-card-body">
@@ -353,9 +354,9 @@
                         <label>TARİH</label>
                         <input type="date" id="asGorevTarih" style="width:100%;">
                     </div>
-                    <button class="as-btn-submit" onclick="asGorevAta()">📤 GÖREVİ ATA</button>
+                    <button class="as-btn-submit" onclick="asGorevAta()"><i class="fa-solid fa-paper-plane"></i> GÖREVİ ATA</button>
                 </div>
-                <button id="asGorevAtaBtn" class="gt-btn-assign" onclick="asGorevFormGoster()">➕ GÖREV ATA</button>
+                <button id="asGorevAtaBtn" class="gt-btn-assign" onclick="asGorevFormGoster()"><i class="fa-solid fa-plus"></i> GÖREV ATA</button>
                 <div id="asGorevListesi"></div>
             </div>
         </div>
@@ -364,7 +365,7 @@
 <!-- Dashboard Ayarları Modal -->
 <div id="dashAyarModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)dashAyarKapat()">
     <div class="modal-box" style="max-width:500px;">
-        <div class="modal-header"><h3>⚙️ Widget Ayarları</h3></div>
+        <div class="modal-header"><h3><i class="fa-solid fa-gear"></i> Widget Ayarları</h3></div>
         <div class="modal-body">
             <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;">Gizlemek istediğiniz widget'ları tekrar gösterin.</p>
             <div id="dashAyarListesi"></div>
@@ -377,7 +378,7 @@
 
             <div id="nakit-dekont-page" class="page">
                 <div id="lock-nakit-dekont" class="page-lock-overlay"></div>
-                <h2>💰 Nakit Ödeme Dekontu Oluştur</h2>
+                <h2><i class="fa-solid fa-coins"></i> Nakit Ödeme Dekontu Oluştur</h2>
                 <div class="nd-form-wrap">
                     <div class="row">
                         <div class="col nd-col-divider" style="padding-right:20px;">
@@ -398,7 +399,7 @@
                             </div>
                         </div>
                         <div class="col" style="padding-left:20px;">
-                            <h3 style="margin-top:0;">📋 İşlem Bilgisi</h3>
+                            <h3 style="margin-top:0;"><i class="fa-solid fa-list"></i> İşlem Bilgisi</h3>
                             <div class="col" style="margin-bottom:12px;">
                                 <label>İşlem Türü:</label>
                                 <select id="ndIslemTuru" style="font-weight:bold;" onchange="nakitDekontIslemTuruRenk(this)">
@@ -426,19 +427,19 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; margin-top:20px;">
-                        <button class="btn btn-save-green" onclick="nakitDekontKaydet()">💾 Kaydet</button>
-                        <button class="btn btn-pdf-red" onclick="nakitDekontPdfUret()">📄 PDF</button>
+                        <button class="btn btn-save-green" onclick="nakitDekontKaydet()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button>
+                        <button class="btn btn-pdf-red" onclick="nakitDekontPdfUret()"><i class="fa-regular fa-file-lines"></i> PDF</button>
                         <button class="btn btn-clear-gray" onclick="nakitDekontFormuTemizle()">🧹 Formu Temizle</button>
                     </div>
                 </div>
 
-                <h3>📋 Oluşturulan Nakit Ödeme Dekontları</h3>
-                <input type="text" id="ndAramaInput" class="search-box" onkeyup="nakitDekontListesiniFiltrele()" placeholder="🔍 Dekontlarda Ara (Müşteri, Firma, İşlem Türü, ID)...">
+                <h3><i class="fa-solid fa-list"></i> Oluşturulan Nakit Ödeme Dekontları</h3>
+                <input type="text" id="ndAramaInput" class="search-box" onkeyup="nakitDekontListesiniFiltrele()" placeholder="Dekontlarda Ara (Müşteri, Firma, İşlem Türü, ID)...">
                 <div id="nakitDekontTablosu"></div>
             </div>
             <div id="is-muhasebe-olustur-page" class="page">
                 <div id="lock-is-muhasebe-olustur" class="page-lock-overlay"></div>
-                <h2>📌 İş Muhasebesi Oluştur</h2>
+                <h2><i class="fa-solid fa-thumbtack"></i> İş Muhasebesi Oluştur</h2>
                 <div class="im-form-wrap">
                     <h3 id="isMuhFormTitle" style="color:var(--ht-text);font-size:14px;">Yeni İş Muhasebesi Kaydı Oluştur</h3>
                     <input type="hidden" id="isMuhEditId" value="-1">
@@ -448,7 +449,7 @@
                             <input type="text" id="isMuhId" readonly style="font-weight:700;">
                         </div>
                     </div>
-                    <h4>📋 İş Bilgileri</h4>
+                    <h4><i class="fa-solid fa-list"></i> İş Bilgileri</h4>
                     <div class="row">
                         <div class="col">
                             <label>İşin Adı:</label>
@@ -474,7 +475,7 @@
                             <input type="text" id="isMuhParsel">
                         </div>
                     </div>
-                    <h4>💰 Anlaşma Detayı</h4>
+                    <h4><i class="fa-solid fa-coins"></i> Anlaşma Detayı</h4>
                     <div class="row">
                         <div class="col" style="max-width:300px;">
                             <label>Anlaşma Ücreti (₺):</label>
@@ -486,7 +487,7 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; margin-top:20px;">
-                        <button class="btn btn-save-green" onclick="isMuhasebeKaydet()">💾 Muhasebe Kaydını Oluştur</button>
+                        <button class="btn btn-save-green" onclick="isMuhasebeKaydet()"><i class="fa-solid fa-floppy-disk"></i> Muhasebe Kaydını Oluştur</button>
                         <button class="btn btn-clear-gray" onclick="isMuhasebeFormuTemizle()">🧹 Formu Temizle</button>
                     </div>
                 </div>
@@ -496,18 +497,18 @@
                 <div id="lock-is-muhasebe" class="page-lock-overlay"></div>
                 <h2>🏦 İş Muhasebesi Takibi</h2>
                 <div id="isMuhGenelDurumSeridi" class="isMuh-status-strip"></div>
-                <input type="text" id="isMuhAramaInput" class="search-box" onkeyup="isMuhasebeListesiniFiltrele()" placeholder="🔍 İş Muhasebesinde Ara (Proje, Müşteri, Referans)...">
+                <input type="text" id="isMuhAramaInput" class="search-box" onkeyup="isMuhasebeListesiniFiltrele()" placeholder="İş Muhasebesinde Ara (Proje, Müşteri, Referans)...">
                 <div id="isMuhasebeKartKonteyner" style="display:flex; flex-direction:column; gap:20px;"></div>
             </div>
             <div id="tamamlanan-is-muhasebeleri-page" class="page">
                 <div id="lock-tamamlanan-is-muhasebe" class="page-lock-overlay"></div>
-                <h2>✅ Tamamlanan İş Muhasebeleri</h2>
-                <input type="text" id="tamIsMuhAramaInput" class="search-box" onkeyup="tamamlananIsMuhasebeListesiniFiltrele()" placeholder="🔍 Tamamlanan İşlerde Ara (Proje, Müşteri, Referans)...">
+                <h2><i class="fa-solid fa-circle-check"></i> Tamamlanan İş Muhasebeleri</h2>
+                <input type="text" id="tamIsMuhAramaInput" class="search-box" onkeyup="tamamlananIsMuhasebeListesiniFiltrele()" placeholder="Tamamlanan İşlerde Ara (Proje, Müşteri, Referans)...">
                 <div id="tamamlananIsMuhasebeKonteyner"></div>
             </div>
             <div id="hesap-takip-page" class="page">
                 <div id="lock-hesap-takip" class="page-lock-overlay"></div>
-                <h2>💰 Hesap Takip Sistemi</h2>
+                <h2><i class="fa-solid fa-coins"></i> Hesap Takip Sistemi</h2>
                 <div id="htAnaSayfa">
                     <div class="ht-bakiye-kart">
                         <div class="ht-bakiye-label">Şirket Bakiyesi</div>
@@ -525,14 +526,14 @@
                     </div>
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
                         <h3 style="margin:0;">🏦 Banka Hesapları</h3>
-                        <button class="ht-ekle-btn primary" onclick="htHesapModalAc()">➕ Yeni Hesap</button>
+                        <button class="ht-ekle-btn primary" onclick="htHesapModalAc()"><i class="fa-solid fa-plus"></i> Yeni Hesap</button>
                     </div>
                     <div class="ht-kart-grid" id="htHesapKartlar"></div>
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; margin-top:22px;">
-                        <h3 style="margin:0;">📋 Tüm Hesap Hareketleri</h3>
+                        <h3 style="margin:0;"><i class="fa-solid fa-list"></i> Tüm Hesap Hareketleri</h3>
                         <div style="display:flex;gap:8px;">
-                            <button class="ht-ekle-btn primary" onclick="htPdfModalAc()">📄 Rapor</button>
-                            <button class="ht-ekle-btn primary" onclick="htIslemModalAc()">➕ Yeni İşlem</button>
+                            <button class="ht-ekle-btn primary" onclick="htPdfModalAc()"><i class="fa-regular fa-file-lines"></i> Rapor</button>
+                            <button class="ht-ekle-btn primary" onclick="htIslemModalAc()"><i class="fa-solid fa-plus"></i> Yeni İşlem</button>
                         </div>
                     </div>
                     <div class="ht-siralama" id="htSiralama">
@@ -543,7 +544,7 @@
                         <button class="ht-sirala-btn" data-key="islem" onclick="htSiralamaDegistir('islem')">İşlem</button>
                     </div>
                     <div class="ht-search-wrap">
-                        <span class="ht-search-icon">🔍</span>
+                        <span class="ht-search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
                         <input type="text" id="htArama" onkeyup="htIslemFiltrele()" placeholder="Tüm hareketlerde ara...">
                     </div>
                     <div id="htIslemListesi"></div>
@@ -555,10 +556,10 @@
                         <div id="htDetayBilgi" style="font-size:12px;color:var(--text-light);"></div>
                     </div>
                     <div class="ht-detay-actions" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-                        <button class="ht-ekle-btn primary" onclick="htPdfModalAc(HT_AKTIF_DETAY_HESAP)">📄 Hesap Raporu</button>
-                        <button class="ht-ekle-btn primary" onclick="htIslemModalAc(null, HT_AKTIF_DETAY_HESAP)">➕ Hareket Ekle</button>
+                        <button class="ht-ekle-btn primary" onclick="htPdfModalAc(HT_AKTIF_DETAY_HESAP)"><i class="fa-regular fa-file-lines"></i> Hesap Raporu</button>
+                        <button class="ht-ekle-btn primary" onclick="htIslemModalAc(null, HT_AKTIF_DETAY_HESAP)"><i class="fa-solid fa-plus"></i> Hareket Ekle</button>
                         <div class="ht-search-wrap" style="flex:1;min-width:160px;">
-                            <span class="ht-search-icon">🔍</span>
+                            <span class="ht-search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
                             <input type="text" id="htDetayArama" onkeyup="htDetayIslemFiltrele()" placeholder="Hareketlerde ara...">
                         </div>
                     </div>
@@ -569,46 +570,46 @@
                 <div id="lock-fatura-takip" class="page-lock-overlay"></div>
                 <div class="ft-wrap">
                     <div class="ft-top-bar">
-                        <h2 style="margin:0; border:none; padding:0;">💰 Fatura Takip Sistemi</h2>
+                        <h2 style="margin:0; border:none; padding:0;"><i class="fa-solid fa-coins"></i> Fatura Takip Sistemi</h2>
                         <div class="ft-tarih-goster" id="ftTarihGoster" style="flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--text-light);"></div>
                         <div class="ft-yil-select">
                             <label style="font-size:12px; font-weight:600;">Yıl:</label>
                             <select id="ftYilSec" onchange="faturaYilDegistir(this.value)"></select>
-                            <button class="btn btn-pdf-red" onclick="faturaPdfIndir()">📄 PDF Rapor</button>
+                            <button class="btn btn-pdf-red" onclick="faturaPdfIndir()"><i class="fa-regular fa-file-lines"></i> PDF Rapor</button>
                         </div>
                     </div>
 
                     <div class="ft-ozet" id="ftOzet">
-                        <div class="ft-ozet-card card-kdv-net" id="ftKdvNetKart"><div class="ft-ico" id="ftKdvNetIco">💰</div><div class="ft-lbl" id="ftKdvNetLbl">KDV Net Durum</div><div class="ft-val" id="ftKdvNet">0,00 ₺</div></div>
+                        <div class="ft-ozet-card card-kdv-net" id="ftKdvNetKart"><div class="ft-ico" id="ftKdvNetIco"><i class="fa-solid fa-coins"></i></div><div class="ft-lbl" id="ftKdvNetLbl">KDV Net Durum</div><div class="ft-val" id="ftKdvNet">0,00 ₺</div></div>
                         <div class="ft-ozet-card card-1"><div class="ft-ico">📥</div><div class="ft-lbl">Gelen Fatura</div><div class="ft-val blue" id="ftGelenAdet">0</div></div>
-                        <div class="ft-ozet-card card-2"><div class="ft-ico">📤</div><div class="ft-lbl">Giden Fatura</div><div class="ft-val blue" id="ftGidenAdet">0</div></div>
+                        <div class="ft-ozet-card card-2"><div class="ft-ico"><i class="fa-solid fa-paper-plane"></i></div><div class="ft-lbl">Giden Fatura</div><div class="ft-val blue" id="ftGidenAdet">0</div></div>
                         <div class="ft-ozet-card card-3"><div class="ft-ico">⬇️</div><div class="ft-lbl">Gelen KDV</div><div class="ft-val red" id="ftGelenKdv">0,00 ₺</div></div>
                         <div class="ft-ozet-card card-4"><div class="ft-ico">⬆️</div><div class="ft-lbl">Giden KDV</div><div class="ft-val green" id="ftGidenKdv">0,00 ₺</div></div>
                         <div class="ft-ozet-card card-7"><div class="ft-ico">🧾</div><div class="ft-lbl">Ödenen Vergiler</div><div class="ft-val orange" id="ftOdenenVergiToplam">0,00 ₺</div></div>
                     </div>
 
                     <div class="ft-bolum">
-                        <h3>📊 KDV Takibi <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Dönem bazlı KDV analizi)</span></h3>
+                        <h3><i class="fa-solid fa-chart-simple"></i> KDV Takibi <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Dönem bazlı KDV analizi)</span></h3>
                         <div class="ft-tbl-wrap"><div id="ftKdvTablosu"></div></div>
                     </div>
 
                     <div class="ft-bolum ft-bolum-gelir">
-                        <h3 style="display:flex;align-items:center;justify-content:space-between;"><span>📥 Gelen Faturalar <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Ödenecek)</span></span><span class="ft-vergi-badge ft-vergi-badge-gelir" style="position:static;font-size:11px;padding:4px 14px;">📉 VERGI OLARAK DÜŞECEK</span></h3>
+                        <h3 style="display:flex;align-items:center;justify-content:space-between;"><span>📥 Gelen Faturalar <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Ödenecek)</span></span><span class="ft-vergi-badge ft-vergi-badge-gelir" style="position:static;font-size:11px;padding:4px 14px;"><i class="fa-solid fa-chart-line fa-rotate-180"></i> VERGI OLARAK DÜŞECEK</span></h3>
                         <div id="ftGelenForm" class="inline-form" style="margin-bottom:12px;"></div>
                         <div style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                            <button class="btn btn-primary" onclick="ftGelenFormAc()">➕ Gelen Fatura Ekle</button>
-                            <input type="text" id="ftGelenArama" class="search-box" onkeyup="ftGelenFiltrele()" placeholder="🔍 Firma veya fatura no ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
+                            <button class="btn btn-primary" onclick="ftGelenFormAc()"><i class="fa-solid fa-plus"></i> Gelen Fatura Ekle</button>
+                            <input type="text" id="ftGelenArama" class="search-box" onkeyup="ftGelenFiltrele()" placeholder="Firma veya fatura no ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
                             <span id="ftGelenSayac" style="font-size:11px; color:var(--text-light); margin-left:auto;">0 kayıt</span>
                         </div>
                         <div id="ftGelenTablosu"></div>
                     </div>
 
                     <div class="ft-bolum ft-bolum-gider">
-                        <h3 style="display:flex;align-items:center;justify-content:space-between;"><span>📤 Giden Faturalar <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Tahsil Edilecek)</span></span><span class="ft-vergi-badge ft-vergi-badge-gider" style="position:static;font-size:11px;padding:4px 14px;">📈 VERGI OLARAK ÖDENECEK</span></h3>
+                        <h3 style="display:flex;align-items:center;justify-content:space-between;"><span><i class="fa-solid fa-paper-plane"></i> Giden Faturalar <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Tahsil Edilecek)</span></span><span class="ft-vergi-badge ft-vergi-badge-gider" style="position:static;font-size:11px;padding:4px 14px;"><i class="fa-solid fa-chart-line"></i> VERGI OLARAK ÖDENECEK</span></h3>
                         <div id="ftGidenForm" class="inline-form" style="margin-bottom:12px;"></div>
                         <div style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                            <button class="btn btn-primary" onclick="ftGidenFormAc()">➕ Giden Fatura Ekle</button>
-                            <input type="text" id="ftGidenArama" class="search-box" onkeyup="ftGidenFiltrele()" placeholder="🔍 Firma veya fatura no ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
+                            <button class="btn btn-primary" onclick="ftGidenFormAc()"><i class="fa-solid fa-plus"></i> Giden Fatura Ekle</button>
+                            <input type="text" id="ftGidenArama" class="search-box" onkeyup="ftGidenFiltrele()" placeholder="Firma veya fatura no ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
                             <span id="ftGidenSayac" style="font-size:11px; color:var(--text-light); margin-left:auto;">0 kayıt</span>
                         </div>
                         <div id="ftGidenTablosu"></div>
@@ -618,17 +619,17 @@
                         <h3>🧾 Ödenen Vergiler <span id="ftOdenenVergiTurleri" style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;"></span></h3>
                         <div id="ftOdenenVergiForm" class="inline-form" style="margin-bottom:12px;"></div>
                         <div style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                            <button class="btn btn-primary" onclick="ftOdenenVergiFormAc()">➕ Ödenen Vergi Ekle</button>
-                            <input type="text" id="ftOdenenVergiArama" class="search-box" onkeyup="ftOdenenVergiFiltrele()" placeholder="🔍 Vergi adı ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
+                            <button class="btn btn-primary" onclick="ftOdenenVergiFormAc()"><i class="fa-solid fa-plus"></i> Ödenen Vergi Ekle</button>
+                            <input type="text" id="ftOdenenVergiArama" class="search-box" onkeyup="ftOdenenVergiFiltrele()" placeholder="Vergi adı ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
                             <span id="ftOdenenVergiSayac" style="font-size:11px; color:var(--text-light); margin-left:auto;">0 kayıt</span>
                         </div>
                         <div id="ftOdenenVergiTablosu"></div>
                     </div>
 
                     <div class="ft-bolum">
-                        <h3>📅 Vergi Takvimi <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Ödeme tarihleri ve hatırlatıcılar)</span></h3>
+                        <h3><i class="fa-regular fa-calendar"></i> Vergi Takvimi <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Ödeme tarihleri ve hatırlatıcılar)</span></h3>
                         <div id="ftTakvimForm" class="inline-form" style="margin-bottom:12px;"></div>
-                        <div style="margin-bottom:12px;"><button class="btn btn-primary" onclick="ftTakvimFormAc()">➕ Vergi Etkinliği Ekle</button></div>
+                        <div style="margin-bottom:12px;"><button class="btn btn-primary" onclick="ftTakvimFormAc()"><i class="fa-solid fa-plus"></i> Vergi Etkinliği Ekle</button></div>
                         <div id="ftTakvimListesi"></div>
                     </div>
                 </div>
@@ -638,7 +639,7 @@
 
                 <div class="yb-fixed-top">
                     <div class="yb-header-row">
-                        <h2>📊 Yıllık Bütçe Takibi</h2>
+                        <h2><i class="fa-solid fa-chart-simple"></i> Yıllık Bütçe Takibi</h2>
                         <div class="yb-yil-gosterge">Yıl: <strong id="ybAktifYilLabel"></strong>
                             <span class="yb-view-pills">
                                 <button class="yb-view-pill yb-view-aktif" data-view="rapor" onclick="ybSekmeGoster('rapor')">Rapor</button>
@@ -660,7 +661,7 @@
 
             <div id="teklif-olustur-page" class="page uppercase-form">
                 <div id="lock-teklif-olustur" class="page-lock-overlay"></div>
-                <h2>📄 Yeni Fiyat Teklifi Oluştur</h2>
+                <h2><i class="fa-regular fa-file-lines"></i> Yeni Fiyat Teklifi Oluştur</h2>
                 <div class="row">
                     <div class="col">
                         <label>Müşteri Adı Soyadı:</label>
@@ -732,16 +733,16 @@
                 </div>
                 
                 <div style="margin-top: 25px; display: flex; gap: 15px;">
-                    <button class="btn btn-save-green" onclick="teklifFormuKaydet()">💾 Hafızaya Kaydet</button>
-                    <button class="btn btn-pdf-red" onclick="teklifFormuPdfUret()">📄 PDF Üret</button>
+                    <button class="btn btn-save-green" onclick="teklifFormuKaydet()"><i class="fa-solid fa-floppy-disk"></i> Hafızaya Kaydet</button>
+                    <button class="btn btn-pdf-red" onclick="teklifFormuPdfUret()"><i class="fa-regular fa-file-lines"></i> PDF Üret</button>
                     <button class="btn btn-clear-gray" onclick="teklifFormuTemizle()">🧹 Formu Temizle</button>
                 </div>
             </div>
 
             <div id="teklif-liste-page" class="page">
                 <div id="lock-teklif-liste" class="page-lock-overlay"></div>
-                <h2>📋 Hazırlanan Geçmiş Teklifler</h2>
-                <input type="text" id="teklifAramaInput" class="search-box" onkeyup="teklifleriFiltrele()" oninput="teklifleriFiltrele()" placeholder="🔍 Arama (ID, İsim, Firma, Proje, Tarih veya Hazırlayan)...">
+                <h2><i class="fa-solid fa-list"></i> Hazırlanan Geçmiş Teklifler</h2>
+                <input type="text" id="teklifAramaInput" class="search-box" onkeyup="teklifleriFiltrele()" oninput="teklifleriFiltrele()" placeholder="Arama (ID, İsim, Firma, Proje, Tarih veya Hazırlayan)...">
                 
                 <table class="app-table">
                     <thead>
@@ -762,7 +763,7 @@
             <div id="tm-fiyatlar-page" class="page">
                 <div id="lock-tm-fiyatlar" class="page-lock-overlay"></div>
                 <div class="tmf-header">
-                    <h2>📈 TM Fiyat Listesi</h2>
+                    <h2><i class="fa-solid fa-chart-line"></i> TM Fiyat Listesi</h2>
                     <button class="btn tmf-btn-add" onclick="tmfKartEkle()">+ Yeni Kart</button>
                 </div>
                 <div id="tmfKartGrid" class="tmf-kart-grid"></div>
@@ -775,17 +776,17 @@
 
             <div id="piyasa-fiyatlari-page" class="page uppercase-form">
                 <div id="lock-piyasa-fiyatlari" class="page-lock-overlay"></div>
-                <h2>📊 Piyasa Proje Fiyatları Takip Modülü</h2>
+                <h2><i class="fa-solid fa-chart-simple"></i> Piyasa Proje Fiyatları Takip Modülü</h2>
                 
                 <div style="background: var(--bg-main); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border-color);">
-                    <h3>📌 Yeni Piyasa Fiyatı Not Et</h3>
+                    <h3><i class="fa-solid fa-thumbtack"></i> Yeni Piyasa Fiyatı Not Et</h3>
                     <div class="row">
                         <div class="col" style="flex:2;">
                             <label>Proje / Hizmet Dalı Seçimi:</label>
                             <div style="display: flex; gap: 10px;">
                                 <select id="pYonetimDal" style="flex: 2;"></select>
-                                <button class="btn-add" onclick="yeniPiyasaDaliEklePrompt()">➕ Dal Ekle</button>
-                                <button class="btn-danger" onclick="piyasaDaliSilPrompt()">🗑 Sil</button>
+                                <button class="btn-add" onclick="yeniPiyasaDaliEklePrompt()"><i class="fa-solid fa-plus"></i> Dal Ekle</button>
+                                <button class="btn-danger" onclick="piyasaDaliSilPrompt()"><i class="fa-solid fa-trash-can"></i> Sil</button>
                             </div>
                         </div>
                     </div>
@@ -809,8 +810,8 @@
                             <label>Hesap Yöntemi / Birim Tipi:</label>
                             <div style="display: flex; gap: 10px;">
                                 <select id="pYonetimBirimTipi" style="flex: 2;"></select>
-                                <button class="btn-add" onclick="yeniPiyasaBirimEklePrompt()">➕ Ekle</button>
-                                <button class="btn-danger" onclick="piyasaBirimSilPrompt()">🗑 Sil</button>
+                                <button class="btn-add" onclick="yeniPiyasaBirimEklePrompt()"><i class="fa-solid fa-plus"></i> Ekle</button>
+                                <button class="btn-danger" onclick="piyasaBirimSilPrompt()"><i class="fa-solid fa-trash-can"></i> Sil</button>
                             </div>
                         </div>
                         <div class="col">
@@ -822,7 +823,7 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn btn-save-green" onclick="piyasaVerisiKaydet()">💾 Fiyatı Hafızaya Not Et</button>
+                        <button class="btn btn-save-green" onclick="piyasaVerisiKaydet()"><i class="fa-solid fa-floppy-disk"></i> Fiyatı Hafızaya Not Et</button>
                         <button class="btn btn-clear-gray" onclick="piyasaFormunuTemizle()">🧹 Formu Temizle</button>
                     </div>
                 </div>
@@ -833,10 +834,10 @@
 
             <div id="musteriler-page" class="page uppercase-form">
                 <div id="lock-musteriler" class="page-lock-overlay"></div>
-                <h2>🗂️ Müşteri Profil Kartları Portföyü</h2>
+                <h2><i class="fa-regular fa-folder-open"></i> Müşteri Profil Kartları Portföyü</h2>
                 <div id="musteriSummaryStrip" style="display:flex; gap:20px; background:var(--bg-main); padding:15px 20px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px; justify-content:space-around; font-weight:600;"></div>
                 <div style="background: var(--bg-main); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border-color);">
-                    <h3 id="musteriFormTitle">📌 Yeni Müşteri Kartı Tanımla</h3>
+                    <h3 id="musteriFormTitle"><i class="fa-solid fa-thumbtack"></i> Yeni Müşteri Kartı Tanımla</h3>
                     <input type="hidden" id="musteriEditId" value="-1">
                     <div class="row">
                         <div class="col">
@@ -866,8 +867,8 @@
                             <label>Müşteri Tipi / Etiket:</label>
                             <div style="display: flex; gap: 10px;">
                                 <select id="mTipi" style="flex: 2;"></select>
-                                <button class="btn-add" onclick="yeniMusteriEtiketiEklePrompt()">➕ Ekle</button>
-                                <button class="btn-danger" onclick="musteriEtiketiSilPrompt()">🗑 Sil</button>
+                                <button class="btn-add" onclick="yeniMusteriEtiketiEklePrompt()"><i class="fa-solid fa-plus"></i> Ekle</button>
+                                <button class="btn-danger" onclick="musteriEtiketiSilPrompt()"><i class="fa-solid fa-trash-can"></i> Sil</button>
                             </div>
                         </div>
                     </div>
@@ -900,23 +901,23 @@
                     </div>
 
                     <div style="display: flex; gap: 10px;">
-                        <button id="btnMusteriSave" class="btn btn-save-green" onclick="musteriProfilKaydet()">💾 Profil Kartını Kaydet</button>
+                        <button id="btnMusteriSave" class="btn btn-save-green" onclick="musteriProfilKaydet()"><i class="fa-solid fa-floppy-disk"></i> Profil Kartını Kaydet</button>
                         <button id="btnMusteriCancel" class="btn btn-clear-gray" onclick="musteriFormTemizle()" style="display:none;">Vazgeç</button>
                         <button class="btn btn-clear-gray" onclick="musteriFormTemizle()">🧹 Formu Temizle</button>
                     </div>
                 </div>
                 
                 <h3>Kayıtlı Müşteri Profil Kartları</h3>
-                <input type="text" id="musteriAramaInput" class="search-box" onkeyup="musterileriFiltrele()" placeholder="🔍 Müşterilerde Ara (İsim, Firma, Etiket, Adres, Kimlik No)...">
+                <input type="text" id="musteriAramaInput" class="search-box" onkeyup="musterileriFiltrele()" placeholder="Müşterilerde Ara (İsim, Firma, Etiket, Adres, Kimlik No)...">
                 <div id="musteriKartlariKonteyner" class="portfolio-grid"></div>
             </div>
 
             <div id="isortaklari-page" class="page uppercase-form">
                 <div id="lock-isortaklari" class="page-lock-overlay"></div>
-                <h2>🤝 İş Ortakları & Partner Havuzu</h2>
+                <h2><i class="fa-solid fa-handshake"></i> İş Ortakları & Partner Havuzu</h2>
                 <div id="partnerSummaryStrip" style="display:flex; gap:20px; background:var(--bg-main); padding:15px 20px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px; justify-content:space-around; font-weight:600;"></div>
                 <div style="background: var(--bg-main); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border-color);">
-                    <h3 id="partnerFormTitle">📌 Yeni İş Ortağı / Partner Kaydet</h3>
+                    <h3 id="partnerFormTitle"><i class="fa-solid fa-thumbtack"></i> Yeni İş Ortağı / Partner Kaydet</h3>
                     <input type="hidden" id="partnerEditId" value="-1">
                     <div class="row">
                         <div class="col">
@@ -938,8 +939,8 @@
         <label>Hizmet Branşı Seçimi:</label>
         <div style="display: flex; gap: 10px;">
             <select id="ioBrans" style="flex: 2;"></select>
-            <button class="btn-add" onclick="yeniPiyasaDaliEklePrompt()">➕ Ekle</button>
-            <button class="btn-danger" onclick="piyasaDaliSilPrompt()">🗑 Sil</button>
+            <button class="btn-add" onclick="yeniPiyasaDaliEklePrompt()"><i class="fa-solid fa-plus"></i> Ekle</button>
+            <button class="btn-danger" onclick="piyasaDaliSilPrompt()"><i class="fa-solid fa-trash-can"></i> Sil</button>
         </div>
                         </div>
                         <div class="col" style="flex:1;">
@@ -987,20 +988,20 @@
                     </div>
 
                     <div style="display: flex; gap: 10px;">
-                        <button id="btnPartnerSave" class="btn btn-save-green" onclick="isOrtagiProfilKaydet()">💾 Partner Profilini Kaydet</button>
+                        <button id="btnPartnerSave" class="btn btn-save-green" onclick="isOrtagiProfilKaydet()"><i class="fa-solid fa-floppy-disk"></i> Partner Profilini Kaydet</button>
                         <button id="btnPartnerCancel" class="btn btn-clear-gray" onclick="partnerFormTemizle()" style="display:none;">Vazgeç</button>
                         <button class="btn btn-clear-gray" onclick="partnerFormTemizle()">🧹 Formu Temizle</button>
                     </div>
                 </div>
                 
                 <h3>İş Ortakları & Partner Kartları</h3>
-                <input type="text" id="partnerAramaInput" class="search-box" onkeyup="partnerleriFiltrele()" placeholder="🔍 Partnerlerde Ara (İsim, Firma, Branş, Adres, Kimlik No)...">
+                <input type="text" id="partnerAramaInput" class="search-box" onkeyup="partnerleriFiltrele()" placeholder="Partnerlerde Ara (İsim, Firma, Branş, Adres, Kimlik No)...">
 <div id="isOrtaklariKartlariKonteyner" class="portfolio-grid"></div>
             </div>
 
             <div id="dilekce-page" class="page">
                 <div id="lock-dilekce" class="page-lock-overlay"></div>
-                <h2>📝 Dilekçe Oluştur</h2>
+                <h2><i class="fa-regular fa-note-sticky"></i> Dilekçe Oluştur</h2>
                 <div id="dilekce-form" style="display:flex; flex-direction:column; gap:14px; margin-bottom:30px;">
                     <div style="display:flex; gap:14px; flex-wrap:wrap;align-items:center;">
                         <div style="min-width:120px;"><b>Dilekçe No:</b> <span id="dlkIdGoster" style="font-weight:700;font-size:15px;">-</span></div>
@@ -1024,13 +1025,13 @@
                         <textarea id="dlkMetin" rows="10" placeholder="Dilekçe metnini buraya yazın..." style="width:100%; resize:vertical; font-family:inherit;"></textarea>
                     </div>
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <button class="btn btn-save-green" onclick="dlkKaydet()">💾 Dilekçeyi Kaydet</button>
-                        <button class="btn btn-pdf-red" onclick="dlkPdfGoster('yeni')">📄 PDF Önizle & İndir</button>
+                        <button class="btn btn-save-green" onclick="dlkKaydet()"><i class="fa-solid fa-floppy-disk"></i> Dilekçeyi Kaydet</button>
+                        <button class="btn btn-pdf-red" onclick="dlkPdfGoster('yeni')"><i class="fa-regular fa-file-lines"></i> PDF Önizle & İndir</button>
                         <button class="btn btn-clear-gray" onclick="dlkFormTemizle()">🧹 Formu Temizle</button>
                     </div>
                 </div>
 
-                <h3>📋 Kaydedilen Dilekçeler</h3>
+                <h3><i class="fa-solid fa-list"></i> Kaydedilen Dilekçeler</h3>
                 <div style="margin-bottom:10px;">
                     <input type="text" id="dlkArama" placeholder="Ara: dilekçe no, konu, gönderilen yer, tarih..." oninput="dlkListele()" style="width:100%;padding:8px 12px;border:1px solid var(--border-color);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--text-color);box-sizing:border-box;">
                 </div>
@@ -1039,13 +1040,13 @@
 
             <div id="istakibi-page" class="page">
                 <div id="lock-istakibi" class="page-lock-overlay"></div>
-                <h2>📅 İş Takibi <span style="font-size:13px;font-weight:400;color:var(--text-light);" id="itSayac">0 kayıt</span></h2>
+                <h2><i class="fa-regular fa-calendar"></i> İş Takibi <span style="font-size:13px;font-weight:400;color:var(--text-light);" id="itSayac">0 kayıt</span></h2>
 
                 <div class="it-stats-bar">
                     <div class="it-stats-group">
                         <div class="it-stats-card it-stats-aktif">
                             <div class="it-stats-top">
-                                <span class="it-stats-label">📌 AKTİF İŞLER</span>
+                                <span class="it-stats-label"><i class="fa-solid fa-thumbtack"></i> AKTİF İŞLER</span>
                                 <span class="it-stats-sayi" id="itAktifToplam">0</span>
                             </div>
                             <div class="it-stats-alt">
@@ -1059,7 +1060,7 @@
                     <div class="it-stats-group">
                         <div class="it-stats-card it-stats-tamam">
                             <div class="it-stats-top">
-                                <span class="it-stats-label">✅ TAMAMLANAN İŞLER</span>
+                                <span class="it-stats-label"><i class="fa-solid fa-circle-check"></i> TAMAMLANAN İŞLER</span>
                                 <span class="it-stats-sayi" id="itTamamToplam">0</span>
                             </div>
                             <div class="it-stats-alt">
@@ -1072,13 +1073,13 @@
                     </div>
                 </div>
 
-                <button class="it-btn-yeni-is" onclick="itFormAc()">➕ Yeni İş Ekle</button>
+                <button class="it-btn-yeni-is" onclick="itFormAc()"><i class="fa-solid fa-plus"></i> Yeni İş Ekle</button>
 
                 <!-- Aktif İşler -->
                 <div class="it-section-group" id="itAktifBolum">
                     <h3 class="it-bolum-baslik-aktif" onclick="itBolumToggle('itAktifBolum')">
-                        <span><span class="it-bolum-ok" id="itAktifBolumOk">▼</span> 📌 Aktif İşler</span>
-                        <input type="text" id="itAktifAra" class="search-box" placeholder="🔍 Ara..." onclick="event.stopPropagation()" oninput="this.value=this.value.toUpperCase();itAktifSekmeDegistir(document.querySelector('#itAktifSekmeBar .it-sekme-aktif').getAttribute('data-tur'))" style="margin:0;margin-left:auto;max-width:260px;padding:5px 10px;font-size:12px;height:auto;text-transform:uppercase;">
+                        <span><span class="it-bolum-ok" id="itAktifBolumOk">▼</span> <i class="fa-solid fa-thumbtack"></i> Aktif İşler</span>
+                        <input type="text" id="itAktifAra" class="search-box" placeholder="Ara..." onclick="event.stopPropagation()" oninput="this.value=this.value.toUpperCase();itAktifSekmeDegistir(document.querySelector('#itAktifSekmeBar .it-sekme-aktif').getAttribute('data-tur'))" style="margin:0;margin-left:auto;max-width:260px;padding:5px 10px;font-size:12px;height:auto;text-transform:uppercase;">
                     </h3>
                     <div class="it-bolum-icerik" id="itAktifBolumIcerik">
                         <div class="it-sekme-bar" id="itAktifSekmeBar">
@@ -1086,7 +1087,7 @@
                             <button class="it-sekme" data-tur="Uygulama Proje" onclick="itAktifSekmeDegistir('Uygulama Proje')">Uygulama Proje</button>
                             <button class="it-sekme" data-tur="3B Modelleme ve Tasarım" onclick="itAktifSekmeDegistir('3B Modelleme ve Tasarım')">3B Modelleme ve Tasarım</button>
                             <button class="it-sekme" data-tur="Diğer" onclick="itAktifSekmeDegistir('Diğer')">Diğer</button>
-                            <button class="btn btn-pdf-red" id="itGanttToggle" onclick="itGanttToggleGoruntu()" style="margin-left:auto;border-radius:8px;">📊 Gantt</button>
+                            <button class="btn btn-pdf-red" id="itGanttToggle" onclick="itGanttToggleGoruntu()" style="margin-left:auto;border-radius:8px;"><i class="fa-solid fa-chart-simple"></i> Gantt</button>
                         </div>
                         <div id="itAktifKartlar"></div>
                         <div id="itGanttContainer" style="display:none;margin-top:8px;"></div>
@@ -1096,8 +1097,8 @@
                 <!-- Tamamlanan İşler -->
                 <div class="it-section-group it-bolum-kapali" id="itTamamlananBolum">
                     <h3 class="it-bolum-baslik-tamam" onclick="itBolumToggle('itTamamlananBolum')">
-                        <span><span class="it-bolum-ok" id="itTamamlananBolumOk">▶</span> ✅ Tamamlanan İşler</span>
-                        <input type="text" id="itTamamlananAra" class="search-box" placeholder="🔍 Ara..." onclick="event.stopPropagation()" oninput="this.value=this.value.toUpperCase();itTamamlananSekmeDegistir(document.querySelector('#itTamamlananSekmeBar .it-sekme-aktif').getAttribute('data-tur'))" style="margin:0;margin-left:auto;max-width:260px;padding:5px 10px;font-size:12px;height:auto;text-transform:uppercase;">
+                        <span><span class="it-bolum-ok" id="itTamamlananBolumOk">▶</span> <i class="fa-solid fa-circle-check"></i> Tamamlanan İşler</span>
+                        <input type="text" id="itTamamlananAra" class="search-box" placeholder="Ara..." onclick="event.stopPropagation()" oninput="this.value=this.value.toUpperCase();itTamamlananSekmeDegistir(document.querySelector('#itTamamlananSekmeBar .it-sekme-aktif').getAttribute('data-tur'))" style="margin:0;margin-left:auto;max-width:260px;padding:5px 10px;font-size:12px;height:auto;text-transform:uppercase;">
                     </h3>
                     <div class="it-bolum-icerik" id="itTamamlananBolumIcerik">
                         <div class="it-sekme-bar" id="itTamamlananSekmeBar">
@@ -1113,7 +1114,7 @@
                 <!-- Yeni İş Popup Formu -->
                 <div id="itFormPopup" class="it-form-popup" onclick="if(event.target===this)itFormKapat()">
                     <div class="it-form-card">
-                        <h3 id="itFormTitle">➕ YENİ İŞ EKLE</h3>
+                        <h3 id="itFormTitle"><i class="fa-solid fa-plus"></i> YENİ İŞ EKLE</h3>
                         <input type="hidden" id="itFormEditId" value="">
                         <div class="row">
                             <div class="col" style="flex:0 0 100%;">
@@ -1164,7 +1165,7 @@
                             </div>
                         </div>
                         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px;">
-                            <button class="btn btn-save-green" onclick="itKaydet()">💾 KAYDET</button>
+                            <button class="btn btn-save-green" onclick="itKaydet()"><i class="fa-solid fa-floppy-disk"></i> KAYDET</button>
                             <button class="btn btn-clear-gray" onclick="itFormKapat()">İPTAL</button>
                         </div>
                     </div>
@@ -1172,11 +1173,11 @@
                 <!-- Notlar Popup -->
                 <div id="itNotPopup" class="it-not-popup" onclick="if(event.target===this)itNotPopupKapat()">
                     <div class="it-not-card">
-                        <h4>📌 NOTLAR</h4>
+                        <h4><i class="fa-solid fa-thumbtack"></i> NOTLAR</h4>
                         <input type="hidden" id="itNotPopupJobId" value="">
                         <textarea id="itNotPopupText" placeholder="NOTLARINIZI BURAYA YAZIN..."></textarea>
                         <div class="it-not-actions">
-                            <button class="btn btn-save-green" onclick="itNotKaydet()">💾 KAYDET</button>
+                            <button class="btn btn-save-green" onclick="itNotKaydet()"><i class="fa-solid fa-floppy-disk"></i> KAYDET</button>
                             <button class="btn btn-clear-gray" onclick="itNotPopupKapat()">KAPAT</button>
                         </div>
                     </div>
@@ -1185,16 +1186,16 @@
 
             <div id="notlar-page" class="page">
                 <div id="lock-notlar" class="page-lock-overlay"></div>
-                <h2>📝 Notlar</h2>
+                <h2><i class="fa-regular fa-note-sticky"></i> Notlar</h2>
                 <div style="display:flex; gap:20px; align-items:stretch; min-height:60vh;">
                     <div style="width:320px; min-width:320px; background:var(--bg-main); border-radius:10px; border:1px solid var(--border-color); padding:16px; display:flex; flex-direction:column; gap:8px;">
-                        <button class="btn btn-primary" onclick="noteKlasorDialog()" style="padding:10px; font-size:14px; width:100%;">📁 Yeni Klasör</button>
+                        <button class="btn btn-primary" onclick="noteKlasorDialog()" style="padding:10px; font-size:14px; width:100%;"><i class="fa-regular fa-folder"></i> Yeni Klasör</button>
                         <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:4px;" id="notlarKlasorListesi"></div>
                     </div>
                     <div style="flex:1; display:flex; flex-direction:column; gap:12px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
                             <span style="font-weight:700; font-size:18px; color:var(--accent-red);" id="noteKlasorAdi">Tüm Notlar</span>
-                            <button class="btn btn-primary" onclick="noteYeniNot()" style="padding:8px 16px; font-size:13px;">➕ Yeni Not Oluştur</button>
+                            <button class="btn btn-primary" onclick="noteYeniNot()" style="padding:8px 16px; font-size:13px;"><i class="fa-solid fa-plus"></i> Yeni Not Oluştur</button>
                         </div>
                         <div id="notlarListesi" style="flex:1; display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:16px; align-content:start;"></div>
                     </div>
@@ -1204,7 +1205,7 @@
             <!-- NOT DÜZENLEYİCİ MODAL -->
             <div id="noteEditorModal" class="modal-overlay" style="display:none;">
                 <div class="modal-box" style="max-width:850px; width:92%;">
-                    <div class="modal-header"><h3 id="noteEditorTitle">📝 Yeni Not</h3></div>
+                    <div class="modal-header"><h3 id="noteEditorTitle"><i class="fa-regular fa-note-sticky"></i> Yeni Not</h3></div>
                     <div class="modal-body">
                         <input type="text" id="noteEditorBaslik" placeholder="NOT BAŞLIĞI..." style="width:100%; padding:10px 14px; font-size:15px; font-weight:600; margin-bottom:10px; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-card); color:var(--text-dark); box-sizing:border-box; text-transform:uppercase;" oninput="noteBaslikTrDuzenle(this)">
                         <div class="note-editor-toolbar" style="display:flex; align-items:center; gap:2px; padding:6px 10px; background:var(--bg-main); border:1px solid var(--border-color); border-bottom:none; border-radius:8px 8px 0 0; flex-wrap:nowrap;">
@@ -1256,7 +1257,7 @@
                         <div id="noteEditorIcerik" contenteditable="true" style="min-height:350px; max-height:55vh; overflow-y:auto; padding:16px; border:1px solid var(--border-color); border-top:none; border-radius:0 0 6px 6px; background:var(--bg-card); color:var(--text-dark); font-size:14px; line-height:1.6; outline:none; box-sizing:border-box;" data-placeholder="Notunuzu yazmaya başlayın..."></div>
                     </div>
                     <div class="modal-actions">
-                        <button class="btn-save-green" onclick="noteEditorKaydet()" style="padding:8px 24px; font-size:13px;">💾 Kaydet</button>
+                        <button class="btn-save-green" onclick="noteEditorKaydet()" style="padding:8px 24px; font-size:13px;"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button>
                         <button class="btn btn-clear-gray" onclick="noteEditorKapat()" style="padding:8px 24px; font-size:13px;">İptal</button>
                     </div>
                     <input type="hidden" id="noteEditorId" value="">
@@ -1266,13 +1267,13 @@
             <!-- NOT GÖRÜNTÜLEME MODAL -->
             <div id="noteViewerModal" class="modal-overlay" style="display:none;">
                 <div class="modal-box" style="max-width:850px; width:92%;">
-                    <div class="modal-header"><h3 id="noteViewerTitle">📄 Not</h3></div>
+                    <div class="modal-header"><h3 id="noteViewerTitle"><i class="fa-regular fa-file-lines"></i> Not</h3></div>
                     <div class="modal-body" id="noteViewerIcerik" style="font-size:14px; line-height:1.7; padding:10px 0;"></div>
                     <div class="modal-actions" style="gap:8px;">
-                        <button class="btn btn-sm btn-warning" onclick="noteDuzenle()">✏️ Düzenle</button>
-                        <button class="btn btn-sm btn-pdf-red" onclick="notePdfIndir()">📄 PDF</button>
-                        <button class="btn btn-sm btn-danger" onclick="noteViewerSil()">🗑️ Sil</button>
-                        <button class="btn btn-sm btn-cancel" onclick="noteViewerKapat()">✕ Kapat</button>
+                        <button class="btn btn-sm btn-warning" onclick="noteDuzenle()"><i class="fa-regular fa-pen-to-square"></i> Düzenle</button>
+                        <button class="btn btn-sm btn-pdf-red" onclick="notePdfIndir()"><i class="fa-regular fa-file-lines"></i> PDF</button>
+                        <button class="btn btn-sm btn-danger" onclick="noteViewerSil()"><i class="fa-solid fa-trash-can"></i> Sil</button>
+                        <button class="btn btn-sm btn-cancel" onclick="noteViewerKapat()"><i class="fa-solid fa-xmark"></i> Kapat</button>
                     </div>
                     <input type="hidden" id="noteViewerId" value="">
                 </div>
@@ -1281,7 +1282,7 @@
             <!-- KLASOR YONETIM MODAL -->
             <div id="noteKlasorModal" class="modal-overlay" style="display:none;">
                 <div class="modal-box" style="max-width:450px;">
-                    <div class="modal-header"><h3>📁 Klasör Yönetimi</h3></div>
+                    <div class="modal-header"><h3><i class="fa-regular fa-folder"></i> Klasör Yönetimi</h3></div>
                     <div class="modal-body" id="noteKlasorBody"></div>
                     <div class="modal-actions">
                         <button class="btn btn-clear-gray" onclick="noteKlasorKapat()" style="padding:8px 20px;">Kapat</button>
@@ -1292,7 +1293,7 @@
             <!-- NOT TASI MODAL -->
             <div id="noteTasiModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)noteTasiKapat()">
                 <div class="modal-box" style="max-width:400px;">
-                    <div class="modal-header"><h3>📂 Notu Taşı</h3></div>
+                    <div class="modal-header"><h3><i class="fa-regular fa-folder-open"></i> Notu Taşı</h3></div>
                     <div class="modal-body" id="noteTasiBody"></div>
                     <div class="modal-actions">
                         <button class="btn btn-clear-gray" onclick="noteTasiKapat()" style="padding:8px 20px;">İptal</button>
@@ -1302,7 +1303,7 @@
 
             <div id="yonetim-page" class="page">
                 <div id="lock-yonetim" class="page-lock-overlay"></div>
-                <h2>⚙️ Portal Yönetimi & Yetkilendirme</h2>
+                <h2><i class="fa-solid fa-gear"></i> Portal Yönetimi & Yetkilendirme</h2>
                 <div style="background: var(--bg-main); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border-color);">
                     <h3 id="formTitle">Yeni Kullanıcı Tanımla</h3>
                     <input type="hidden" id="editIndex" value="-1">
@@ -1348,11 +1349,11 @@
                 </table>
 
                 <div style="background:var(--bg-main); padding:20px; border-radius:8px; border:1px solid var(--border-color); margin-top:20px;">
-                    <h3>🔗 Görev Atama Yetkileri</h3>
+                    <h3><i class="fa-solid fa-link"></i> Görev Atama Yetkileri</h3>
                     <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; margin-bottom:15px;">
                         <div style="flex:1; min-width:160px;"><label style="font-size:11px;font-weight:600;display:block;margin-bottom:4px;">GÖREVİ VEREBİLECEK KULLANICI</label><select id="gorevYetkiVeren" class="form-select" style="width:100%;"></select></div>
                         <div style="flex:1; min-width:160px;"><label style="font-size:11px;font-weight:600;display:block;margin-bottom:4px;">GÖREV ATANACAK KULLANICI</label><select id="gorevYetkiAlan" class="form-select" style="width:100%;"></select></div>
-                        <button class="btn btn-primary btn-sm" onclick="gorevYetkiEkle()" style="height:36px;">➕ EKLE</button>
+                        <button class="btn btn-primary btn-sm" onclick="gorevYetkiEkle()" style="height:36px;"><i class="fa-solid fa-plus"></i> EKLE</button>
                     </div>
                     <table class="app-table">
                         <thead><tr><th>Görevi Veren</th><th>Görev Atanacak</th><th>İşlem</th></tr></thead>
@@ -1380,7 +1381,7 @@
                         <div class="col-full"><label>Adres</label><textarea id="ciAdres" rows="2">KIRKLARELİ / DEMİRKÖY / İĞNEADA</textarea></div>
                         <div class="col-full"><label>Dilekçe Alt Bilgi (sayfa altı)</label><textarea id="ciDilekceAltBilgi" rows="2" placeholder="Boş bırakılırsa adres/telefon/e-posta kullanılır"></textarea></div>
                     </div>
-                    <button class="btn btn-save-green" onclick="sirketBilgileriKaydet()">💾 Bilgileri Kaydet</button>
+                    <button class="btn btn-save-green" onclick="sirketBilgileriKaydet()"><i class="fa-solid fa-floppy-disk"></i> Bilgileri Kaydet</button>
                     <span id="ciKayitMsg" style="margin-left:10px; font-size:12px; color:green; display:none;">Kaydedildi ✓</span>
                 </div>
 
@@ -1390,7 +1391,7 @@
                 </div>
 
                 <div style="background:var(--bg-main); padding:20px; border-radius:8px; border:1px solid var(--border-color); margin-top:20px;">
-                    <h3>📋 Giriş / Çıkış Kaydı (Son 50)</h3>
+                    <h3><i class="fa-solid fa-list"></i> Giriş / Çıkış Kaydı (Son 50)</h3>
                     <div style="max-height:300px; overflow-y:auto; border:1px solid var(--border-color); border-radius:6px;">
                         <table class="app-table" style="margin:0;">
                             <thead><tr><th style="position:sticky; top:0; background:var(--panel-bg);">Kullanıcı</th><th style="position:sticky; top:0; background:var(--panel-bg);">İşlem</th><th style="position:sticky; top:0; background:var(--panel-bg);">Tarih & Saat</th></tr></thead>
@@ -1400,7 +1401,7 @@
                 </div>
 
                 <div style="background:var(--bg-main); padding:20px; border-radius:8px; border:1px solid var(--border-color); margin-top:20px;">
-                    <h3>📝 Aktivite Kaydı (Son 10)</h3>
+                    <h3><i class="fa-regular fa-note-sticky"></i> Aktivite Kaydı (Son 10)</h3>
                     <div style="max-height:300px; overflow-y:auto; border:1px solid var(--border-color); border-radius:6px;">
                         <table class="app-table" style="margin:0;">
                             <thead><tr><th style="position:sticky;top:0;background:var(--panel-bg);">Zaman</th><th style="position:sticky;top:0;background:var(--panel-bg);">Kullanıcı</th><th style="position:sticky;top:0;background:var(--panel-bg);">İşlem</th><th style="position:sticky;top:0;background:var(--panel-bg);">Sayfa</th></tr></thead>
@@ -1409,15 +1410,15 @@
                     </div>
                 </div>
                 <div style="background:var(--bg-main); padding:20px; border-radius:8px; border:1px solid var(--border-color); margin-top:20px;">
-                    <h3>💾 Yedek & Geri Yükle</h3>
+                    <h3><i class="fa-solid fa-floppy-disk"></i> Yedek & Geri Yükle</h3>
                     <p style="font-size:13px; color:var(--text-light); margin-bottom:15px;">Tüm verileri JSON dosyası olarak dışa aktarır veya önceden aldığınız yedeği geri yükler.</p>
                     <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                         <button class="btn btn-primary" onclick="tmYedekAl()">📥 Yedek Al (Dışa Aktar)</button>
                         <input type="file" id="yedekYukleInput" accept=".json" style="display:none" onchange="tmYedekYukle(event)">
-                        <button class="btn btn-primary" onclick="document.getElementById('yedekYukleInput').click()">📂 Yedek Yükle (Geri Yükle)</button>
+                        <button class="btn btn-primary" onclick="document.getElementById('yedekYukleInput').click()"><i class="fa-regular fa-folder-open"></i> Yedek Yükle (Geri Yükle)</button>
                     </div>
                     <div style="margin-top:12px; font-size:12px; color:var(--text-light);">
-                        <span>📅 Son yedek: <strong id="sonYedekTarihi">-</strong></span>
+                        <span><i class="fa-regular fa-calendar"></i> Son yedek: <strong id="sonYedekTarihi">-</strong></span>
                     </div>
                     <div id="yedekMsg" style="margin-top:6px; font-size:12px; color:var(--text-light);"></div>
                 </div>
@@ -1464,7 +1465,7 @@
             <!-- YILLIK BÜTÇE KATEGORİ YÖNETİM MODAL -->
             <div id="ybKategoriModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)ybKategoriModalKapat()">
                 <div class="modal-box" style="max-width:500px;">
-                    <div class="modal-header"><h3>📂 Kategori Yönetimi</h3></div>
+                    <div class="modal-header"><h3><i class="fa-regular fa-folder-open"></i> Kategori Yönetimi</h3></div>
                     <div class="modal-body" id="ybKategoriModalBody"></div>
                     <div class="modal-actions">
                         <button class="btn btn-clear-gray" onclick="ybKategoriModalKapat()" style="padding:8px 20px;">Kapat</button>
@@ -1474,12 +1475,12 @@
             <!-- YILLIK BÜTÇE KALEM EKLEME MODAL -->
             <div id="ybModalKalem" class="modal-overlay" style="display:none;" onclick="if(event.target===this)ybModalKalemKapat()">
                 <div class="modal-box">
-                    <div class="modal-header"><h3>➕ Yeni Kalem Ekle</h3></div>
+                    <div class="modal-header"><h3><i class="fa-solid fa-plus"></i> Yeni Kalem Ekle</h3></div>
                     <div class="modal-body">
                         <label>Tür</label>
                         <div class="mk-tip-secimi" id="mkTipSecimi">
-                            <button class="mk-tip-btn mk-gelir active" data-tip="gelir" onclick="ybModalKalemTip('gelir')">📈 Gelir</button>
-                            <button class="mk-tip-btn mk-gider" data-tip="gider" onclick="ybModalKalemTip('gider')">📉 Gider</button>
+                            <button class="mk-tip-btn mk-gelir active" data-tip="gelir" onclick="ybModalKalemTip('gelir')"><i class="fa-solid fa-chart-line"></i> Gelir</button>
+                            <button class="mk-tip-btn mk-gider" data-tip="gider" onclick="ybModalKalemTip('gider')"><i class="fa-solid fa-chart-line fa-rotate-180"></i> Gider</button>
                         </div>
                         <label id="mkKatLabel">Kategori</label>
                         <div id="mkKatSatir"><select id="mkKategori"></select></div>
@@ -1522,7 +1523,7 @@
             <!-- HESAP TAKİBİ İŞLEM MODAL -->
             <div id="htIslemModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)htIslemModalKapat()">
                 <div class="modal-box">
-                    <div class="modal-header"><h3>📝 Hesap Hareketi</h3></div>
+                    <div class="modal-header"><h3><i class="fa-regular fa-note-sticky"></i> Hesap Hareketi</h3></div>
                     <div class="modal-body">
                         <label>Açıklama</label>
                         <input type="text" id="htModalIslemAciklama" oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase;">
@@ -1551,7 +1552,7 @@
             <!-- HESAP TAKİBİ PDF RAPOR MODAL -->
             <div id="htPdfModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)htPdfModalKapat()">
                 <div class="modal-box" style="max-width:500px;">
-                    <div class="modal-header"><h3>📄 Hesap Hareket Raporu</h3></div>
+                    <div class="modal-header"><h3><i class="fa-regular fa-file-lines"></i> Hesap Hareket Raporu</h3></div>
                     <div class="modal-body">
                         <label>Rapor Türü</label>
                         <select id="htPdfDonem" style="width:100%;margin-bottom:14px;" onchange="htPdfDonemDegisti()">
@@ -1572,7 +1573,7 @@
                     </div>
                     <div class="modal-actions">
                         <button class="ht-modal-iptal" onclick="htPdfModalKapat()">İptal</button>
-                        <button class="ht-modal-kaydet" onclick="htPdfRaporOlustur()">📄 PDF Oluştur</button>
+                        <button class="ht-modal-kaydet" onclick="htPdfRaporOlustur()"><i class="fa-regular fa-file-lines"></i> PDF Oluştur</button>
                     </div>
                 </div>
             </div>
@@ -1581,13 +1582,13 @@
                 <div class="as-modal-box" style="max-width:380px;">
                     <div class="as-modal-header">
                         <h3 id="asGunInfoTitle">ETKİNLİKLER</h3>
-                        <button class="as-modal-close" onclick="asGunInfoKapat()">✕</button>
+                        <button class="as-modal-close" onclick="asGunInfoKapat()"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     <div id="asEventFilterBar" class="as-event-filter-bar" style="display:none;padding:8px 16px;border-bottom:1px solid var(--border-color);">
                         <span class="as-filter-label">Filtre:</span>
                         <button class="as-filter-btn as-filter-active" data-filter="all" onclick="asEventFilterSet('all')">Tümü</button>
-                        <button class="as-filter-btn" data-filter="reminder" onclick="asEventFilterSet('reminder')">🔔 Anımsatıcı</button>
-                        <button class="as-filter-btn" data-filter="note" onclick="asEventFilterSet('note')">📝 Not</button>
+                        <button class="as-filter-btn" data-filter="reminder" onclick="asEventFilterSet('reminder')"><i class="fa-solid fa-bell"></i> Anımsatıcı</button>
+                        <button class="as-filter-btn" data-filter="note" onclick="asEventFilterSet('note')"><i class="fa-regular fa-note-sticky"></i> Not</button>
                     </div>
                     <div class="as-modal-body" id="asGunInfoBody"></div>
                     <div class="as-modal-actions">
@@ -1600,7 +1601,7 @@
                 <div class="as-modal-box">
                     <div class="as-modal-header">
                         <h3 id="asEventModalTitle">ETKİNLİK</h3>
-                        <button class="as-modal-close" onclick="asEventModalKapat()">✕</button>
+                        <button class="as-modal-close" onclick="asEventModalKapat()"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     <div class="as-modal-body">
                         <input type="hidden" id="asEventEditId" value="">
@@ -1626,7 +1627,7 @@
                         </div>
                         <div class="as-modal-field" style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-main);border-radius:6px;border:1px solid var(--border-color);margin-bottom:14px;">
                             <input type="checkbox" id="asEventTekrar" onchange="asEventTekrarToggle()" style="width:auto;height:16px;cursor:pointer;">
-                            <label for="asEventTekrar" style="margin:0;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-dark);">🔄 Tekrarla</label>
+                            <label for="asEventTekrar" style="margin:0;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-dark);"><i class="fa-solid fa-rotate"></i> Tekrarla</label>
                         </div>
                         <div id="asEventTekrarOptions" class="as-modal-field" style="display:none;">
                             <label>TEKRARLAMA</label>
@@ -1638,13 +1639,13 @@
                         </div>
                         <div class="as-modal-field" style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-main);border-radius:6px;border:1px solid var(--border-color);">
                             <input type="checkbox" id="asEventPaylas" style="width:auto;height:16px;cursor:pointer;">
-                            <label for="asEventPaylas" style="margin:0;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-dark);">👥 Ekip İle Paylaş</label>
+                            <label for="asEventPaylas" style="margin:0;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-dark);"><i class="fa-solid fa-users"></i> Ekip İle Paylaş</label>
                         </div>
                     </div>
                     <div class="as-modal-actions">
-                        <button class="as-btn-save" onclick="asEventKaydet()">💾 KAYDET</button>
+                        <button class="as-btn-save" onclick="asEventKaydet()"><i class="fa-solid fa-floppy-disk"></i> KAYDET</button>
                         <button class="as-btn-cancel" onclick="asEventModalKapat()">İPTAL</button>
-                        <button class="as-btn-delete" id="asEventSilBtn" onclick="asEventSil()" style="display:none;">🗑 SİL</button>
+                        <button class="as-btn-delete" id="asEventSilBtn" onclick="asEventSil()" style="display:none;"><i class="fa-solid fa-trash-can"></i> SİL</button>
                     </div>
                 </div>
             </div>
@@ -1734,12 +1735,12 @@
     <!-- PORTFOLYO DOSYA YÖNETİM MODAL -->
     <div id="pbDosyaPopupOverlay" class="modal-overlay" style="display:none;" onclick="if(event.target===this)pbPopupKapat()">
         <div class="modal-box" style="max-width:700px;width:90%;">
-            <div class="modal-header"><h3 id="pbPopupTitle">📁 DOSYALAR</h3></div>
+            <div class="modal-header"><h3 id="pbPopupTitle"><i class="fa-regular fa-folder"></i> DOSYALAR</h3></div>
             <div class="modal-body" style="max-height:60vh;overflow-y:auto;padding:16px 20px;">
                 <div id="pbDosyaListesi"></div>
             </div>
             <div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-                <button class="btn btn-primary btn-sm" onclick="pbDosyaYukle(parseInt(document.getElementById('pbDosyaPopupOverlay').dataset.kartId), document.getElementById('pbDosyaPopupOverlay').dataset.tur)">📤 Dosya Yükle</button>
+                <button class="btn btn-primary btn-sm" onclick="pbDosyaYukle(parseInt(document.getElementById('pbDosyaPopupOverlay').dataset.kartId), document.getElementById('pbDosyaPopupOverlay').dataset.tur)"><i class="fa-solid fa-paper-plane"></i> Dosya Yükle</button>
                 <button class="btn btn-clear-gray btn-sm" onclick="pbPopupKapat()">Kapat</button>
             </div>
         </div>
