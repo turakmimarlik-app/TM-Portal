@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.33.4';
+        var APP_VERSION = 'V1.33.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -9915,14 +9915,16 @@ function itDurumMetni(o) {
                     return '<span style="' + s + '">';
                 }).replace(/<\/font>/gi, '</span>');
 
+            var MM = 12, PW = 186, PH = 273;
+
             var htm = '<div style="font-size:14px;line-height:1.6;color:#333;">'
-                + '<div style="font-weight:700;font-size:15px;color:#000;margin:0;">' + baslik + '</div>'
+                + '<div style="font-weight:700;font-size:15px;color:#000;">' + baslik + '</div>'
                 + '<div style="height:24px;"></div>'
                 + icerik
                 + '<style>body{margin:0;padding:0;background:#fff;}img{max-width:100%;height:auto;}table{width:100%;border-collapse:collapse;}td,th{padding:4px 6px;border:1px solid #ccc;text-align:left;}pre{white-space:pre-wrap;word-break:break-word;}*{box-sizing:border-box;}</style></div>';
 
             var el = document.createElement('div');
-            el.style.cssText = 'position:fixed;left:0;top:0;width:210mm;padding:12mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#333;z-index:99999;';
+            el.style.cssText = 'position:fixed;left:0;top:0;width:' + PW + 'mm;box-sizing:border-box;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#333;z-index:99999;';
             el.innerHTML = htm;
             document.body.appendChild(el);
 
@@ -9931,21 +9933,17 @@ function itDurumMetni(o) {
                 try {
                     var totalH = el.scrollHeight;
                     if (!totalH || totalH < 10) { throw new Error("Eleman yuksekligi alinamadi: " + totalH); }
-                    html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' }).then(function(cv) {
-                        var ew = el.offsetWidth || 794;
+                    html2canvas(el, { scale: 1, useCORS: true, logging: false, backgroundColor: '#ffffff' }).then(function(cv) {
+                        var ew = el.offsetWidth;
                         el.style.display = 'none';
                         if (!cv || cv.width < 10 || cv.height < 10) { throw new Error("Canvas gorsel icerigi bos"); }
                         var doc = new jspdf.jsPDF({ format: 'a4', orientation: 'portrait', unit: 'mm' });
-                        var m = 12;
-                        var iw = 210 - 2 * m, ih = 297 - 2 * m;
-                        var ew = el.offsetWidth || 794;
-                        var r = ew / iw;
-                        var pp = ih * r;
+                        var pxPerMm = ew / PW;
+                        var pp = PH * pxPerMm;
                         var pg = Math.ceil(totalH / pp);
                         for (var i = 0; i < pg; i++) {
                             if (i > 0) doc.addPage();
-                            var sy = i * pp;
-                            var sh = Math.min(pp, totalH - sy);
+                            var sh = Math.min(pp, totalH - i * pp);
                             if (sh <= 0) break;
                             var c2 = document.createElement('canvas');
                             c2.width = cv.width;
@@ -9953,8 +9951,8 @@ function itDurumMetni(o) {
                             var ctx = c2.getContext('2d');
                             ctx.fillStyle = '#ffffff';
                             ctx.fillRect(0, 0, c2.width, c2.height);
-                            ctx.drawImage(cv, 0, sy, cv.width, sh, 0, 0, c2.width, c2.height);
-                            doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', m, m, iw, sh / r);
+                            ctx.drawImage(cv, 0, i * pp, cv.width, sh, 0, 0, c2.width, c2.height);
+                            doc.addImage(c2.toDataURL('image/jpeg', 0.95), 'JPEG', MM, MM, PW, sh / pxPerMm);
                         }
                         var fn = (n.title || "NOT").replace(/[\/\\:*?"<>|,;\.]/g, '_').trim();
                         doc.save(fn + ".pdf");
