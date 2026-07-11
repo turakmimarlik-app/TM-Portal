@@ -124,7 +124,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()">🚪 Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.35.4</div>
+                <div class="version-tag">V1.35.5</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1601,15 +1601,18 @@
                         <input type="hidden" id="asEventDate" value="">
                         <div class="as-modal-field">
                             <label>TÜR</label>
-                            <select id="asEventType"><option value="reminder">🔔 ANIMSATICI</option><option value="note">📝 NOT</option></select>
+                            <select id="asEventType" onchange="asEventTypeDegisti()"><option value="reminder">🔔 ANIMSATICI</option><option value="note">📝 NOT</option></select>
                         </div>
                         <div class="as-modal-field">
                             <label>BAŞLIK</label>
                             <input type="text" id="asEventTitle" placeholder="Etkinlik başlığı...">
                         </div>
-                        <div class="as-modal-field">
+                        <div id="asEventTimeRow" class="as-modal-field">
                             <label>SAAT</label>
-                            <input type="time" id="asEventTime" value="09:00">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <input type="time" id="asEventTime" value="09:00" style="flex:1;">
+                                <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--text-dark);"><input type="checkbox" id="asEventTumGun" style="width:auto;height:14px;cursor:pointer;"> Tüm Gün</label>
+                            </div>
                         </div>
                         <div class="as-modal-field">
                             <label>AÇIKLAMA</label>

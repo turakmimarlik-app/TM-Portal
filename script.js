@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.35.4';
+        var APP_VERSION = 'V1.35.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; console.error=function(){};
@@ -2963,7 +2963,7 @@ function gorevMailGonder(gorev) {
                     gunEtk.slice(0,5).forEach(function(e) {
                         const renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
                         var etkLabel = e.title;
-                        if (e.paylas) etkLabel = "👥" + etkLabel;
+                        if (e.paylas) etkLabel = (e.paylasan ? "👥" + e.paylasan + " " : "👥") + etkLabel;
                         html += '<span class="as-event-dot" onclick="event.stopPropagation();asGosterGunBilgi(\'' + gunStr + '\')" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-dot-c" style="background:' + renk + ';"></span>' + etkLabel + '</span>';
                     });
                     if (gunEtk.length > 5) html += '<span class="as-event-dot" style="color:var(--text-light);font-size:8px;" onclick="event.stopPropagation();asGosterGunBilgi(\'' + gunStr + '\')">+' + (gunEtk.length - 5) + ' daha</span>';
@@ -3013,7 +3013,7 @@ function gorevMailGonder(gorev) {
                             const isGorev = e.type === "gorev";
                             const id = e.id || "";
                             var etkLabel = e.title;
-                            if (e.paylas) etkLabel = "👥" + etkLabel;
+                            if (e.paylas) etkLabel = (e.paylasan ? "👥" + e.paylasan + " " : "👥") + etkLabel;
                             cell += '<span class="as-event-dot" onclick="event.stopPropagation();' + (isGorev ? 'asGosterGunBilgi(\'' + gunStr + '\')' : 'asEventDuzenle(\'' + id.replace(/'/g,"\\'") + '\')') + ';" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-dot-c" style="background:' + renk + ';"></span>' + etkLabel + '</span>';
                         });
                         cell += '</div>';
@@ -3061,8 +3061,8 @@ function gorevMailGonder(gorev) {
                 g.etkinlikler.forEach(function(e) {
                     var renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
                     var label = e.title;
-                    if (e.time) label = e.time + " " + label;
-                    if (e.paylas) label = "👥 " + label;
+                    if (e.time && e.type !== "note" && !e.tumGun) label = e.time + " " + label;
+                    if (e.paylas) label = (e.paylasan ? "👥" + e.paylasan + " " : "👥") + label;
                     h += '<span class="as-takvim-ozet-event" onclick="asGosterGunBilgi(\'' + ds + '\')" title="' + e.title.replace(/'/g,"&apos;") + '"><span class="as-ozet-dot" style="background:' + renk + ';"></span>' + label + '</span>';
                 });
                 h += '</div></div>';
@@ -3082,14 +3082,34 @@ function gorevMailGonder(gorev) {
                 const durumEtiketi = isGorev ? asGorevDurumEtiketi(e.durum, e.tarih) + " " : "";
                 html += '<div class="as-etkinlik-item">';
                 html += '<span class="as-etkinlik-dot" style="background:' + renk + ';border-color:' + renk + ';"></span>';
-                html += '<span class="as-etkinlik-text">' + durumEtiketi + e.title + ' <small>' + e.date + ' ' + (e.time||'') + '</small></span>';
+                html += '<span class="as-etkinlik-text">' + durumEtiketi + e.title + ' <small>' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : '') + (e.paylas && e.paylasan ? ' 👥' + e.paylasan : '') + '</small></span>';
                 if (!isGorev) { html += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + e.id + '\')">✏️</button>'; }
                 html += '</div>';
             });
             html += '</div>';
             container.innerHTML = html;
         }
+        function asEventTypeDegisti() {
+            var tip = document.getElementById("asEventType").value;
+            var timeRow = document.getElementById("asEventTimeRow");
+            timeRow.style.display = tip === "note" ? "none" : "block";
+        }
         function asEventModalAc(tarih) {
+            document.getElementById("asEventEditId").value = "";
+            document.getElementById("asEventDate").value = tarih;
+            document.getElementById("asEventTitle").value = "";
+            document.getElementById("asEventTime").value = "09:00";
+            document.getElementById("asEventTumGun").checked = false;
+            document.getElementById("asEventDesc").value = "";
+            document.getElementById("asEventType").value = "reminder";
+            document.getElementById("asEventTekrar").checked = false;
+            document.getElementById("asEventTekrarOptions").style.display = "none";
+            document.getElementById("asEventPaylas").checked = false;
+            document.getElementById("asEventModalTitle").textContent = "ETKİNLİK EKLE - " + tarih;
+            document.getElementById("asEventSilBtn").style.display = "none";
+            document.getElementById("asEventModal").style.display = "flex";
+            asEventTypeDegisti();
+        }
             document.getElementById("asEventEditId").value = "";
             document.getElementById("asEventDate").value = tarih;
             document.getElementById("asEventTitle").value = "";
@@ -3116,8 +3136,10 @@ function gorevMailGonder(gorev) {
             document.getElementById("asEventDate").value = ev.date;
             document.getElementById("asEventTitle").value = ev.title;
             document.getElementById("asEventTime").value = ev.time || "09:00";
+            document.getElementById("asEventTumGun").checked = ev.tumGun || false;
             document.getElementById("asEventDesc").value = ev.description || "";
             document.getElementById("asEventType").value = ev.type;
+            asEventTypeDegisti();
             if (ev.tekrar && ev.tekrar.tip) {
                 document.getElementById("asEventTekrar").checked = true;
                 document.getElementById("asEventTekrarOptions").style.display = "block";
@@ -3136,9 +3158,11 @@ function gorevMailGonder(gorev) {
             const editId = document.getElementById("asEventEditId").value;
             const date = document.getElementById("asEventDate").value;
             const title = document.getElementById("asEventTitle").value.trim();
-            const time = document.getElementById("asEventTime").value;
-            const desc = document.getElementById("asEventDesc").value.trim();
             const type = document.getElementById("asEventType").value;
+            const tumGun = document.getElementById("asEventTumGun").checked;
+            var time = document.getElementById("asEventTime").value;
+            if (type === "note" || tumGun) time = "";
+            const desc = document.getElementById("asEventDesc").value.trim();
             const paylas = document.getElementById("asEventPaylas").checked;
             if (!title || !date) { tmNotify("Başlık ve tarih zorunludur!", "error"); return; }
             var tekrar = null;
@@ -3146,7 +3170,7 @@ function gorevMailGonder(gorev) {
                 var tip = document.getElementById("asEventTekrarTip").value;
                 if (tip) tekrar = { tip: tip };
             }
-            var eventData = { id: editId || ("as_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4)), date: date, time: time, title: title, description: desc, type: type, tekrar: tekrar, paylas: paylas, paylasan: paylas ? aktifUser : undefined };
+            var eventData = { id: editId || ("as_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4)), date: date, time: time, title: title, description: desc, type: type, tumGun: tumGun, tekrar: tekrar, paylas: paylas, paylasan: paylas ? aktifUser : undefined };
             if (paylas) {
                 var paylasilan = JSON.parse(localStorage.getItem("tm_as_etkinlikler_paylasilan")) || [];
                 if (editId) { var idx = paylasilan.findIndex(function(e) { return e.id === editId; }); if (idx >= 0) paylasilan[idx] = eventData; else paylasilan.push(eventData); }
@@ -3205,7 +3229,7 @@ function gorevMailGonder(gorev) {
                 const id = e.id || "";
                 h += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-color);">';
                 h += '<span style="width:12px;height:12px;border-radius:50%;background:' + renk + ';flex-shrink:0;margin-top:5px;"></span>';
-                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);">' + turAdi + (e.time ? ' &middot; ' + e.time : '') + (e.paylas ? ' &middot; 👥 Paylaşılan' : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
+                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);">' + turAdi + (e.time && e.type !== "note" && !e.tumGun ? ' &middot; ' + e.time : '') + (e.paylas ? (e.paylasan ? ' &middot; 👥 ' + e.paylasan : ' &middot; 👥 Paylaşılan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
                 if (!isGorev) {
                     var realId = id.replace("gorev_", "");
                     h += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + realId.replace(/'/g,"\\'") + '\');asGunInfoKapat();" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;" title="Düzenle">✏️</button>';
@@ -3247,7 +3271,7 @@ function gorevMailGonder(gorev) {
                 const id = e.id || "";
                 h += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-color);">';
                 h += '<span style="width:12px;height:12px;border-radius:50%;background:' + renk + ';flex-shrink:0;margin-top:5px;"></span>';
-                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);"><span style="color:' + renk + ';">●</span> ' + turAdi + ' &middot; ' + e.date + (e.time ? ' ' + e.time : '') + (e.paylas ? ' &middot; 👥 Paylaşılan' : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
+                h += '<div style="flex:1;min-width:0;word-break:break-word;"><b style="font-size:13px;">' + e.title + '</b><br><small style="color:var(--text-light);"><span style="color:' + renk + ';">●</span> ' + turAdi + ' &middot; ' + e.date + (e.time && e.type !== "note" && !e.tumGun ? ' ' + e.time : '') + (e.paylas ? (e.paylasan ? ' &middot; 👥 ' + e.paylasan : ' &middot; 👥 Paylaşılan') : '') + (e.description ? '<br>' + e.description : '') + '</small></div>';
                 if (!isGorev) {
                     var realId = id.replace("gorev_", "");
                     h += '<button class="as-etkinlik-edit" onclick="asEventDuzenle(\'' + realId.replace(/'/g,"\\'") + '\');asGunInfoKapat();" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;" title="Düzenle">✏️</button>';
