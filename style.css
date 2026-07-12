@@ -1589,10 +1589,35 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
 .rapor-turu-select option { color: var(--text-dark); }
 /* Font Awesome integration */
         .fa-solid, .fa-regular, .fa-brands { vertical-align:-2px; }
-        .sidebar .menu-item i, .sidebar .submenu-item i { width:18px; text-align:center; margin-right:4px; color:var(--accent-red); }
-        .sidebar .menu-item:hover i, .sidebar .submenu-item:hover i { color:#fff; }
-        .sidebar .menu-item.active i, .sidebar .submenu-item.active i { color:#fff; }
-        .dash-stat-box .icon i { font-size:22px; color:var(--accent-red); }
+        .sidebar .menu-item i, .sidebar .submenu-item i { width:18px; text-align:center; margin-right:4px; }
+        .sidebar .menu-item:hover i, .sidebar .submenu-item:hover i { color:#fff !important; }
+        .sidebar .menu-item.active i, .sidebar .submenu-item.active i { color:#fff !important; }
+        /* ===== PER-MENU ICON COLORS ===== */
+        #menu-anasayfa > span > i { color:#4CAF50; }
+        #menu-gorevler-takvim > span > i { color:#42A5F5; }
+        #menu-teklif-root > span > i { color:#FF9800; }
+        #menu-dilekce > span > i { color:#AB47BC; }
+        #menu-istakibi > span > i { color:#EF5350; }
+        #menu-portfoy-root > span > i { color:#FFA726; }
+        #menu-muhasebe-root > span > i { color:#26A69A; }
+        #menu-notlar > span > i { color:#FFD54F; }
+        #menu-yonetim > span > i { color:#78909C; }
+        /* Dropdown arrows match parent */
+        #arrow-icon i { color:#FF9800; }
+        #arrow-portfoy-icon i { color:#FFA726; }
+        #arrow-muhasebe-icon i { color:#26A69A; }
+        /* Submenu icons inherit parent category color */
+        #teklif-submenu .submenu-item i { color:#FF9800; }
+        #portfoy-submenu .submenu-item i { color:#FFA726; }
+        #muhasebe-submenu .submenu-item i { color:#26A69A; }
+        .dash-stat-box .icon i { font-size:22px; }
+        /* ===== DASHBOARD STAT BOX ICON COLORS ===== */
+        #dashStatsSection .dash-stat-box:nth-child(1) .icon i { color:#5C6BC0; }
+        #dashStatsSection .dash-stat-box:nth-child(2) .icon i { color:#26A69A; }
+        #dashStatsSection .dash-stat-box:nth-child(3) .icon i { color:#FF7043; }
+        #dashStatsSection .dash-stat-box:nth-child(4) .icon i { color:#42A5F5; }
+        #dashStatsSection .dash-stat-box:nth-child(5) .icon i { color:#66BB6A; }
+        #dashStatsSection .dash-stat-box:nth-child(6) .icon i { color:#EC407A; }
         .gt-card-icon i { font-size:20px; }
         .as-event-dot i { margin-right:2px; }
         .dash-widget-title i { margin-right:4px; color:var(--accent-red); }
