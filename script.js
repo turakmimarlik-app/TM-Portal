@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.3';
+        var APP_VERSION = 'V1.23.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8564,7 +8564,7 @@ function itDurumMetni(o) {
 
         function itSortOk(col, sort) {
             if (sort.col !== col) return "";
-            return sort.dir === "asc" ? " ^" : " ¡";
+            return sort.dir === "asc" ? ' <i class="fa-solid fa-arrow-up-short-wide"></i>' : ' <i class="fa-solid fa-arrow-down-wide-short"></i>';
         }
 
         function itJobDurumMetni(is) {
@@ -8780,6 +8780,7 @@ function itDurumMetni(o) {
             var liste = itDbYukle().filter(function(x){return !x.tamamlandi;});
             if (!liste.length) { konteyner.innerHTML = '<div class="it-gantt-notice"><div style="font-size:32px;margin-bottom:6px;"><i class="fa-solid fa-chart-simple"></i></div>Gantt şeması gösterilecek aktif iş bulunmamaktadır.<p>Yeni iş ekleyerek başlayın.</p></div>'; return; }
             var aylar = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+            var gunler = ["Paz","Pts","Sal","Çar","Per","Cum","Cmt"];
             var minDate = Infinity, maxDate = -Infinity;
             liste.forEach(function(is){
                 var d = new Date(is.tarih || Date.now());
@@ -8792,16 +8793,37 @@ function itDurumMetni(o) {
             var totalMonths = (maxD.getFullYear() - minD.getFullYear()) * 12 + (maxD.getMonth() - minD.getMonth());
             if (totalMonths < 3) { maxD.setMonth(maxD.getMonth() + 3); totalMonths = (maxD.getFullYear() - minD.getFullYear()) * 12 + (maxD.getMonth() - minD.getMonth()); }
             if (totalMonths > 36) { maxD.setMonth(minD.getMonth() + 36); totalMonths = 36; }
-            var totalDays = (maxD - minD) / (1000*60*60*24);
-            var today = new Date();
-            today.setHours(0,0,0,0);
-            var todayLeft = (today - minD) / (1000*60*60*24);
-            var todayPct = (todayLeft / totalDays) * 100;
-            var h = '<div class="it-gantt-wrap"><div class="it-gantt-scroll"><table class="it-gantt-table"><thead><tr><th class="it-gantt-hdr-job">İş / Ortak</th>';
+            var totalDays = Math.round((maxD - minD) / (1000*60*60*24));
+            var pxPerDay = 22;
+            var timelineWidth = totalDays * pxPerDay;
+            var today = new Date(); today.setHours(0,0,0,0);
+            var todayLeft = Math.round((today - minD) / (1000*60*60*24));
+            var haftaIcinde = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
+            var h = '<div class="it-gantt-wrap"><div class="it-gantt-scroll"><table class="it-gantt-table"><thead>';
+            // Row 1: Month headers spanning days
+            h += '<tr class="it-gantt-month-row"><th class="it-gantt-hdr-job" rowspan="2">İş / Ortak</th>';
+            var curD = new Date(minD);
             for (var m = 0; m < totalMonths; m++) {
-                var dt = new Date(minD); dt.setMonth(dt.getMonth() + m);
-                var isCurrentMonth = dt.getMonth() === today.getMonth() && dt.getFullYear() === today.getFullYear();
-                h += '<th class="it-gantt-hdr-month' + (isCurrentMonth ? ' it-gantt-hdr-current' : '') + '" style="width:' + (100/totalMonths) + '%"><span class="it-gantt-month-label">' + aylar[dt.getMonth()] + '<br><span class="it-gantt-year-label">' + dt.getFullYear() + '</span></span></th>';
+                var yil = curD.getFullYear();
+                var ay = curD.getMonth();
+                var ayGunSayisi = new Date(yil, ay + 1, 0).getDate();
+                var ayGenislik = ayGunSayisi * pxPerDay;
+                var simdikiAy = (ay === today.getMonth() && yil === today.getFullYear());
+                h += '<th class="it-gantt-hdr-month' + (simdikiAy ? ' it-gantt-hdr-current' : '') + '" style="width:' + ayGenislik + 'px;" colspan="' + ayGunSayisi + '"><span class="it-gantt-month-label">' + aylar[ay] + ' ' + yil + '</span></th>';
+                curD.setMonth(curD.getMonth() + 1);
+            }
+            h += '</tr>';
+            // Row 2: Day headers
+            h += '<tr class="it-gantt-day-row">';
+            curD = new Date(minD);
+            for (var d = 0; d < totalDays; d++) {
+                var gunNum = curD.getDate();
+                var dayOfWeek = curD.getDay();
+                var haftaSonu = (dayOfWeek === 0 || dayOfWeek === 6);
+                var bugunMu = (curD.getTime() === today.getTime());
+                var ilkGun = (gunNum === 1);
+                h += '<th class="it-gantt-hdr-day' + (haftaSonu ? ' it-gantt-hdr-weekend' : '') + (bugunMu ? ' it-gantt-hdr-today' : '') + (ilkGun ? ' it-gantt-hdr-first' : '') + '"><span class="it-gantt-day-num">' + gunNum + '</span></th>';
+                curD.setDate(curD.getDate() + 1);
             }
             h += '</tr></thead><tbody>';
             var renkPalet = ["#e53935","#1565C0","#2e7d32","#f9a825","#6a1b9a","#00838f","#d84315","#283593","#558b2f","#ad1457","#00acc1","#795548"];
@@ -8810,36 +8832,34 @@ function itDurumMetni(o) {
                 var endDate = is.bitisTarihi ? new Date(is.bitisTarihi) : new Date();
                 if (endDate < startDate) endDate = new Date(startDate.getTime() + 30*24*60*60*1000);
                 startDate.setHours(0,0,0,0); endDate.setHours(0,0,0,0);
-                var leftDays = (startDate - minD) / (1000*60*60*24);
-                var spanDays = (endDate - startDate) / (1000*60*60*24);
+                var leftDays = Math.round((startDate - minD) / (1000*60*60*24));
+                var spanDays = Math.round((endDate - startDate) / (1000*60*60*24));
                 if (spanDays < 7) spanDays = 7;
-                var leftPct = (leftDays / totalDays) * 100;
-                var widthPct = (spanDays / totalDays) * 100;
-                if (leftPct < 0) { widthPct += leftPct; leftPct = 0; }
-                if (widthPct > 100 - leftPct) widthPct = 100 - leftPct;
-                if (widthPct < 2) widthPct = 2;
+                var leftPx = leftDays * pxPerDay;
+                var widthPx = spanDays * pxPerDay;
+                if (leftPx < 0) { widthPx += leftPx; leftPx = 0; }
+                if (widthPx < 4) widthPx = 4;
                 var avgPct = itJobOrtalamaPct(is);
                 var durumText = itJobDurumMetni(is).text;
-                var turKisaltma = is.tur === "Uygulama Proje" ? "UygulamaProje" : (is.tur === "3B Modelleme ve Tasarım" ? "3B" : is.tur);
                 var tTip = is.tur === "Taslak" ? "Taslak" : (is.tur === "Uygulama Proje" ? "UygulamaProje" : (is.tur === "3B Modelleme ve Tasarım" ? "3B" : "Diger"));
                 var partnerCount = (is.ortaklar||[]).length;
                 var jobRowCount = Math.max(1, partnerCount);
                 h += '<tr class="it-gantt-job-row"><td class="it-gantt-job-cell" rowspan="' + jobRowCount + '"><div class="it-gantt-job-info"><div class="it-gantt-job-name">' + esc(is.isAdi || "İSİMSİZ") + '</div><div class="it-gantt-job-meta"><span class="it-gantt-tur-tag it-gantt-tur-' + tTip + '">' + esc(is.tur) + '</span><span class="it-gantt-job-firma">' + esc((is.firma||"").toUpperCase() || "-") + '</span><span class="it-gantt-job-pct" style="color:' + (avgPct>=75?'#2e7d32':avgPct>=50?'#f9a825':'#e53935') + ';">' + avgPct + '%</span></div></div></td>';
-                h += '<td class="it-gantt-timeline-cell" style="position:relative;"><div class="it-gantt-bar-wrap">';
-                h += '<div class="it-gantt-bar-main" style="left:' + leftPct + '%;width:' + widthPct + '%;background:linear-gradient(90deg,#e53935,#f9a825,#4caf50);opacity:0.85;" title="' + esc(is.isAdi) + ' - ' + durumText + ' (' + avgPct + '%)">';
+                h += '<td class="it-gantt-timeline-cell" style="position:relative;"><div class="it-gantt-bar-wrap" style="width:' + timelineWidth + 'px;min-height:30px;">';
+                h += '<div class="it-gantt-bar-main" style="left:' + leftPx + 'px;width:' + widthPx + 'px;background:linear-gradient(90deg,#e53935,#f9a825,#4caf50);opacity:0.85;" title="' + esc(is.isAdi) + ' - ' + durumText + ' (' + avgPct + '%)">';
                 if (avgPct > 0 && avgPct < 100) {
                     var donePct = Math.min(avgPct, 100);
                     h += '<div class="it-gantt-bar-seg" style="width:' + donePct + '%;background:rgba(255,255,255,0.25);"></div>';
                 }
-                h += '<span class="it-gantt-bar-label' + (widthPct < 8 ? ' overflow' : '') + '">' + durumText + '</span>';
+                h += '<span class="it-gantt-bar-label' + (widthPx < 60 ? ' overflow' : '') + '">' + durumText + '</span>';
                 h += '</div>';
-                if (todayPct > 0 && todayPct < 100) { h += '<div class="it-gantt-today-line" style="left:' + todayPct + '%;"></div>'; }
+                if (todayLeft > 0 && todayLeft < totalDays) { h += '<div class="it-gantt-today-line" style="left:' + (todayLeft * pxPerDay) + 'px;"></div>'; }
                 (is.ortaklar||[]).forEach(function(o){
                     if (o.projeTeslimTarihi) {
                         var msDate = new Date(o.projeTeslimTarihi); msDate.setHours(0,0,0,0);
-                        var msPct = ((msDate - minD) / (1000*60*60*24) / totalDays) * 100;
-                        if (msPct >= 0 && msPct <= 100) {
-                            h += '<div class="it-gantt-milestone it-gantt-milestone-complete" style="left:' + msPct + '%;" title="' + esc(o.ortakAdi || "") + ' teslim: ' + tarihStr(o.projeTeslimTarihi) + '"></div>';
+                        var msDays = Math.round((msDate - minD) / (1000*60*60*24));
+                        if (msDays >= 0 && msDays <= totalDays) {
+                            h += '<div class="it-gantt-milestone it-gantt-milestone-complete" style="left:' + (msDays * pxPerDay) + 'px;" title="' + esc(o.ortakAdi || "") + ' teslim: ' + tarihStr(o.projeTeslimTarihi) + '"></div>';
                         }
                     }
                 });
@@ -8851,45 +8871,45 @@ function itDurumMetni(o) {
                         var ortakStart = startDate;
                         var ortakEnd = o.projeTeslimTarihi ? new Date(o.projeTeslimTarihi) : endDate;
                         ortakStart.setHours(0,0,0,0); ortakEnd.setHours(0,0,0,0);
-                        var oLeftDays = (ortakStart - minD) / (1000*60*60*24);
-                        var oSpanDays = (ortakEnd - ortakStart) / (1000*60*60*24);
+                        var oLeftDays = Math.round((ortakStart - minD) / (1000*60*60*24));
+                        var oSpanDays = Math.round((ortakEnd - ortakStart) / (1000*60*60*24));
                         if (oSpanDays < 3) oSpanDays = 3;
-                        var oLeftPct = (oLeftDays / totalDays) * 100;
-                        var oWidthPct = (oSpanDays / totalDays) * 100;
-                        if (oLeftPct < 0) { oWidthPct += oLeftPct; oLeftPct = 0; }
-                        if (oWidthPct > 100 - oLeftPct) oWidthPct = 100 - oLeftPct;
-                        if (oWidthPct < 1) oWidthPct = 1;
+                        var oLeftPx = oLeftDays * pxPerDay;
+                        var oWidthPx = oSpanDays * pxPerDay;
+                        if (oLeftPx < 0) { oWidthPx += oLeftPx; oLeftPx = 0; }
+                        if (oWidthPx < 2) oWidthPx = 2;
                         var renk = renkPalet[oi % renkPalet.length];
                         h += '<tr class="it-gantt-ortak-row"><td class="it-gantt-ortak-cell"><div class="it-gantt-ortak-info"><span class="it-gantt-ortak-renk" style="background:' + renk + ';"></span><span class="it-gantt-ortak-ad">' + esc(o.ortakAdi || "ORT-"+oi) + '</span><span class="it-gantt-ortak-brans">' + esc(o.brans || "") + '</span><span class="it-gantt-ortak-pct" style="color:' + (pct>=75?'#2e7d32':pct>=50?'#f9a825':'#e53935') + ';">' + pct + '%</span></div></td>';
-                        h += '<td class="it-gantt-timeline-cell" style="position:relative;"><div class="it-gantt-bar-wrap">';
-                        h += '<div class="it-gantt-bar-ortak" style="left:' + oLeftPct + '%;width:' + oWidthPct + '%;background:' + renk + ';opacity:' + (pct>0?0.85:0.35) + ';" title="' + esc(o.ortakAdi || "") + ' ' + pct + '%">';
+                        h += '<td class="it-gantt-timeline-cell" style="position:relative;"><div class="it-gantt-bar-wrap" style="width:' + timelineWidth + 'px;min-height:26px;">';
+                        h += '<div class="it-gantt-bar-ortak" style="left:' + oLeftPx + 'px;width:' + oWidthPx + 'px;background:' + renk + ';opacity:' + (pct>0?0.85:0.35) + ';" title="' + esc(o.ortakAdi || "") + ' ' + pct + '%">';
                         if (pct > 0) { h += '<div class="it-gantt-bar-seg" style="width:' + Math.min(pct,100) + '%;background:rgba(255,255,255,0.2);"></div>'; }
-                        h += '<span class="it-gantt-bar-label' + (oWidthPct < 5 ? ' overflow' : '') + '">' + esc(o.ortakAdi || "O") + ' ' + pct + '%</span>';
+                        h += '<span class="it-gantt-bar-label' + (oWidthPx < 40 ? ' overflow' : '') + '">' + esc(o.ortakAdi || "O") + ' ' + pct + '%</span>';
                         h += '</div>';
                         ASAMA_LIST.forEach(function(a){
                             if (o[a.field]) {
                                 var aDate = new Date(o[a.field]); aDate.setHours(0,0,0,0);
-                                var aPct = ((aDate - minD) / (1000*60*60*24) / totalDays) * 100;
-                                if (aPct >= 0 && aPct <= 100) {
-                                    h += '<div class="it-gantt-stage-dot" style="left:' + aPct + '%;background:' + (ASAMA_LIST===itAsamaList(is.tur)?renkPalet[ASAMA_LIST.indexOf(a)]||renk:renk) + ';" title="' + a.label + ': ' + tarihStr(o[a.field]) + '"></div>';
+                                var aDays = Math.round((aDate - minD) / (1000*60*60*24));
+                                if (aDays >= 0 && aDays <= totalDays) {
+                                    h += '<div class="it-gantt-stage-dot" style="left:' + (aDays * pxPerDay) + 'px;background:' + (ASAMA_LIST===itAsamaList(is.tur)?renkPalet[ASAMA_LIST.indexOf(a)]||renk:renk) + ';" title="' + a.label + ': ' + tarihStr(o[a.field]) + '"></div>';
                                 }
                             }
                         });
                         if (o.projeTeslimTarihi) {
                             var msDate = new Date(o.projeTeslimTarihi); msDate.setHours(0,0,0,0);
-                            var msPct2 = ((msDate - minD) / (1000*60*60*24) / totalDays) * 100;
-                            if (msPct2 >= 0 && msPct2 <= 100) {
-                                h += '<div class="it-gantt-milestone-sm" style="left:' + msPct2 + '%;" title="Teslim: ' + tarihStr(o.projeTeslimTarihi) + '"></div>';
+                            var msDays2 = Math.round((msDate - minD) / (1000*60*60*24));
+                            if (msDays2 >= 0 && msDays2 <= totalDays) {
+                                h += '<div class="it-gantt-milestone-sm" style="left:' + (msDays2 * pxPerDay) + 'px;" title="Teslim: ' + tarihStr(o.projeTeslimTarihi) + '"></div>';
                             }
                         }
-                        if (todayPct > 0 && todayPct < 100) { h += '<div class="it-gantt-today-line" style="left:' + todayPct + '%;"></div>'; }
+                        if (todayLeft > 0 && todayLeft < totalDays) { h += '<div class="it-gantt-today-line" style="left:' + (todayLeft * pxPerDay) + 'px;"></div>'; }
                         h += '</div></td></tr>';
                     });
                 }
             });
             h += '</tbody></table></div></div>';
             konteyner.innerHTML = h;
-            konteyner.querySelector('.it-gantt-scroll').scrollLeft = konteyner.querySelector('.it-gantt-scroll').scrollWidth;
+            var scrollEl = konteyner.querySelector('.it-gantt-scroll');
+            if (scrollEl) { scrollEl.scrollLeft = Math.max(0, (todayLeft * pxPerDay) - 300); }
         }
         function itAktifSortGuncelle(col) {
             if (itAktifSort.col === col) { itAktifSort.dir = itAktifSort.dir === "asc" ? "desc" : "asc"; }

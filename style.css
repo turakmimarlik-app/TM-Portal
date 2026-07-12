@@ -1167,6 +1167,7 @@
         [data-theme="dark"] .it-bolum-baslik-tamam { background:rgba(76,175,80,0.1); color:#81C784; border-bottom-color:#81C784; }
         .it-bolum-icerik { padding:16px 0 0 0; }
         .it-bolum-ok { font-size:12px; margin-right:4px; transition:0.2s; display:inline-block; }
+        #itTamamlananBolum { margin-top:40px; }
         .it-bolum-kapali .it-bolum-ok { transform:rotate(-90deg); }
         .it-bolum-kapali .it-bolum-icerik { display:none; }
         .it-sekme-bar { display:flex; gap:4px; margin-bottom:16px; flex-wrap:wrap; border-bottom:1px solid var(--border-color); padding-bottom:0; }
@@ -1310,19 +1311,23 @@
 
         /* ================= GANTT ŞEMASI ================= */
         .it-gantt-wrap { border:1px solid var(--border-color); border-radius:10px; background:var(--panel-bg); overflow:hidden; }
-        .it-gantt-scroll { overflow-x:auto; }
-        .it-gantt-table { width:100%; border-collapse:collapse; min-width:800px; table-layout:fixed; }
-        .it-gantt-table th { background:var(--bg-main); padding:8px 4px; font-size:10px; font-weight:700; color:var(--text-light); text-align:center; border-bottom:2px solid var(--border-color); border-right:1px solid var(--border-color); white-space:nowrap; position:sticky; top:0; z-index:2; }
-        .it-gantt-hdr-job { width:200px; text-align:left; padding:10px 12px !important; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; }
-        .it-gantt-hdr-month { font-size:10px; }
+        .it-gantt-scroll { overflow-x:auto; overflow-y:visible; }
+        .it-gantt-table { border-collapse:collapse; }
+        .it-gantt-table th { background:var(--bg-main); padding:0; font-size:10px; font-weight:700; color:var(--text-light); text-align:center; border-bottom:1px solid var(--border-color); border-right:1px solid var(--border-color); white-space:nowrap; }
+        .it-gantt-hdr-job { width:200px; min-width:200px; text-align:left; padding:7px 12px !important; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-right:2px solid var(--border-color) !important; }
+        .it-gantt-hdr-month { font-size:11px; padding:6px 2px !important; font-weight:700; letter-spacing:0.3px; }
         .it-gantt-hdr-current { background:rgba(158,42,43,0.08) !important; }
-        .it-gantt-year-label { font-size:8px; font-weight:400; color:var(--text-light); opacity:0.7; }
-        .it-gantt-table td { padding:0; border-bottom:1px solid var(--border-color); border-right:1px solid var(--border-color); vertical-align:middle; }
-        .it-gantt-job-row td { height:44px; }
-        .it-gantt-ortak-row td { height:32px; }
+        .it-gantt-hdr-day { padding:2px 0 !important; font-size:8px; font-weight:400; border-bottom:1px solid var(--border-color); min-width:22px; max-width:22px; width:22px; color:var(--text-light); }
+        .it-gantt-hdr-weekend { background:rgba(0,0,0,0.02) !important; color:var(--text-light); opacity:0.5; }
+        .it-gantt-hdr-today { background:rgba(158,42,43,0.12) !important; color:var(--accent-red); font-weight:700 !important; }
+        .it-gantt-hdr-first { border-left:1px solid rgba(0,0,0,0.08); }
+        .it-gantt-day-num { font-size:8px; }
+        .it-gantt-table td { padding:0; border-bottom:1px solid var(--border-color); vertical-align:middle; }
+        .it-gantt-job-row td { height:40px; }
+        .it-gantt-ortak-row td { height:28px; }
         .it-gantt-ortak-row:last-child td { border-bottom:none; }
-        .it-gantt-table .it-gantt-job-cell { padding:8px 12px; vertical-align:middle; background:var(--bg-main); border-right:2px solid var(--border-color); }
-        .it-gantt-table .it-gantt-ortak-cell { padding:4px 12px; vertical-align:middle; background:var(--sidebar-bg); border-right:2px solid var(--border-color); }
+        .it-gantt-table .it-gantt-job-cell { padding:6px 12px; vertical-align:middle; background:var(--bg-main); border-right:2px solid var(--border-color); }
+        .it-gantt-table .it-gantt-ortak-cell { padding:2px 12px; vertical-align:middle; background:var(--sidebar-bg); border-right:2px solid var(--border-color); }
         .it-gantt-job-info { display:flex; flex-direction:column; gap:2px; }
         .it-gantt-job-name { font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
         .it-gantt-job-meta { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
@@ -1333,26 +1338,26 @@
         .it-gantt-ortak-ad { font-size:11px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
         .it-gantt-ortak-brans { font-size:9px; color:var(--text-light); font-weight:400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex-shrink:1; min-width:0; }
         .it-gantt-ortak-pct { font-size:10px; font-weight:700; margin-left:auto; flex-shrink:0; }
-        .it-gantt-bar-wrap { position:relative; width:100%; height:100%; min-height:28px; }
+        .it-gantt-bar-wrap { position:relative; height:100%; }
         .it-gantt-bar-wrap .it-gantt-bar-seg { position:absolute; top:0; left:0; height:100%; border-radius:0; transition:width 0.3s; }
-        .it-gantt-bar-main { position:absolute; top:6px; height:20px; border-radius:4px; overflow:hidden; cursor:pointer; transition:box-shadow 0.2s; min-width:4px; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
+        .it-gantt-bar-main { position:absolute; top:5px; height:18px; border-radius:4px; overflow:hidden; cursor:pointer; transition:box-shadow 0.2s; min-width:4px; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
         .it-gantt-bar-main:hover { box-shadow:0 2px 8px rgba(0,0,0,0.3); }
-        .it-gantt-bar-ortak { position:absolute; top:7px; height:14px; border-radius:3px; overflow:hidden; cursor:pointer; transition:opacity 0.2s; min-width:4px; }
+        .it-gantt-bar-ortak { position:absolute; top:6px; height:12px; border-radius:3px; overflow:hidden; cursor:pointer; transition:opacity 0.2s; min-width:2px; }
         .it-gantt-bar-ortak:hover { opacity:1 !important; }
         .it-gantt-bar-label { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; font-size:8px; font-weight:700; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,0.5); pointer-events:none; white-space:nowrap; padding:0 4px; }
         .it-gantt-bar-label.overflow { display:none; }
-        .it-gantt-milestone { position:absolute; top:2px; width:14px; height:14px; border-radius:50%; transform:translateX(-50%); z-index:3; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.3); cursor:pointer; transition:transform 0.15s; }
+        .it-gantt-milestone { position:absolute; top:1px; width:12px; height:12px; border-radius:50%; transform:translateX(-50%); z-index:3; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.3); cursor:pointer; transition:transform 0.15s; }
         .it-gantt-milestone:hover { transform:translateX(-50%) scale(1.3); z-index:4; }
         .it-gantt-milestone-complete { background:#2e7d32; }
         .it-gantt-milestone-partial { background:#f9a825; }
         .it-gantt-milestone-pending { background:#e53935; }
-        .it-gantt-milestone-sm { position:absolute; top:10px; width:8px; height:8px; border-radius:50%; transform:translateX(-50%); z-index:3; background:#fff; border:2px solid #e53935; box-shadow:0 1px 3px rgba(0,0,0,0.2); cursor:pointer; transition:transform 0.15s; }
+        .it-gantt-milestone-sm { position:absolute; top:9px; width:7px; height:7px; border-radius:50%; transform:translateX(-50%); z-index:3; background:#fff; border:2px solid #e53935; box-shadow:0 1px 3px rgba(0,0,0,0.2); cursor:pointer; transition:transform 0.15s; }
         .it-gantt-milestone-sm:hover { transform:translateX(-50%) scale(1.4); z-index:4; }
-        .it-gantt-stage-dot { position:absolute; top:14px; width:6px; height:6px; border-radius:50%; transform:translateX(-50%); z-index:2; border:1px solid rgba(255,255,255,0.6); cursor:pointer; transition:transform 0.15s; }
+        .it-gantt-stage-dot { position:absolute; top:12px; width:5px; height:5px; border-radius:50%; transform:translateX(-50%); z-index:2; border:1px solid rgba(255,255,255,0.6); cursor:pointer; transition:transform 0.15s; }
         .it-gantt-stage-dot:hover { transform:translateX(-50%) scale(1.5); z-index:3; }
-        .it-gantt-today-line { position:absolute; top:0; width:2px; height:100%; background:var(--accent-red); z-index:5; opacity:0.7; pointer-events:none; }
-        .it-gantt-today-line::before { content:'●'; position:absolute; top:-2px; left:50%; transform:translateX(-50%); font-size:10px; color:var(--accent-red); }
-        .it-gantt-month-label { font-size:10px; }
+        .it-gantt-today-line { position:absolute; top:0; width:2px; height:100%; background:var(--accent-red); z-index:5; opacity:0.8; pointer-events:none; box-shadow:0 0 4px rgba(158,42,43,0.3); }
+        .it-gantt-today-line::before { content:'●'; position:absolute; top:-1px; left:50%; transform:translateX(-50%); font-size:8px; color:var(--accent-red); }
+        .it-gantt-month-label { font-size:11px; font-weight:700; }
         .it-gantt-tur-tag { display:inline-block; font-size:8px; font-weight:700; padding:1px 6px; border-radius:4px; margin-left:4px; vertical-align:middle; }
         .it-gantt-tur-Taslak { background:#e53935; color:#fff; }
         .it-gantt-tur-UygulamaProje { background:#1565C0; color:#fff; }
@@ -1360,7 +1365,12 @@
         .it-gantt-tur-Diger { background:#6a1b9a; color:#fff; }
         .it-gantt-notice { padding:30px; text-align:center; color:var(--text-light); font-size:14px; font-weight:600; background:var(--bg-main); border-radius:8px; border:1px dashed var(--border-color); }
         .it-gantt-notice p { margin:8px 0 0 0; font-size:12px; font-weight:400; }
+        .it-gantt-table .it-gantt-timeline-cell { padding:0; border-right:none; }
+        .it-gantt-table thead { position:sticky; top:0; z-index:2; }
         [data-theme="dark"] .it-gantt-table th { background:var(--sidebar-bg); }
+        [data-theme="dark"] .it-gantt-hdr-weekend { background:rgba(255,255,255,0.02) !important; }
+        [data-theme="dark"] .it-gantt-hdr-today { background:rgba(158,42,43,0.2) !important; }
+        [data-theme="dark"] .it-gantt-hdr-current { background:rgba(158,42,43,0.12) !important; }
 
         /* ================= TM FİYAT LİSTESİ EXCEL TAB SİSTEMİ ================= */
         .tmf-tab-bar { display:flex; gap:4px; flex-wrap:wrap; align-items:stretch; min-height:38px; background:var(--bg-main); border-radius:8px; padding:4px; border:1px solid var(--border-color); }
