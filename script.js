@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.2';
+        var APP_VERSION = 'V1.23.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8686,7 +8686,7 @@ function itDurumMetni(o) {
                 var rowBg = itPctColor(avgPct);
                 var acik = acikIds.indexOf(String(is.id)) >= 0;
                 h += '<tr class="it-row-clickable" id="itRow_' + is.id + '" style="background:' + rowBg + ';" onclick="itRowToggle(' + is.id + ')">' +
-                    '<td style="text-align:center;"><span class="it-expand-icon" id="itExpandIcon_' + is.id + '" style="font-size:10px;color:var(--text-light);user-select:none;">' + (acik ? '¡' : '?') + '</span></td>' +
+                    '<td style="text-align:center;"><span class="it-expand-icon" id="itExpandIcon_' + is.id + '" style="font-size:10px;color:var(--text-light);user-select:none;">' + (acik ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-right"></i>') + '</span></td>' +
                     '<td style="text-align:center;font-weight:700;color:var(--text-light);font-size:12px;">' + sira + '</td>' +
                     '<td style="font-weight:600;">' + esc(is.isAdi || "İSİMSİZ") + '</td>' +
                     '<td style="color:var(--text-dark);">' + esc(is.firma || "-") + '</td>' +
@@ -8734,7 +8734,7 @@ function itDurumMetni(o) {
                 var sira = itTamamlananSort.dir === "asc" ? idx+1 : liste.length-idx;
                 var acik = acikIds.indexOf(String(is.id)) >= 0;
                 h += '<tr class="it-row-clickable" onclick="itRowToggle(' + is.id + ')">' +
-                    '<td style="width:28px;text-align:center;"><span class="it-expand-icon" id="itTamExpandIcon_' + is.id + '">' + (acik ? '¡' : '?') + '</span></td>' +
+                    '<td style="width:28px;text-align:center;"><span class="it-expand-icon" id="itTamExpandIcon_' + is.id + '">' + (acik ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-right"></i>') + '</span></td>' +
                     '<td style="text-align:center;font-weight:700;color:var(--text-light);font-size:12px;">' + sira + '</td>' +
                     '<td style="font-weight:600;">' + esc(is.isAdi || "İSİMSİZ") + '</td>' +
                     '<td>' + esc(is.firma || "-") + '</td>' +
@@ -8795,12 +8795,16 @@ function itDurumMetni(o) {
             var totalDays = (maxD - minD) / (1000*60*60*24);
             var today = new Date();
             today.setHours(0,0,0,0);
-            var h = '<div class="it-gantt-wrap"><table class="it-gantt-table"><thead><tr><th style="width:180px;text-align:left;padding:6px 10px;">İş Adı</th>';
+            var todayLeft = (today - minD) / (1000*60*60*24);
+            var todayPct = (todayLeft / totalDays) * 100;
+            var h = '<div class="it-gantt-wrap"><div class="it-gantt-scroll"><table class="it-gantt-table"><thead><tr><th class="it-gantt-hdr-job">İş / Ortak</th>';
             for (var m = 0; m < totalMonths; m++) {
                 var dt = new Date(minD); dt.setMonth(dt.getMonth() + m);
-                h += '<th style="width:' + (100/totalMonths) + '%"><span class="it-gantt-month-label">' + aylar[dt.getMonth()] + ' ' + dt.getFullYear() + '</span></th>';
+                var isCurrentMonth = dt.getMonth() === today.getMonth() && dt.getFullYear() === today.getFullYear();
+                h += '<th class="it-gantt-hdr-month' + (isCurrentMonth ? ' it-gantt-hdr-current' : '') + '" style="width:' + (100/totalMonths) + '%"><span class="it-gantt-month-label">' + aylar[dt.getMonth()] + '<br><span class="it-gantt-year-label">' + dt.getFullYear() + '</span></span></th>';
             }
             h += '</tr></thead><tbody>';
+            var renkPalet = ["#e53935","#1565C0","#2e7d32","#f9a825","#6a1b9a","#00838f","#d84315","#283593","#558b2f","#ad1457","#00acc1","#795548"];
             liste.forEach(function(is){
                 var startDate = new Date(is.tarih || Date.now());
                 var endDate = is.bitisTarihi ? new Date(is.bitisTarihi) : new Date();
@@ -8815,34 +8819,77 @@ function itDurumMetni(o) {
                 if (widthPct > 100 - leftPct) widthPct = 100 - leftPct;
                 if (widthPct < 2) widthPct = 2;
                 var avgPct = itJobOrtalamaPct(is);
-                var durum = itJobDurumMetni(is);
+                var durumText = itJobDurumMetni(is).text;
                 var turKisaltma = is.tur === "Uygulama Proje" ? "UygulamaProje" : (is.tur === "3B Modelleme ve Tasarım" ? "3B" : is.tur);
-                var firmaBilgi = (is.firma || "").toUpperCase();
-                h += '<tr><td class="it-gantt-job-cell">' + esc(is.isAdi || "İSİMSİZ") + '<span class="it-gantt-meta">' + esc(firmaBilgi || "-") + ' <span class="it-gantt-tur-tag it-gantt-tur-' + turKisaltma + '">' + esc(is.tur) + '</span></span></td>';
-                h += '<td colspan="' + totalMonths + '" style="position:relative;padding:0;">';
-                h += '<div class="it-gantt-bar-wrap">';
-                h += '<div class="it-gantt-bar" style="left:' + leftPct + '%;width:' + widthPct + '%;background:' + durum.bg + ';" title="' + esc(is.isAdi) + ' - ' + durum.text + ' (' + avgPct + '%)">';
+                var tTip = is.tur === "Taslak" ? "Taslak" : (is.tur === "Uygulama Proje" ? "UygulamaProje" : (is.tur === "3B Modelleme ve Tasarım" ? "3B" : "Diger"));
+                var partnerCount = (is.ortaklar||[]).length;
+                var jobRowCount = Math.max(1, partnerCount);
+                h += '<tr class="it-gantt-job-row"><td class="it-gantt-job-cell" rowspan="' + jobRowCount + '"><div class="it-gantt-job-info"><div class="it-gantt-job-name">' + esc(is.isAdi || "İSİMSİZ") + '</div><div class="it-gantt-job-meta"><span class="it-gantt-tur-tag it-gantt-tur-' + tTip + '">' + esc(is.tur) + '</span><span class="it-gantt-job-firma">' + esc((is.firma||"").toUpperCase() || "-") + '</span><span class="it-gantt-job-pct" style="color:' + (avgPct>=75?'#2e7d32':avgPct>=50?'#f9a825':'#e53935') + ';">' + avgPct + '%</span></div></div></td>';
+                h += '<td class="it-gantt-timeline-cell" style="position:relative;"><div class="it-gantt-bar-wrap">';
+                h += '<div class="it-gantt-bar-main" style="left:' + leftPct + '%;width:' + widthPct + '%;background:linear-gradient(90deg,#e53935,#f9a825,#4caf50);opacity:0.85;" title="' + esc(is.isAdi) + ' - ' + durumText + ' (' + avgPct + '%)">';
                 if (avgPct > 0 && avgPct < 100) {
                     var donePct = Math.min(avgPct, 100);
-                    h += '<div class="it-gantt-bar-seg" style="width:' + donePct + '%;background:rgba(255,255,255,0.2);"></div>';
+                    h += '<div class="it-gantt-bar-seg" style="width:' + donePct + '%;background:rgba(255,255,255,0.25);"></div>';
                 }
-                h += '<div class="it-gantt-bar-label' + (widthPct < 8 ? ' overflow' : '') + '">' + durum.text + ' ' + avgPct + '%</div>';
+                h += '<span class="it-gantt-bar-label' + (widthPct < 8 ? ' overflow' : '') + '">' + durumText + '</span>';
                 h += '</div>';
-                (is.ortaklar||[]).forEach(function(o, oi){
+                if (todayPct > 0 && todayPct < 100) { h += '<div class="it-gantt-today-line" style="left:' + todayPct + '%;"></div>'; }
+                (is.ortaklar||[]).forEach(function(o){
                     if (o.projeTeslimTarihi) {
-                        var msDate = new Date(o.projeTeslimTarihi);
-                        msDate.setHours(0,0,0,0);
-                        var msLeft = (msDate - minD) / (1000*60*60*24);
-                        var msPct = (msLeft / totalDays) * 100;
+                        var msDate = new Date(o.projeTeslimTarihi); msDate.setHours(0,0,0,0);
+                        var msPct = ((msDate - minD) / (1000*60*60*24) / totalDays) * 100;
                         if (msPct >= 0 && msPct <= 100) {
-                            h += '<div class="it-gantt-milestone it-gantt-milestone-complete" style="left:' + msPct + '%;" title="Teslim: ' + esc(o.ortakAdi || "") + ' (' + tarihStr(o.projeTeslimTarihi) + ')"></div>';
+                            h += '<div class="it-gantt-milestone it-gantt-milestone-complete" style="left:' + msPct + '%;" title="' + esc(o.ortakAdi || "") + ' teslim: ' + tarihStr(o.projeTeslimTarihi) + '"></div>';
                         }
                     }
                 });
                 h += '</div></td></tr>';
+                if (partnerCount > 0) {
+                    (is.ortaklar||[]).forEach(function(o, oi){
+                        var ASAMA_LIST = itAsamaList(is.tur);
+                        var pct = itAsamaPct(o, ASAMA_LIST);
+                        var ortakStart = startDate;
+                        var ortakEnd = o.projeTeslimTarihi ? new Date(o.projeTeslimTarihi) : endDate;
+                        ortakStart.setHours(0,0,0,0); ortakEnd.setHours(0,0,0,0);
+                        var oLeftDays = (ortakStart - minD) / (1000*60*60*24);
+                        var oSpanDays = (ortakEnd - ortakStart) / (1000*60*60*24);
+                        if (oSpanDays < 3) oSpanDays = 3;
+                        var oLeftPct = (oLeftDays / totalDays) * 100;
+                        var oWidthPct = (oSpanDays / totalDays) * 100;
+                        if (oLeftPct < 0) { oWidthPct += oLeftPct; oLeftPct = 0; }
+                        if (oWidthPct > 100 - oLeftPct) oWidthPct = 100 - oLeftPct;
+                        if (oWidthPct < 1) oWidthPct = 1;
+                        var renk = renkPalet[oi % renkPalet.length];
+                        h += '<tr class="it-gantt-ortak-row"><td class="it-gantt-ortak-cell"><div class="it-gantt-ortak-info"><span class="it-gantt-ortak-renk" style="background:' + renk + ';"></span><span class="it-gantt-ortak-ad">' + esc(o.ortakAdi || "ORT-"+oi) + '</span><span class="it-gantt-ortak-brans">' + esc(o.brans || "") + '</span><span class="it-gantt-ortak-pct" style="color:' + (pct>=75?'#2e7d32':pct>=50?'#f9a825':'#e53935') + ';">' + pct + '%</span></div></td>';
+                        h += '<td class="it-gantt-timeline-cell" style="position:relative;"><div class="it-gantt-bar-wrap">';
+                        h += '<div class="it-gantt-bar-ortak" style="left:' + oLeftPct + '%;width:' + oWidthPct + '%;background:' + renk + ';opacity:' + (pct>0?0.85:0.35) + ';" title="' + esc(o.ortakAdi || "") + ' ' + pct + '%">';
+                        if (pct > 0) { h += '<div class="it-gantt-bar-seg" style="width:' + Math.min(pct,100) + '%;background:rgba(255,255,255,0.2);"></div>'; }
+                        h += '<span class="it-gantt-bar-label' + (oWidthPct < 5 ? ' overflow' : '') + '">' + esc(o.ortakAdi || "O") + ' ' + pct + '%</span>';
+                        h += '</div>';
+                        ASAMA_LIST.forEach(function(a){
+                            if (o[a.field]) {
+                                var aDate = new Date(o[a.field]); aDate.setHours(0,0,0,0);
+                                var aPct = ((aDate - minD) / (1000*60*60*24) / totalDays) * 100;
+                                if (aPct >= 0 && aPct <= 100) {
+                                    h += '<div class="it-gantt-stage-dot" style="left:' + aPct + '%;background:' + (ASAMA_LIST===itAsamaList(is.tur)?renkPalet[ASAMA_LIST.indexOf(a)]||renk:renk) + ';" title="' + a.label + ': ' + tarihStr(o[a.field]) + '"></div>';
+                                }
+                            }
+                        });
+                        if (o.projeTeslimTarihi) {
+                            var msDate = new Date(o.projeTeslimTarihi); msDate.setHours(0,0,0,0);
+                            var msPct2 = ((msDate - minD) / (1000*60*60*24) / totalDays) * 100;
+                            if (msPct2 >= 0 && msPct2 <= 100) {
+                                h += '<div class="it-gantt-milestone-sm" style="left:' + msPct2 + '%;" title="Teslim: ' + tarihStr(o.projeTeslimTarihi) + '"></div>';
+                            }
+                        }
+                        if (todayPct > 0 && todayPct < 100) { h += '<div class="it-gantt-today-line" style="left:' + todayPct + '%;"></div>'; }
+                        h += '</div></td></tr>';
+                    });
+                }
             });
-            h += '</tbody></table></div>';
+            h += '</tbody></table></div></div>';
             konteyner.innerHTML = h;
+            konteyner.querySelector('.it-gantt-scroll').scrollLeft = konteyner.querySelector('.it-gantt-scroll').scrollWidth;
         }
         function itAktifSortGuncelle(col) {
             if (itAktifSort.col === col) { itAktifSort.dir = itAktifSort.dir === "asc" ? "desc" : "asc"; }
@@ -8863,11 +8910,11 @@ function itDurumMetni(o) {
             var tamIcon = document.getElementById("itTamExpandIcon_" + id);
             if (aktifRow) {
                 aktifRow.classList.toggle("open");
-                if (aktifIcon) aktifIcon.innerText = aktifRow.classList.contains("open") ? "¡" : "?";
+                if (aktifIcon) aktifIcon.innerHTML = aktifRow.classList.contains("open") ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-right"></i>';
             }
             if (tamRow) {
                 tamRow.classList.toggle("open");
-                if (tamIcon) tamIcon.innerText = tamRow.classList.contains("open") ? "¡" : "?";
+                if (tamIcon) tamIcon.innerHTML = tamRow.classList.contains("open") ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-right"></i>';
             }
         }
 
@@ -8876,7 +8923,7 @@ function itDurumMetni(o) {
             if (!bolum) return;
             bolum.classList.toggle("it-bolum-kapali");
             var ok = document.getElementById(id + "Ok");
-            if (ok) ok.innerText = bolum.classList.contains("it-bolum-kapali") ? "?" : "¡";
+            if (ok) ok.innerHTML = bolum.classList.contains("it-bolum-kapali") ? '<i class="fa-solid fa-chevron-right"></i>' : '<i class="fa-solid fa-chevron-down"></i>';
         }
 
         function itSayaciGuncelle() {
@@ -9018,7 +9065,7 @@ function itDurumMetni(o) {
                 h += '<span style="display:flex;align-items:center;gap:6px;">';
                 h += '<span id="itOrtakPct_' + jobId + '_' + i + '" style="font-weight:700;min-width:24px;text-align:right;font-size:11px;">' + pct + '%</span>';
                 h += '<div style="width:60px;height:6px;background:var(--border-color);border-radius:3px;overflow:hidden;"><div id="itOrtakMiniBar_' + jobId + '_' + i + '" style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,#e53935,' + (isTaslak ? '#2e7d32' : '#f9a825,#4caf50') + ');border-radius:3px;"></div></div>';
-                h += '<span class="it-ortak-card-toggle-icon" id="itOrtakToggleIcon_' + jobId + '_' + i + '">?</span>';
+                h += '<span class="it-ortak-card-toggle-icon" id="itOrtakToggleIcon_' + jobId + '_' + i + '"><i class="fa-solid fa-chevron-down"></i></span>';
                 h += '<span onclick="event.stopPropagation();itOrtakKaldir(' + jobId + ',' + i + ')" style="cursor:pointer;color:#e53935;font-weight:700;font-size:16px;"><i class="fa-solid fa-xmark"></i></span>';
                 h += '</span></div>';
                 h += '<div class="it-ortak-card-body closed" id="itOrtakBody_' + jobId + '_' + i + '">';
@@ -9032,7 +9079,7 @@ function itDurumMetni(o) {
                     var segClass = completed ? 'completed' : (isNext ? 'next' : 'pending');
                     var bgColor = completed ? ASAMA_RENKLER[ai] : (isNext ? ASAMA_RENKLER[ai] : '');
                     var displayDate = o[a.field] ? tarihStr(o[a.field]) : '-';
-                    h += '<div class="it-asama-step"><button class="it-asama-segment ' + segClass + '" style="' + (bgColor ? 'background:' + bgColor + ';' : '') + '" id="itAsamaBtn_' + jobId + '_' + i + '_' + a.field + '" onclick="event.stopPropagation();itAsamaToggle(' + jobId + ',' + i + ',\'' + a.field + '\')"><span class="it-asama-seg-label">' + (completed ? '? ' : '') + a.label + '</span><span class="it-asama-seg-date" id="itAsamaTarih_' + jobId + '_' + i + '_' + a.field + '">' + displayDate + '</span></button></div>';
+                    h += '<div class="it-asama-step"><button class="it-asama-segment ' + segClass + '" style="' + (bgColor ? 'background:' + bgColor + ';' : '') + '" id="itAsamaBtn_' + jobId + '_' + i + '_' + a.field + '" onclick="event.stopPropagation();itAsamaToggle(' + jobId + ',' + i + ',\'' + a.field + '\')"><span class="it-asama-seg-label">' + (completed ? '<i class="fa-solid fa-check" style="font-size:9px;margin-right:3px;"></i> ' : '') + a.label + '</span><span class="it-asama-seg-date" id="itAsamaTarih_' + jobId + '_' + i + '_' + a.field + '">' + displayDate + '</span></button></div>';
                 });
                 h += '</div>';
                 h += '<div class="it-asama-row" style="margin-top:4px;border-bottom:none;flex-direction:column;align-items:stretch;">';
@@ -9053,7 +9100,7 @@ function itDurumMetni(o) {
             if (!readonly) {
                 h += '<div class="it-ortak-ekle-panel" style="margin-top:10px;border:1px dashed var(--border-color);border-radius:8px;background:var(--bg-main);">';
                 h += '<div onclick="event.stopPropagation();itOrtakEkleToggle(\'' + jobId + '\')" style="cursor:pointer;padding:12px;font-size:12px;font-weight:700;text-transform:uppercase;color:var(--text-light);display:flex;align-items:center;gap:6px;">';
-                h += '<span id="itOrtakEkleIcon_' + jobId + '" style="font-size:10px;">?</span> <i class="fa-solid fa-plus"></i> YENİ İŞ ORTAĞI EKLE</div>';
+                h += '<span id="itOrtakEkleIcon_' + jobId + '" style="font-size:10px;"><i class="fa-solid fa-chevron-right"></i></span> <i class="fa-solid fa-plus"></i> YENİ İŞ ORTAĞI EKLE</div>';
                 h += '<div id="itOrtakEkleBody_' + jobId + '" style="display:none;padding:0 12px 12px;">';
                 h += '<div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">';
                 h += '<div style="flex:1;min-width:160px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text-light);margin-bottom:2px;">İŞ ORTAĞI</div>';
@@ -9075,7 +9122,7 @@ function itDurumMetni(o) {
             }
             var jobNot = (job.not||"").trim();
             h += '<div class="it-not-panel' + (jobNot ? ' has-not' : '') + '" onclick="event.stopPropagation();itNotPopupAc(' + jobId + ')">';
-            h += '<div><i class="fa-solid fa-thumbtack"></i> NOTLAR' + (jobNot ? ' <span style="font-size:10px;color:#1565C0;">?</span>' : '') + '</div>';
+            h += '<div><i class="fa-solid fa-thumbtack"></i> NOTLAR' + (jobNot ? ' <span style="font-size:10px;color:var(--accent-red);"><i class="fa-solid fa-circle"></i></span>' : '') + '</div>';
             h += '</div>';
             return h;
         }
@@ -9101,7 +9148,7 @@ function itDurumMetni(o) {
             if (!body) return;
             var shown = body.style.display !== 'none';
             body.style.display = shown ? 'none' : 'block';
-            if (icon) icon.innerText = shown ? '?' : '¡';
+            if (icon) icon.innerHTML = shown ? '<i class="fa-solid fa-chevron-right"></i>' : '<i class="fa-solid fa-chevron-down"></i>';
         }
         function itOrtakEkleDetay(jobId) {
             var ortakAd = document.getElementById("itOrtakEkleSec_" + jobId).value;
@@ -9138,7 +9185,7 @@ function itDurumMetni(o) {
             var icon = document.getElementById("itOrtakToggleIcon_" + key);
             if (!body) return;
             body.classList.toggle("closed");
-            if (icon) icon.innerText = body.classList.contains("closed") ? "?" : "¡";
+            if (icon) icon.innerHTML = body.classList.contains("closed") ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-up"></i>';
         }
 
         function itAsamaToggle(jobId, index, field) {
@@ -9177,7 +9224,7 @@ function itDurumMetni(o) {
                 btn.className = 'it-asama-segment ' + segClass;
                 btn.style.background = (completed || isNext) ? ASAMA_RENKLER[ai] : '';
                 var label = btn.querySelector('.it-asama-seg-label');
-                if (label) label.innerText = (completed ? '? ' : '') + a.label;
+                if (label) label.innerHTML = (completed ? '<i class="fa-solid fa-check" style="font-size:9px;margin-right:3px;"></i> ' : '') + a.label;
             });
             // Dinamik olarak TAHSİLAT ONAYI ve İŞ TAMAMLANDI butonlarını göster/gizle
             var is_ = liste[idx];
@@ -9530,7 +9577,7 @@ function itDurumMetni(o) {
                 var hasNot = not.length > 0;
                 panel.className = 'it-not-panel' + (hasNot ? ' has-not' : '');
                 var div = panel.querySelector('div');
-                if (div) div.innerHTML = '<i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:#1565C0;">?</span>' : '');
+                if (div) div.innerHTML = '<i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:var(--accent-red);"><i class="fa-solid fa-circle"></i></span>' : '');
             }
             tmNotify("Notlar güncellendi.", "success");
         }
@@ -9573,7 +9620,7 @@ function itDurumMetni(o) {
             itDbKaydet(liste);
             itGoster();
             itAcKalanYukle(openIds);
-            tmNotify("<i class=\"fa-solid fa-stamp\"></i> Ruhsat onayı alındı.", "success");
+            tmNotify("Ruhsat onayı alındı.", "success");
             aktiviteEkle("Ruhsat onayı verildi: " + (liste[idx].isAdi || ""), "İş Takibi");
         }
 
@@ -9586,7 +9633,7 @@ function itDurumMetni(o) {
             itDbKaydet(liste);
             itGoster();
             itAcKalanYukle(openIds);
-            tmNotify('<i class="fa-solid fa-check"></i> Tahsilat onayı verildi.', 'success');
+            tmNotify('Tahsilat onayı verildi.', 'success');
             aktiviteEkle("Tahsilat onayı verildi: " + (liste[idx].isAdi || ""), "İş Takibi");
         }
 
