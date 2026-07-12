@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V2.0.4';
+        var APP_VERSION = 'V2.0.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -1464,7 +1464,7 @@ function gorevMailGonder(gorev) {
                     sirketBakiye += htDb.nakit || 0;
                 }
                 setText("dashFinBakiye", tmTl(sirketBakiye));
-            } catch(e) { setText("dashFinBakiye", "0,00 TL"); }
+            } catch(e) { setText("dashFinBakiye", "0,00 ₺"); }
 
             // YILLIK BÜTÇE VERİSİ (gelir/gider)
             try {
@@ -1492,7 +1492,7 @@ function gorevMailGonder(gorev) {
                 });
                 setText("dashFinKalanTahsilat", tmTl(imHacim - imTahsilat));
                 setText("dashFinKalanOdeme", tmTl(imVerecek - imOdenen));
-            } catch(e) { setText("dashFinKalanTahsilat", "0,00 TL"); setText("dashFinKalanOdeme", "0,00 TL"); }
+            } catch(e) { setText("dashFinKalanTahsilat", "0,00 ₺"); setText("dashFinKalanOdeme", "0,00 ₺"); }
 
             // SON TEKLİFLER TABLOSU
             const offerBody = document.getElementById("dashRecentOfferBody");
@@ -3649,9 +3649,9 @@ function gorevMailGonder(gorev) {
                 const t = m * f;
                 araToplam += t; kdvToplam += (t * (k / 100));
             });
-            document.getElementById("liveAra").innerText = araToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " TL";
-            document.getElementById("liveKdv").innerText = kdvToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " TL";
-            document.getElementById("liveGenel").innerText = (araToplam + kdvToplam).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " TL";
+            document.getElementById("liveAra").innerText = araToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " ₺";
+            document.getElementById("liveKdv").innerText = kdvToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " ₺";
+            document.getElementById("liveGenel").innerText = (araToplam + kdvToplam).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " ₺";
         }
 
         function teklifFormuTemizle() {
@@ -3706,7 +3706,7 @@ function gorevMailGonder(gorev) {
             return { 
                 id: yeniId, musteriAd, firma, isAdi, hazirlayan, telefon, sTarih, kalemler,
                 araTutar: araToplam, kdvTutar: kdvToplam,
-                genelTutar: (araToplam + kdvToplam).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " TL" 
+                genelTutar: (araToplam + kdvToplam).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " ₺" 
             };
         }
 
@@ -3760,11 +3760,11 @@ function gorevMailGonder(gorev) {
             const pBody = document.getElementById("pOutTableBody"); pBody.innerHTML = "";
             veri.kalemler.forEach(k => {
                 const t = k.miktar * k.fiyat;
-                pBody.innerHTML += `<tr><td class="pdf-cell-hizmet">${k.servis}</td><td style="text-align:center;">${k.miktar}</td><td style="text-align:center;">${k.birim||''}</td><td style="text-align:right;">${k.fiyat.toLocaleString('tr-TR')} TL</td><td style="text-align:center;">%${k.kdv}</td><td style="text-align:right;">${t.toLocaleString('tr-TR')} TL</td></tr>`;
+                pBody.innerHTML += `<tr><td class="pdf-cell-hizmet">${k.servis}</td><td style="text-align:center;">${k.miktar}</td><td style="text-align:center;">${k.birim||''}</td><td style="text-align:right;">${k.fiyat.toLocaleString('tr-TR')} ₺</td><td style="text-align:center;">%${k.kdv}</td><td style="text-align:right;">${t.toLocaleString('tr-TR')} ₺</td></tr>`;
             });
 
-            document.getElementById("pOutAra").innerText = (veri.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " TL";
-            document.getElementById("pOutKdv").innerText = (veri.kdvTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " TL";
+            document.getElementById("pOutAra").innerText = (veri.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " ₺";
+            document.getElementById("pOutKdv").innerText = (veri.kdvTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + " ₺";
             document.getElementById("pOutGenel").innerText = veri.genelTutar;
 
             const template = document.getElementById("pdf-export-template");
@@ -4017,7 +4017,7 @@ function gorevMailGonder(gorev) {
                     const item = eleman.veri;
                     const globalIdx = eleman.globalIndex;
                     const formatliTarih = item.tarih ? new Date(item.tarih).toLocaleDateString("tr-TR") : "-";
-                    const formatliFiyat = item.fiyat.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " TL";
+                    const formatliFiyat = item.fiyat.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " ₺";
 
                     tabloHTML += `
                         <tr>
@@ -5006,7 +5006,7 @@ function gorevMailGonder(gorev) {
         }
 
         function tutarYaziyla(tutar) {
-            if (tutar === 0) return "SIFIR TL";
+            if (tutar === 0) return "SIFIR ₺";
             const birler = ["","BİR","İKİ","ÜÇ","DÖRT","BEŞ","ALTI","YEDİ","SEKİZ","DOKUZ"];
             const onlar = ["","ON","YİRMİ","OTUZ","KIRK","ELLİ","ALTMIŞ","YETMİŞ","SEKSEN","DOKSAN"];
             const basamaklar = ["","BİN","MİLYON","MİLYAR","TRİLYON"];
@@ -5039,7 +5039,7 @@ function gorevMailGonder(gorev) {
                 tl = Math.floor(tl / 1000);
                 idx++;
             }
-            result += "TL";
+            result += "₺";
             if (kurus > 0) {
                 result += " " + ucBasamakOku(kurus) + "KURUŞ";
             }
@@ -5048,7 +5048,7 @@ function gorevMailGonder(gorev) {
 
         function nakitDekontPdfOlustur(d) {
             const formatliId = String(d.id).padStart(5, '0');
-            const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " TL";
+            const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " ₺";
             const yaziyla = tutarYaziyla(d.tutar);
             const tarihKisa = d.tarih ? new Date(d.tarih).toLocaleDateString("tr-TR") : "-";
             const tarihSayi = d.tarih ? new Date(d.tarih).toLocaleDateString("tr-TR", {day:'2-digit',month:'2-digit',year:'numeric'}) : "-";
@@ -5122,7 +5122,7 @@ function gorevMailGonder(gorev) {
                             <thead>
                                 <tr style="background:#1a1a2e;color:#fff;">
                                     <th style="padding:2mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;">AÇIKLAMA</th>
-                                    <th style="padding:2mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:35%;">TUTAR (TL)</th>
+                                    <th style="padding:2mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:35%;">TUTAR (₺)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -5284,7 +5284,7 @@ function gorevMailGonder(gorev) {
             db.forEach(d => {
                 const formatliId = "#" + String(d.id).padStart(5, '0');
                 const tipRenk = d.islemTuru === "Gelen Nakit Ödeme" ? "var(--btn-green)" : "var(--accent-red)";
-                const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " TL";
+                const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " ₺";
 
                 html += `
                     <tr class="nd-row" data-search="${d.musteriAd} ${d.firma} ${d.islemTuru} ${formatliId}">
@@ -6199,7 +6199,7 @@ function gorevMailGonder(gorev) {
                         ]},
                         options:{ responsive:false, maintainAspectRatio:false,
                             plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:yil+' Yili Net Durum Trendi',font:{size:28,weight:'bold'}} },
-                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
+                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
                         }
                     });
 
@@ -6212,7 +6212,7 @@ function gorevMailGonder(gorev) {
                         ]},
                         options:{ responsive:false, maintainAspectRatio:false,
                             plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:'Aylik Gelir / Gider Karsilastirmasi',font:{size:28,weight:'bold'}} },
-                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
+                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
                         },
                         plugins: [{
                             id:'barEtiket',
@@ -6225,7 +6225,7 @@ function gorevMailGonder(gorev) {
                                     [{v:gVal,p:meta0.data[i]},{v:gdVal,p:meta1.data[i]}].forEach(function(d){
                                         if(d.v<=0)return;
                                         var pp=d.p.getProps(['x','y','base','width'],true), bw=pp.width, bh=pp.base-pp.y;
-                                        var amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' TL';
+                                        var amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺';
                                         var fs=Math.min(Math.floor(bw*0.55),24);
                                         fs=Math.max(14,fs);
                                         ctx.font='bold '+fs+'px Helvetica';
@@ -6354,7 +6354,7 @@ function gorevMailGonder(gorev) {
                         doc.text(v.l, kx+5, y+8);
                         doc.setFontSize(10);
                         doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        doc.text((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL', kx+5, y+19);
+                        doc.text((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', kx+5, y+19);
                     }
                     y += kY + 10;
 
@@ -6391,7 +6391,7 @@ function gorevMailGonder(gorev) {
                             doc.setTextColor(GRI_METIN[0],GRI_METIN[1],GRI_METIN[2]);
                             doc.text((vd[i]/tp*100).toFixed(1)+'%',x+38,yl+1.5);
                             doc.setTextColor(SEKME_RENGI[0],SEKME_RENGI[1],SEKME_RENGI[2]);
-                            doc.text(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+' TL',x+56,yl+1.5);
+                            doc.text(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+' ₺',x+56,yl+1.5);
                             yl+=3;
                         } return yl;
                     }
@@ -6462,7 +6462,7 @@ function gorevMailGonder(gorev) {
                             doc.text(oItems[oi].l, oiX+5, y+6);
                             doc.setFontSize(9);
                             doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                            doc.text(oItems[oi].v.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', oiX+5, y+14);
+                            doc.text(oItems[oi].v.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', oiX+5, y+14);
                         }
                         y += oKartY + 8;
 
@@ -6496,14 +6496,14 @@ function gorevMailGonder(gorev) {
                         // --- GELIR TABLOSU ---
                         var gRows = [];
                         Object.entries(ayd.gelirler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL']); });
+                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺']); });
                         });
                         _ct("GELIRLER", gRows, POZITIF, [245,252,245]);
 
                         // --- GIDER TABLOSU ---
                         var gdRows = [];
                         Object.entries(ayd.giderler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL']); });
+                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺']); });
                         });
                         _ct("GIDERLER", gdRows, NEGATIF, [252,245,245]);
 
@@ -6514,7 +6514,7 @@ function gorevMailGonder(gorev) {
                         doc.rect(M, y, 3, 10, 'F');
                         doc.setFont(FN, "bold"); doc.setFontSize(10);
                         doc.setTextColor(farkRenk[0], farkRenk[1], farkRenk[2]);
-                        doc.text(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' TL', M+8, y+7);
+                        doc.text(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', M+8, y+7);
                         y += 16;
 
                         // --- Alt Bilgi ---
@@ -6551,8 +6551,8 @@ function gorevMailGonder(gorev) {
         const HT_ORNEK_ISLEMLER = [];
         var HT_AKTIF_DETAY_HESAP = null;
 
-function htTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " TL"; }
-function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " TL"; }
+function htTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " ₺"; }
+function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " ₺"; }
         function htIbanGoster(iban) {
             if(!iban) return "-";
             var s = iban.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
@@ -7438,7 +7438,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if (miktar <= 0) {
                 const sEl = document.getElementById("tmfHesapSonuc_" + id);
                 const iEl = document.getElementById("tmfHesapIslem_" + id);
-                if (sEl) sEl.textContent = "0,00 TL";
+                if (sEl) sEl.textContent = "0,00 ₺";
                 if (iEl) iEl.textContent = "";
                 return;
             }
