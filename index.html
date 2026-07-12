@@ -1011,20 +1011,20 @@
                 </div>
 
                 <div id="dilekce-form" class="dilekce-form-card">
+                    <div class="dilekce-field">
+                        <label class="dilekce-label"><i class="fa-solid fa-location-dot"></i> Gönderilecek Yer</label>
+                        <textarea id="dlkGonderilecekYer" class="dilekce-input dilekce-input-recipient" rows="3" placeholder="Örn: ... Belediyesi İmar Müdürlüğü" oninput="this.value=trToUpper(this.value)"></textarea>
+                    </div>
+
                     <div class="dilekce-form-row">
-                        <div class="dilekce-field">
-                            <label class="dilekce-label"><i class="fa-solid fa-location-dot"></i> Gönderilecek Yer</label>
-                            <textarea id="dlkGonderilecekYer" class="dilekce-input dilekce-input-recipient" rows="3" placeholder="Örn: ... Belediyesi İmar Müdürlüğü" oninput="this.value=trToUpper(this.value)"></textarea>
-                        </div>
                         <div class="dilekce-field">
                             <label class="dilekce-label"><i class="fa-solid fa-paperclip"></i> İlgi (varsa)</label>
                             <input type="text" id="dlkIlgi" class="dilekce-input" placeholder="İlgi yazı/vs." oninput="titleCaseInput(this)">
                         </div>
-                    </div>
-
-                    <div class="dilekce-field">
-                        <label class="dilekce-label"><i class="fa-solid fa-heading"></i> Konu</label>
-                        <input type="text" id="dlkKonu" class="dilekce-input dilekce-input-subject" placeholder="Dilekçenin konusu" oninput="titleCaseInput(this)">
+                        <div class="dilekce-field">
+                            <label class="dilekce-label"><i class="fa-solid fa-heading"></i> Konu</label>
+                            <input type="text" id="dlkKonu" class="dilekce-input" placeholder="Dilekçenin konusu" oninput="titleCaseInput(this)">
+                        </div>
                     </div>
 
                     <div class="dilekce-field dilekce-field-body">

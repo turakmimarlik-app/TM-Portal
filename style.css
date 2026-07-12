@@ -1665,7 +1665,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .dilekce-input:focus { border-color:var(--accent-red); box-shadow:0 0 0 3px rgba(229,57,53,0.15); }
         .dilekce-input::placeholder { color:var(--text-muted); opacity:0.55; }
         .dilekce-input-recipient { text-align:center; text-transform:uppercase; resize:vertical; min-height:82px; }
-        .dilekce-input-subject { font-weight:600; text-align:center; }
+        .dilekce-input-subject { font-weight:600; }
         .dilekce-input-body { resize:vertical; min-height:220px; line-height:1.75; }
         .dilekce-actions { display:flex; gap:10px; flex-wrap:wrap; padding-top:20px; border-top:1px solid var(--border-color); }
         .dilekce-saved { margin-top:4px; }
