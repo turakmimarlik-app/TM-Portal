@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.1';
+        var APP_VERSION = 'V1.23.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -271,6 +271,7 @@ function gorevMailGonder(gorev) {
             "?/m²"
         ];
         let SABIT_BIRIM_LISTESI = ["M²","ADET","KM","AY","GÜN"];
+        let SABIT_KDV_LISTESI = ["0","10","20"];
 
         let SABIT_VERGI_TURLERI = [
             "KDV",
@@ -377,7 +378,7 @@ function gorevMailGonder(gorev) {
                 document.getElementById("loginSection").style.display = "flex";
                 overlayGizle();
             }
-            function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(e){e.stopPropagation();s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eşleşme bulunamadı)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');var wr=w.getBoundingClientRect();d.classList.add('open-upward');d.style.position='absolute';d.style.left='0';d.style.width='100%';d.style.top='auto';d.style.bottom='100%';d.style.marginTop='0';d.style.marginBottom='-1px';d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;var cf=d.querySelector('.cs-birim-footer');if(cf)cf.remove();if(s.classList.contains('row-birim')){var cft=document.createElement('div');cft.className='cs-birim-footer';cft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';cft.innerHTML='<button onclick="event.stopPropagation();birimEklePrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">+ YENİ</button><button onclick="event.stopPropagation();birimSilPrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">- SİL</button>';d.appendChild(cft);}};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});
+            function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(e){e.stopPropagation();s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eşleşme bulunamadı)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');var wr=w.getBoundingClientRect();d.style.position='absolute';d.style.left='0';d.style.width='100%';d.style.top='100%';d.style.bottom='auto';d.style.marginTop='-1px';d.style.marginBottom='0';d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;var cf=d.querySelector('.cs-birim-footer');if(cf)cf.remove();if(s.classList.contains('row-birim')){var cft=document.createElement('div');cft.className='cs-birim-footer';cft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';cft.innerHTML='<button onclick="event.stopPropagation();birimEklePrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">+ YENİ</button><button onclick="event.stopPropagation();birimSilPrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">- SİL</button>';d.appendChild(cft);}var kf=d.querySelector('.cs-kdv-footer');if(kf)kf.remove();if(s.classList.contains('row-kdv')){var kft=document.createElement('div');kft.className='cs-kdv-footer';kft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';kft.innerHTML='<button onclick="event.stopPropagation();kdvEklePrompt();kdvDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">+ EKLE</button><button onclick="event.stopPropagation();kdvSilPrompt();kdvDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">- SİL</button>';d.appendChild(kft);}};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});
 
             const loginSection = document.getElementById("loginSection");
             if (loginSection) {
@@ -417,6 +418,12 @@ function gorevMailGonder(gorev) {
                 SABIT_BIRIM_LISTESI = JSON.parse(localStorage.getItem("tm_birim_listesi_v1"));
             } else {
                 origSetItem("tm_birim_listesi_v1", JSON.stringify(SABIT_BIRIM_LISTESI));
+            }
+
+            if (localStorage.getItem("tm_kdv_listesi_v1")) {
+                SABIT_KDV_LISTESI = JSON.parse(localStorage.getItem("tm_kdv_listesi_v1"));
+            } else {
+                origSetItem("tm_kdv_listesi_v1", JSON.stringify(SABIT_KDV_LISTESI));
             }
 
             document.addEventListener("click", function(e) {
@@ -1325,6 +1332,7 @@ function gorevMailGonder(gorev) {
                     el = document.getElementById("menu-muhasebe-root"); if(el) el.classList.add("active");
                 }
                 if (pageId === 'anasayfa-page') { asOzetTakvimRender(); asOzetGorevListele(); dashboardVerileriniGuncelle(); }
+                else if (pageId === 'teklif-olustur-page') { teklifFormuTemizle(); }
                 else if (pageId === 'teklif-liste-page') { teklifListesiniYenile(); }
                 else if (pageId === 'piyasa-fiyatlari-page') { piyasaListesiniYenile(); }
                 else if (pageId === 'is-muhasebe-page') { isMuhasebeListesiniYenile(); }
@@ -3656,6 +3664,53 @@ function gorevMailGonder(gorev) {
             }, "", "B\u0130R\u0130M EKLE");
         }
         function birimDropdownKapat(el){var dd=el.closest('.cs-dropdown');if(dd){dd.classList.remove('open');dd.previousElementSibling.classList.remove('open');}}
+        function kdvDropdownKapat(el){var dd=el.closest('.cs-dropdown');if(dd){dd.classList.remove('open');dd.previousElementSibling.classList.remove('open');}}
+        function kdvListesiGetir(){try{return JSON.parse(localStorage.getItem("tm_kdv_listesi_v1"))||SABIT_KDV_LISTESI;}catch(e){return SABIT_KDV_LISTESI;}}
+        function kdvListesiniYenile(){
+            var list=kdvListesiGetir();
+            document.querySelectorAll(".row-kdv").forEach(function(s){
+                var val=s.value;
+                var txt=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';
+                s.innerHTML='';
+                list.forEach(function(k){
+                    var o=document.createElement("option");
+                    o.value=k;o.textContent='%'+k;if(k===val)o.selected=true;
+                    s.appendChild(o);
+                });
+                if(s.options.length>0&&s.selectedIndex===-1){s.selectedIndex=0;}
+                var w=s.parentNode.querySelector('.cs-wrapper');
+                if(w&&!s.value){var t=w.querySelector('.cs-trigger');if(t)t.textContent=s.options[0]?s.options[0].text:'';}
+            });
+        }
+        function kdvEklePrompt(){
+            tmPrompt("Yeni KDV oran\u0131 giriniz (sadece say\u0131, \u00f6rn: 15):",function(yeni){
+                if(!yeni||yeni.trim()==="")return;
+                yeni=yeni.trim();
+                if(isNaN(parseFloat(yeni))){tmNotify("Geçerli bir sayı giriniz!","error");return;}
+                yeni=String(Math.round(parseFloat(yeni)));
+                var list=kdvListesiGetir();
+                if(list.indexOf(yeni)!==-1){tmNotify("Bu KDV oranı zaten mevcut!","error");return;}
+                list.push(yeni);
+                list.sort(function(a,b){return parseInt(b)-parseInt(a);});
+                localStorage.setItem("tm_kdv_listesi_v1",JSON.stringify(list));
+                kdvListesiniYenile();
+                tmNotify("KDV oranı eklendi: %"+yeni,"success");
+            },"","KDV ORANI EKLE");
+        }
+        function kdvSilPrompt(){
+            var list=kdvListesiGetir();
+            if(list.length<=1){tmNotify("En az bir KDV oranı kalmalıdır.","error");return;}
+            tmPrompt("Silmek istedi\u011finiz KDV oran\u0131n\u0131 yaz\u0131n:\n\n"+list.map(function(k,i){return (i+1)+". %"+k;}).join("\n"),function(sec){
+                if(!sec||sec.trim()==="")return;
+                sec=sec.trim();
+                var idx=list.indexOf(sec);
+                if(idx===-1){tmNotify("Bu KDV oranı listede bulunamadı.","error");return;}
+                list.splice(idx,1);
+                localStorage.setItem("tm_kdv_listesi_v1",JSON.stringify(list));
+                kdvListesiniYenile();
+                tmNotify("KDV oranı silindi: %"+sec,"success");
+            },"","KDV ORANI SIL");
+        }
         /* ================= TEKLİF FORMU MOTORLARI ================= */
         function teklifFormSatirEkle() {
             const tbody = document.getElementById("teklifFormRows");
@@ -3676,6 +3731,7 @@ function gorevMailGonder(gorev) {
             `;
             tbody.appendChild(tr);
             birimListesiniYenile();
+            kdvListesiniYenile();
             canliTeklifHesapla();
         }
         function teklifFormSatirSil(btn) { btn.closest("tr").remove(); canliTeklifHesapla(); }
@@ -3713,9 +3769,9 @@ function gorevMailGonder(gorev) {
                 </tr>
             `;
             birimListesiniYenile();
+            kdvListesiniYenile();
             canliTeklifHesapla();
         }
-
         /* ================= GEÇMİŞ TABLO & SIRALAMA MOTORU ================= */
         function formVerileriniTopla() {
             const musteriAd = trToUpper(document.getElementById("tMusteriAd").value);
