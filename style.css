@@ -248,36 +248,42 @@
         .btn:hover { transform: translateY(-1px); }
 
         .btn-primary, .btn-add {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             background: linear-gradient(135deg, #1a3a5c, #0d1b2a);
             border: 1px solid #a0b8cc; color: #a0b8cc;
         }
         .btn-primary:hover, .btn-add:hover { background: #152d4a; }
 
         .btn-save, .btn-save-green, .btn-success {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             background: linear-gradient(135deg, #2E7D32, #1B5E20);
             border: 1px solid #66BB6A; color: #fff;
         }
         .btn-save:hover, .btn-save-green:hover, .btn-success:hover { background: #1B5E20; }
 
         .btn-danger, .btn-red {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             background: linear-gradient(135deg, #9E2A2B, #7a2021);
             border: 1px solid #E57373; color: #fff;
         }
         .btn-danger:hover, .btn-red:hover { background: #7a2021; }
 
         .btn-pdf, .btn-pdf-red {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             background: linear-gradient(135deg, #9E2A2B, #7a2021);
             border: 1px solid #E57373; color: #fff;
         }
         .btn-pdf:hover, .btn-pdf-red:hover { background: #7a2021; }
 
         .btn-warning {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             background: linear-gradient(135deg, #d68910, #b8730d);
             border: 1px solid #FFD54F; color: #fff;
         }
         .btn-warning:hover { background: #b8730d; }
 
         .btn-cancel, .btn-clear-gray {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             background: transparent; border: 1px solid var(--border-color); color: var(--text-light);
         }
         .btn-cancel:hover, .btn-clear-gray:hover { background: var(--bg-main); }
