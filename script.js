@@ -1160,9 +1160,16 @@ function gorevMailGonder(gorev) {
             if(!sub) return;
             const opening = !sub.classList.contains("open");
             document.querySelectorAll(".submenu").forEach(s => { if (s.id !== id) s.classList.remove("open"); });
-            document.querySelectorAll(".menu-item .arrow").forEach(a => { if (a.id !== arrowId) a.innerText = "¡"; });
-            if (opening) { sub.classList.add("open"); arrow.innerText = "^"; try { origSetItem("tm_submenu_open", id); } catch(e) { console.error("Submenu acma hatasi:", e); } }
-            else { sub.classList.remove("open"); arrow.innerText = "¡"; try { origSetItem("tm_submenu_open", ""); } catch(e) { console.error("Submenu kapama hatasi:", e); } }
+            document.querySelectorAll("#arrow-icon i, #arrow-portfoy-icon i, #arrow-muhasebe-icon i").forEach(a => { if (a.closest('span').id !== arrowId) a.className = "fa-solid fa-chevron-down"; });
+            if (opening) {
+                sub.classList.add("open");
+                if (arrow) { const icn = arrow.querySelector('i'); if (icn) icn.className = "fa-solid fa-chevron-up"; }
+                try { origSetItem("tm_submenu_open", id); } catch(e) { console.error("Submenu acma hatasi:", e); }
+            } else {
+                sub.classList.remove("open");
+                if (arrow) { const icn = arrow.querySelector('i'); if (icn) icn.className = "fa-solid fa-chevron-down"; }
+                try { origSetItem("tm_submenu_open", ""); } catch(e) { console.error("Submenu kapama hatasi:", e); }
+            }
         }
 
         var tmFormDirty = false;
