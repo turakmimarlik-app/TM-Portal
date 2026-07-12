@@ -1167,7 +1167,7 @@
         [data-theme="dark"] .it-bolum-baslik-tamam { background:rgba(76,175,80,0.1); color:#81C784; border-bottom-color:#81C784; }
         .it-bolum-icerik { padding:16px 0 0 0; }
         .it-bolum-ok { font-size:12px; margin-right:4px; transition:0.2s; display:inline-block; }
-        #itTamamlananBolum { margin-top:40px; }
+        #itTamamlananBolum { margin-top:80px; }
         .it-bolum-kapali .it-bolum-ok { transform:rotate(-90deg); }
         .it-bolum-kapali .it-bolum-icerik { display:none; }
         .it-sekme-bar { display:flex; gap:4px; margin-bottom:16px; flex-wrap:wrap; border-bottom:1px solid var(--border-color); padding-bottom:0; }
