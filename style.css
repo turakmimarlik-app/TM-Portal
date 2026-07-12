@@ -1649,3 +1649,28 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .it-detay-actions button i, .it-btn-tamamla i, .it-btn-tahsilat i, .it-btn-ruhsat i { color:inherit; }
         button i, a.btn i { color:inherit; }
         .sidebar-section-title i { color:var(--accent-red); margin-right:4px; }
+        /* ===== DILEKCE PAGE PROFESSIONAL DESIGN ===== */
+        .dilekce-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+        .dilekce-header h2 { margin:0; }
+        .dilekce-badge { background:var(--bg-main); border:1px solid var(--border-color); border-radius:10px; padding:8px 20px; display:flex; flex-direction:column; align-items:center; gap:2px; }
+        .dilekce-badge-label { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+        .dilekce-badge-value { font-size:20px; font-weight:800; color:var(--accent-red); letter-spacing:0.5px; }
+        .dilekce-form-card { background:var(--bg-main); border:1px solid var(--border-color); border-radius:12px; padding:24px; margin-bottom:28px; }
+        .dilekce-form-row { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+        .dilekce-field { margin-bottom:20px; }
+        .dilekce-field-body { margin-bottom:0; }
+        .dilekce-label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:var(--text-light); margin-bottom:7px; }
+        .dilekce-label i { margin-right:5px; color:var(--accent-red); }
+        .dilekce-input { width:100%; padding:12px 14px; border:1px solid var(--border-color); border-radius:8px; background:var(--panel-bg); color:var(--text-color); font-size:14px; font-family:inherit; box-sizing:border-box; outline:none; transition:border-color 0.2s ease, box-shadow 0.2s ease; }
+        .dilekce-input:focus { border-color:var(--accent-red); box-shadow:0 0 0 3px rgba(229,57,53,0.15); }
+        .dilekce-input::placeholder { color:var(--text-muted); opacity:0.55; }
+        .dilekce-input-recipient { text-align:center; text-transform:uppercase; resize:vertical; min-height:82px; }
+        .dilekce-input-subject { font-weight:600; text-align:center; }
+        .dilekce-input-body { resize:vertical; min-height:220px; line-height:1.75; }
+        .dilekce-actions { display:flex; gap:10px; flex-wrap:wrap; padding-top:20px; border-top:1px solid var(--border-color); }
+        .dilekce-saved { margin-top:4px; }
+        .dilekce-saved-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+        .dilekce-saved-header h3 { margin:0; }
+        .dilekce-search { width:340px; max-width:100%; padding:10px 14px; border:1px solid var(--border-color); border-radius:8px; font-size:13px; background:var(--input-bg); color:var(--text-color); box-sizing:border-box; outline:none; transition:border-color 0.2s ease, box-shadow 0.2s ease; }
+        .dilekce-search:focus { border-color:var(--accent-red); box-shadow:0 0 0 3px rgba(229,57,53,0.15); }
+        @media (max-width:640px){ .dilekce-form-row { grid-template-columns:1fr; } .dilekce-badge { width:100%; } .dilekce-search { width:100%; } }

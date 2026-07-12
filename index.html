@@ -1001,41 +1001,51 @@
 
             <div id="dilekce-page" class="page">
                 <div id="lock-dilekce" class="page-lock-overlay"></div>
-                <h2><i class="fa-regular fa-note-sticky"></i> Dilekçe Oluştur</h2>
-                <div id="dilekce-form" style="display:flex; flex-direction:column; gap:14px; margin-bottom:30px;">
-                    <div style="display:flex; gap:14px; flex-wrap:wrap;align-items:center;">
-                        <div style="min-width:120px;"><b>Dilekçe No:</b> <span id="dlkIdGoster" style="font-weight:700;font-size:15px;">-</span></div>
+
+                <div class="dilekce-header">
+                    <h2><i class="fa-regular fa-file-lines"></i> Dilekçe Oluştur</h2>
+                    <div class="dilekce-badge">
+                        <span class="dilekce-badge-label">Dilekçe No</span>
+                        <span class="dilekce-badge-value" id="dlkIdGoster">-</span>
                     </div>
-                    <div style="display:flex; gap:14px; flex-wrap:wrap;">
-                        <div style="flex:1; min-width:200px;">
-                            <label>Gönderilecek Yer</label>
-                            <textarea id="dlkGonderilecekYer" rows="3" placeholder="Örn: ... Belediyesi İmar Müdürlüğü" style="width:100%;text-align:center;text-transform:uppercase;resize:vertical;" oninput="this.value=trToUpper(this.value)"></textarea>
+                </div>
+
+                <div id="dilekce-form" class="dilekce-form-card">
+                    <div class="dilekce-form-row">
+                        <div class="dilekce-field">
+                            <label class="dilekce-label"><i class="fa-solid fa-location-dot"></i> Gönderilecek Yer</label>
+                            <textarea id="dlkGonderilecekYer" class="dilekce-input dilekce-input-recipient" rows="3" placeholder="Örn: ... Belediyesi İmar Müdürlüğü" oninput="this.value=trToUpper(this.value)"></textarea>
                         </div>
-                        <div style="flex:1; min-width:200px;">
-                            <label>İlgi (varsa)</label>
-                            <input type="text" id="dlkIlgi" placeholder="İlgi yazı/vs." style="width:100%;" oninput="titleCaseInput(this)">
+                        <div class="dilekce-field">
+                            <label class="dilekce-label"><i class="fa-solid fa-paperclip"></i> İlgi (varsa)</label>
+                            <input type="text" id="dlkIlgi" class="dilekce-input" placeholder="İlgi yazı/vs." oninput="titleCaseInput(this)">
                         </div>
                     </div>
-                    <div>
-                        <label>Konu</label>
-                            <input type="text" id="dlkKonu" placeholder="Dilekçenin konusu" style="width:100%;" oninput="titleCaseInput(this)">
+
+                    <div class="dilekce-field">
+                        <label class="dilekce-label"><i class="fa-solid fa-heading"></i> Konu</label>
+                        <input type="text" id="dlkKonu" class="dilekce-input dilekce-input-subject" placeholder="Dilekçenin konusu" oninput="titleCaseInput(this)">
                     </div>
-                    <div>
-                        <label>Dilekçe Metni</label>
-                        <textarea id="dlkMetin" rows="10" placeholder="Dilekçe metnini buraya yazın..." style="width:100%; resize:vertical; font-family:inherit;"></textarea>
+
+                    <div class="dilekce-field dilekce-field-body">
+                        <label class="dilekce-label"><i class="fa-solid fa-align-left"></i> Dilekçe Metni</label>
+                        <textarea id="dlkMetin" class="dilekce-input dilekce-input-body" rows="10" placeholder="Dilekçe metnini buraya yazın..."></textarea>
                     </div>
-                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+                    <div class="dilekce-actions">
                         <button class="btn btn-save-green" onclick="dlkKaydet()"><i class="fa-solid fa-floppy-disk"></i> Dilekçeyi Kaydet</button>
                         <button class="btn btn-pdf-red" onclick="dlkPdfGoster('yeni')"><i class="fa-regular fa-file-lines"></i> PDF Önizle & İndir</button>
                         <button class="btn btn-clear-gray" onclick="dlkFormTemizle()"><i class="fa-solid fa-broom"></i> Formu Temizle</button>
                     </div>
                 </div>
 
-                <h3><i class="fa-solid fa-list"></i> Kaydedilen Dilekçeler</h3>
-                <div style="margin-bottom:10px;">
-                    <input type="text" id="dlkArama" placeholder="Ara: dilekçe no, konu, gönderilen yer, tarih..." oninput="dlkListele()" style="width:100%;padding:8px 12px;border:1px solid var(--border-color);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--text-color);box-sizing:border-box;">
+                <div class="dilekce-saved">
+                    <div class="dilekce-saved-header">
+                        <h3><i class="fa-solid fa-list"></i> Kaydedilen Dilekçeler</h3>
+                        <input type="text" id="dlkArama" class="dilekce-search" placeholder="Ara: dilekçe no, konu, gönderilen yer, tarih..." oninput="dlkListele()">
+                    </div>
+                    <div id="dlkListe"></div>
                 </div>
-                <div id="dlkListe"></div>
             </div>
 
             <div id="istakibi-page" class="page">

@@ -9745,7 +9745,7 @@ function itDurumMetni(o) {
                 }
 
                 var p = Promise.resolve();
-                p = p.then(function() { return ekle(sayfalar[0], true, true); });
+                p = p.then(function() { return ekle(sayfalar[0], sayfalar.length === 1, true); });
                 for (var si = 1; si < sayfalar.length; si++) {
                     (function(s) {
                         var son = (s === sayfalar.length - 1);
