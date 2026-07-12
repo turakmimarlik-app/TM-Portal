@@ -125,7 +125,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.22.0</div>
+                <div class="version-tag">V1.23.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -148,157 +148,155 @@
             <button class="dash-settings-btn" onclick="dashAyarGoster()" title="Widget Ayarları"><i class="fa-solid fa-sliders"></i></button>
         </div>
     </div>
-    <div id="dashStatsSection" class="dash-stat-row" data-perm="anasayfa">
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('teklif-liste')?'':menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null" style="cursor:pointer;" data-perm='["teklif-liste","teklif-olustur"]'><div class="icon"><i class="fa-regular fa-file-lines"></i></div><div class="num" id="dashStatTeklif">0</div><div class="lbl">TEKLİF</div></div>
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('musteriler-page')?menudenSayfaAc('musteriler','musteriler-page',document.getElementById('sub-musteriler')):null" style="cursor:pointer;" data-perm="musteriler-page"><div class="icon"><i class="fa-solid fa-user-group"></i></div><div class="num" id="dashStatMusteri">0</div><div class="lbl">MÜŞTERİ</div></div>
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('isortaklari-page')?menudenSayfaAc('isortaklari','isortaklari-page',document.getElementById('sub-isortaklari')):null" style="cursor:pointer;" data-perm="isortaklari-page"><div class="icon"><i class="fa-solid fa-handshake"></i></div><div class="num" id="dashStatPartner">0</div><div class="lbl">İŞ ORTAĞI</div></div>
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null" style="cursor:pointer;" data-perm='["is-muhasebe","tamamlanan-is-muhasebe"]'><div class="icon"><i class="fa-solid fa-helmet-safety"></i></div><div class="num" id="dashStatAktifIs">0</div><div class="lbl">AKTİF İŞ</div></div>
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('tamamlanan-is-muhasebeleri')?menudenSayfaAc('tamamlanan-is-muhasebeleri','tamamlanan-is-muhasebeleri-page',document.getElementById('sub-tamamlanan-is-muhasebeleri')):null" style="cursor:pointer;" data-perm='["tamamlanan-is-muhasebeleri","is-muhasebe"]'><div class="icon"><i class="fa-solid fa-circle-check"></i></div><div class="num" id="dashStatTamamlanan">0</div><div class="lbl">TAMAMLANAN</div></div>
-        <div class="dash-stat-box" onclick="yetkiSayfaAc('nakit-dekont')?menudenSayfaAc('nakit-dekont','nakit-dekont-page',document.getElementById('sub-nakit-dekont')):null" style="cursor:pointer;" data-perm="nakit-dekont"><div class="icon"><i class="fa-regular fa-credit-card"></i></div><div class="num" id="dashStatDekont">0</div><div class="lbl">DEKONT</div></div>
-    </div>
-    <div id="dashFinSection" class="dash-fin-row" data-perm='["hesap-takip","yillik-butce"]'>
-        <div class="dash-fin-card dfc-bakiye"><div class="dash-fin-label">ŞİRKET BAKİYESİ</div><div class="dash-fin-val green" id="dashFinBakiye">0,00 ₺</div></div>
-        <div class="dash-fin-card dfc-gelir"><div class="dash-fin-label">YILLIK GELİR</div><div class="dash-fin-val orange" id="dashFinGelir">0,00 ₺</div></div>
-        <div class="dash-fin-card dfc-gider"><div class="dash-fin-label">YILLIK GİDER</div><div class="dash-fin-val red" id="dashFinGider">0,00 ₺</div></div>
-    </div>
-    <div id="dashKalanSection" class="dash-kalan-row" data-perm="is-muhasebe">
-        <div class="dash-section-label">TAHSİLAT / ÖDEME DURUMU</div>
-        <div class="dash-kalan-cards">
-            <div class="dash-fin-card dfc-kalan"><div class="dash-fin-label">KALAN TAHSİLAT</div><div class="dash-fin-val orange" id="dashFinKalanTahsilat">0,00 ₺</div></div>
-            <div class="dash-fin-card dfc-kalan"><div class="dash-fin-label">KALAN ÖDEME</div><div class="dash-fin-val red" id="dashFinKalanOdeme">0,00 ₺</div></div>
-        </div>
-    </div>
-    <div id="dashChartSection" class="dash-modern-card" data-perm='["yillik-butce","hesap-takip"]' data-widget="chart" draggable="true">
-        <div class="dash-widget-head">
-            <span class="dash-drag-handle" draggable="true">⠿</span>
-            <span class="dash-widget-title"><i class="fa-solid fa-chart-simple"></i> GELİR / GİDER GRAFİĞİ</span>
-            <span class="dash-widget-actions">
-                <span class="dash-widget-hide" onclick="dashWidgetGizle('chart')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
-            </span>
-        </div>
-        <div class="dash-widget-body">
-            <canvas id="dashAylikChart" style="width:100%;max-height:300px;"></canvas>
-        </div>
-    </div>
-    <div class="dash-dynamic-grid" id="dashWidgetGrid">
-        <!-- Hızlı Kısayollar -->
-        <div class="dash-modern-card" data-widget="shortcuts" draggable="true">
-            <div class="dash-widget-head">
-                <span class="dash-drag-handle">⠿</span>
-                <span class="dash-widget-title"><i class="fa-solid fa-bolt"></i> HIZLI KISAYOLLAR</span>
-                <span class="dash-widget-actions">
-                    <span class="dash-widget-hide" onclick="dashWidgetGizle('shortcuts')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
-                </span>
+    <div class="dash-layout">
+        <div class="dash-left-panel">
+            <!-- TAKVIM -->
+            <div class="dash-left-card" data-perm="anasayfa.takvim">
+                <div class="dash-left-card-head">
+                    <span class="dash-left-card-title"><i class="fa-regular fa-calendar"></i> TAKVİM</span>
+                    <span class="dash-left-card-link" onclick="menudenSayfaAc('gorevler-takvim','gorevler-takvim-page',document.getElementById('menu-gorevler-takvim'))">TÜMÜNÜ GÖR →</span>
+                </div>
+                <div class="dash-left-card-body" id="asOzetTakvim"></div>
             </div>
-            <div class="dash-widget-body">
-                <div class="dash-shortcuts" id="dashShortcuts"></div>
+            <!-- GOREVLER -->
+            <div class="dash-left-card" data-perm="anasayfa.gorev">
+                <div class="dash-left-card-head">
+                    <span class="dash-left-card-title"><i class="fa-solid fa-list"></i> GÖREVLER</span>
+                    <span class="dash-left-card-link" onclick="menudenSayfaAc('gorevler-takvim','gorevler-takvim-page',document.getElementById('menu-gorevler-takvim'))">TÜMÜNÜ GÖR →</span>
+                </div>
+                <div class="dash-left-card-body" id="asOzetGorev"></div>
             </div>
         </div>
-        <!-- Takvim (Özet) -->
-        <div class="dash-modern-card" data-widget="takvim" data-perm="anasayfa.takvim" draggable="true">
-            <div class="dash-widget-head">
-                <span class="dash-drag-handle">⠿</span>
-                <span class="dash-widget-title"><i class="fa-regular fa-calendar"></i> TAKVİM</span>
-                <span class="dash-widget-actions">
-                    <span class="dash-widget-link" onclick="menudenSayfaAc('gorevler-takvim','gorevler-takvim-page',document.getElementById('menu-gorevler-takvim'))">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="dashWidgetGizle('takvim')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
-                </span>
+        <div class="dash-right-panel">
+            <div id="dashStatsSection" class="dash-stat-row" data-perm="anasayfa">
+                <div class="dash-stat-box" onclick="yetkiSayfaAc('teklif-liste')?'':menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null" style="cursor:pointer;" data-perm='["teklif-liste","teklif-olustur"]'><div class="icon"><i class="fa-regular fa-file-lines"></i></div><div class="num" id="dashStatTeklif">0</div><div class="lbl">TEKLİF</div></div>
+                <div class="dash-stat-box" onclick="yetkiSayfaAc('musteriler-page')?menudenSayfaAc('musteriler','musteriler-page',document.getElementById('sub-musteriler')):null" style="cursor:pointer;" data-perm="musteriler-page"><div class="icon"><i class="fa-solid fa-user-group"></i></div><div class="num" id="dashStatMusteri">0</div><div class="lbl">MÜŞTERİ</div></div>
+                <div class="dash-stat-box" onclick="yetkiSayfaAc('isortaklari-page')?menudenSayfaAc('isortaklari','isortaklari-page',document.getElementById('sub-isortaklari')):null" style="cursor:pointer;" data-perm="isortaklari-page"><div class="icon"><i class="fa-solid fa-handshake"></i></div><div class="num" id="dashStatPartner">0</div><div class="lbl">İŞ ORTAĞI</div></div>
+                <div class="dash-stat-box" onclick="yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null" style="cursor:pointer;" data-perm='["is-muhasebe","tamamlanan-is-muhasebe"]'><div class="icon"><i class="fa-solid fa-helmet-safety"></i></div><div class="num" id="dashStatAktifIs">0</div><div class="lbl">AKTİF İŞ</div></div>
+                <div class="dash-stat-box" onclick="yetkiSayfaAc('tamamlanan-is-muhasebeleri')?menudenSayfaAc('tamamlanan-is-muhasebeleri','tamamlanan-is-muhasebeleri-page',document.getElementById('sub-tamamlanan-is-muhasebeleri')):null" style="cursor:pointer;" data-perm='["tamamlanan-is-muhasebeleri","is-muhasebe"]'><div class="icon"><i class="fa-solid fa-circle-check"></i></div><div class="num" id="dashStatTamamlanan">0</div><div class="lbl">TAMAMLANAN</div></div>
+                <div class="dash-stat-box" onclick="yetkiSayfaAc('nakit-dekont')?menudenSayfaAc('nakit-dekont','nakit-dekont-page',document.getElementById('sub-nakit-dekont')):null" style="cursor:pointer;" data-perm="nakit-dekont"><div class="icon"><i class="fa-regular fa-credit-card"></i></div><div class="num" id="dashStatDekont">0</div><div class="lbl">DEKONT</div></div>
             </div>
-            <div class="dash-widget-body" id="asOzetTakvim"></div>
-        </div>
-        <!-- Son Teklifler -->
-        <div class="dash-modern-card" data-widget="teklifler" data-perm='["teklif-liste","teklif-olustur"]' draggable="true">
-            <div class="dash-widget-head" onclick="yetkiSayfaAc('teklif-liste')?menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null" style="cursor:pointer;">
-                <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
-                <span class="dash-widget-title"><i class="fa-regular fa-file-lines"></i> SON TEKLİFLER</span>
-                <span class="dash-widget-actions">
-                    <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('teklif-liste')?menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('teklifler')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
-                </span>
+            <div id="dashFinSection" class="dash-fin-row" data-perm='["hesap-takip","yillik-butce"]'>
+                <div class="dash-fin-card dfc-bakiye"><div class="dash-fin-label">ŞİRKET BAKİYESİ</div><div class="dash-fin-val green" id="dashFinBakiye">0,00 ₺</div></div>
+                <div class="dash-fin-card dfc-gelir"><div class="dash-fin-label">YILLIK GELİR</div><div class="dash-fin-val orange" id="dashFinGelir">0,00 ₺</div></div>
+                <div class="dash-fin-card dfc-gider"><div class="dash-fin-label">YILLIK GİDER</div><div class="dash-fin-val red" id="dashFinGider">0,00 ₺</div></div>
             </div>
-            <div class="dash-widget-body" style="padding:0;">
-                <table class="dash-table-widget">
-                    <thead><tr><th>#</th><th>MÜŞTERİ</th><th>İŞ / PROJE</th><th style="text-align:right;">TUTAR</th></tr></thead>
-                    <tbody id="dashRecentOfferBody"></tbody>
-                </table>
+            <div id="dashKalanSection" class="dash-kalan-row" data-perm="is-muhasebe">
+                <div class="dash-section-label">TAHSİLAT / ÖDEME DURUMU</div>
+                <div class="dash-kalan-cards">
+                    <div class="dash-fin-card dfc-kalan"><div class="dash-fin-label">KALAN TAHSİLAT</div><div class="dash-fin-val orange" id="dashFinKalanTahsilat">0,00 ₺</div></div>
+                    <div class="dash-fin-card dfc-kalan"><div class="dash-fin-label">KALAN ÖDEME</div><div class="dash-fin-val red" id="dashFinKalanOdeme">0,00 ₺</div></div>
+                </div>
             </div>
-        </div>
-        <!-- Aktif İşler -->
-        <div class="dash-modern-card" data-widget="isler" data-perm='["is-muhasebe","tamamlanan-is-muhasebe"]' draggable="true">
-            <div class="dash-widget-head" onclick="yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null" style="cursor:pointer;">
-                <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
-                <span class="dash-widget-title"><i class="fa-solid fa-helmet-safety"></i> AKTİF İŞLER</span>
-                <span class="dash-widget-actions">
-                    <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('isler')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
-                </span>
+            <div id="dashChartSection" class="dash-modern-card" data-perm='["yillik-butce","hesap-takip"]' data-widget="chart" draggable="true">
+                <div class="dash-widget-head">
+                    <span class="dash-drag-handle" draggable="true">⠿</span>
+                    <span class="dash-widget-title"><i class="fa-solid fa-chart-simple"></i> GELİR / GİDER GRAFİĞİ</span>
+                    <span class="dash-widget-actions">
+                        <span class="dash-widget-hide" onclick="dashWidgetGizle('chart')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                    </span>
+                </div>
+                <div class="dash-widget-body">
+                    <canvas id="dashAylikChart" style="width:100%;max-height:300px;"></canvas>
+                </div>
             </div>
-            <div id="dashActiveJobsBody" class="dash-widget-body"></div>
-        </div>
-        <!-- Görevler (Özet) -->
-        <div class="dash-modern-card" data-widget="gorevler" data-perm="anasayfa.gorev" draggable="true">
-            <div class="dash-widget-head">
-                <span class="dash-drag-handle">⠿</span>
-                <span class="dash-widget-title"><i class="fa-solid fa-list"></i> GÖREVLER</span>
-                <span class="dash-widget-actions">
-                    <span class="dash-widget-link" onclick="menudenSayfaAc('gorevler-takvim','gorevler-takvim-page',document.getElementById('menu-gorevler-takvim'))">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="dashWidgetGizle('gorevler')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
-                </span>
-            </div>
-            <div class="dash-widget-body" id="asOzetGorev"></div>
-        </div>
-        <!-- Fatura Özeti -->
-        <div class="dash-modern-card" data-widget="fatura" data-perm="fatura-takip" draggable="true">
-            <div class="dash-widget-head" onclick="yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null" style="cursor:pointer;">
-                <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
-                <span class="dash-widget-title"><i class="fa-solid fa-coins"></i> FATURA ÖZETİ</span>
-                <span class="dash-widget-actions">
-                    <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('fatura')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
-                </span>
-            </div>
-            <div class="dash-widget-body" style="padding:0;">
-                <table class="dash-table-widget">
-                    <thead><tr><th>TÜR</th><th style="text-align:center;">ADET</th><th style="text-align:right;">TOPLAM</th><th style="text-align:right;">KDV</th></tr></thead>
-                    <tbody id="dashInvoiceBody"></tbody>
-                </table>
-            </div>
-        </div>
-        <!-- Piyasa Endeksi -->
-        <div class="dash-modern-card" data-widget="piyasa" data-perm="piyasa-fiyatlari" draggable="true">
-            <div class="dash-widget-head" onclick="yetkiSayfaAc('piyasa-fiyatlari')?menudenSayfaAc('piyasa-fiyatlari','piyasa-fiyatlari-page',document.getElementById('sub-piyasa-fiyatlari')):null" style="cursor:pointer;">
-                <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
-                <span class="dash-widget-title"><i class="fa-solid fa-chart-simple"></i> PİYASA ENDEKSİ</span>
-                <span class="dash-widget-actions">
-                    <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('piyasa-fiyatlari')?menudenSayfaAc('piyasa-fiyatlari','piyasa-fiyatlari-page',document.getElementById('sub-piyasa-fiyatlari')):null">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('piyasa')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
-                </span>
-            </div>
-            <div id="dashPiyasaIndexList" class="dash-widget-body"></div>
-        </div>
-        <!-- Vergi Takvimi -->
-        <div class="dash-modern-card" data-widget="vergi" data-perm="fatura-takip" draggable="true">
-            <div class="dash-widget-head" onclick="yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null" style="cursor:pointer;">
-                <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
-                <span class="dash-widget-title"><i class="fa-regular fa-calendar"></i> VERGİ TAKVİMİ</span>
-                <span class="dash-widget-actions">
-                    <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null">TÜMÜNÜ GÖR →</span>
-                    <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('vergi')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
-                </span>
-            </div>
-            <div id="dashVergiTakvimi" class="dash-widget-body"></div>
-        </div>
-        <!-- Ofis Notları -->
-        <div class="dash-modern-card" data-widget="notlar" draggable="true">
-            <div class="dash-widget-head">
-                <span class="dash-drag-handle">⠿</span>
-                <span class="dash-widget-title"><i class="fa-regular fa-note-sticky"></i> OFİS NOTLARI</span>
-                <span class="dash-widget-actions">
-                    <span class="dash-widget-hide" onclick="dashWidgetGizle('notlar')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
-                </span>
-            </div>
-            <div class="dash-widget-body" style="padding:12px 16px;">
-                <textarea id="dashOfficeNotes" class="dash-office-notes" oninput="dashNotlariKaydet(this.value)" placeholder="Notlarınızı buraya yazın..." style="width:100%;min-height:70px;padding:10px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-main);color:var(--text-dark);font-size:13px;resize:vertical;box-sizing:border-box;"></textarea>
+            <div class="dash-dynamic-grid" id="dashWidgetGrid">
+                <!-- Hızlı Kısayollar -->
+                <div class="dash-modern-card" data-widget="shortcuts" draggable="true">
+                    <div class="dash-widget-head">
+                        <span class="dash-drag-handle">⠿</span>
+                        <span class="dash-widget-title"><i class="fa-solid fa-bolt"></i> HIZLI KISAYOLLAR</span>
+                        <span class="dash-widget-actions">
+                            <span class="dash-widget-hide" onclick="dashWidgetGizle('shortcuts')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                    </div>
+                    <div class="dash-widget-body">
+                        <div class="dash-shortcuts" id="dashShortcuts"></div>
+                    </div>
+                </div>
+                <!-- Son Teklifler -->
+                <div class="dash-modern-card" data-widget="teklifler" data-perm='["teklif-liste","teklif-olustur"]' draggable="true">
+                    <div class="dash-widget-head" onclick="yetkiSayfaAc('teklif-liste')?menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null" style="cursor:pointer;">
+                        <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
+                        <span class="dash-widget-title"><i class="fa-regular fa-file-lines"></i> SON TEKLİFLER</span>
+                        <span class="dash-widget-actions">
+                            <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('teklif-liste')?menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null">TÜMÜNÜ GÖR →</span>
+                            <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('teklifler')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                    </div>
+                    <div class="dash-widget-body" style="padding:0;">
+                        <table class="dash-table-widget">
+                            <thead><tr><th>#</th><th>MÜŞTERİ</th><th>İŞ / PROJE</th><th style="text-align:right;">TUTAR</th></tr></thead>
+                            <tbody id="dashRecentOfferBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Aktif İşler -->
+                <div class="dash-modern-card" data-widget="isler" data-perm='["is-muhasebe","tamamlanan-is-muhasebe"]' draggable="true">
+                    <div class="dash-widget-head" onclick="yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null" style="cursor:pointer;">
+                        <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
+                        <span class="dash-widget-title"><i class="fa-solid fa-helmet-safety"></i> AKTİF İŞLER</span>
+                        <span class="dash-widget-actions">
+                            <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null">TÜMÜNÜ GÖR →</span>
+                            <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('isler')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                    </div>
+                    <div id="dashActiveJobsBody" class="dash-widget-body"></div>
+                </div>
+                <!-- Fatura Özeti -->
+                <div class="dash-modern-card" data-widget="fatura" data-perm="fatura-takip" draggable="true">
+                    <div class="dash-widget-head" onclick="yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null" style="cursor:pointer;">
+                        <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
+                        <span class="dash-widget-title"><i class="fa-solid fa-coins"></i> FATURA ÖZETİ</span>
+                        <span class="dash-widget-actions">
+                            <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null">TÜMÜNÜ GÖR →</span>
+                            <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('fatura')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                    </div>
+                    <div class="dash-widget-body" style="padding:0;">
+                        <table class="dash-table-widget">
+                            <thead><tr><th>TÜR</th><th style="text-align:center;">ADET</th><th style="text-align:right;">TOPLAM</th><th style="text-align:right;">KDV</th></tr></thead>
+                            <tbody id="dashInvoiceBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Piyasa Endeksi -->
+                <div class="dash-modern-card" data-widget="piyasa" data-perm="piyasa-fiyatlari" draggable="true">
+                    <div class="dash-widget-head" onclick="yetkiSayfaAc('piyasa-fiyatlari')?menudenSayfaAc('piyasa-fiyatlari','piyasa-fiyatlari-page',document.getElementById('sub-piyasa-fiyatlari')):null" style="cursor:pointer;">
+                        <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
+                        <span class="dash-widget-title"><i class="fa-solid fa-chart-simple"></i> PİYASA ENDEKSİ</span>
+                        <span class="dash-widget-actions">
+                            <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('piyasa-fiyatlari')?menudenSayfaAc('piyasa-fiyatlari','piyasa-fiyatlari-page',document.getElementById('sub-piyasa-fiyatlari')):null">TÜMÜNÜ GÖR →</span>
+                            <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('piyasa')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                    </div>
+                    <div id="dashPiyasaIndexList" class="dash-widget-body"></div>
+                </div>
+                <!-- Vergi Takvimi -->
+                <div class="dash-modern-card" data-widget="vergi" data-perm="fatura-takip" draggable="true">
+                    <div class="dash-widget-head" onclick="yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null" style="cursor:pointer;">
+                        <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
+                        <span class="dash-widget-title"><i class="fa-regular fa-calendar"></i> VERGİ TAKVİMİ</span>
+                        <span class="dash-widget-actions">
+                            <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null">TÜMÜNÜ GÖR →</span>
+                            <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('vergi')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                    </div>
+                    <div id="dashVergiTakvimi" class="dash-widget-body"></div>
+                </div>
+                <!-- Ofis Notları -->
+                <div class="dash-modern-card" data-widget="notlar" draggable="true">
+                    <div class="dash-widget-head">
+                        <span class="dash-drag-handle">⠿</span>
+                        <span class="dash-widget-title"><i class="fa-regular fa-note-sticky"></i> OFİS NOTLARI</span>
+                        <span class="dash-widget-actions">
+                            <span class="dash-widget-hide" onclick="dashWidgetGizle('notlar')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                    </div>
+                    <div class="dash-widget-body" style="padding:12px 16px;">
+                        <textarea id="dashOfficeNotes" class="dash-office-notes" oninput="dashNotlariKaydet(this.value)" placeholder="Notlarınızı buraya yazın..." style="width:100%;min-height:70px;padding:10px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-main);color:var(--text-dark);font-size:13px;resize:vertical;box-sizing:border-box;"></textarea>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
