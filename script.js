@@ -447,6 +447,7 @@ function gorevMailGonder(gorev) {
             window.addEventListener('resize', tmScrollHintKontrol);
         });
 
+        let AKTIF_KULLANICI_ADI = "";
         let AKTIF_KULLANICI_YETKILERI = [];
         let TEKLIF_SIRALAMA_YONU = "AZALAN";
         let P_GRUP_SIRALAMA = {};
@@ -476,10 +477,12 @@ function gorevMailGonder(gorev) {
         function yetkiCheckboxlariniRenderEt() {
             const container = document.getElementById("yetkiCheckboxContainer");
             if (!container) return;
+            let isKurucu = false;
+            try { var master = JSON.parse(localStorage.getItem("tm_admin_creds_final")); if (master && master.usr && AKTIF_KULLANICI_ADI === master.usr) isKurucu = true; } catch(e) {}
             let html = '<div class="checkbox-group" style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px; background:none; border:none; padding:0;">';
             TM_YETKI_TANIMLARI.forEach(function(item) {
                 html += '<div class="checkbox-item" style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--panel-bg);border:1px solid var(--border-color);border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.02);">';
-                html += '<input type="checkbox" id="auth_' + item.key.replace(/[.-]/g,"_") + '" style="width:16px;height:16px;cursor:pointer;">';
+                html += '<input type="checkbox" id="auth_' + item.key.replace(/[.-]/g,"_") + '" style="width:16px;height:16px;cursor:pointer;"' + (isKurucu ? '' : ' disabled') + '>';
                 html += '<label for="auth_' + item.key.replace(/[.-]/g,"_") + '" style="margin:0;text-transform:none;font-weight:600;font-size:13px;cursor:pointer;flex:1;">' + item.label + '</label>';
                 html += '</div>';
             });
@@ -957,6 +960,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("loginSection").style.display = "none";
             document.getElementById("portalSection").style.display = "block";
             sidebardaLogoyuGoster();
+            AKTIF_KULLANICI_ADI = kullanici;
             AKTIF_KULLANICI_YETKILERI = yetkiler;
             try { localStorage.setItem("tm_active_user", kullanici); } catch(e) { console.error("Oturum kaydetme hatasi:", e); }
             try { sessionStorage.setItem("tm_session_active", "1"); } catch(e) { console.error("Session kaydetme hatasi:", e); }
