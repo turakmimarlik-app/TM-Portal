@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.20.8';
+        var APP_VERSION = 'V1.21.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -3813,6 +3813,8 @@ function gorevMailGonder(gorev) {
                 if (r.style.display === "table-row") acikRows.add(r.id);
             });
             tbody.innerHTML = "";
+            var metaEl = document.getElementById("tlHeaderMeta");
+            if(metaEl) metaEl.innerHTML = db.length > 0 ? 'Toplam <strong>' + db.length + '</strong> teklif' : '';
             if(db.length === 0) { tbody.innerHTML = '<tr><td colspan="7">'+tmEmptyStateHTML('<i class="fa-regular fa-file-lines"></i>','Henüz kayıtlı teklif bulunmuyor.','Yeni bir teklif oluşturmak için yukarıdaki butonu kullanın.')+'</td></tr>'; return; }
 
             db.sort((a, b) => {

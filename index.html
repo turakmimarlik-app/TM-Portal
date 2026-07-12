@@ -125,7 +125,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.20.8</div>
+                <div class="version-tag">V1.21.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -741,23 +741,34 @@
 
             <div id="teklif-liste-page" class="page">
                 <div id="lock-teklif-liste" class="page-lock-overlay"></div>
-                <h2><i class="fa-solid fa-list"></i> Hazırlanan Geçmiş Teklifler</h2>
-                <input type="text" id="teklifAramaInput" class="search-box" onkeyup="teklifleriFiltrele()" oninput="teklifleriFiltrele()" placeholder="Arama (ID, İsim, Firma, Proje, Tarih veya Hazırlayan)...">
-                
-                <table class="app-table">
-                    <thead>
-                        <tr>
-                            <th>Teklif ID</th>
-                            <th id="th-teklif-tarih" class="th-sortable" onclick="teklifListesiTarihSirala()">Tarih <span id="sort-direction-icon">↓</span></th>
-                            <th>Müşteri / Firma</th>
-                            <th>İş / Proje Tanımı</th>
-                            <th>Hazırlayan</th>
-                            <th>Genel Toplam</th>
-                            <th>İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody id="teklifListTableBody"></tbody>
-                </table>
+
+                <div class="tl-header">
+                    <div class="tl-header-left">
+                        <h2><i class="fa-regular fa-file-lines"></i> Geçmiş Teklifler</h2>
+                        <div class="tl-header-meta" id="tlHeaderMeta">Toplam <strong>0</strong> teklif</div>
+                    </div>
+                    <div class="tl-search-wrap">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="teklifAramaInput" onkeyup="teklifleriFiltrele()" oninput="teklifleriFiltrele()" placeholder="Ara: ID, isim, firma, proje, tarih..." autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="tl-table-wrap">
+                    <table class="tl-table">
+                        <thead>
+                            <tr>
+                                <th class="tl-th-id">ID</th>
+                                <th id="th-teklif-tarih" class="tl-th-sortable" onclick="teklifListesiTarihSirala()">Tarih <span id="sort-direction-icon">↓</span></th>
+                                <th class="tl-th-client">Müşteri / Firma</th>
+                                <th class="tl-th-job">İş / Proje</th>
+                                <th class="tl-th-prep">Hazırlayan</th>
+                                <th class="tl-th-total">Genel Toplam</th>
+                                <th class="tl-th-actions">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teklifListTableBody"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="tm-fiyatlar-page" class="page">

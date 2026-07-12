@@ -234,6 +234,53 @@
         .detail-expanded-row { display: none; background: var(--panel-bg); border-left: 4px solid var(--accent-red); }
         .detail-panel-inner { padding: 20px; box-sizing: border-box; }
         .detail-grid-box { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 6px; }
+        /* ===== GE�M�� TEKL�FLER — PROFESYONEL TASARIM ===== */
+        #teklif-liste-page .tl-header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
+        #teklif-liste-page .tl-header-left { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+        #teklif-liste-page .tl-header-left h2 { margin:0; border:none; padding:0; white-space:nowrap; }
+        #teklif-liste-page .tl-header-meta { font-size:12px; color:var(--text-light); background:var(--bg-main); padding:5px 14px; border-radius:20px; border:1px solid var(--border-color); white-space:nowrap; }
+        #teklif-liste-page .tl-header-meta strong { color:var(--accent-red); }
+        #teklif-liste-page .tl-search-wrap { position:relative; max-width:360px; flex:1; min-width:200px; }
+        #teklif-liste-page .tl-search-wrap i { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text-light); font-size:13px; pointer-events:none; }
+        #teklif-liste-page .tl-search-wrap input { width:100%; padding:10px 14px 10px 36px; border:1px solid var(--border-color); border-radius:10px; font-size:13px; background:var(--input-bg); color:var(--text-dark); outline:none; box-sizing:border-box; transition:border-color 0.2s,box-shadow 0.2s; }
+        #teklif-liste-page .tl-search-wrap input:focus { border-color:var(--accent-red); box-shadow:0 0 0 3px rgba(229,57,53,0.12); }
+        #teklif-liste-page .tl-table-wrap { border:1px solid var(--border-color); border-radius:12px; overflow:hidden; background:var(--panel-bg); }
+        #teklif-liste-page .tl-table { width:100%; border-collapse:collapse; table-layout:fixed; }
+        #teklif-liste-page .tl-table thead th { background:var(--bg-main); padding:12px 14px; font-size:10px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.6px; font-weight:700; border-bottom:2px solid var(--border-color); text-align:left; white-space:nowrap; }
+        #teklif-liste-page .tl-table thead tr th:last-child { text-align:center; }
+        #teklif-liste-page .tl-table tbody td { padding:12px 14px; border-bottom:1px solid var(--border-color); font-size:13px; vertical-align:middle; }
+        #teklif-liste-page .tl-table tbody tr:last-child td { border-bottom:none; }
+        #teklif-liste-page .tl-th-id { width:60px; text-align:center !important; }
+        #teklif-liste-page .tl-th-sortable { cursor:pointer; user-select:none; width:85px; }
+        #teklif-liste-page .tl-th-sortable:hover { color:var(--accent-red) !important; }
+        #teklif-liste-page .tl-th-client { width:22%; }
+        #teklif-liste-page .tl-th-job { width:24%; }
+        #teklif-liste-page .tl-th-prep { width:12%; }
+        #teklif-liste-page .tl-th-total { width:14%; text-align:right !important; }
+        #teklif-liste-page .tl-th-actions { width:100px; text-align:center !important; }
+        #teklif-liste-page .tl-table .teklif-row-header { cursor:pointer; transition:background 0.15s; }
+        #teklif-liste-page .tl-table .teklif-row-header:hover td { background:rgba(229,57,53,0.04); }
+        #teklif-liste-page .tl-table .teklif-row-header td:first-child { font-weight:700; color:var(--accent-red); font-size:12px; text-align:center; }
+        #teklif-liste-page .tl-table .teklif-row-header td:nth-child(6) { font-weight:700; color:var(--accent-red); white-space:nowrap; text-align:right; }
+        #teklif-liste-page .tl-table .teklif-row-header td:last-child { text-align:center; white-space:nowrap; }
+        #teklif-liste-page .tl-table .detail-expanded-row td { padding:0; }
+        #teklif-liste-page .tl-table .detail-panel-inner { padding:16px 20px 20px 20px; background:var(--bg-main); border-top:1px solid var(--border-color); }
+        #teklif-liste-page .tl-table .detail-grid-box { background:var(--panel-bg); border:1px solid var(--border-color); border-radius:8px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+        #teklif-liste-page .tl-table .detail-grid-box > div:first-child { font-size:12px; color:var(--accent-red); font-weight:700; padding-bottom:8px; margin-bottom:10px; border-bottom:1px solid var(--border-color); letter-spacing:0.3px; }
+        #teklif-liste-page .tl-table .detail-grid-box p { font-size:13px; margin:4px 0; }
+        #teklif-liste-page .tl-table .detail-grid-box table { font-size:12px; }
+        #teklif-liste-page .tl-table .detail-grid-box table th { padding:6px 8px; border-bottom:1px solid var(--border-color); font-size:10px; text-transform:uppercase; letter-spacing:0.4px; color:var(--text-light); font-weight:700; text-align:left; background:transparent; }
+        #teklif-liste-page .tl-table .detail-grid-box table td { padding:6px 8px; border-bottom:1px solid var(--border-color); font-size:12px; }
+        #teklif-liste-page .tl-table .detail-grid-box table tbody tr:last-child td { border-bottom:none; }
+        @media (max-width:768px){
+            #teklif-liste-page .tl-header { flex-direction:column; align-items:stretch; }
+            #teklif-liste-page .tl-search-wrap { max-width:100%; }
+            #teklif-liste-page .tl-table-wrap { border-radius:8px; }
+            #teklif-liste-page .tl-table { table-layout:auto; font-size:12px; }
+        }
+        #teklif-liste-page .tl-table .btn-pdf-red { padding:5px 10px; font-size:10px; }
+        #teklif-liste-page .tl-table .btn-danger { padding:5px 10px; font-size:10px; }
+        #teklif-liste-page .tl-table .btn-pdf-red i, #teklif-liste-page .tl-table .btn-danger i { font-size:inherit; }
 
         /* CANLI ÖZET KARTI */
         .live-summary-card { background: var(--bg-main); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); width: 320px; margin-left: auto; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
