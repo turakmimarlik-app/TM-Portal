@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.0';
+        var APP_VERSION = 'V1.23.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -1431,8 +1431,6 @@ function gorevMailGonder(gorev) {
 
         /* ================= ANA SAYFA DURUM MOTORU ================= */
         function dashboardVerileriniGuncelle() {
-            var gizli = dashWidgetGizliListesi().filter(function(w){ return w !== "takvim" && w !== "gorevler"; });
-            dashWidgetGizliKaydet(gizli);
             document.querySelectorAll("#anasayfa-page [data-perm]").forEach(function(el){
                 var val = el.getAttribute("data-perm");
                 var goster = true;
@@ -1791,13 +1789,13 @@ function gorevMailGonder(gorev) {
             if (!modal || !liste) return;
             var gizli = dashWidgetGizliListesi();
             var widgetAdlari = {
-                chart:"Gelir/Gider Grafiği", shortcuts:"Hızlı Kısayollar",
-                teklifler:"Son Teklifler", isler:"Aktif İşler",
+                chart:"Gelir/Gider Grafiği", shortcuts:"Hızlı Kısayollar", takvim:"Takvim",
+                teklifler:"Son Teklifler", isler:"Aktif İşler", gorevler:"Görevler",
                 fatura:"Fatura Özeti", piyasa:"Piyasa Endeksi", vergi:"Vergi Takvimi", notlar:"Ofis Notları"
             };
             var widgetIkonlari = {
-                chart:'<i class="fa-solid fa-chart-simple"></i>', shortcuts:'<i class="fa-solid fa-rocket"></i>', teklifler:'<i class="fa-regular fa-file-lines"></i>',
-                isler:'<i class="fa-solid fa-helmet-safety"></i>', fatura:'<i class="fa-solid fa-coins"></i>', piyasa:'<i class="fa-solid fa-chart-simple"></i>', vergi:'<i class="fa-regular fa-calendar"></i>', notlar:'<i class="fa-regular fa-note-sticky"></i>'
+                chart:'<i class="fa-solid fa-chart-simple"></i>', shortcuts:'<i class="fa-solid fa-rocket"></i>', takvim:'<i class="fa-regular fa-calendar"></i>', teklifler:'<i class="fa-regular fa-file-lines"></i>',
+                isler:'<i class="fa-solid fa-helmet-safety"></i>', gorevler:'<i class="fa-solid fa-list"></i>', fatura:'<i class="fa-solid fa-coins"></i>', piyasa:'<i class="fa-solid fa-chart-simple"></i>', vergi:'<i class="fa-regular fa-calendar"></i>', notlar:'<i class="fa-regular fa-note-sticky"></i>'
             };
             var h = "";
             Object.keys(widgetAdlari).forEach(function(wid){
@@ -3121,6 +3119,32 @@ function gorevMailGonder(gorev) {
             var timeRow = document.getElementById("asEventTimeRow");
             timeRow.style.display = tip === "note" ? "none" : "block";
         }
+        document.addEventListener("click", function(e) {
+            var cs = document.getElementById("asEventTypeCustom");
+            if (cs && !cs.contains(e.target)) cs.classList.remove("as-open");
+        });
+        function asCustomSelectToggle() {
+            document.getElementById("asEventTypeCustom").classList.toggle("as-open");
+        }
+        function asCustomSelectSec(val) {
+            var h = document.getElementById("asEventType");
+            var t = document.getElementById("asEventTypeText");
+            var opts = document.querySelectorAll("#asEventTypeOptions .as-custom-select-option");
+            opts.forEach(function(o) {
+                if (o.getAttribute("data-value") === val) { t.textContent = o.textContent; h.value = val; }
+            });
+            document.getElementById("asEventTypeCustom").classList.remove("as-open");
+            asEventTypeDegisti();
+        }
+        function asCustomSelectSync() {
+            var h = document.getElementById("asEventType");
+            var t = document.getElementById("asEventTypeText");
+            if (!h || !t) return;
+            var opts = document.querySelectorAll("#asEventTypeOptions .as-custom-select-option");
+            opts.forEach(function(o) {
+                if (o.getAttribute("data-value") === h.value) t.textContent = o.textContent;
+            });
+        }
         function asEventTumGunDegisti() {
             var cb = document.getElementById("asEventTumGun");
             var timeInput = document.getElementById("asEventTime");
@@ -3136,6 +3160,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("asEventTumGun").checked = false;
             document.getElementById("asEventDesc").value = "";
             document.getElementById("asEventType").value = "reminder";
+            asCustomSelectSync();
             document.getElementById("asEventTekrar").checked = false;
             document.getElementById("asEventTekrarOptions").style.display = "none";
             document.getElementById("asEventPaylas").checked = false;
@@ -3163,6 +3188,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("asEventTumGun").checked = ev.tumGun || false;
             document.getElementById("asEventDesc").value = ev.description || "";
             document.getElementById("asEventType").value = ev.type;
+            asCustomSelectSync();
             asEventTypeDegisti();
             asEventTumGunDegisti();
             if (ev.tekrar && ev.tekrar.tip) {
@@ -3181,6 +3207,8 @@ function gorevMailGonder(gorev) {
             document.getElementById("asEventTitle").disabled = !yetkili;
             document.getElementById("asEventDesc").disabled = !yetkili;
             document.getElementById("asEventType").disabled = !yetkili;
+            var ct = document.querySelector(".as-custom-select-trigger");
+            if (ct) ct.style.pointerEvents = yetkili ? "" : "none";
             document.getElementById("asEventTime").disabled = !yetkili || document.getElementById("asEventTumGun").checked;
             document.getElementById("asEventTumGun").disabled = !yetkili;
             document.getElementById("asEventTekrar").disabled = !yetkili;

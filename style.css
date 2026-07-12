@@ -796,18 +796,6 @@
         .dash-widget-body table { margin:0; }
         .dash-widget-body .dash-office-notes { min-height:70px; }
 
-        .dash-layout { display:grid; grid-template-columns:340px 1fr; gap:20px; align-items:start; }
-        .dash-left-panel { display:flex; flex-direction:column; gap:18px; position:sticky; top:10px; }
-        .dash-left-card { background:var(--panel-bg); border:1px solid var(--border-color); border-radius:12px; overflow:hidden; box-shadow:0 2px 16px rgba(0,0,0,0.04); transition:box-shadow 0.2s; }
-        .dash-left-card:hover { box-shadow:0 4px 24px rgba(0,0,0,0.08); }
-        .dash-left-card-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:linear-gradient(135deg,#1a1a2e,#16213e); border-bottom:1px solid var(--border-color); }
-        .dash-left-card-title { font-size:13px; font-weight:700; color:#fff; letter-spacing:0.5px; display:flex; align-items:center; gap:6px; }
-        .dash-left-card-title i { color:var(--accent-red); }
-        .dash-left-card-link { font-size:10px; color:rgba(255,255,255,0.6); font-weight:600; cursor:pointer; padding:2px 8px; border-radius:4px; transition:0.15s; white-space:nowrap; }
-        .dash-left-card-link:hover { color:#fff; background:rgba(255,255,255,0.08); }
-        .dash-left-card-body { padding:12px; }
-        .dash-left-card[data-perm]:not([style*="display:none"]) + .dash-left-card[data-perm]:not([style*="display:none"]) { border-top:1px solid var(--border-color); }
-
         /* Hızlı Kısayollar */
         .dash-shortcuts { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; }
         .dash-shortcut-item { display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 6px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-main); cursor:pointer; transition:0.2s; text-decoration:none; color:var(--text-dark); font-weight:600; font-size:11px; }
@@ -885,8 +873,8 @@
         }
         .as-btn-assign:hover { background:#1B5E20; transform:translateY(-1px); }
         .as-modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(4px); }
-        .as-modal-box { background:var(--panel-bg); border-radius:14px; max-width:460px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); overflow:visible; animation:asModalIn 0.25s ease; }
-        @keyframes asModalIn { from { opacity:0; margin-top:-15px; } to { opacity:1; margin-top:0; } }
+        .as-modal-box { background:var(--panel-bg); border-radius:14px; max-width:460px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); overflow:hidden; animation:asModalIn 0.25s ease; }
+        @keyframes asModalIn { from { opacity:0; transform:scale(0.92) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
         .as-modal-header { background:linear-gradient(135deg, #1a1a2e, #16213e); padding:16px 20px; display:flex; justify-content:space-between; align-items:center; }
         .as-modal-header h3 { margin:0; font-size:14px; font-weight:700; letter-spacing:1px; color:#fff; }
         .as-modal-close { background:none; border:none; color:rgba(255,255,255,0.6); font-size:18px; cursor:pointer; padding:0 4px; transition:0.15s; }
@@ -896,6 +884,17 @@
         .as-modal-field label { display:block; font-size:10px; font-weight:700; color:var(--text-light); margin-bottom:4px; letter-spacing:0.5px; }
         .as-modal-field input, .as-modal-field textarea, .as-modal-field select { width:100%; padding:9px 12px; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-main); color:var(--text-dark); font-size:13px; box-sizing:border-box; transition:0.15s; }
         .as-modal-field input:focus, .as-modal-field textarea:focus, .as-modal-field select:focus { outline:none; border-color:var(--accent-red); box-shadow:0 0 0 2px rgba(158,42,43,0.15); }
+        .as-custom-select { position:relative; width:100%; }
+        .as-custom-select-trigger { display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-main); color:var(--text-dark); font-size:13px; cursor:pointer; transition:0.15s; user-select:none; }
+        .as-custom-select-trigger:hover { border-color:var(--accent-red); }
+        .as-custom-select-trigger i { font-size:11px; color:var(--text-light); transition:0.2s; }
+        .as-custom-select.as-open .as-custom-select-trigger { border-color:var(--accent-red); box-shadow:0 0 0 2px rgba(158,42,43,0.15); }
+        .as-custom-select.as-open .as-custom-select-trigger i { transform:rotate(180deg); }
+        .as-custom-select-options { position:absolute; top:100%; left:0; right:0; z-index:999; background:var(--panel-bg); border:1px solid var(--border-color); border-radius:6px; margin-top:2px; box-shadow:0 8px 24px rgba(0,0,0,0.15); display:none; overflow:hidden; }
+        .as-custom-select.as-open .as-custom-select-options { display:block; }
+        .as-custom-select-option { padding:9px 12px; font-size:13px; font-weight:600; cursor:pointer; transition:0.1s; color:var(--text-dark); }
+        .as-custom-select-option:hover { background:rgba(158,42,43,0.08); color:var(--accent-red); }
+        .as-custom-select-option:first-child { border-bottom:1px solid var(--border-color); }
         .as-modal-actions { padding:0 20px 20px 20px; display:flex; gap:10px; justify-content:flex-end; }
         .as-btn-save {
             background: linear-gradient(135deg, #2E7D32, #1B5E20);
@@ -1034,7 +1033,6 @@
         .as-takvim-ozet-bos { text-align:center; padding:20px; color:var(--text-light); font-size:14px; }
         @media (max-width:600px) { .as-takvim-ozet-item { flex-wrap:wrap; } .as-takvim-ozet-tarih { min-width:60px; font-size:12px; } .as-takvim-ozet-event { font-size:12px; max-width:180px; } }
         @media (max-width: 1200px) { .dash-stat-row { grid-template-columns: repeat(3, 1fr); } .dash-fin-row { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 992px) { .dash-layout { grid-template-columns:1fr; } .dash-left-panel { position:static; } }
         @media (max-width: 768px) { .dash-stat-row { grid-template-columns: repeat(2, 1fr); } .dash-fin-row { grid-template-columns: 1fr; } }
 
         /* PORTFÖY MODÜLÜ MİMARİ MINIMALIST KART STİLLERİ */

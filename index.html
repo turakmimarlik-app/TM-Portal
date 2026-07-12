@@ -125,7 +125,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.23.0</div>
+                <div class="version-tag">V1.23.1</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -148,27 +148,7 @@
             <button class="dash-settings-btn" onclick="dashAyarGoster()" title="Widget Ayarları"><i class="fa-solid fa-sliders"></i></button>
         </div>
     </div>
-    <div class="dash-layout">
-        <div class="dash-left-panel">
-            <!-- TAKVIM -->
-            <div class="dash-left-card" data-perm="anasayfa.takvim">
-                <div class="dash-left-card-head">
-                    <span class="dash-left-card-title"><i class="fa-regular fa-calendar"></i> TAKVİM</span>
-                    <span class="dash-left-card-link" onclick="menudenSayfaAc('gorevler-takvim','gorevler-takvim-page',document.getElementById('menu-gorevler-takvim'))">TÜMÜNÜ GÖR →</span>
-                </div>
-                <div class="dash-left-card-body" id="asOzetTakvim"></div>
-            </div>
-            <!-- GOREVLER -->
-            <div class="dash-left-card" data-perm="anasayfa.gorev">
-                <div class="dash-left-card-head">
-                    <span class="dash-left-card-title"><i class="fa-solid fa-list"></i> GÖREVLER</span>
-                    <span class="dash-left-card-link" onclick="menudenSayfaAc('gorevler-takvim','gorevler-takvim-page',document.getElementById('menu-gorevler-takvim'))">TÜMÜNÜ GÖR →</span>
-                </div>
-                <div class="dash-left-card-body" id="asOzetGorev"></div>
-            </div>
-        </div>
-        <div class="dash-right-panel">
-            <div id="dashStatsSection" class="dash-stat-row" data-perm="anasayfa">
+    <div id="dashStatsSection" class="dash-stat-row" data-perm="anasayfa">
                 <div class="dash-stat-box" onclick="yetkiSayfaAc('teklif-liste')?'':menudenSayfaAc('teklif-liste','teklif-liste-page',document.getElementById('sub-teklif-liste')):null" style="cursor:pointer;" data-perm='["teklif-liste","teklif-olustur"]'><div class="icon"><i class="fa-regular fa-file-lines"></i></div><div class="num" id="dashStatTeklif">0</div><div class="lbl">TEKLİF</div></div>
                 <div class="dash-stat-box" onclick="yetkiSayfaAc('musteriler-page')?menudenSayfaAc('musteriler','musteriler-page',document.getElementById('sub-musteriler')):null" style="cursor:pointer;" data-perm="musteriler-page"><div class="icon"><i class="fa-solid fa-user-group"></i></div><div class="num" id="dashStatMusteri">0</div><div class="lbl">MÜŞTERİ</div></div>
                 <div class="dash-stat-box" onclick="yetkiSayfaAc('isortaklari-page')?menudenSayfaAc('isortaklari','isortaklari-page',document.getElementById('sub-isortaklari')):null" style="cursor:pointer;" data-perm="isortaklari-page"><div class="icon"><i class="fa-solid fa-handshake"></i></div><div class="num" id="dashStatPartner">0</div><div class="lbl">İŞ ORTAĞI</div></div>
@@ -297,10 +277,32 @@
                         <textarea id="dashOfficeNotes" class="dash-office-notes" oninput="dashNotlariKaydet(this.value)" placeholder="Notlarınızı buraya yazın..." style="width:100%;min-height:70px;padding:10px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-main);color:var(--text-dark);font-size:13px;resize:vertical;box-sizing:border-box;"></textarea>
                     </div>
                 </div>
+                <!-- Takvim (Özet) -->
+                <div class="dash-modern-card" data-widget="takvim" data-perm="anasayfa.takvim" draggable="true">
+                    <div class="dash-widget-head">
+                        <span class="dash-drag-handle">⠿</span>
+                        <span class="dash-widget-title"><i class="fa-regular fa-calendar"></i> TAKVİM</span>
+                        <span class="dash-widget-actions">
+                            <span class="dash-widget-link" onclick="menudenSayfaAc('gorevler-takvim','gorevler-takvim-page',document.getElementById('menu-gorevler-takvim'))">TÜMÜNÜ GÖR →</span>
+                            <span class="dash-widget-hide" onclick="dashWidgetGizle('takvim')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                    </div>
+                    <div class="dash-widget-body" id="asOzetTakvim"></div>
+                </div>
+                <!-- Görevler (Özet) -->
+                <div class="dash-modern-card" data-widget="gorevler" data-perm="anasayfa.gorev" draggable="true">
+                    <div class="dash-widget-head">
+                        <span class="dash-drag-handle">⠿</span>
+                        <span class="dash-widget-title"><i class="fa-solid fa-list"></i> GÖREVLER</span>
+                        <span class="dash-widget-actions">
+                            <span class="dash-widget-link" onclick="menudenSayfaAc('gorevler-takvim','gorevler-takvim-page',document.getElementById('menu-gorevler-takvim'))">TÜMÜNÜ GÖR →</span>
+                            <span class="dash-widget-hide" onclick="dashWidgetGizle('gorevler')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                    </div>
+                    <div class="dash-widget-body" id="asOzetGorev"></div>
+                </div>
             </div>
-        </div>
     </div>
-</div>
 <div id="gorevler-takvim-page" class="page">
     <div id="lock-gorevler-takvim" class="page-lock-overlay"></div>
     <div class="gt-header">
@@ -1627,7 +1629,17 @@
                         <input type="hidden" id="asEventDate" value="">
                         <div class="as-modal-field">
                             <label>TÜR</label>
-                            <select id="asEventType" onchange="asEventTypeDegisti()"><option value="reminder">ANIMSATICI</option><option value="note">NOT</option></select>
+                            <div class="as-custom-select" id="asEventTypeCustom">
+                                <div class="as-custom-select-trigger" onclick="asCustomSelectToggle()">
+                                    <span id="asEventTypeText">ANIMSATICI</span>
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                                <div class="as-custom-select-options" id="asEventTypeOptions">
+                                    <div class="as-custom-select-option" data-value="reminder" onclick="asCustomSelectSec('reminder')">ANIMSATICI</div>
+                                    <div class="as-custom-select-option" data-value="note" onclick="asCustomSelectSec('note')">NOT</div>
+                                </div>
+                                <input type="hidden" id="asEventType" value="reminder">
+                            </div>
                         </div>
                         <div class="as-modal-field">
                             <label>BAŞLIK</label>
