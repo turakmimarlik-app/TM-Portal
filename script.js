@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.8';
+        var APP_VERSION = 'V1.23.9';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8855,35 +8855,56 @@ function itDurumMetni(o) {
                 var avgPct = itJobOrtalamaPct(is);
                 var tTip = is.tur === "Taslak" ? "Taslak" : (is.tur === "Uygulama Proje" ? "UygulamaProje" : (is.tur === "3B Modelleme ve Tasarım" ? "3B" : "Diger"));
                 var ortaklar = is.ortaklar || [];
-                // Build partner list html
-                var ortakHtml = '';
-                ortaklar.forEach(function(o, oi){
-                    var renk = renkPalet[oi % renkPalet.length];
-                    ortakHtml += '<span class="it-gantt-ortak-item"><span class="it-gantt-ortak-dot" style="background:' + renk + ';"></span>' + esc(o.ortakAdi || "ORT-"+oi) + '</span>';
-                });
-                h += '<tr class="it-gantt-job-row"><td class="it-gantt-job-cell"><div class="it-gantt-job-info"><div class="it-gantt-job-name">' + esc(is.isAdi || "İSİMSİZ") + ' <span class="it-gantt-tur-tag it-gantt-tur-' + tTip + '">' + esc(is.tur) + '</span> <span style="font-weight:700;font-size:10px;color:' + (avgPct>=75?'#2e7d32':avgPct>=50?'#f9a825':'#e53935') + ';">' + avgPct + '%</span></div>' + (ortakHtml ? '<div class="it-gantt-ortak-list">' + ortakHtml + '</div>' : '') + '</div></td>';
+                var rowspan = Math.max(1, ortaklar.length);
+                var ASAMA_LIST = itAsamaList(is.tur);
+                // Main job row
+                h += '<tr class="it-gantt-job-row"><td class="it-gantt-job-cell" rowspan="' + rowspan + '"><div class="it-gantt-job-info"><div class="it-gantt-job-name">' + esc(is.isAdi || "İSİMSİZ") + ' <span class="it-gantt-tur-tag it-gantt-tur-' + tTip + '">' + esc(is.tur) + '</span> <span style="font-weight:700;font-size:10px;color:' + (avgPct>=75?'#2e7d32':avgPct>=50?'#f9a825':'#e53935') + ';">' + avgPct + '%</span></div></div></td>';
                 h += '<td class="it-gantt-timeline-cell"><div class="it-gantt-bar-wrap">';
-                // Main bar
                 var barColor = 'linear-gradient(90deg,#e53935,#f9a825,#4caf50)';
                 h += '<div class="it-gantt-bar-main" style="left:' + leftPx + 'px;width:' + widthPx + 'px;">';
-                // Completed portion
                 if (avgPct > 0) { h += '<div class="it-gantt-bar-seg" style="width:' + Math.min(avgPct,100) + '%;background:' + barColor + ';"></div>'; }
                 h += '<span class="it-gantt-bar-pct" style="font-size:' + (widthPx<40?'7px':'9px') + ';">' + avgPct + '%</span>';
                 h += '</div>';
-                // Partner milestones (teslim dates)
+                // Milestones on main bar
                 ortaklar.forEach(function(o, oi){
                     if (o.projeTeslimTarihi) {
                         var msDate = new Date(o.projeTeslimTarihi); msDate.setHours(0,0,0,0);
                         var msLeft = tarihToPx(msDate);
-                        var renk = renkPalet[oi % renkPalet.length];
                         if (msLeft >= 0 && msLeft <= timelineW) {
-                            h += '<div class="it-gantt-milestone it-gantt-milestone-complete" style="left:' + msLeft + 'px;background:' + renk + ';border-color:' + renk + ';" title="' + esc(o.ortakAdi || "") + ' teslim: ' + tarihStr(o.projeTeslimTarihi) + '"></div>';
+                            h += '<div class="it-gantt-milestone" style="left:' + msLeft + 'px;" title="' + esc(o.ortakAdi || "") + ' teslim: ' + tarihStr(o.projeTeslimTarihi) + '"></div>';
                         }
                     }
                 });
-                // Today line
                 if (todayLeft > 0 && todayLeft < timelineW) { h += '<div class="it-gantt-today-line" style="left:' + todayLeft + 'px;"></div>'; }
                 h += '</div></td></tr>';
+                // Partner sub-rows
+                ortaklar.forEach(function(o, oi){
+                    var renk = renkPalet[oi % renkPalet.length];
+                    var pPct = itAsamaPct(o, ASAMA_LIST);
+                    var pStart = new Date(o.fiyatOnayTarihi || o.isVerildiTarihi || is.tarih || Date.now());
+                    pStart.setHours(0,0,0,0);
+                    var pEnd = o.projeTeslimTarihi ? new Date(o.projeTeslimTarihi) : endDate;
+                    pEnd.setHours(0,0,0,0);
+                    var pLeft = tarihToPx(pStart);
+                    var pRight = tarihToPx(pEnd);
+                    var pWidth = Math.max(6, pRight - pLeft);
+                    if (pLeft + pWidth > timelineW) pWidth = timelineW - pLeft;
+                    h += '<tr class="it-gantt-ortak-row"><td class="it-gantt-ortak-cell"><div class="it-gantt-ortak-info"><span class="it-gantt-ortak-dot-sm" style="background:' + renk + ';"></span><span class="it-gantt-ortak-ad">' + esc(o.ortakAdi || "ORT-"+oi) + '</span><span class="it-gantt-ortak-brans">' + esc(o.brans || "") + '</span><span class="it-gantt-ortak-pct" style="color:' + (pPct>=75?'#2e7d32':pPct>=50?'#f9a825':'#e53935') + ';">' + pPct + '%</span></div></td>';
+                    h += '<td class="it-gantt-timeline-cell"><div class="it-gantt-bar-wrap">';
+                    h += '<div class="it-gantt-bar-ortak" style="left:' + pLeft + 'px;width:' + pWidth + 'px;background:' + renk + ';opacity:' + (pPct>0?0.85:0.35) + ';" title="' + esc(o.ortakAdi || "") + ' ' + pPct + '%">';
+                    if (pPct > 0) { h += '<div class="it-gantt-bar-seg" style="width:' + Math.min(pPct,100) + '%;background:rgba(255,255,255,0.2);"></div>'; }
+                    h += '<span class="it-gantt-bar-pct" style="font-size:8px;">' + pPct + '%</span>';
+                    h += '</div>';
+                    if (o.projeTeslimTarihi) {
+                        var pmDate = new Date(o.projeTeslimTarihi); pmDate.setHours(0,0,0,0);
+                        var pmLeft = tarihToPx(pmDate);
+                        if (pmLeft >= 0 && pmLeft <= timelineW) {
+                            h += '<div class="it-gantt-milestone-ortak" style="left:' + pmLeft + 'px;border-color:' + renk + ';" title="Teslim: ' + tarihStr(o.projeTeslimTarihi) + '"></div>';
+                        }
+                    }
+                    if (todayLeft > 0 && todayLeft < timelineW) { h += '<div class="it-gantt-today-line" style="left:' + todayLeft + 'px;"></div>'; }
+                    h += '</div></td></tr>';
+                });
             });
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
