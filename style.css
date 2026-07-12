@@ -1311,13 +1311,13 @@
 
         /* ================= GANTT ŞEMASI ================= */
         .it-gantt-wrap { border:1px solid var(--border-color); border-radius:10px; background:var(--panel-bg); overflow:hidden; }
-        .it-gantt-scroll { overflow-x:auto; overflow-y:visible; }
+        .it-gantt-scroll { overflow:hidden; width:100%; }
         .it-gantt-table { border-collapse:collapse; }
         .it-gantt-table th { background:var(--bg-main); padding:0; font-size:10px; font-weight:700; color:var(--text-light); text-align:center; border-bottom:1px solid var(--border-color); border-right:1px solid var(--border-color); white-space:nowrap; }
         .it-gantt-hdr-job { width:200px; min-width:200px; text-align:left; padding:7px 12px !important; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-right:2px solid var(--border-color) !important; }
         .it-gantt-hdr-month { font-size:11px; padding:6px 2px !important; font-weight:700; letter-spacing:0.3px; }
         .it-gantt-hdr-current { background:rgba(158,42,43,0.08) !important; }
-        .it-gantt-hdr-day { padding:2px 0 !important; font-size:8px; font-weight:400; border-bottom:1px solid var(--border-color); min-width:22px; max-width:22px; width:22px; color:var(--text-light); }
+        .it-gantt-hdr-day { padding:2px 0 !important; font-size:8px; font-weight:400; border-bottom:1px solid var(--border-color); color:var(--text-light); overflow:hidden; white-space:nowrap; text-overflow:clip; }
         .it-gantt-hdr-weekend { background:rgba(0,0,0,0.02) !important; color:var(--text-light); opacity:0.5; }
         .it-gantt-hdr-today { background:rgba(158,42,43,0.12) !important; color:var(--accent-red); font-weight:700 !important; }
         .it-gantt-hdr-first { border-left:1px solid rgba(0,0,0,0.08); }

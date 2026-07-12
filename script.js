@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.6';
+        var APP_VERSION = 'V1.23.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8775,8 +8775,37 @@ function itDurumMetni(o) {
                 gantt.style.display = "none";
             }
         }
+        function itOrnekIsEkle() {
+            if (localStorage.getItem("tm_ornek_is_eklendi")) return;
+            var liste = itDbYukle();
+            var ornek = {
+                id: 999999,
+                tur: "Uygulama Proje",
+                isAdi: "ÖRNEK PROJE - GANTT İNCELEME",
+                firma: "TURAK MİMARLIK",
+                pafta: "12A-34B",
+                ada: "567",
+                parsel: "89",
+                tarih: "2026-03-15",
+                not: "GANTT ŞEMASI İNCELEMEK İÇİN OLUŞTURULMUŞ ÖRNEK İŞ.",
+                tamamlandi: false,
+                tahsilatOnayi: false,
+                ruhsatOnayi: false,
+                bitisTarihi: "2026-10-15",
+                ortaklar: [
+                    {ortakAdi:"AHMET YILMAZ MİMARLIK",brans:"MİMARİ PROJE",fiyatOnayTarihi:"2026-03-15",isVerildiTarihi:"2026-03-20",belgelerTarihi:"2026-04-01",cizimTarihi:"2026-05-15",baskiTarihi:"2026-06-01",imzaTarihi:"2026-06-10",projeTeslimTarihi:"2026-06-15",not:[]},
+                    {ortakAdi:"ZEYNEP KAYA İNŞAAT",brans:"STATİK PROJE",fiyatOnayTarihi:"2026-04-01",isVerildiTarihi:"2026-04-05",belgelerTarihi:"2026-04-20",cizimTarihi:"2026-06-10",baskiTarihi:"",imzaTarihi:"",projeTeslimTarihi:"2026-07-15",not:[]},
+                    {ortakAdi:"MEHMET DEMİR MÜHENDİSLİK",brans:"ELEKTRİK PROJESİ",fiyatOnayTarihi:"2026-05-01",isVerildiTarihi:"2026-05-10",belgelerTarihi:"2026-05-25",cizimTarihi:"",baskiTarihi:"",imzaTarihi:"",projeTeslimTarihi:"2026-08-01",not:[]},
+                    {ortakAdi:"AYŞE ÇELİK TESİSAT",brans:"MEKANİK TESİSAT",fiyatOnayTarihi:"2026-06-01",isVerildiTarihi:"",belgelerTarihi:"",cizimTarihi:"",baskiTarihi:"",imzaTarihi:"",projeTeslimTarihi:"2026-09-01",not:[]}
+                ]
+            };
+            var varsa = liste.some(function(x){return x.id === 999999;});
+            if (!varsa) { liste.push(ornek); itDbKaydet(liste); }
+            localStorage.setItem("tm_ornek_is_eklendi","1");
+        }
         function itGanttGoster() {
             var konteyner = document.getElementById("itGanttContainer");
+            itOrnekIsEkle();
             var liste = itDbYukle().filter(function(x){return !x.tamamlandi;});
             if (!liste.length) { konteyner.innerHTML = '<div class="it-gantt-notice"><div style="font-size:32px;margin-bottom:6px;"><i class="fa-solid fa-chart-simple"></i></div>Gantt şeması gösterilecek aktif iş bulunmamaktadır.<p>Yeni iş ekleyerek başlayın.</p></div>'; return; }
             var aylar = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
@@ -8794,11 +8823,12 @@ function itDurumMetni(o) {
             if (totalMonths < 3) { maxD.setMonth(maxD.getMonth() + 3); totalMonths = (maxD.getFullYear() - minD.getFullYear()) * 12 + (maxD.getMonth() - minD.getMonth()); }
             if (totalMonths > 36) { maxD.setMonth(minD.getMonth() + 36); totalMonths = 36; }
             var totalDays = Math.round((maxD - minD) / (1000*60*60*24));
-            var pxPerDay = 22;
+            var availW = konteyner.clientWidth - 220;
+            if (availW < 300) availW = 300;
+            var pxPerDay = Math.max(2.5, Math.min(30, availW / totalDays));
             var timelineWidth = totalDays * pxPerDay;
             var today = new Date(); today.setHours(0,0,0,0);
             var todayLeft = Math.round((today - minD) / (1000*60*60*24));
-            var haftaIcinde = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
             var h = '<div class="it-gantt-wrap"><div class="it-gantt-scroll"><table class="it-gantt-table"><thead>';
             // Row 1: Month headers spanning days
             h += '<tr class="it-gantt-month-row"><th class="it-gantt-hdr-job" rowspan="2">İş / Ortak</th>';
@@ -8822,7 +8852,7 @@ function itDurumMetni(o) {
                 var haftaSonu = (dayOfWeek === 0 || dayOfWeek === 6);
                 var bugunMu = (curD.getTime() === today.getTime());
                 var ilkGun = (gunNum === 1);
-                h += '<th class="it-gantt-hdr-day' + (haftaSonu ? ' it-gantt-hdr-weekend' : '') + (bugunMu ? ' it-gantt-hdr-today' : '') + (ilkGun ? ' it-gantt-hdr-first' : '') + '"><span class="it-gantt-day-num">' + gunNum + '</span></th>';
+                h += '<th class="it-gantt-hdr-day' + (haftaSonu ? ' it-gantt-hdr-weekend' : '') + (bugunMu ? ' it-gantt-hdr-today' : '') + (ilkGun ? ' it-gantt-hdr-first' : '') + '" style="width:' + pxPerDay + 'px;"><span class="it-gantt-day-num">' + gunNum + '</span></th>';
                 curD.setDate(curD.getDate() + 1);
             }
             h += '</tr></thead><tbody>';
@@ -8908,8 +8938,8 @@ function itDurumMetni(o) {
             });
             h += '</tbody></table></div></div>';
             konteyner.innerHTML = h;
-            var scrollEl = konteyner.querySelector('.it-gantt-scroll');
-            if (scrollEl) { scrollEl.scrollLeft = Math.max(0, (todayLeft * pxPerDay) - 300); }
+            // Scroll kaldirildi — tüm şema sayfa genişliğine sığacak şekilde ölçeklenir
+            if (timelineWidth > konteyner.clientWidth - 220) { /* taşma olursa pxPerDay küçültülür */ }
         }
         function itAktifSortGuncelle(col) {
             if (itAktifSort.col === col) { itAktifSort.dir = itAktifSort.dir === "asc" ? "desc" : "asc"; }
