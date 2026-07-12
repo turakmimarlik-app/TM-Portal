@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.20.7';
+        var APP_VERSION = 'V1.20.8';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -1514,7 +1514,7 @@ function gorevMailGonder(gorev) {
                             '<td style="font-weight:700;color:var(--accent-red);font-size:12px;">#' + String(t.id).padStart(4,'0') + '</td>' +
                             '<td style="font-weight:600;">' + esc(t.musteriAd) + '</td>' +
                             '<td style="color:var(--text-light);font-size:12px;">' + (t.isAdi ? esc(t.isAdi).substring(0,30) + (t.isAdi.length>30?'...':'') : '-') + '</td>' +
-                            '<td style="text-align:right;font-weight:700;color:var(--accent-red);font-size:13px;">' + (t.genelTutar || '0,00 ?') + '</td>' +
+                            '<td style="text-align:right;font-weight:700;color:var(--accent-red);font-size:13px;white-space:nowrap;">' + (t.genelTutar || '0,00 \u20BA') + '</td>' +
                             '</tr>';
                     });
                 }
@@ -3835,7 +3835,7 @@ function gorevMailGonder(gorev) {
                 let kalemHTML = "";
                 t.kalemler.forEach(k => {
                     const toplamKalem = k.miktar * k.fiyat;
-                    kalemHTML += `<tr><td>${k.servis}</td><td style='text-align:center;'>${k.miktar}</td><td style='text-align:center;'>${k.birim||''}</td><td style='text-align:right;'>${k.fiyat.toLocaleString('tr-TR')} ?</td><td style='text-align:center;'>%${k.kdv}</td><td style='text-align:right;'>${toplamKalem.toLocaleString('tr-TR')} ?</td></tr>`;
+                    kalemHTML += `<tr><td style="padding:6px 8px;">${k.servis}</td><td style="text-align:center;padding:6px 8px;white-space:nowrap;">${k.miktar}</td><td style="text-align:center;padding:6px 8px;white-space:nowrap;">${k.birim||''}</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${k.fiyat.toLocaleString('tr-TR')} \u20BA</td><td style="text-align:center;padding:6px 8px;white-space:nowrap;">%${k.kdv}</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${toplamKalem.toLocaleString('tr-TR')} \u20BA</td></tr>`;
                 });
 
                 tbody.innerHTML += `
@@ -3845,7 +3845,7 @@ function gorevMailGonder(gorev) {
                         <td class="search-target-m"><b>${t.musteriAd}</b><br><small class="search-target-f">${t.firma}</small></td>
                         <td class="search-target-j">${t.isAdi}</td>
                         <td class="search-target-h">${t.hazirlayan}</td>
-                        <td style="color:var(--accent-red); font-weight:700;">${t.genelTutar}</td>
+                        <td style="color:var(--accent-red); font-weight:700;white-space:nowrap;">${t.genelTutar}</td>
                         <td>
                             <button class="btn btn-pdf-red btn-sm" onclick="event.stopPropagation(); eskiTeklifPdfUretDbId(${t.id})"><i class="fa-regular fa-file-lines"></i> PDF</button> 
                             <button class="btn-danger" onclick="event.stopPropagation(); teklifSilDbId(${t.id})">Sil</button>
@@ -3857,22 +3857,22 @@ function gorevMailGonder(gorev) {
                                 <div class="detail-grid-box">
                                     <div style="font-weight:700; border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-bottom:12px; color:var(--accent-red); font-size:13px;"><i class="fa-solid fa-magnifying-glass-plus"></i> TEKLİF İÇERİK DETAYI</div>
                                     <p style="margin:5px 0; font-size:13px;"><b>Müşteri Telefon:</b> ${t.telefon}</p>
-                                    <table style="width:100%; border-collapse:collapse; font-size:13px; margin-top:10px;">
+                                    <table style="width:100%; border-collapse:collapse; font-size:13px; margin-top:10px; table-layout:auto;">
                                         <thead>
                                             <tr style="background:var(--bg-main); font-weight:700;">
-                                                <th style="padding:8px; text-align:left;">Hizmet Kalemi</th>
-                                                <th style="padding:8px; text-align:center;">Miktar</th>
-                                                <th style="padding:8px; text-align:center;">Birim</th>
-                                                <th style="padding:8px; text-align:right;">Br. Fiyat</th>
-                                                <th style="padding:8px; text-align:center;">KDV</th>
-                                                <th style="padding:8px; text-align:right;">Toplam</th>
+                                                <th style="padding:6px 8px; text-align:left;width:auto;">Hizmet Kalemi</th>
+                                                <th style="padding:6px 8px; text-align:center;white-space:nowrap;width:60px;">Miktar</th>
+                                                <th style="padding:6px 8px; text-align:center;white-space:nowrap;width:50px;">Birim</th>
+                                                <th style="padding:6px 8px; text-align:right;white-space:nowrap;width:100px;">Br. Fiyat</th>
+                                                <th style="padding:6px 8px; text-align:center;white-space:nowrap;width:50px;">KDV</th>
+                                                <th style="padding:6px 8px; text-align:right;white-space:nowrap;width:120px;">Toplam</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             ${kalemHTML}
-                                            <tr style="border-top:2px solid var(--border-color); font-weight:600;"><td colspan="5" style="text-align:right; padding:8px;">ARA TOPLAM:</td><td style="text-align:right; padding:8px;">${(t.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</td></tr>
-                                            <tr style="font-weight:600;"><td colspan="5" style="text-align:right; padding:8px;">TOPLAM K.D.V:</td><td style="text-align:right; padding:8px;">${(t.kdvTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ?</td></tr>
-                                            <tr style="font-weight:700; color:var(--accent-red); background:var(--bg-main);"><td colspan="5" style="text-align:right; padding:8px;">GENEL TOPLAM:</td><td style="text-align:right; padding:8px;">${t.genelTutar}</td></tr>
+                                            <tr style="border-top:2px solid var(--border-color); font-weight:600;"><td colspan="5" style="text-align:right;padding:6px 8px;white-space:nowrap;">ARA TOPLAM:</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${(t.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} \u20BA</td></tr>
+                                            <tr style="font-weight:600;"><td colspan="5" style="text-align:right;padding:6px 8px;white-space:nowrap;">TOPLAM K.D.V:</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${(t.kdvTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} \u20BA</td></tr>
+                                            <tr style="font-weight:700; color:var(--accent-red); background:var(--bg-main);"><td colspan="5" style="text-align:right;padding:6px 8px;white-space:nowrap;">GENEL TOPLAM:</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${t.genelTutar}</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
