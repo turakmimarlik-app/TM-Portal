@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V2.0.2';
+        var APP_VERSION = 'V2.0.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -377,7 +377,7 @@ function gorevMailGonder(gorev) {
                 document.getElementById("loginSection").style.display = "flex";
                 overlayGizle();
             }
-            function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(e){e.stopPropagation();s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eşleşme bulunamadı)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');var wr=w.getBoundingClientRect();d.classList.add('open-upward');d.style.position='absolute';d.style.left='0';d.style.width='100%';d.style.top='auto';d.style.bottom='100%';d.style.marginTop='0';d.style.marginBottom='-1px';d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;var cf=d.querySelector('.cs-birim-footer');if(cf)cf.remove();if(s.classList.contains('row-birim')){var cft=document.createElement('div');cft.className='cs-birim-footer';cft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';cft.innerHTML='<button onclick="event.stopPropagation();birimEklePrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;">+ YENİ</button><button onclick="event.stopPropagation();birimSilPrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;">- SİL</button>';d.appendChild(cft);}};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});
+            function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(e){e.stopPropagation();s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eşleşme bulunamadı)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');var wr=w.getBoundingClientRect();d.classList.add('open-upward');d.style.position='absolute';d.style.left='0';d.style.width='100%';d.style.top='auto';d.style.bottom='100%';d.style.marginTop='0';d.style.marginBottom='-1px';d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;var cf=d.querySelector('.cs-birim-footer');if(cf)cf.remove();if(s.classList.contains('row-birim')){var cft=document.createElement('div');cft.className='cs-birim-footer';cft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';cft.innerHTML='<button onclick="event.stopPropagation();birimEklePrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">+ YENİ</button><button onclick="event.stopPropagation();birimSilPrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">- SİL</button>';d.appendChild(cft);}};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});
 
             const loginSection = document.getElementById("loginSection");
             if (loginSection) {
@@ -2793,7 +2793,7 @@ function gorevMailGonder(gorev) {
                     html += '<span style="font-size:10px;font-weight:700;color:var(--text-light);min-width:62px;flex-shrink:0;padding-top:2px;' + (g.tatil ? 'color:#E53935;' : '') + '">' + gunAdi + '</span>';
                     html += '<div style="flex:1;display:flex;flex-wrap:wrap;gap:3px;">';
                     if (g.tatil) {
-                        html += '<span style="font-size:10px;background:rgba(229,57,53,0.15);color:#E53935;font-weight:600;padding:1px 5px;border-radius:3px;">?? ' + g.tatil.name + '</span>';
+                        html += '<span style="font-size:10px;background:rgba(229,57,53,0.15);color:#E53935;font-weight:600;padding:1px 5px;border-radius:3px;"><i class="fa-solid fa-flag"></i> ' + g.tatil.name + '</span>';
                     }
                     g.etkinlikler.forEach(function(e) {
                         var renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
@@ -2944,7 +2944,7 @@ function gorevMailGonder(gorev) {
                 if (gunIdx >= 5) cls = (cls ? cls + ' ' : '') + 'as-td-weekend';
                 if (tatil) cls = (cls ? cls + ' ' : '') + 'as-td-tatil';
                 html += '<td' + (cls ? ' class="' + cls + '"' : '') + ' onclick="asEventModalAc(\'' + gunStr + '\')">';
-                html += '<span class="as-day-num">' + (tatil ? '?? ' : '') + g + '</span>';
+                html += '<span class="as-day-num">' + (tatil ? '<i class="fa-solid fa-flag"></i> ' : '') + g + '</span>';
                 if (tatil) { var kisaAd = tatil.name.replace(/Bayramı.*/,'Bay.').replace(/\(.*?\)/g,'').trim(); html += '<div class="as-tatil-etiketi" title="' + tatil.name + '">' + kisaAd + '</div>'; }
                 if (gunEtk.length > 0) {
                     html += '<div class="as-event-dots">';
@@ -2984,7 +2984,7 @@ function gorevMailGonder(gorev) {
                 var gunStr2 = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
                 var tatil = tatiller.find(function(t){ return t.date === gunStr2; });
                 var haftaCls = i >= 5 ? ' style="color:var(--text-light);background:rgba(255,255,255,0.04);"' : '';
-                html += '<th' + (bugunMu ? ' style="color:var(--accent-red);"' : haftaCls) + '>' + gnAd + ' ' + d.getDate() + (tatil ? ' ??' : '') + '</th>';
+                html += '<th' + (bugunMu ? ' style="color:var(--accent-red);"' : haftaCls) + '>' + gnAd + ' ' + d.getDate() + (tatil ? ' <i class="fa-solid fa-flag"></i>' : '') + '</th>';
             }
             html += '</tr></thead><tbody>';
             /* Tüm Gün satırı */
@@ -3069,7 +3069,7 @@ function gorevMailGonder(gorev) {
                 h += '<div class="as-takvim-ozet-tarih' + (g.tatil ? ' as-ozet-tatil-tarih' : '') + '">' + gunAdi.toUpperCase() + '</div>';
                 h += '<div class="as-takvim-ozet-events">';
                 if (g.tatil) {
-                    h += '<span class="as-takvim-ozet-event tatil" title="' + g.tatil.name + '">?? ' + g.tatil.name + '</span>';
+                    h += '<span class="as-takvim-ozet-event tatil" title="' + g.tatil.name + '"><i class="fa-solid fa-flag"></i> ' + g.tatil.name + '</span>';
                 }
                 g.etkinlikler.forEach(function(e) {
                     var renk = e.type === "reminder" ? "#E67E22" : (e.type === "note" ? "#95A5A6" : (e.type === "gorev" ? asGorevRenk(e.durum, e.tarih) : "#2B6CB0"));
@@ -5517,7 +5517,7 @@ function gorevMailGonder(gorev) {
 
             let h = '<div class="yb-gecmis-container"><div class="gbaslik">'+
                 '<h3><i class="fa-regular fa-folder-open"></i> '+yil+' Yılı Bütçe Raporu</h3>'+
-                '<button class="btn btn-primary" onclick="ybCariYilaDon()" style="padding:8px 18px;font-size:12px;">?? Cari Yıla Dön</button></div>';
+                '<button class="btn btn-primary" onclick="ybCariYilaDon()" style="padding:8px 18px;font-size:12px;"><i class="fa-solid fa-arrow-left"></i> Cari Yıla Dön</button></div>';
 
             h += '<div class="yb-graph-grid"><div class="yb-graph-box full"><canvas id="ybChartNetDurum"></canvas></div>'+
                 '<div class="yb-graph-box"><canvas id="ybChartGelirDagilim"></canvas></div>'+
@@ -5749,7 +5749,7 @@ function gorevMailGonder(gorev) {
             const secimEl = document.getElementById("ybKarsilastirSecim");
             const seciliYil = secimEl ? parseInt(secimEl.value) : (gecmis.length > 0 ? gecmis[0].yil : null);
 
-            let h = '<h3 style="border:none;padding:0;margin:0 0 16px 0;">?? Yıl Karşılaştırması</h3>';
+            let h = '<h3 style="border:none;padding:0;margin:0 0 16px 0;"><i class="fa-solid fa-chart-bar"></i> Yıl Karşılaştırması</h3>';
 
             if(!seciliYil) {
                 h += '<p style="color:var(--yb-text-light);">Karşılaştırma yapmak için tamamlanmış bir yıl bulunmuyor.</p>';
@@ -7350,13 +7350,13 @@ function gorevMailGonder(gorev) {
             const grid = document.getElementById("tmfKartGrid");
             if (!grid) return;
             if (db.kartlar.length === 0) {
-                grid.innerHTML = '<div class="tmf-bos-durum"><div class="tmf-bos-icon">??</div><div class="tmf-bos-title">Henüz fiyat kartı yok</div><div class="tmf-bos-desc">"Yeni Kart" butonuna tıklayarak ilk fiyatlandırma kartınızı oluşturun.</div></div>';
+                grid.innerHTML = '<div class="tmf-bos-durum"><div class="tmf-bos-icon"><i class="fa-solid fa-box-open"></i></div><div class="tmf-bos-title">Henüz fiyat kartı yok</div><div class="tmf-bos-desc">"Yeni Kart" butonuna tıklayarak ilk fiyatlandırma kartınızı oluşturun.</div></div>';
                 return;
             }
             let h = "";
             db.kartlar.forEach(k => {
                 const tipEtiket = k.tip === "sabit" ? "Sabit" : k.tip === "birim" ? "Birim" : "Kademeli";
-                const tipIcon = k.tip === "sabit" ? '<i class="fa-solid fa-coins"></i>' : k.tip === "birim" ? "??" : '<i class="fa-solid fa-ruler-combined"></i>';
+                const tipIcon = k.tip === "sabit" ? '<i class="fa-solid fa-coins"></i>' : k.tip === "birim" ? '<i class="fa-solid fa-cube"></i>' : '<i class="fa-solid fa-ruler-combined"></i>';
                 h += '<div class="tmf-kart" draggable="true" data-id="' + k.id + '">';
                 h += '<div class="tmf-kart-header"><h3>' + esc(k.ad) + '</h3><div class="tmf-kart-badges">';
                 h += '<span class="tmf-badge tmf-badge-' + k.tip + '">' + tipIcon + ' ' + tipEtiket + '</span>';
@@ -7509,7 +7509,7 @@ function gorevMailGonder(gorev) {
             let h = '<div class="tmf-modal-header"><h3><i class="fa-regular fa-pen-to-square"></i> Kart Düzenle</h3><button class="tmf-modal-close" onclick="tmfKartModalKapat()"><i class="fa-solid fa-xmark"></i></button></div>';
             h += '<div class="tmf-modal-body">';
             h += '<div class="tmf-modal-field"><label>Kart Adı</label><input type="text" id="tmfModalAd" value="' + esc(kart.ad) + '"></div>';
-            h += '<div class="tmf-modal-field"><label>Fiyat Türü</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>?? Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '><i class="fa-solid fa-ruler-combined"></i> Kademeli Fiyat</option></select></div>';
+            h += '<div class="tmf-modal-field"><label>Fiyat Türü</label><select id="tmfModalTip" onchange="tmfModalTipDegisti()"><option value="birim"' + (kart.tip==="birim"?' selected':'') + '>Birim Fiyat</option><option value="kademeli"' + (kart.tip==="kademeli"?' selected':'') + '><i class="fa-solid fa-ruler-combined"></i> Kademeli Fiyat</option></select></div>';
             h += '<div class="tmf-modal-field"><label>Birim Türü</label><input type="text" id="tmfModalBirim" value="' + esc(kart.birim) + '" placeholder="m², adet, ay, saat..."></div>';
             h += '<div id="tmfModalDinamikAlan"></div>';
             h += '<div class="tmf-modal-field"><label>Not (isteğe bağlı)</label><textarea id="tmfModalNot" placeholder="Bu kartla ilgili notlar...">' + esc(kart.not || "") + '</textarea></div>';
@@ -8599,8 +8599,8 @@ function itDurumMetni(o) {
                     '<td colspan="7"><div class="it-detay-panel">' +
                     itOrtakSecimHtml(is.id) +
                     '<div class="it-detay-actions">' +
-                    (isTam && is.tur === "Uygulama Proje" && !is.ruhsatOnayi ? '<button class="it-btn-ruhsat" onclick="event.stopPropagation();itRuhsatOnayiVer(' + is.id + ')">?? RUHSAT ONAYI ALINDI</button>' : '') +
-                    (isTam && is.tur === "Uygulama Proje" && is.ruhsatOnayi ? '<span class="it-ruhsat-badge">?? RUHSAT ONAYI ALINDI</span>' : '') +
+                    (isTam && is.tur === "Uygulama Proje" && !is.ruhsatOnayi ? '<button class="it-btn-ruhsat" onclick="event.stopPropagation();itRuhsatOnayiVer(' + is.id + ')"><i class="fa-solid fa-stamp"></i> RUHSAT ONAYI ALINDI</button>' : '') +
+                    (isTam && is.tur === "Uygulama Proje" && is.ruhsatOnayi ? '<span class="it-ruhsat-badge"><i class="fa-solid fa-stamp"></i> RUHSAT ONAYI ALINDI</span>' : '') +
                     (isTam && is.tahsilatOnayi && is.tur !== "Taslak" ? '<span class="it-tahsilat-badge"><i class="fa-solid fa-check"></i> İŞİN TAHSİLATI ONAYLANDI</span>' : '') +
                     (isTam && !is.tahsilatOnayi && is.tur !== "Taslak" && is.tur !== "Uygulama Proje" ? '<button class="it-btn-tahsilat" onclick="event.stopPropagation();itTahsilatOnayiVer(' + is.id + ')"><i class="fa-solid fa-check"></i> TAHSİLAT ONAYI VER</button>' : '') +
                     (isTam && !is.tahsilatOnayi && is.tur === "Uygulama Proje" ? '<button class="it-btn-tahsilat" onclick="event.stopPropagation();itTahsilatOnayiVer(' + is.id + ')"><i class="fa-solid fa-check"></i> TAHSİLAT ONAYI VER</button>' : '') +
@@ -8644,7 +8644,7 @@ function itDurumMetni(o) {
                     '<td>' + (is.bitisTarihi ? tarihStr(is.bitisTarihi) : "-") + '</td>' +
                     (showActionCol ? '<td style="text-align:center;"><div style="display:flex;gap:4px;justify-content:center;">' +
                         (isTaslak ? '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();itTaslakUygulamayaGec(' + is.id + ')" style="white-space:nowrap;"><i class="fa-solid fa-rocket"></i> UYGULAMA PROJEYE BAŞLA</button>' : '') +
-                        '<button class="btn btn-sm" onclick="event.stopPropagation();it3bModellemeyeGec(' + is.id + ')" style="background:#d68910;color:white;border:none;white-space:nowrap;border-radius:6px;">?? 3B MODELLEMEYE BAŞLA</button>' +
+                        '<button class="btn btn-sm" onclick="event.stopPropagation();it3bModellemeyeGec(' + is.id + ')" style="background:#d68910;color:white;border:none;white-space:nowrap;border-radius:6px;"><i class="fa-solid fa-cube"></i> 3B MODELLEMEYE BAŞLA</button>' +
                         '</div></td>' : '') +
                     '</tr>' +
                     '<tr class="it-row-detail' + (acik ? ' open' : '') + '" id="itTamDetayRow_' + is.id + '">' +
@@ -9100,39 +9100,39 @@ function itDurumMetni(o) {
                 // Add appropriate elements
                 if (isTam2 && is_.tur === "Taslak") {
                     var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; btn.style.background = '#2e7d32';
-                    btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '<i class="fa-solid fa-check"></i> İŞ TAMAMLANDI';
+                    btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerHTML = '<i class="fa-solid fa-check"></i> İŞ TAMAMLANDI';
                     if (silBtn) actionsDiv.insertBefore(btn, silBtn); else actionsDiv.appendChild(btn);
                 } else if (isTam2 && is_.tur === "Uygulama Proje") {
                     if (!is_.ruhsatOnayi) {
                         var rBtn = document.createElement('button'); rBtn.className = 'it-btn-ruhsat';
-                        rBtn.onclick = function(e) { e.stopPropagation(); itRuhsatOnayiVer(jobId); }; rBtn.innerText = '?? RUHSAT ONAYI ALINDI';
+                        rBtn.onclick = function(e) { e.stopPropagation(); itRuhsatOnayiVer(jobId); }; rBtn.innerHTML = '<i class="fa-solid fa-stamp"></i> RUHSAT ONAYI ALINDI';
                         if (silBtn) actionsDiv.insertBefore(rBtn, silBtn); else actionsDiv.appendChild(rBtn);
                     } else {
-                        var rSp = document.createElement('span'); rSp.className = 'it-ruhsat-badge'; rSp.innerText = '?? RUHSAT ONAYI ALINDI';
+                        var rSp = document.createElement('span'); rSp.className = 'it-ruhsat-badge'; rSp.innerHTML = '<i class="fa-solid fa-stamp"></i> RUHSAT ONAYI ALINDI';
                         if (silBtn) actionsDiv.insertBefore(rSp, silBtn); else actionsDiv.appendChild(rSp);
                     }
                     if (!is_.tahsilatOnayi) {
                         var tBtn = document.createElement('button'); tBtn.className = 'it-btn-tahsilat';
-                        tBtn.onclick = function(e) { e.stopPropagation(); itTahsilatOnayiVer(jobId); }; tBtn.innerText = '<i class="fa-solid fa-check"></i> TAHSİLAT ONAYI VER';
+                        tBtn.onclick = function(e) { e.stopPropagation(); itTahsilatOnayiVer(jobId); }; tBtn.innerHTML = '<i class="fa-solid fa-check"></i> TAHSİLAT ONAYI VER';
                         if (silBtn) actionsDiv.insertBefore(tBtn, silBtn); else actionsDiv.appendChild(tBtn);
                     } else {
-                        var tSp = document.createElement('span'); tSp.className = 'it-tahsilat-badge'; tSp.innerText = '<i class="fa-solid fa-check"></i> İŞİN TAHSİLATI ONAYLANDI';
+                        var tSp = document.createElement('span'); tSp.className = 'it-tahsilat-badge'; tSp.innerHTML = '<i class="fa-solid fa-check"></i> İŞİN TAHSİLATI ONAYLANDI';
                         if (silBtn) actionsDiv.insertBefore(tSp, silBtn); else actionsDiv.appendChild(tSp);
                     }
                     if (is_.ruhsatOnayi && is_.tahsilatOnayi) {
                         var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; btn.style.background = '#2e7d32';
-                        btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '<i class="fa-solid fa-check"></i> İŞ TAMAMLANDI';
+                        btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerHTML = '<i class="fa-solid fa-check"></i> İŞ TAMAMLANDI';
                         if (silBtn) actionsDiv.insertBefore(btn, silBtn); else actionsDiv.appendChild(btn);
                     }
                 } else if (isTam2 && is_.tahsilatOnayi) {
-                    var sp = document.createElement('span'); sp.className = 'it-tahsilat-badge'; sp.innerText = '<i class="fa-solid fa-check"></i> İŞİN TAHSİLATI ONAYLANDI';
+                    var sp = document.createElement('span'); sp.className = 'it-tahsilat-badge'; sp.innerHTML = '<i class="fa-solid fa-check"></i> İŞİN TAHSİLATI ONAYLANDI';
                     if (silBtn) actionsDiv.insertBefore(sp, silBtn); else actionsDiv.appendChild(sp);
                     var btn = document.createElement('button'); btn.className = 'it-btn-tamamla'; btn.style.background = '#2e7d32';
-                    btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerText = '<i class="fa-solid fa-check"></i> İŞ TAMAMLANDI';
+                    btn.onclick = function(e) { e.stopPropagation(); itTamamla(jobId); }; btn.innerHTML = '<i class="fa-solid fa-check"></i> İŞ TAMAMLANDI';
                     if (silBtn) actionsDiv.insertBefore(btn, silBtn); else actionsDiv.appendChild(btn);
                 } else if (isTam2 && !is_.tahsilatOnayi) {
                     var btn2 = document.createElement('button'); btn2.className = 'it-btn-tahsilat';
-                    btn2.onclick = function(e) { e.stopPropagation(); itTahsilatOnayiVer(jobId); }; btn2.innerText = '<i class="fa-solid fa-check"></i> TAHSİLAT ONAYI VER';
+                    btn2.onclick = function(e) { e.stopPropagation(); itTahsilatOnayiVer(jobId); }; btn2.innerHTML = '<i class="fa-solid fa-check"></i> TAHSİLAT ONAYI VER';
                     if (silBtn) actionsDiv.insertBefore(btn2, silBtn); else actionsDiv.appendChild(btn2);
                 }
             }
@@ -9474,7 +9474,7 @@ function itDurumMetni(o) {
             itDbKaydet(liste);
             itGoster();
             itAcKalanYukle(openIds);
-            tmNotify("?? Ruhsat onayı alındı.", "success");
+            tmNotify("<i class=\"fa-solid fa-stamp\"></i> Ruhsat onayı alındı.", "success");
             aktiviteEkle("Ruhsat onayı verildi: " + (liste[idx].isAdi || ""), "İş Takibi");
         }
 
