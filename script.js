@@ -3595,22 +3595,10 @@ function gorevMailGonder(gorev) {
                 });
             });
         }
-        function birimEklePrompt() {
-            tmPrompt("Yeni birim türü giriniz (örn: M², ADET, KG):", function(yeni) {
-                if (!yeni || yeni.trim() === "") return;
-                yeni = yeni.trim().toUpperCase();
-                var list = birimListesiGetir();
-                if (list.indexOf(yeni) !== -1) { tmNotify("Bu birim zaten mevcut!", "error"); return; }
-                list.push(yeni);
-                localStorage.setItem("tm_birim_listesi_v1", JSON.stringify(list));
-                birimListesiniYenile();
-                tmNotify("Birim eklendi: " + yeni, "success");
-            });
-        }
         function birimSilPrompt() {
             var list = birimListesiGetir();
             if (list.length === 0) { tmNotify("Silinecek birim kalmadı.", "error"); return; }
-            tmPrompt("Silmek istediğiniz birim adını yazın:\nMevcut: " + list.join(", "), function(sec) {
+            tmPrompt("Silmek istedi\u011finiz birim ad\u0131n\u0131 yaz\u0131n:\n\n" + list.map(function(b,i){ return (i+1)+". "+b; }).join("\n"), function(sec) {
                 if (!sec || sec.trim() === "") return;
                 sec = sec.trim().toUpperCase();
                 var idx = list.indexOf(sec);
@@ -3619,7 +3607,19 @@ function gorevMailGonder(gorev) {
                 localStorage.setItem("tm_birim_listesi_v1", JSON.stringify(list));
                 birimListesiniYenile();
                 tmNotify("Birim silindi: " + sec, "success");
-            });
+            }, "", "B\u0130R\u0130M S\u0130L");
+        }
+        function birimEklePrompt() {
+            tmPrompt("Yeni birim t\u00fcr\u00fc giriniz (\u00f6rn: M\u00b2, ADET, KG):", function(yeni) {
+                if (!yeni || yeni.trim() === "") return;
+                yeni = yeni.trim().toUpperCase();
+                var list = birimListesiGetir();
+                if (list.indexOf(yeni) !== -1) { tmNotify("Bu birim zaten mevcut!", "error"); return; }
+                list.push(yeni);
+                localStorage.setItem("tm_birim_listesi_v1", JSON.stringify(list));
+                birimListesiniYenile();
+                tmNotify("Birim eklendi: " + yeni, "success");
+            }, "", "B\u0130R\u0130M EKLE");
         }
         function birimDropdownKapat(el){var dd=el.closest('.cs-dropdown');if(dd){dd.classList.remove('open');dd.previousElementSibling.classList.remove('open');}}
         /* ================= TEKLİF FORMU MOTORLARI ================= */
@@ -7371,15 +7371,15 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 h += '</div></div>';
                 h += '<div class="tmf-kart-body">';
                 if (k.tip === "sabit") {
-                    h += '<div class="tmf-sabit-goster"><div class="tmf-fiyat-buyuk">' + tmfFmt(tmfDegerCoz(k.sabitFiyat)) + ' ?</div></div>';
+                    h += '<div class="tmf-sabit-goster"><div class="tmf-fiyat-buyuk">' + tmfFmt(tmfDegerCoz(k.sabitFiyat)) + ' \u20BA</div></div>';
                 } else if (k.tip === "birim") {
-                    h += '<div class="tmf-birim-goster"><div class="tmf-fiyat-orta">' + tmfFmt(tmfDegerCoz(k.birimFiyat)) + ' ?</div>';
+                    h += '<div class="tmf-birim-goster"><div class="tmf-fiyat-orta">' + tmfFmt(tmfDegerCoz(k.birimFiyat)) + ' \u20BA</div>';
                     h += '<div class="tmf-unit-label">/ ' + esc(k.birim) + '</div></div>';
                 } else if (k.tip === "kademeli" && k.kademeler) {
                     h += '<table class="tmf-kademeli-tablo">';
                     k.kademeler.forEach(kd => {
                         const aralik = kd.max === "+" ? kd.min + ' ' + esc(k.birim) + ' ve \u00fczeri' : kd.min + ' - ' + kd.max + ' ' + esc(k.birim);
-                        h += '<tr><td class="tmf-desc">' + esc(kd.aciklama || "") + '</td><td class="tmf-range">' + aralik + '</td><td class="tmf-price">' + tmfFmt(tmfDegerCoz(kd.fiyat)) + ' ?</td></tr>';
+                        h += '<tr><td class="tmf-desc">' + esc(kd.aciklama || "") + '</td><td class="tmf-range">' + aralik + '</td><td class="tmf-price">' + tmfFmt(tmfDegerCoz(kd.fiyat)) + ' \u20BA</td></tr>';
                     });
                     h += '</table>';
                 }
@@ -7453,13 +7453,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             const iEl = document.getElementById("tmfHesapIslem_" + id);
             if (kart.tip === "sabit") {
                 const f = tmfDegerCoz(kart.sabitFiyat);
-                if (sEl) sEl.textContent = tmfFmt(f) + ' ?';
+                if (sEl) sEl.textContent = tmfFmt(f) + ' \u20BA';
                 if (iEl) iEl.textContent = "Sabit fiyat × 1";
             } else if (kart.tip === "birim") {
                 const bf = tmfDegerCoz(kart.birimFiyat);
                 const t = miktar * bf;
-                if (sEl) sEl.textContent = tmfFmt(t) + ' ?';
-                if (iEl) iEl.textContent = tmfFmt(bf) + ' ? × ' + tmfFmt(miktar) + ' ' + kart.birim;
+                if (sEl) sEl.textContent = tmfFmt(t) + ' \u20BA';
+                if (iEl) iEl.textContent = tmfFmt(bf) + ' \u20BA × ' + tmfFmt(miktar) + ' ' + kart.birim;
             } else if (kart.tip === "kademeli" && kart.kademeler) {
                 let eslesen = null;
                 for (let i = 0; i < kart.kademeler.length; i++) {
@@ -7471,10 +7471,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 if (eslesen) {
                     const bf = tmfDegerCoz(eslesen.fiyat);
                     const t = miktar * bf;
-                    if (sEl) sEl.textContent = tmfFmt(t) + ' ?';
-                    if (iEl) iEl.textContent = tmfFmt(bf) + ' ? × ' + tmfFmt(miktar) + ' ' + kart.birim;
+                    if (sEl) sEl.textContent = tmfFmt(t) + ' \u20BA';
+                    if (iEl) iEl.textContent = tmfFmt(bf) + ' \u20BA × ' + tmfFmt(miktar) + ' ' + kart.birim;
                 } else {
-                    if (sEl) sEl.textContent = '<i class="fa-solid fa-triangle-exclamation"></i> Aralık dışı';
+                    if (sEl) sEl.innerHTML = 'ARALIK DIŞI';
                     if (iEl) iEl.textContent = "";
                 }
             }

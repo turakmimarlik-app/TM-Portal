@@ -100,7 +100,7 @@
         .pdf-table tbody tr:nth-child(even) td {
             background: #f8f8f8;
         }
-        .pdf-table tbody td.pdf-cell-hizmet { max-height:2.6em; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+        .pdf-table tbody td.pdf-cell-hizmet { white-space:normal; word-wrap:break-word; }
         .pdf-bottom { 
             display: flex;
             flex-direction: column;
