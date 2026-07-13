@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.1';
+        var APP_VERSION = 'V1.31.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -1919,7 +1919,7 @@ function gorevMailGonder(gorev) {
             const kart = db.find(m => m.id === id);
             if(!kart) return;
 
-            document.getElementById("musteriFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> Müşteri Kartını Düzenle';
+            document.getElementById("musteriFormTitle").textContent = 'Müşteri Kartını Düzenle';
             document.getElementById("musteriEditId").value = kart.id;
             document.getElementById("mAdi").value = kart.ad;
             document.getElementById("mSirket").value = kart.sirket;
@@ -1940,12 +1940,12 @@ function gorevMailGonder(gorev) {
                 bankaSatiriEkle("musteriBankaKonteyner");
             }
 
-            document.getElementById("btnMusteriSave").innerText = "Değişiklikleri Kaydet";
+            document.getElementById("btnMusteriSave").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Değişiklikleri Kaydet';
             document.getElementById("btnMusteriCancel").style.display = "inline-block";
         }
 
         function musteriFormTemizle() {
-            document.getElementById("musteriFormTitle").innerHTML = '<i class="fa-solid fa-thumbtack"></i> Yeni Müşteri Kartı Tanımla';
+            document.getElementById("musteriFormTitle").textContent = 'Yeni Müşteri Kartı Tanımla';
             document.getElementById("musteriEditId").value = "-1";
             document.getElementById("mAdi").value = "";
             document.getElementById("mSirket").value = "";
@@ -1975,11 +1975,23 @@ function gorevMailGonder(gorev) {
                     toplamIs += tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(m.ad) || trToUpper(t.firma || "") === trToUpper(m.sirket)).length;
                 });
                 musteriSummary.innerHTML = `
-                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam Müşteri</small><span style="font-weight:700; color:var(--accent-red); font-size:18px;">${db.length}</span></div>
-                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam Yapılan İş</small><span style="font-weight:700; color:var(--btn-green); font-size:18px;">${toplamIs}</span></div>
+                    <div class="partner-stat-box">
+                        <div class="partner-stat-icon" style="background:rgba(158,42,43,0.12);color:var(--accent-red);"><i class="fa-regular fa-folder-open"></i></div>
+                        <div class="partner-stat-info">
+                            <span class="partner-stat-value" style="color:var(--accent-red);">${db.length}</span>
+                            <span class="partner-stat-label">Toplam Müşteri</span>
+                        </div>
+                    </div>
+                    <div class="partner-stat-box">
+                        <div class="partner-stat-icon" style="background:rgba(46,125,50,0.12);color:#2E7D32;"><i class="fa-solid fa-briefcase"></i></div>
+                        <div class="partner-stat-info">
+                            <span class="partner-stat-value" style="color:#2E7D32;">${toplamIs}</span>
+                            <span class="partner-stat-label">Toplam Yapılan İş</span>
+                        </div>
+                    </div>
                 `;
             }
-            if(db.length === 0) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-users"></i>','Kayıtlı müşteri bulunmamaktadır.','Yeni bir müşteri eklemek için "Müşteri Ekle" butonunu kullanın.'); return; }
+            if(db.length === 0) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-folder-open"></i>','Kayıtlı müşteri bulunmamaktadır.','Yeni bir müşteri eklemek için "Müşteri Ekle" butonunu kullanın.'); return; }
             
             const tekliflerDb = JSON.parse(localStorage.getItem("tm_teklifler_db_final")) || [];
             db.sort(function(a, b) {
@@ -1993,35 +2005,78 @@ function gorevMailGonder(gorev) {
                     m.bankalar.forEach(b => { 
                         const bankaRenk = getBankaRenkKodu(b.banka);
                         const ibanFormatted = (b.iban || '').replace(/(.{4})/g, '$1 ').trim();
-                        bankaHTML += `<div style="font-size:13px; margin-left:15px; color:${bankaRenk}; font-weight:700; letter-spacing:0.5px;">• ${b.banka}: ${ibanFormatted}</div>`; 
+                        bankaHTML += `<div class="partner-banka-item" style="border-left:3px solid ${bankaRenk};">
+                            <div class="partner-banka-name" style="color:${bankaRenk};"><i class="fa-solid fa-university"></i> ${b.banka}</div>
+                            <div class="partner-banka-iban" style="color:${bankaRenk};"><i class="fa-solid fa-arrow-right"></i> ${ibanFormatted}</div>
+                        </div>`; 
                     });
-                } else { bankaHTML = " GİRİLMEMİŞ"; }
+                } else { bankaHTML = '<div class="partner-banka-item partner-banka-empty"><i class="fa-solid fa-circle-exclamation"></i> Banka hesabı girilmemiş</div>'; }
 
                 const isSayisi = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(m.ad) || trToUpper(t.firma || "") === trToUpper(m.sirket)).length;
 
                 konteyner.innerHTML += `
                     <div class="portfolio-card m-card-item">
-                        <div class="card-job-counter">
-                            <small>Yapılan İş</small>
-                            <span>${isSayisi}</span>
+                        <div class="partner-card-top">
+                            <div class="partner-card-avatar">
+                                <i class="fa-regular fa-user"></i>
+                            </div>
+                            <div class="partner-card-header">
+                                <h4 class="m-search-ad">${m.ad}</h4>
+                                <div class="partner-card-brans m-search-tipi"><i class="fa-solid fa-tag"></i> ${m.tipi}</div>
+                            </div>
+                            <div class="partner-card-jobcount">
+                                <span class="partner-jobcount-num">${isSayisi}</span>
+                                <span class="partner-jobcount-label">İŞ</span>
+                            </div>
                         </div>
-                        <div class="card-main-header">
-                            <h4 class="m-search-ad">${m.ad}</h4>
-                            <div class="p-type m-search-tipi"><i class="fa-solid fa-tag"></i> ${m.tipi}</div>
+                        <div class="partner-card-divider"></div>
+                        <div class="partner-card-body">
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-building"></i></span>
+                                <div><span class="partner-info-label">Firma</span><span class="partner-info-val m-search-sirket">${m.sirket}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-briefcase"></i></span>
+                                <div><span class="partner-info-label">Ünvan</span><span class="partner-info-val m-search-unvan">${m.unvan || '-'}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-phone"></i></span>
+                                <div><span class="partner-info-label">Telefon</span><span class="partner-info-val">${m.tel}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-envelope"></i></span>
+                                <div><span class="partner-info-label">E-Posta</span><span class="partner-info-val">${m.eposta}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-id-card"></i></span>
+                                <div><span class="partner-info-label">T.C. Kimlik</span><span class="partner-info-val m-search-kimlik">${m.kimlik || '-'}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-file-invoice"></i></span>
+                                <div><span class="partner-info-label">Vergi Dairesi</span><span class="partner-info-val">${m.vergiDairesi || '-'}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-file-invoice"></i></span>
+                                <div><span class="partner-info-label">Vergi No</span><span class="partner-info-val">${m.vergiNo || '-'}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-location-dot"></i></span>
+                                <div><span class="partner-info-label">Adres</span><span class="partner-info-val m-search-adres">${m.adres}</span></div>
+                            </div>
+                            <div class="partner-card-info" style="align-items:flex-start;">
+                                <span class="partner-info-icon" style="margin-top:3px;"><i class="fa-solid fa-building-columns"></i></span>
+                                <div style="flex:1;">
+                                    <span class="partner-info-label">Banka Hesapları</span>
+                                    <div class="partner-banka-list">${bankaHTML}</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="p-detail"><b>Firma/Kurum:</b> <span class="m-search-sirket">${m.sirket}</span></div>
-                        <div class="p-detail"><b>Ünvan:</b> <span class="m-search-unvan">${m.unvan || '-'}</span></div>
-                        <div class="p-detail"><b>Telefon:</b> <span>${m.tel}</span></div>
-                        <div class="p-detail"><b>E-Posta:</b> <span>${m.eposta}</span></div>
-                        <div class="p-detail"><b>T.C. Kimlik:</b> <span class="m-search-kimlik">${m.kimlik || '-'}</span></div>
-                        <div class="p-detail"><b>Vergi Dairesi:</b> <span>${m.vergiDairesi || '-'}</span></div>
-                        <div class="p-detail"><b>Vergi No:</b> <span>${m.vergiNo || '-'}</span></div>
-                        <div class="p-detail"><b>Adres:</b> <span class="m-search-adres">${m.adres}</span></div>
-                        <div class="p-detail" style="flex-direction:column; gap:2px;"><b>Banka Hesapları:</b>${bankaHTML}</div>
-                        <div class="card-actions">
-                            <button class="btn btn-primary" onclick="pbPopupAc(${m.id}, 'musteri')" style="margin-right:auto;"><i class="fa-regular fa-folder"></i> DOSYALAR</button>
-                            <button class="btn-warning" onclick="musteriDuzenle(${m.id})">Düzenle</button>
-                            <button class="btn-danger" onclick="portfolioKartSil('tm_musteriler_db', ${m.id}, 'musteri')">Sil</button>
+                        <div class="partner-card-actions">
+                            <button class="partner-btn partner-btn-files" onclick="pbPopupAc(${m.id}, 'musteri')"><i class="fa-regular fa-folder"></i> Dosyalar</button>
+                            <div class="partner-card-actions-right">
+                                <button class="partner-btn partner-btn-edit" onclick="musteriDuzenle(${m.id})"><i class="fa-solid fa-pen"></i> Düzenle</button>
+                                <button class="partner-btn partner-btn-delete" onclick="portfolioKartSil('tm_musteriler_db', ${m.id}, 'musteri')"><i class="fa-solid fa-trash-can"></i> Sil</button>
+                            </div>
                         </div>
                     </div>
                 `;

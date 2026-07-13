@@ -846,80 +846,103 @@
             <div id="musteriler-page" class="page uppercase-form">
                 <div id="lock-musteriler" class="page-lock-overlay"></div>
                 <h2><i class="fa-regular fa-folder-open"></i> Müşteri Profil Kartları Portföyü</h2>
-                <div id="musteriSummaryStrip" style="display:flex; gap:20px; background:var(--bg-main); padding:15px 20px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px; justify-content:space-around; font-weight:600;"></div>
-                <div style="background: var(--bg-main); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border-color);">
-                    <h3 id="musteriFormTitle"><i class="fa-solid fa-thumbtack"></i> Yeni Müşteri Kartı Tanımla</h3>
-                    <input type="hidden" id="musteriEditId" value="-1">
-                    <div class="row">
-                        <div class="col">
-                            <label>Müşteri Adı Soyadı:</label>
-                            <input type="text" id="mAdi" autocomplete="off" oninput="tmAkilliTahminMotoru(this, 'MUSTERI')">
-                            <div id="mAdi-tahmin" class="tm-autocomplete-box"></div>
-                        </div>
-                        <div class="col">
-                            <label>firma / kurum adı:</label>
-                            <input type="text" id="mSirket">
-                        </div>
-                        <div class="col">
-                            <label>Ünvanı:</label>
-                            <input type="text" id="mUnvan">
-                        </div>
+                <div id="musteriSummaryStrip" class="partner-summary-strip"></div>
+                
+                <div class="partner-form-card">
+                    <div class="partner-form-header">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <h3 id="musteriFormTitle">Yeni Müşteri Kartı Tanımla</h3>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <label>Telefon:</label>
-                            <input type="text" id="mTel" style="text-transform:none;" oninput="formatPhone(this)">
-                        </div>
-                        <div class="col">
-                            <label>E-Mail:</label>
-                            <input type="text" id="mEposta" style="text-transform:none;">
-                        </div>
-                        <div class="col">
-                            <label>Müşteri Tipi / Etiket:</label>
-                            <div style="display: flex; gap: 10px;">
-                                <select id="mTipi" style="flex: 2;"></select>
-                                <button class="btn-add" onclick="yeniMusteriEtiketiEklePrompt()"><i class="fa-solid fa-plus"></i> Ekle</button>
-                                <button class="btn-danger" onclick="musteriEtiketiSilPrompt()"><i class="fa-solid fa-trash-can"></i> Sil</button>
+                    <input type="hidden" id="musteriEditId" value="-1">
+
+                    <div class="partner-form-section">
+                        <div class="partner-form-section-title"><i class="fa-solid fa-circle-info"></i> Genel Bilgiler</div>
+                        <div class="row">
+                            <div class="col">
+                                <label><i class="fa-solid fa-user"></i> Müşteri Adı Soyadı:</label>
+                                <input type="text" id="mAdi" autocomplete="off" oninput="tmAkilliTahminMotoru(this, 'MUSTERI')">
+                                <div id="mAdi-tahmin" class="tm-autocomplete-box"></div>
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-building"></i> Firma / Kurum Adı:</label>
+                                <input type="text" id="mSirket">
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-briefcase"></i> Ünvanı:</label>
+                                <input type="text" id="mUnvan">
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <label>T.C. Kimlik Numarası:</label>
-                            <input type="text" id="mKimlikNo" maxlength="11" style="text-transform:none;">
-                        </div>
-                        <div class="col">
-                            <label>Vergi Dairesi:</label>
-                            <input type="text" id="mVergiDairesi">
-                        </div>
-                        <div class="col">
-                            <label>Vergi No:</label>
-                            <input type="text" id="mVergiNo" style="text-transform:none;">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label>adres:</label>
-                            <textarea id="mAdres" style="height: 60px;"></textarea>
+
+                    <div class="partner-form-section">
+                        <div class="partner-form-section-title"><i class="fa-solid fa-tags"></i> İletişim & Etiket</div>
+                        <div class="row">
+                            <div class="col">
+                                <label><i class="fa-solid fa-phone"></i> Telefon:</label>
+                                <input type="text" id="mTel" oninput="formatPhone(this)">
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-envelope"></i> E-Mail:</label>
+                                <input type="text" id="mEposta">
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-tag"></i> Müşteri Tipi / Etiket:</label>
+                                <div class="partner-inline-group">
+                                    <select id="mTipi" style="flex:2;"></select>
+                                    <button class="partner-btn-sm partner-btn-sm-add" onclick="yeniMusteriEtiketiEklePrompt()"><i class="fa-solid fa-plus"></i></button>
+                                    <button class="partner-btn-sm partner-btn-sm-del" onclick="musteriEtiketiSilPrompt()"><i class="fa-solid fa-minus"></i></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col" style="margin-bottom: 20px;">
-                        <label>Banka Hesabı Bilgileri (Çoklu Giriş):</label>
-                        <div id="musteriBankaKonteyner">
+                    <div class="partner-form-section">
+                        <div class="partner-form-section-title"><i class="fa-solid fa-file-invoice"></i> Vergi & Kimlik Bilgileri</div>
+                        <div class="row">
+                            <div class="col">
+                                <label><i class="fa-solid fa-id-card"></i> T.C. Kimlik No:</label>
+                                <input type="text" id="mKimlikNo" maxlength="11">
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-building-columns"></i> Vergi Dairesi:</label>
+                                <input type="text" id="mVergiDairesi">
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-hashtag"></i> Vergi No:</label>
+                                <input type="text" id="mVergiNo">
+                            </div>
                         </div>
-                        <button class="btn-add" onclick="bankaSatiriEkle('musteriBankaKonteyner')" style="margin-top:5px;"><i class="fa-solid fa-building-columns"></i> Banka Hesabı Ekle</button>
                     </div>
 
-                    <div style="display: flex; gap: 10px;">
-                        <button id="btnMusteriSave" class="btn btn-save-green" onclick="musteriProfilKaydet()"><i class="fa-solid fa-floppy-disk"></i> Profil Kartını Kaydet</button>
-                        <button id="btnMusteriCancel" class="btn btn-clear-gray" onclick="musteriFormTemizle()" style="display:none;">Vazgeç</button>
-                        <button class="btn btn-clear-gray" onclick="musteriFormTemizle()"><i class="fa-solid fa-broom"></i> Formu Temizle</button>
+                    <div class="partner-form-section">
+                        <div class="partner-form-section-title"><i class="fa-solid fa-location-dot"></i> Adres Bilgisi</div>
+                        <div class="row">
+                            <div class="col">
+                                <textarea id="mAdres" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="partner-form-section">
+                        <div class="partner-form-section-title"><i class="fa-solid fa-building-columns"></i> Banka Hesapları</div>
+                        <div id="musteriBankaKonteyner"></div>
+                        <button class="partner-btn partner-btn-files" onclick="bankaSatiriEkle('musteriBankaKonteyner')" style="margin-top:8px;"><i class="fa-solid fa-plus"></i> Banka Hesabı Ekle</button>
+                    </div>
+
+                    <div class="partner-form-footer">
+                        <button id="btnMusteriSave" class="partner-btn-submit" onclick="musteriProfilKaydet()"><i class="fa-solid fa-floppy-disk"></i> Profil Kartını Kaydet</button>
+                        <button id="btnMusteriCancel" class="partner-btn-cancel" onclick="musteriFormTemizle()" style="display:none;"><i class="fa-solid fa-xmark"></i> Vazgeç</button>
+                        <button class="partner-btn-clear" onclick="musteriFormTemizle()"><i class="fa-solid fa-broom"></i> Formu Temizle</button>
                     </div>
                 </div>
                 
-                <h3>Kayıtlı Müşteri Profil Kartları</h3>
-                <input type="text" id="musteriAramaInput" class="search-box" onkeyup="musterileriFiltrele()" placeholder="Müşterilerde Ara (İsim, Firma, Etiket, Adres, Kimlik No)...">
+                <div class="partner-list-header">
+                    <h3><i class="fa-regular fa-address-card"></i> Kayıtlı Müşteri Profil Kartları</h3>
+                    <div class="partner-search-wrap">
+                        <i class="fa-solid fa-search partner-search-icon"></i>
+                        <input type="text" id="musteriAramaInput" class="partner-search-input" onkeyup="musterileriFiltrele()" placeholder="İsim, Firma, Etiket, Adres, Kimlik No ile ara...">
+                    </div>
+                </div>
                 <div id="musteriKartlariKonteyner" class="portfolio-grid"></div>
             </div>
 
