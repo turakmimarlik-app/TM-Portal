@@ -2136,9 +2136,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
     font-size: 13px;
     font-weight: 600;
     color: var(--text-dark);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-word;
 }
 .partner-badge {
     display: inline-flex; align-items: center; gap: 4px;
@@ -2166,29 +2164,40 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
     margin-top: 4px;
 }
 .partner-banka-item {
-    font-size: 12px;
-    font-weight: 700;
     padding: 6px 10px;
     border-radius: 6px;
     background: var(--bg-main);
-    margin-bottom: 2px;
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
+    margin-bottom: 4px;
 }
-.partner-banka-item i {
+.partner-banka-item:last-child {
+    margin-bottom: 0;
+}
+.partner-banka-name {
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+.partner-banka-name i {
     font-size: 11px;
-    margin-top: 2px;
     flex-shrink: 0;
 }
-.partner-banka-item strong {
-    font-weight: 700;
+.partner-banka-iban {
     font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dark);
     letter-spacing: 0.3px;
     word-break: break-all;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 17px;
+}
+.partner-banka-iban i {
+    font-size: 9px;
+    flex-shrink: 0;
 }
 .partner-banka-empty {
     color: var(--text-light) !important;

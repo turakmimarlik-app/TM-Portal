@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.29.0';
+        var APP_VERSION = 'V1.30.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -2231,7 +2231,10 @@ function gorevMailGonder(gorev) {
                     io.bankalar.forEach(b => { 
                         const bankaRenk = getBankaRenkKodu(b.banka);
                         const ibanFormatted = (b.iban || '').replace(/(.{4})/g, '$1 ').trim();
-                        bankaHTML += `<div class="partner-banka-item" style="border-left:3px solid ${bankaRenk};color:${bankaRenk};"><i class="fa-solid fa-university"></i> ${b.banka}: <strong>${ibanFormatted}</strong></div>`; 
+                        bankaHTML += `<div class="partner-banka-item" style="border-left:3px solid ${bankaRenk};">
+                            <div class="partner-banka-name" style="color:${bankaRenk};"><i class="fa-solid fa-university"></i> ${b.banka}</div>
+                            <div class="partner-banka-iban"><i class="fa-solid fa-arrow-right" style="color:${bankaRenk};"></i> ${ibanFormatted}</div>
+                        </div>`; 
                     });
                 } else { bankaHTML = '<div class="partner-banka-item partner-banka-empty"><i class="fa-solid fa-circle-exclamation"></i> Banka hesabı girilmemiş</div>'; }
 
@@ -2257,67 +2260,47 @@ function gorevMailGonder(gorev) {
                         </div>
                         <div class="partner-card-divider"></div>
                         <div class="partner-card-body">
-                            <div class="partner-card-row">
-                                <div class="partner-card-col">
-                                    <div class="partner-card-info">
-                                        <span class="partner-info-icon"><i class="fa-solid fa-building"></i></span>
-                                        <div><span class="partner-info-label">Firma</span><span class="partner-info-val p-search-sirket">${io.sirket}</span></div>
-                                    </div>
-                                    <div class="partner-card-info">
-                                        <span class="partner-info-icon"><i class="fa-solid fa-briefcase"></i></span>
-                                        <div><span class="partner-info-label">Ünvan</span><span class="partner-info-val">${io.unvan || '-'}</span></div>
-                                    </div>
-                                </div>
-                                <div class="partner-card-col">
-                                    <div class="partner-card-info">
-                                        <span class="partner-info-icon"><i class="fa-solid fa-tag"></i></span>
-                                        <div><span class="partner-info-label">Statü</span><span class="partner-info-val">${statusIcon}</span></div>
-                                    </div>
-                                    <div class="partner-card-info">
-                                        <span class="partner-info-icon"><i class="fa-solid fa-phone"></i></span>
-                                        <div><span class="partner-info-label">Telefon</span><span class="partner-info-val">${io.tel}</span></div>
-                                    </div>
-                                </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-building"></i></span>
+                                <div><span class="partner-info-label">Firma</span><span class="partner-info-val p-search-sirket">${io.sirket}</span></div>
                             </div>
-                            <div class="partner-card-row">
-                                <div class="partner-card-col">
-                                    <div class="partner-card-info">
-                                        <span class="partner-info-icon"><i class="fa-solid fa-envelope"></i></span>
-                                        <div><span class="partner-info-label">E-Posta</span><span class="partner-info-val">${io.eposta}</span></div>
-                                    </div>
-                                    <div class="partner-card-info">
-                                        <span class="partner-info-icon"><i class="fa-solid fa-id-card"></i></span>
-                                        <div><span class="partner-info-label">T.C. Kimlik</span><span class="partner-info-val p-search-kimlik">${io.kimlik || '-'}</span></div>
-                                    </div>
-                                </div>
-                                <div class="partner-card-col">
-                                    <div class="partner-card-info">
-                                        <span class="partner-info-icon"><i class="fa-solid fa-file-invoice"></i></span>
-                                        <div><span class="partner-info-label">Vergi Dairesi</span><span class="partner-info-val">${io.vergiDairesi || '-'}</span></div>
-                                    </div>
-                                    <div class="partner-card-info">
-                                        <span class="partner-info-icon"><i class="fa-solid fa-file-invoice"></i></span>
-                                        <div><span class="partner-info-label">Vergi No</span><span class="partner-info-val">${io.vergiNo || '-'}</span></div>
-                                    </div>
-                                </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-briefcase"></i></span>
+                                <div><span class="partner-info-label">Ünvan</span><span class="partner-info-val">${io.unvan || '-'}</span></div>
                             </div>
-                            <div class="partner-card-row${!io.adres || io.adres === '-' ? '' : ''}">
-                                <div class="partner-card-col" style="flex:1;">
-                                    <div class="partner-card-info">
-                                        <span class="partner-info-icon"><i class="fa-solid fa-location-dot"></i></span>
-                                        <div><span class="partner-info-label">Adres</span><span class="partner-info-val p-search-adres">${io.adres || '-'}</span></div>
-                                    </div>
-                                </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-tag"></i></span>
+                                <div><span class="partner-info-label">Statü</span><span class="partner-info-val">${statusIcon}</span></div>
                             </div>
-                            <div class="partner-card-row">
-                                <div class="partner-card-col" style="flex:1;">
-                                    <div class="partner-card-info" style="align-items:flex-start;">
-                                        <span class="partner-info-icon" style="margin-top:2px;"><i class="fa-solid fa-building-columns"></i></span>
-                                        <div style="flex:1;">
-                                            <span class="partner-info-label">Banka Hesapları</span>
-                                            <div class="partner-banka-list">${bankaHTML}</div>
-                                        </div>
-                                    </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-phone"></i></span>
+                                <div><span class="partner-info-label">Telefon</span><span class="partner-info-val">${io.tel}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-envelope"></i></span>
+                                <div><span class="partner-info-label">E-Posta</span><span class="partner-info-val">${io.eposta}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-id-card"></i></span>
+                                <div><span class="partner-info-label">T.C. Kimlik</span><span class="partner-info-val p-search-kimlik">${io.kimlik || '-'}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-file-invoice"></i></span>
+                                <div><span class="partner-info-label">Vergi Dairesi</span><span class="partner-info-val">${io.vergiDairesi || '-'}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-file-invoice"></i></span>
+                                <div><span class="partner-info-label">Vergi No</span><span class="partner-info-val">${io.vergiNo || '-'}</span></div>
+                            </div>
+                            <div class="partner-card-info">
+                                <span class="partner-info-icon"><i class="fa-solid fa-location-dot"></i></span>
+                                <div><span class="partner-info-label">Adres</span><span class="partner-info-val p-search-adres">${io.adres || '-'}</span></div>
+                            </div>
+                            <div class="partner-card-info" style="align-items:flex-start;">
+                                <span class="partner-info-icon" style="margin-top:3px;"><i class="fa-solid fa-building-columns"></i></span>
+                                <div style="flex:1;">
+                                    <span class="partner-info-label">Banka Hesapları</span>
+                                    <div class="partner-banka-list">${bankaHTML}</div>
                                 </div>
                             </div>
                         </div>
