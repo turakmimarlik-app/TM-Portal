@@ -1808,7 +1808,6 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
     border: 1px solid var(--border-color);
     margin-bottom: 32px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-    overflow: hidden;
 }
 .partner-form-header {
     display: flex; align-items: center; gap: 10px;

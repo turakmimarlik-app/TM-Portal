@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.31.0';
+        var APP_VERSION = 'V1.31.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -2084,14 +2084,14 @@ function gorevMailGonder(gorev) {
         }
 
         function musterileriFiltrele() {
-            const kelime = document.getElementById("musteriAramaInput").value.toLowerCase().trim();
+            const kelime = trToUpper(document.getElementById("musteriAramaInput").value.trim());
             document.querySelectorAll("#musteriKartlariKonteyner .m-card-item").forEach((kart) => {
-                const ad = kart.querySelector(".m-search-ad").innerText.toLowerCase();
-                const tipi = kart.querySelector(".m-search-tipi").innerText.toLowerCase();
-                const sirket = kart.querySelector(".m-search-sirket").innerText.toLowerCase();
-                const unvan = kart.querySelector(".m-search-unvan").innerText.toLowerCase();
-                const kimlik = kart.querySelector(".m-search-kimlik").innerText.toLowerCase();
-                const adres = kart.querySelector(".m-search-adres").innerText.toLowerCase();
+                const ad = trToUpper(kart.querySelector(".m-search-ad").innerText);
+                const tipi = trToUpper(kart.querySelector(".m-search-tipi").innerText);
+                const sirket = trToUpper(kart.querySelector(".m-search-sirket").innerText);
+                const unvan = trToUpper(kart.querySelector(".m-search-unvan").innerText);
+                const kimlik = trToUpper(kart.querySelector(".m-search-kimlik").innerText);
+                const adres = trToUpper(kart.querySelector(".m-search-adres").innerText);
                 
                 if (ad.includes(kelime) || tipi.includes(kelime) || sirket.includes(kelime) || unvan.includes(kelime) || kimlik.includes(kelime) || adres.includes(kelime)) {
                     kart.style.display = "flex";
@@ -2372,13 +2372,13 @@ function gorevMailGonder(gorev) {
         }
 
         function partnerleriFiltrele() {
-            const kelime = document.getElementById("partnerAramaInput").value.toLowerCase().trim();
+            const kelime = trToUpper(document.getElementById("partnerAramaInput").value.trim());
             document.querySelectorAll("#isOrtaklariKartlariKonteyner .partner-card-item").forEach((kart) => {
-                const ad = kart.querySelector(".p-search-ad").innerText.toLowerCase();
-                const brans = kart.querySelector(".p-search-brans").innerText.toLowerCase();
-                const sirket = kart.querySelector(".p-search-sirket").innerText.toLowerCase();
-                const kimlik = kart.querySelector(".p-search-kimlik").innerText.toLowerCase();
-                const adres = kart.querySelector(".p-search-adres").innerText.toLowerCase();
+                const ad = trToUpper(kart.querySelector(".p-search-ad").innerText);
+                const brans = trToUpper(kart.querySelector(".p-search-brans").innerText);
+                const sirket = trToUpper(kart.querySelector(".p-search-sirket").innerText);
+                const kimlik = trToUpper(kart.querySelector(".p-search-kimlik").innerText);
+                const adres = trToUpper(kart.querySelector(".p-search-adres").innerText);
                 
                 if (ad.includes(kelime) || brans.includes(kelime) || sirket.includes(kelime) || kimlik.includes(kelime) || adres.includes(kelime)) {
                     kart.style.display = "flex";
