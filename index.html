@@ -926,89 +926,112 @@
             <div id="isortaklari-page" class="page uppercase-form">
                 <div id="lock-isortaklari" class="page-lock-overlay"></div>
                 <h2><i class="fa-solid fa-handshake"></i> İş Ortakları & Partner Havuzu</h2>
-                <div id="partnerSummaryStrip" style="display:flex; gap:20px; background:var(--bg-main); padding:15px 20px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px; justify-content:space-around; font-weight:600;"></div>
-                <div style="background: var(--bg-main); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border-color);">
-                    <h3 id="partnerFormTitle"><i class="fa-solid fa-thumbtack"></i> Yeni İş Ortağı / Partner Kaydet</h3>
+                <div id="partnerSummaryStrip" class="partner-summary-strip"></div>
+                
+                <div class="partner-form-card">
+                    <div class="partner-form-header">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <h3 id="partnerFormTitle">Yeni İş Ortağı / Partner Kaydet</h3>
+                    </div>
                     <input type="hidden" id="partnerEditId" value="-1">
-                    <div class="row">
-                        <div class="col">
-                            <label>Adı Soyadı:</label>
-                            <input type="text" id="ioAdi" autocomplete="off" oninput="tmAkilliTahminMotoru(this, 'PARTNER')">
-                            <div id="ioAdi-tahmin" class="tm-autocomplete-box"></div>
-                        </div>
-                        <div class="col">
-                            <label>Firma / Kurum Adı:</label>
-                            <input type="text" id="ioSirket">
-                        </div>
-                        <div class="col">
-                            <label>Ünvan / Görev / Uzmanlık:</label>
-                            <input type="text" id="ioUnvan" placeholder="İNŞAAT MÜHENDİSİ, JEOFİZİK Vb.">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col" style="flex:3.5;">
-        <label>Hizmet Branşı Seçimi:</label>
-        <div style="display: flex; gap: 10px;">
-            <select id="ioBrans" style="flex: 2;"></select>
-            <button class="btn-add" onclick="yeniPiyasaDaliEklePrompt()"><i class="fa-solid fa-plus"></i> Ekle</button>
-            <button class="btn-danger" onclick="piyasaDaliSilPrompt()"><i class="fa-solid fa-trash-can"></i> Sil</button>
-        </div>
-                        </div>
-                        <div class="col" style="flex:1;">
-                            <label>Telefon:</label>
-                            <input type="text" id="ioTel" style="text-transform:none;" oninput="formatPhone(this)">
-                        </div>
-                        <div class="col" style="flex:1;">
-                            <label>E-Mail:</label>
-                            <input type="text" id="ioEposta" style="text-transform:none;">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label>T.C. Kimlik Numarası:</label>
-                            <input type="text" id="ioKimlikNo" maxlength="11" style="text-transform:none;">
-                        </div>
-                        <div class="col">
-                            <label>Vergi Dairesi:</label>
-                            <input type="text" id="ioVergiDairesi">
-                        </div>
-                        <div class="col">
-                            <label>Vergi No:</label>
-                            <input type="text" id="ioVergiNo" style="text-transform:none;">
-                        </div>
-                        <div class="col">
-                            <label>Ortaklık Statüsü:</label>
-                            <div style="display:flex;gap:10px;align-items:center;">
-                                <select id="ioStatus" style="flex:2;"></select>
-                                <button class="btn-add" style="padding:12px 20px;" onclick="ioStatusEkle()"><i class="fa-solid fa-plus"></i> Ekle</button>
-                                <button class="btn-danger" style="padding:12px 20px;" onclick="ioStatusSil()"><i class="fa-solid fa-trash-can"></i> Sil</button>
+
+                    <div class="partner-form-section">
+                        <div class="partner-form-section-title"><i class="fa-solid fa-circle-info"></i> Genel Bilgiler</div>
+                        <div class="row">
+                            <div class="col">
+                                <label><i class="fa-solid fa-user"></i> Adı Soyadı:</label>
+                                <input type="text" id="ioAdi" autocomplete="off" oninput="tmAkilliTahminMotoru(this, 'PARTNER')">
+                                <div id="ioAdi-tahmin" class="tm-autocomplete-box"></div>
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-building"></i> Firma / Kurum Adı:</label>
+                                <input type="text" id="ioSirket">
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-briefcase"></i> Ünvan / Uzmanlık:</label>
+                                <input type="text" id="ioUnvan" placeholder="İNŞAAT MÜHENDİSİ, JEOFİZİK VB.">
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <label>Adres Bilgisi:</label>
-                            <textarea id="ioAdres" style="height: 60px;"></textarea>
+
+                    <div class="partner-form-section">
+                        <div class="partner-form-section-title"><i class="fa-solid fa-tags"></i> Hizmet & İletişim</div>
+                        <div class="row">
+                            <div class="col" style="flex:3;">
+                                <label><i class="fa-solid fa-ruler-combined"></i> Hizmet Branşı:</label>
+                                <div class="partner-inline-group">
+                                    <select id="ioBrans" style="flex:2;"></select>
+                                    <button class="partner-btn-sm partner-btn-sm-add" onclick="yeniPiyasaDaliEklePrompt()"><i class="fa-solid fa-plus"></i></button>
+                                    <button class="partner-btn-sm partner-btn-sm-del" onclick="piyasaDaliSilPrompt()"><i class="fa-solid fa-minus"></i></button>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-phone"></i> Telefon:</label>
+                                <input type="text" id="ioTel" oninput="formatPhone(this)">
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-envelope"></i> E-Mail:</label>
+                                <input type="text" id="ioEposta">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col" style="margin-bottom: 20px;">
-                        <label>Banka Hesabı Bilgileri (Çoklu Giriş):</label>
-                        <div id="partnerBankaKonteyner">
+                    <div class="partner-form-section">
+                        <div class="partner-form-section-title"><i class="fa-solid fa-file-invoice"></i> Vergi & Kimlik Bilgileri</div>
+                        <div class="row">
+                            <div class="col">
+                                <label><i class="fa-solid fa-id-card"></i> T.C. Kimlik No:</label>
+                                <input type="text" id="ioKimlikNo" maxlength="11">
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-building-columns"></i> Vergi Dairesi:</label>
+                                <input type="text" id="ioVergiDairesi">
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-hashtag"></i> Vergi No:</label>
+                                <input type="text" id="ioVergiNo">
+                            </div>
+                            <div class="col">
+                                <label><i class="fa-solid fa-handshake"></i> Ortaklık Statüsü:</label>
+                                <div class="partner-inline-group">
+                                    <select id="ioStatus" style="flex:2;"></select>
+                                    <button class="partner-btn-sm partner-btn-sm-add" onclick="ioStatusEkle()"><i class="fa-solid fa-plus"></i></button>
+                                    <button class="partner-btn-sm partner-btn-sm-del" onclick="ioStatusSil()"><i class="fa-solid fa-minus"></i></button>
+                                </div>
+                            </div>
                         </div>
-                        <button class="btn-add" onclick="bankaSatiriEkle('partnerBankaKonteyner')" style="margin-top:5px;"><i class="fa-solid fa-building-columns"></i> Banka Hesabı Ekle</button>
                     </div>
 
-                    <div style="display: flex; gap: 10px;">
-                        <button id="btnPartnerSave" class="btn btn-save-green" onclick="isOrtagiProfilKaydet()"><i class="fa-solid fa-floppy-disk"></i> Partner Profilini Kaydet</button>
-                        <button id="btnPartnerCancel" class="btn btn-clear-gray" onclick="partnerFormTemizle()" style="display:none;">Vazgeç</button>
-                        <button class="btn btn-clear-gray" onclick="partnerFormTemizle()"><i class="fa-solid fa-broom"></i> Formu Temizle</button>
+                    <div class="partner-form-section">
+                        <div class="partner-form-section-title"><i class="fa-solid fa-location-dot"></i> Adres Bilgisi</div>
+                        <div class="row">
+                            <div class="col">
+                                <textarea id="ioAdres" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="partner-form-section">
+                        <div class="partner-form-section-title"><i class="fa-solid fa-building-columns"></i> Banka Hesapları</div>
+                        <div id="partnerBankaKonteyner"></div>
+                        <button class="partner-btn partner-btn-files" onclick="bankaSatiriEkle('partnerBankaKonteyner')" style="margin-top:8px;"><i class="fa-solid fa-plus"></i> Banka Hesabı Ekle</button>
+                    </div>
+
+                    <div class="partner-form-footer">
+                        <button id="btnPartnerSave" class="partner-btn-submit" onclick="isOrtagiProfilKaydet()"><i class="fa-solid fa-floppy-disk"></i> Partner Profilini Kaydet</button>
+                        <button id="btnPartnerCancel" class="partner-btn-cancel" onclick="partnerFormTemizle()" style="display:none;"><i class="fa-solid fa-xmark"></i> Vazgeç</button>
+                        <button class="partner-btn-clear" onclick="partnerFormTemizle()"><i class="fa-solid fa-broom"></i> Formu Temizle</button>
                     </div>
                 </div>
                 
-                <h3>İş Ortakları & Partner Kartları</h3>
-                <input type="text" id="partnerAramaInput" class="search-box" onkeyup="partnerleriFiltrele()" placeholder="Partnerlerde Ara (İsim, Firma, Branş, Adres, Kimlik No)...">
-<div id="isOrtaklariKartlariKonteyner" class="portfolio-grid"></div>
+                <div class="partner-list-header">
+                    <h3><i class="fa-solid fa-address-card"></i> İş Ortakları & Partner Kartları</h3>
+                    <div class="partner-search-wrap">
+                        <i class="fa-solid fa-search partner-search-icon"></i>
+                        <input type="text" id="partnerAramaInput" class="partner-search-input" onkeyup="partnerleriFiltrele()" placeholder="İsim, Firma, Branş, Adres, Kimlik No ile ara...">
+                    </div>
+                </div>
+                <div id="isOrtaklariKartlariKonteyner" class="portfolio-grid"></div>
             </div>
 
             <div id="dilekce-page" class="page">

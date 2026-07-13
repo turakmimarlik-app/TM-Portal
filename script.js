@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.27.1';
+        var APP_VERSION = 'V1.28.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -2142,7 +2142,7 @@ function gorevMailGonder(gorev) {
             const kart = db.find(io => io.id === id);
             if(!kart) return;
 
-            document.getElementById("partnerFormTitle").innerHTML = '<i class="fa-solid fa-gear"></i> Partner Kartını Düzenle';
+            document.getElementById("partnerFormTitle").textContent = 'Partner Kartını Düzenle';
             document.getElementById("partnerEditId").value = kart.id;
             document.getElementById("ioAdi").value = kart.ad;
             document.getElementById("ioSirket").value = kart.sirket;
@@ -2165,12 +2165,12 @@ function gorevMailGonder(gorev) {
                 bankaSatiriEkle("partnerBankaKonteyner");
             }
 
-            document.getElementById("btnPartnerSave").innerText = "Değişiklikleri Kaydet";
+            document.getElementById("btnPartnerSave").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Değişiklikleri Kaydet';
             document.getElementById("btnPartnerCancel").style.display = "inline-block";
         }
 
         function partnerFormTemizle() {
-            document.getElementById("partnerFormTitle").innerHTML = '<i class="fa-solid fa-thumbtack"></i> Yeni İş Ortağı / Partner Kaydet';
+            document.getElementById("partnerFormTitle").textContent = 'Yeni İş Ortağı / Partner Kaydet';
             document.getElementById("partnerEditId").value = "-1";
             document.getElementById("ioAdi").value = "";
             document.getElementById("ioSirket").value = "";
@@ -2201,8 +2201,20 @@ function gorevMailGonder(gorev) {
                     toplamIs += tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(io.ad) || trToUpper(t.firma || "") === trToUpper(io.sirket) || (t.kalemler && t.kalemler.some(k => trToUpper(k.kisi || "") === trToUpper(io.ad) || trToUpper(k.kisi || "") === trToUpper(io.sirket)))).length;
                 });
                 partnerSummary.innerHTML = `
-                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam Partner</small><span style="font-weight:700; color:var(--accent-red); font-size:18px;">${db.length}</span></div>
-                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block; text-transform:uppercase;">Toplam Yapılan İş</small><span style="font-weight:700; color:var(--btn-green); font-size:18px;">${toplamIs}</span></div>
+                    <div class="partner-stat-box">
+                        <div class="partner-stat-icon" style="background:rgba(158,42,43,0.12);color:var(--accent-red);"><i class="fa-solid fa-handshake"></i></div>
+                        <div class="partner-stat-info">
+                            <span class="partner-stat-value" style="color:var(--accent-red);">${db.length}</span>
+                            <span class="partner-stat-label">Toplam Partner</span>
+                        </div>
+                    </div>
+                    <div class="partner-stat-box">
+                        <div class="partner-stat-icon" style="background:rgba(46,125,50,0.12);color:#2E7D32;"><i class="fa-solid fa-briefcase"></i></div>
+                        <div class="partner-stat-info">
+                            <span class="partner-stat-value" style="color:#2E7D32;">${toplamIs}</span>
+                            <span class="partner-stat-label">Toplam Yapılan İş</span>
+                        </div>
+                    </div>
                 `;
             }
             if(db.length === 0) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-handshake"></i>','Kayıtlı iş ortağı bulunmamaktadır.','Yeni bir iş ortağı eklemek için "İş Ortağı Ekle" butonunu kullanın.'); return; }
@@ -2219,36 +2231,102 @@ function gorevMailGonder(gorev) {
                     io.bankalar.forEach(b => { 
                         const bankaRenk = getBankaRenkKodu(b.banka);
                         const ibanFormatted = (b.iban || '').replace(/(.{4})/g, '$1 ').trim();
-                        bankaHTML += `<div style="font-size:13px; margin-left:15px; color:${bankaRenk}; font-weight:700; letter-spacing:0.5px;">• ${b.banka}: ${ibanFormatted}</div>`; 
+                        bankaHTML += `<div class="partner-banka-item" style="border-left:3px solid ${bankaRenk};color:${bankaRenk};"><i class="fa-solid fa-university"></i> ${b.banka}: <strong>${ibanFormatted}</strong></div>`; 
                     });
-                } else { bankaHTML = " GİRİLMEMİŞ"; }
+                } else { bankaHTML = '<div class="partner-banka-item partner-banka-empty"><i class="fa-solid fa-circle-exclamation"></i> Banka hesabı girilmemiş</div>'; }
 
                 const isSayisi = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(io.ad) || trToUpper(t.firma || "") === trToUpper(io.sirket) || (t.kalemler && t.kalemler.some(k => trToUpper(k.kisi || "") === trToUpper(io.ad) || trToUpper(k.kisi || "") === trToUpper(io.sirket)))).length;
 
+                const statusIcon = io.status === 'Sürekli Partner' ? '<span class="partner-badge partner-badge-star"><i class="fa-solid fa-crown"></i> Sürekli</span>' : (io.status === 'Proje Bazlı' ? '<span class="partner-badge partner-badge-proje"><i class="fa-solid fa-diagram-project"></i> Proje</span>' : `<span class="partner-badge">${io.status}</span>`);
+                const surekliClass = io.status === 'Sürekli Partner' ? ' partner-card-surekli' : '';
+
                 konteyner.innerHTML += `
-                    <div class="portfolio-card partner-card-item">
-                        <div class="card-job-counter">
-                            <small>Yapılan İş</small>
-                            <span>${isSayisi}</span>
+                    <div class="portfolio-card partner-card-item${surekliClass}">
+                        <div class="partner-card-top">
+                            <div class="partner-card-avatar">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </div>
+                            <div class="partner-card-header">
+                                <h4 class="p-search-ad">${io.ad}</h4>
+                                <div class="partner-card-brans p-search-brans"><i class="fa-solid fa-ruler-combined"></i> ${io.brans}</div>
+                            </div>
+                            <div class="partner-card-jobcount">
+                                <span class="partner-jobcount-num">${isSayisi}</span>
+                                <span class="partner-jobcount-label">İŞ</span>
+                            </div>
                         </div>
-                        <div class="card-main-header">
-                            <h4 class="p-search-ad">${io.ad}${io.status === 'Sürekli Partner' ? ' <i class="fa-solid fa-star"></i>' : ''}</h4>
-                            <div class="p-type p-search-brans" style="color:var(--btn-green)"><i class="fa-solid fa-ruler-combined"></i> ${io.brans}</div>
+                        <div class="partner-card-divider"></div>
+                        <div class="partner-card-body">
+                            <div class="partner-card-row">
+                                <div class="partner-card-col">
+                                    <div class="partner-card-info">
+                                        <span class="partner-info-icon"><i class="fa-solid fa-building"></i></span>
+                                        <div><span class="partner-info-label">Firma</span><span class="partner-info-val p-search-sirket">${io.sirket}</span></div>
+                                    </div>
+                                    <div class="partner-card-info">
+                                        <span class="partner-info-icon"><i class="fa-solid fa-briefcase"></i></span>
+                                        <div><span class="partner-info-label">Ünvan</span><span class="partner-info-val">${io.unvan || '-'}</span></div>
+                                    </div>
+                                </div>
+                                <div class="partner-card-col">
+                                    <div class="partner-card-info">
+                                        <span class="partner-info-icon"><i class="fa-solid fa-tag"></i></span>
+                                        <div><span class="partner-info-label">Statü</span><span class="partner-info-val">${statusIcon}</span></div>
+                                    </div>
+                                    <div class="partner-card-info">
+                                        <span class="partner-info-icon"><i class="fa-solid fa-phone"></i></span>
+                                        <div><span class="partner-info-label">Telefon</span><span class="partner-info-val">${io.tel}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="partner-card-row">
+                                <div class="partner-card-col">
+                                    <div class="partner-card-info">
+                                        <span class="partner-info-icon"><i class="fa-solid fa-envelope"></i></span>
+                                        <div><span class="partner-info-label">E-Posta</span><span class="partner-info-val">${io.eposta}</span></div>
+                                    </div>
+                                    <div class="partner-card-info">
+                                        <span class="partner-info-icon"><i class="fa-solid fa-id-card"></i></span>
+                                        <div><span class="partner-info-label">T.C. Kimlik</span><span class="partner-info-val p-search-kimlik">${io.kimlik || '-'}</span></div>
+                                    </div>
+                                </div>
+                                <div class="partner-card-col">
+                                    <div class="partner-card-info">
+                                        <span class="partner-info-icon"><i class="fa-solid fa-file-invoice"></i></span>
+                                        <div><span class="partner-info-label">Vergi Dairesi</span><span class="partner-info-val">${io.vergiDairesi || '-'}</span></div>
+                                    </div>
+                                    <div class="partner-card-info">
+                                        <span class="partner-info-icon"><i class="fa-solid fa-file-invoice"></i></span>
+                                        <div><span class="partner-info-label">Vergi No</span><span class="partner-info-val">${io.vergiNo || '-'}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="partner-card-row${!io.adres || io.adres === '-' ? '' : ''}">
+                                <div class="partner-card-col" style="flex:1;">
+                                    <div class="partner-card-info">
+                                        <span class="partner-info-icon"><i class="fa-solid fa-location-dot"></i></span>
+                                        <div><span class="partner-info-label">Adres</span><span class="partner-info-val p-search-adres">${io.adres || '-'}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="partner-card-row">
+                                <div class="partner-card-col" style="flex:1;">
+                                    <div class="partner-card-info" style="align-items:flex-start;">
+                                        <span class="partner-info-icon" style="margin-top:2px;"><i class="fa-solid fa-building-columns"></i></span>
+                                        <div style="flex:1;">
+                                            <span class="partner-info-label">Banka Hesapları</span>
+                                            <div class="partner-banka-list">${bankaHTML}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="p-detail"><b>Firma/Kurum:</b> <span class="p-search-sirket">${io.sirket}</span></div>
-                        <div class="p-detail"><b>Ünvanı:</b> <span>${io.unvan || '-'}</span></div>
-                        <div class="p-detail"><b>Statü:</b> <span>${io.status}</span></div>
-                        <div class="p-detail"><b>İletişim:</b> <span>${io.tel}</span></div>
-                        <div class="p-detail"><b>E-Posta:</b> <span>${io.eposta}</span></div>
-                        <div class="p-detail"><b>T.C. Kimlik:</b> <span class="p-search-kimlik">${io.kimlik || '-'}</span></div>
-                        <div class="p-detail"><b>Vergi Dairesi:</b> <span>${io.vergiDairesi || '-'}</span></div>
-                        <div class="p-detail"><b>Vergi No:</b> <span>${io.vergiNo || '-'}</span></div>
-                        <div class="p-detail"><b>Adres:</b> <span class="p-search-adres">${io.adres || '-'}</span></div>
-                        <div class="p-detail" style="flex-direction:column; gap:2px;"><b>Banka Hesapları:</b>${bankaHTML}</div>
-                        <div class="card-actions">
-                            <button class="btn btn-primary" onclick="pbPopupAc(${io.id}, 'partner')" style="margin-right:auto;"><i class="fa-regular fa-folder"></i> DOSYALAR</button>
-                            <button class="btn-warning" onclick="partnerDuzenle(${io.id})">Düzenle</button>
-                            <button class="btn-danger" onclick="portfolioKartSil('tm_isortaklari_db', ${io.id}, 'partner')">Sil</button>
+                        <div class="partner-card-actions">
+                            <button class="partner-btn partner-btn-files" onclick="pbPopupAc(${io.id}, 'partner')"><i class="fa-regular fa-folder"></i> Dosyalar</button>
+                            <div class="partner-card-actions-right">
+                                <button class="partner-btn partner-btn-edit" onclick="partnerDuzenle(${io.id})"><i class="fa-solid fa-pen"></i> Düzenle</button>
+                                <button class="partner-btn partner-btn-delete" onclick="portfolioKartSil('tm_isortaklari_db', ${io.id}, 'partner')"><i class="fa-solid fa-trash-can"></i> Sil</button>
+                            </div>
                         </div>
                     </div>
                 `;
