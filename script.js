@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.30.0';
+        var APP_VERSION = 'V1.30.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -2233,7 +2233,7 @@ function gorevMailGonder(gorev) {
                         const ibanFormatted = (b.iban || '').replace(/(.{4})/g, '$1 ').trim();
                         bankaHTML += `<div class="partner-banka-item" style="border-left:3px solid ${bankaRenk};">
                             <div class="partner-banka-name" style="color:${bankaRenk};"><i class="fa-solid fa-university"></i> ${b.banka}</div>
-                            <div class="partner-banka-iban"><i class="fa-solid fa-arrow-right" style="color:${bankaRenk};"></i> ${ibanFormatted}</div>
+                            <div class="partner-banka-iban" style="color:${bankaRenk};"><i class="fa-solid fa-arrow-right"></i> ${ibanFormatted}</div>
                         </div>`; 
                     });
                 } else { bankaHTML = '<div class="partner-banka-item partner-banka-empty"><i class="fa-solid fa-circle-exclamation"></i> Banka hesabı girilmemiş</div>'; }
