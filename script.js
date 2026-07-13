@@ -435,6 +435,7 @@ function gorevMailGonder(gorev) {
             piyasaDallariSecenekleriniDoldur();
             piyasaBirimTipiSecenekleriniDoldur();
             musteriEtiketleriniDoldur();
+            ioStatusSecenekleriniDoldur();
             csInit();var cso=new MutationObserver(function(m){for(var i=0;i<m.length;i++){if(m[i].addedNodes.length){csInit();break;}}});cso.observe(document.body,{childList:true,subtree:true});
             document.addEventListener('dragstart', dashDragBasla);
             document.addEventListener('dragover', dashDragOver);
