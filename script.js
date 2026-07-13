@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.10';
+        var APP_VERSION = 'V1.23.11';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -5942,7 +5942,6 @@ function gorevMailGonder(gorev) {
                             }
                         },
                         scales: { y: { beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺'} } }
-                        }
                     });
                 }
             }
