@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.9';
+        var APP_VERSION = 'V1.23.10';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -1665,7 +1665,7 @@ function gorevMailGonder(gorev) {
                             options: {
                                 responsive: true, maintainAspectRatio: true,
                                 plugins: { legend: { labels: { font: {size:11} } }, datalabels: { display: false } },
-                                scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' ?'; } } } }
+                                scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' ₺'; } } } }
                             }
                         });
                     }
@@ -5907,7 +5907,7 @@ function gorevMailGonder(gorev) {
                     options: {
                         responsive:true, maintainAspectRatio:false,
                         plugins: { legend:{position:'top',labels:{font:{size:10,weight:'bold'}}}, datalabels:{display:false} },
-                        scales: { y:{ beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+' ?'} } }
+                        scales: { y:{ beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺'} } }
                     }
                 });
             } catch(e) { console.warn("Karşılaştırma grafiği çizilemedi:", e); }
@@ -5941,9 +5941,10 @@ function gorevMailGonder(gorev) {
                                 formatter:(v,ctx) => { const total = ctx.dataset.label==='Gelir' ? toplamYillikGelir : toplamYillikGider; return total>0 ? (v/total*100).toFixed(1)+'%' : ''; }
                             }
                         },
-                        scales: { y: { beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+' ?'} } }
-                    }
-                });
+                        scales: { y: { beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺'} } }
+                        }
+                    });
+                }
             }
 
             const gelirVeri = kayit.gelirKategorileri.map(k => { let t=0; for(let i=0;i<12;i++){const ay=kayit.aylar[i];if(ay)t+=(ay.gelirler[k]||[]).reduce((s,x)=>s+(x.tutar||0),0)} return t; });
@@ -5994,7 +5995,7 @@ function gorevMailGonder(gorev) {
                     },
                     options: { responsive:true, maintainAspectRatio:false,
                         plugins: { legend:{position:'top',labels:{font:{weight:'bold'}}}, datalabels:{display:false} },
-                        scales: { y: { ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+' ?'} } }
+                        scales: { y: { ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺'} } }
                     }
                 });
             }
@@ -6022,7 +6023,7 @@ function gorevMailGonder(gorev) {
                 if(inp) total += tmTutarCoz(inp.value||'0');
             });
             var hdr = body.parentElement.querySelector('.yb-acc-header');
-            if(hdr) hdr.querySelector('.acc-tutar').textContent = total.toLocaleString('tr-TR',{minFractionDigits:2})+' ?';
+            if(hdr) hdr.querySelector('.acc-tutar').textContent = total.toLocaleString('tr-TR',{minFractionDigits:2});
         }
         function ybDomOzetGuncelle(ayIdx) {
             var icerik = document.getElementById("ybSekmeIcerik");
@@ -6034,10 +6035,10 @@ function gorevMailGonder(gorev) {
             giderRows.forEach(function(el){ aylikGider += tmTutarCoz(el.textContent.replace(/[^0-9.,-]/g,'').trim()); });
             var sumCards = icerik.querySelectorAll('.yb-sum-card .sc-value');
             if(sumCards.length>=3) {
-                sumCards[0].textContent = aylikGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ?';
-                sumCards[1].textContent = aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ?';
+                sumCards[0].textContent = aylikGelir.toLocaleString('tr-TR',{minFractionDigits:2});
+                sumCards[1].textContent = aylikGider.toLocaleString('tr-TR',{minFractionDigits:2});
                 var fark = aylikGelir - aylikGider;
-                sumCards[2].textContent = fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ?';
+                sumCards[2].textContent = fark.toLocaleString('tr-TR',{minFractionDigits:2});
             }
         }
         function ybDomAyKartGuncelle(ayIdx) {
