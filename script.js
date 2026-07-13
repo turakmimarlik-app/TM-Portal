@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.28.0';
+        var APP_VERSION = 'V1.29.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -2237,7 +2237,7 @@ function gorevMailGonder(gorev) {
 
                 const isSayisi = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(io.ad) || trToUpper(t.firma || "") === trToUpper(io.sirket) || (t.kalemler && t.kalemler.some(k => trToUpper(k.kisi || "") === trToUpper(io.ad) || trToUpper(k.kisi || "") === trToUpper(io.sirket)))).length;
 
-                const statusIcon = io.status === 'Sürekli Partner' ? '<span class="partner-badge partner-badge-star"><i class="fa-solid fa-crown"></i> Sürekli</span>' : (io.status === 'Proje Bazlı' ? '<span class="partner-badge partner-badge-proje"><i class="fa-solid fa-diagram-project"></i> Proje</span>' : `<span class="partner-badge">${io.status}</span>`);
+                const statusIcon = io.status === 'Sürekli Partner' ? '<span class="partner-badge partner-badge-star"><i class="fa-solid fa-crown"></i> Sürekli Çözüm Ortağı</span>' : (io.status === 'Proje Bazlı' ? '<span class="partner-badge partner-badge-proje"><i class="fa-solid fa-diagram-project"></i> Proje Bazlı Partner</span>' : `<span class="partner-badge">${io.status}</span>`);
                 const surekliClass = io.status === 'Sürekli Partner' ? ' partner-card-surekli' : '';
 
                 konteyner.innerHTML += `
