@@ -5942,8 +5942,8 @@ function gorevMailGonder(gorev) {
                             }
                         },
                         scales: { y: { beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺'} } }
-                    });
-                }
+                    }
+                });
             }
 
             const gelirVeri = kayit.gelirKategorileri.map(k => { let t=0; for(let i=0;i<12;i++){const ay=kayit.aylar[i];if(ay)t+=(ay.gelirler[k]||[]).reduce((s,x)=>s+(x.tutar||0),0)} return t; });
