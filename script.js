@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.23.11';
+        var APP_VERSION = 'V1.24.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -761,9 +761,14 @@ function gorevMailGonder(gorev) {
 
         function getBankaRenkKodu(bankaAdi) {
             const name = trToUpper(bankaAdi);
+            if(name.includes("AKBANK")) return "#E53935";
+            if(name.includes("VAKIF")) return "#FDD835";
+            if(name.includes("QNB") || name.includes("FİNANS") || name.includes("FINANS")) return "#7B1FA2";
+            if(name.includes("DENİZ") || name.includes("DENIZ")) return "#0D47A1";
+            if(name.includes("ING")) return "#FF6F00";
             if(name.includes("ZİRAAT") || name.includes("ZIRAAT")) return "#9E2A2B"; 
-            if(name.includes("GARANTİ") || name.includes("GARANTI") || name.includes("VAKIF")) return "#2E7D32";
-            if(name.includes("İŞ") || name.includes("IS ") || name.includes("YAPI") || name.includes("AKBANK")) return "#0D47A1";
+            if(name.includes("GARANTİ") || name.includes("GARANTI")) return "#2E7D32";
+            if(name.includes("İŞ") || name.includes("IS ") || name.includes("YAPI")) return "#0D47A1";
             if(name.includes("HALK") || name.includes("TEB")) return "#00838F";
             if(name.includes("KUVEYT") || name.includes("ALBARAKA")) return "#1B5E20";
             return "inherit";
@@ -848,6 +853,7 @@ function gorevMailGonder(gorev) {
                         document.getElementById("ioKimlikNo").value = kart.kimlik || "";
                         document.getElementById("ioVergiDairesi").value = kart.vergiDairesi || "";
                         document.getElementById("ioVergiNo").value = kart.vergiNo || "";
+                        ioStatusOptionsYukle();
                         document.getElementById("ioStatus").value = kart.status || "Sürekli Partner";
                         document.getElementById("ioAdres").value = kart.adres || "";
                         const kont = document.getElementById("partnerBankaKonteyner");
@@ -2040,6 +2046,49 @@ function gorevMailGonder(gorev) {
         }
 
         /* ================= PORTFÖY MODÜLÜ (İŞ ORTAKLARI) MOTORU ================= */
+        function ioStatusOptionsYukle() {
+            var sec = document.getElementById("ioStatus");
+            if(!sec) return;
+            var defaults = ["Sürekli Partner", "Proje Bazlı"];
+            var custom = [];
+            try { custom = JSON.parse(localStorage.getItem("tm_io_status_list")) || []; } catch(e) {}
+            var all = defaults.concat(custom);
+            var secili = sec.value;
+            sec.innerHTML = "";
+            all.forEach(function(s) {
+                var o = document.createElement("option");
+                o.value = s;
+                o.textContent = s;
+                if(s === secili) o.selected = true;
+                sec.appendChild(o);
+            });
+        }
+        function ioStatusEkle() {
+            var yeni = prompt("Yeni ortaklık statüsü adı girin:");
+            if(!yeni || yeni.trim() === "") return;
+            yeni = yeni.trim();
+            var custom = [];
+            try { custom = JSON.parse(localStorage.getItem("tm_io_status_list")) || []; } catch(e) {}
+            if(custom.indexOf(yeni) !== -1) { tmNotify("Bu statü zaten mevcut!", "error"); return; }
+            custom.push(yeni);
+            try { localStorage.setItem("tm_io_status_list", JSON.stringify(custom)); } catch(e) {}
+            ioStatusOptionsYukle();
+            document.getElementById("ioStatus").value = yeni;
+        }
+        function ioStatusSil() {
+            var sec = document.getElementById("ioStatus");
+            if(!sec) return;
+            var secilen = sec.value;
+            var defaults = ["Sürekli Partner", "Proje Bazlı"];
+            if(defaults.indexOf(secilen) !== -1) { tmNotify("Varsayılan statüler silinemez!", "error"); return; }
+            if(!confirm('"' + secilen + '" statüsünü silmek istediğinize emin misiniz?')) return;
+            var custom = [];
+            try { custom = JSON.parse(localStorage.getItem("tm_io_status_list")) || []; } catch(e) {}
+            var idx = custom.indexOf(secilen);
+            if(idx !== -1) custom.splice(idx, 1);
+            try { localStorage.setItem("tm_io_status_list", JSON.stringify(custom)); } catch(e) {}
+            ioStatusOptionsYukle();
+        }
         function isOrtagiProfilKaydet() {
             const ad = trToUpper(document.getElementById("ioAdi").value.trim());
             const sirket = trToUpper(document.getElementById("ioSirket").value.trim()) || "BİREYSEL";
@@ -2093,6 +2142,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("ioKimlikNo").value = kart.kimlik || "";
             document.getElementById("ioVergiDairesi").value = kart.vergiDairesi || "";
             document.getElementById("ioVergiNo").value = kart.vergiNo || "";
+            ioStatusOptionsYukle();
             document.getElementById("ioStatus").value = kart.status;
             document.getElementById("ioAdres").value = kart.adres || "";
 
@@ -2122,6 +2172,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("ioAdres").value = "";
             document.getElementById("partnerBankaKonteyner").innerHTML = "";
             bankaSatiriEkle("partnerBankaKonteyner");
+            ioStatusOptionsYukle();
 
             document.getElementById("btnPartnerSave").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Partner Profilini Kaydet';
             document.getElementById("btnPartnerCancel").style.display = "none";
@@ -6683,15 +6734,15 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var a = ad.toUpperCase().replace(/[İI]/g, "I");
             if(a.indexOf("ZIRAAT") !== -1) return "#C62828";
             if(a.indexOf("IS") !== -1 && a.indexOf("BANK") !== -1) return "#003399";
-            if(a.indexOf("AKBANK") !== -1) return "#D32F2F";
+            if(a.indexOf("AKBANK") !== -1) return "#E53935";
+            if(a.indexOf("VAKIF") !== -1) return "#FDD835";
+            if(a.indexOf("QNB") !== -1 || a.indexOf("FINANS") !== -1) return "#7B1FA2";
+            if(a.indexOf("DENIZ") !== -1) return "#0D47A1";
+            if(a.indexOf("ING") !== -1) return "#FF6F00";
             if(a.indexOf("GARANTI") !== -1) return "#00695C";
             if(a.indexOf("YAPI") !== -1 || a.indexOf("YKB") !== -1) return "#003399";
-            if(a.indexOf("VAKIF") !== -1) return "#005BAA";
             if(a.indexOf("HALK") !== -1) return "#003399";
-            if(a.indexOf("DENIZ") !== -1) return "#00AEEF";
-            if(a.indexOf("QNB") !== -1 || a.indexOf("FINANS") !== -1) return "#8F1B1B";
             if(a.indexOf("TEB") !== -1) return "#003B7B";
-            if(a.indexOf("ING") !== -1) return "#FF6600";
             if(a.indexOf("HSBC") !== -1) return "#DB0011";
             if(a.indexOf("ALTERNATIF") !== -1) return "#E51836";
             if(a.indexOf("SEKER") !== -1) return "#006B3F";
