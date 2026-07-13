@@ -853,7 +853,7 @@ function gorevMailGonder(gorev) {
                         document.getElementById("ioKimlikNo").value = kart.kimlik || "";
                         document.getElementById("ioVergiDairesi").value = kart.vergiDairesi || "";
                         document.getElementById("ioVergiNo").value = kart.vergiNo || "";
-                        ioStatusOptionsYukle();
+                        ioStatusSecenekleriniDoldur();
                         document.getElementById("ioStatus").value = kart.status || "Sürekli Partner";
                         document.getElementById("ioAdres").value = kart.adres || "";
                         const kont = document.getElementById("partnerBankaKonteyner");
@@ -2046,48 +2046,58 @@ function gorevMailGonder(gorev) {
         }
 
         /* ================= PORTFÖY MODÜLÜ (İŞ ORTAKLARI) MOTORU ================= */
-        function ioStatusOptionsYukle() {
+        function ioStatusSecenekleriniDoldur() {
             var sec = document.getElementById("ioStatus");
             if(!sec) return;
-            var defaults = ["Sürekli Partner", "Proje Bazlı"];
+            var varsayilan = [
+                { value:"Sürekli Partner", text:"Sürekli Çözüm Ortağı" },
+                { value:"Proje Bazlı", text:"Proje Bazlı Partner" }
+            ];
             var custom = [];
             try { custom = JSON.parse(localStorage.getItem("tm_io_status_list")) || []; } catch(e) {}
-            var all = defaults.concat(custom);
             var secili = sec.value;
             sec.innerHTML = "";
-            all.forEach(function(s) {
+            varsayilan.forEach(function(s) {
                 var o = document.createElement("option");
-                o.value = s;
-                o.textContent = s;
+                o.value = s.value; o.textContent = s.text;
+                if(s.value === secili) o.selected = true;
+                sec.appendChild(o);
+            });
+            custom.forEach(function(s) {
+                var o = document.createElement("option");
+                o.value = s; o.textContent = s;
                 if(s === secili) o.selected = true;
                 sec.appendChild(o);
             });
         }
         function ioStatusEkle() {
-            var yeni = prompt("Yeni ortaklık statüsü adı girin:");
-            if(!yeni || yeni.trim() === "") return;
-            yeni = yeni.trim();
-            var custom = [];
-            try { custom = JSON.parse(localStorage.getItem("tm_io_status_list")) || []; } catch(e) {}
-            if(custom.indexOf(yeni) !== -1) { tmNotify("Bu statü zaten mevcut!", "error"); return; }
-            custom.push(yeni);
-            try { localStorage.setItem("tm_io_status_list", JSON.stringify(custom)); } catch(e) {}
-            ioStatusOptionsYukle();
-            document.getElementById("ioStatus").value = yeni;
+            tmPrompt("Lütfen eklemek istediğiniz yeni Ortaklık Statüsü adını giriniz:", function(yeni) {
+                if(yeni) {
+                    yeni = yeni.trim();
+                    if(!yeni) return;
+                    var custom = [];
+                    try { custom = JSON.parse(localStorage.getItem("tm_io_status_list")) || []; } catch(e) {}
+                    if(custom.indexOf(yeni) !== -1) { tmNotify("Bu statü zaten sistemde mevcut!", "error"); return; }
+                    custom.push(yeni);
+                    try { localStorage.setItem("tm_io_status_list", JSON.stringify(custom)); } catch(e) {}
+                    ioStatusSecenekleriniDoldur();
+                    document.getElementById("ioStatus").value = yeni;
+                }
+            });
         }
         function ioStatusSil() {
             var sec = document.getElementById("ioStatus");
             if(!sec) return;
             var secilen = sec.value;
-            var defaults = ["Sürekli Partner", "Proje Bazlı"];
-            if(defaults.indexOf(secilen) !== -1) { tmNotify("Varsayılan statüler silinemez!", "error"); return; }
-            if(!confirm('"' + secilen + '" statüsünü silmek istediğinize emin misiniz?')) return;
-            var custom = [];
-            try { custom = JSON.parse(localStorage.getItem("tm_io_status_list")) || []; } catch(e) {}
-            var idx = custom.indexOf(secilen);
-            if(idx !== -1) custom.splice(idx, 1);
-            try { localStorage.setItem("tm_io_status_list", JSON.stringify(custom)); } catch(e) {}
-            ioStatusOptionsYukle();
+            var varsayilan = ["Sürekli Partner", "Proje Bazlı"];
+            if(varsayilan.indexOf(secilen) !== -1) { tmNotify("Varsayılan statüler silinemez!", "error"); return; }
+            tmConfirm('"' + secilen + '" statüsünü silmek istediğinize emin misiniz?', function() {
+                var custom = [];
+                try { custom = JSON.parse(localStorage.getItem("tm_io_status_list")) || []; } catch(e) {}
+                custom = custom.filter(function(s) { return s !== secilen; });
+                try { localStorage.setItem("tm_io_status_list", JSON.stringify(custom)); } catch(e) {}
+                ioStatusSecenekleriniDoldur();
+            });
         }
         function isOrtagiProfilKaydet() {
             const ad = trToUpper(document.getElementById("ioAdi").value.trim());
@@ -2142,7 +2152,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("ioKimlikNo").value = kart.kimlik || "";
             document.getElementById("ioVergiDairesi").value = kart.vergiDairesi || "";
             document.getElementById("ioVergiNo").value = kart.vergiNo || "";
-            ioStatusOptionsYukle();
+            ioStatusSecenekleriniDoldur();
             document.getElementById("ioStatus").value = kart.status;
             document.getElementById("ioAdres").value = kart.adres || "";
 
@@ -2172,7 +2182,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("ioAdres").value = "";
             document.getElementById("partnerBankaKonteyner").innerHTML = "";
             bankaSatiriEkle("partnerBankaKonteyner");
-            ioStatusOptionsYukle();
+            ioStatusSecenekleriniDoldur();
 
             document.getElementById("btnPartnerSave").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Partner Profilini Kaydet';
             document.getElementById("btnPartnerCancel").style.display = "none";
