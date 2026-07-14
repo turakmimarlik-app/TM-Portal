@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.34.0';
+        var APP_VERSION = 'V1.34.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -50,6 +50,13 @@ function tmSesCal(tur) {
             pad(329.63, t + 0.08, 0.1, v * 0.6);
             pad(293.66, t + 0.16, 0.1, v * 0.5);
             pad(261.63, t + 0.24, 0.4, v * 0.4);
+        } else if (tur === 'para') {
+            pad(523.25, t, 0.06, v * 0.5);
+            pad(659.25, t + 0.05, 0.06, v * 0.6);
+            pad(783.99, t + 0.1, 0.06, v * 0.7);
+            pad(1046.5, t + 0.15, 0.06, v * 0.8);
+            pad(783.99, t + 0.2, 0.06, v * 0.6);
+            pad(1046.5, t + 0.25, 0.15, v * 0.7);
         } else {
             pad(800, t, 0.12, v * 0.6);
         }
@@ -7037,7 +7044,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     h += '</div>';
                     h += '<div class="kart-bakiye '+bakiyeTipi+'">'+htTl(hs.bakiye)+'</div>';
                     h += '<div class="kart-iban">'+ibanStr+'</div>';
-                    h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">'+hs.hesapSahibi+'</div></div></div>';
+                    h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">'+hs.hesapSahibi+'</div></div>';
+                    h += '<div class="kart-alt-sag"><div class="kart-sifreler"><span>KART: '+kartSifre+'</span><span>NET: '+netSifre+'</span></div></div></div>';
                     h += '</div>';
                     h += '<div class="kart-chip"></div>';
                     h += '</div>';
@@ -7050,7 +7058,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             h += '<div class="kart-top"><div class="kart-banka">NAKİT HESABI</div><div class="kart-actions"></div></div>';
             h += '<div class="kart-bakiye '+nakitBakiyeTipi+'">'+htTl(db.nakit)+'</div>';
             h += '<div class="kart-iban">•••• •••• •••• ••••</div>';
-            h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">Fiziki Nakit Para</div></div></div>';
+            h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">Fiziki Nakit Para</div></div>';
+            h += '<div class="kart-alt-sag"><div class="kart-sifreler"><span>KART: —</span><span>NET: —</span></div></div></div>';
             h += '</div>';
             h += '<div class="kart-chip"></div>';
             h += '</div>';
@@ -7411,6 +7420,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if(HT_AKTIF_DETAY_HESAP !== null) htDetayIslemleriGoster();
             htDurumGuncelle();
             tmNotify(id ? "Hareket güncellendi." : "Hareket eklendi.", "success");
+            if(!id && (tur === "GELEN" || tur === "TRANSFER")) tmSesCal('para');
             aktiviteEkle((id ? "Hareket güncellendi: " : "Hareket eklendi: ") + aciklama, "Muhasebe");
         }
 
