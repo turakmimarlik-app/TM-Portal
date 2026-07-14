@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.32.16';
+        var APP_VERSION = 'V1.32.17';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -5056,7 +5056,7 @@ function gorevMailGonder(gorev) {
             const gNetRenk = genelNet >= 0 ? "var(--btn-green)" : "var(--accent-red)";
 
             let toplamHTML = `
-                <div style="display:flex; flex-direction:column; gap:10px; width:100%; padding:18px 10px; box-sizing:border-box; background:var(--ht-card); border-radius:12px; border:1px solid var(--ht-border); margin-bottom:18px;">
+                <div style="display:flex; flex-direction:column; gap:10px; width:100%; padding:18px 10px; box-sizing:border-box; background:#0b1928; border-radius:12px; border:1px solid var(--ht-border); margin-bottom:18px;">
                     <div style="display:flex; justify-content:center; text-align:center; gap:8px; padding-bottom:8px; border-bottom:1px solid var(--ht-border);">
                         <div style="padding:0 20px;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">TAMAMLANAN İŞ SAYISI</small><span style="font-weight:900; color:var(--accent-red); font-size:28px;">${db.length}</span></div>
                     </div>

@@ -561,7 +561,7 @@
         #is-muhasebe-page h2 { color:var(--ht-text); font-size:18px; border-left:3px solid var(--ht-accent); padding-left:12px; margin:0 0 16px 0; }
         #is-muhasebe-page .search-box { width:100% !important; max-width:100% !important; padding:9px 14px 9px 36px !important; border:1px solid var(--ht-border) !important; border-radius:8px !important; background:var(--ht-card) !important; color:var(--ht-text) !important; font-size:12px !important; box-sizing:border-box !important; margin-bottom:14px !important; }
         #is-muhasebe-page .search-box:focus { border-color:var(--ht-accent) !important; }
-        #is-muhasebe-page .isMuh-status-strip { display:flex !important; gap:16px !important; background:var(--ht-card) !important; padding:16px 20px !important; border-radius:12px !important; border:1px solid var(--ht-border) !important; margin-bottom:18px !important; justify-content:space-around !important; font-weight:600 !important; }
+        #is-muhasebe-page .isMuh-status-strip { display:flex !important; gap:16px !important; background:#0b1928 !important; padding:16px 20px !important; border-radius:12px !important; border:1px solid var(--ht-border) !important; margin-bottom:18px !important; justify-content:space-around !important; font-weight:600 !important; }
         #is-muhasebe-page .isMuh-status-strip small { font-size:9px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.5px; }
         #is-muhasebe-page .isMuh-status-strip span { font-size:18px; font-weight:800; color:var(--ht-text); }
         #is-muhasebe-page .portfolio-card { background:var(--ht-card) !important; border:1px solid rgba(160,184,204,0.12) !important; border-top:2px solid var(--ht-accent) !important; border-radius:12px !important; padding:20px 0 16px 0 !important; box-shadow:0 2px 12px rgba(0,0,0,0.15) !important; transition:all 0.25s ease !important; display:flex; flex-direction:column; }
@@ -632,7 +632,7 @@
         #tamamlanan-is-muhasebeleri-page .portfolio-card [id^="tamIsMuhKartContent_"] { display:none; }
         #tamamlanan-is-muhasebeleri-page .portfolio-card [id^="tamIsMuhKartContent_"].open { display:block; }
         /* Status strip */
-        #tamamlanan-is-muhasebeleri-page .tam-status-strip { display:flex !important; gap:16px !important; background:var(--ht-card) !important; padding:16px 20px !important; border-radius:12px !important; border:1px solid var(--ht-border) !important; margin-bottom:18px !important; justify-content:space-around !important; font-weight:600 !important; }
+        #tamamlanan-is-muhasebeleri-page .tam-status-strip { display:flex !important; gap:16px !important; background:#0b1928 !important; padding:16px 20px !important; border-radius:12px !important; border:1px solid var(--ht-border) !important; margin-bottom:18px !important; justify-content:space-around !important; font-weight:600 !important; }
         #tamamlanan-is-muhasebeleri-page .tam-status-strip small { font-size:9px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.5px; }
         #tamamlanan-is-muhasebeleri-page .tam-status-strip span { font-size:18px; font-weight:800; color:var(--ht-text); }
         /* Buttons matching is-muhasebe-page */
