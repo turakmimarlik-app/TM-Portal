@@ -17,9 +17,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.32.14">
-    <link rel="stylesheet" href="pdf.css?v=1.32.14">
-    <link rel="stylesheet" href="responsive.css?v=1.32.14">
+    <link rel="stylesheet" href="style.css?v=1.32.15">
+    <link rel="stylesheet" href="pdf.css?v=1.32.15">
+    <link rel="stylesheet" href="responsive.css?v=1.32.15">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -71,17 +71,17 @@
             <div class="sidebar-toggle" id="sidebarToggle" onclick="sidebarToggle()"><i class="fa-solid fa-chevron-left"></i></div>
             <ul class="menu-list">
                 <li id="menu-anasayfa" class="menu-item" onclick="menudenSayfaAc('anasayfa', 'anasayfa-page', this)"><span><i class="fa-solid fa-house"></i> <span class="menu-text">Ana Sayfa</span></span></li>
-                <li id="menu-gorevler-takvim" class="menu-item" onclick="menudenSayfaAc('gorevler-takvim', 'gorevler-takvim-page', this)"><span><i class="fa-regular fa-calendar"></i> <span class="menu-text">Görevler ve Takvim</span></span></li>
+                <li id="menu-gorevler-takvim" class="menu-item" onclick="menudenSayfaAc('gorevler-takvim', 'gorevler-takvim-page', this)"><span><i class="fa-regular fa-calendar"></i> <span class="menu-text">Görev & Takvim</span></span></li>
                 
                 <li id="menu-teklif-root" class="menu-item" onclick="toggleSubmenu('teklif-submenu', 'arrow-icon')">
-                    <span><i class="fa-regular fa-file-lines"></i> <span class="menu-text">Fiyatlandırma</span></span>
+                    <span><i class="fa-regular fa-file-lines"></i> <span class="menu-text">Teklif & Fiyat</span></span>
                     <span id="arrow-icon"><i class="fa-solid fa-chevron-down"></i></span>
                 </li>
                 <div id="teklif-submenu" class="submenu-list">
-                    <div id="sub-teklif-olustur" class="submenu-item" onclick="menudenSayfaAc('teklif-olustur', 'teklif-olustur-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Teklif Oluştur</span></div>
-                    <div id="sub-teklif-liste" class="submenu-item" onclick="menudenSayfaAc('teklif-liste', 'teklif-liste-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Geçmiş Teklifler</span></div>
+                    <div id="sub-teklif-olustur" class="submenu-item" onclick="menudenSayfaAc('teklif-olustur', 'teklif-olustur-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Yeni Teklif</span></div>
+                    <div id="sub-teklif-liste" class="submenu-item" onclick="menudenSayfaAc('teklif-liste', 'teklif-liste-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Teklif Geçmişi</span></div>
                     <div id="sub-piyasa-fiyatlari" class="submenu-item" onclick="menudenSayfaAc('piyasa-fiyatlari', 'piyasa-fiyatlari-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Piyasa Fiyatları</span></div>
-                    <div id="sub-tm-fiyatlar" class="submenu-item" onclick="menudenSayfaAc('tm-fiyatlar', 'tm-fiyatlar-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">TM Fiyatlar</span></div>
+                    <div id="sub-tm-fiyatlar" class="submenu-item" onclick="menudenSayfaAc('tm-fiyatlar', 'tm-fiyatlar-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">TM Fiyat Listesi</span></div>
 
                 </div>
 
@@ -98,12 +98,12 @@
                 </div>
 
                 <li id="menu-muhasebe-root" class="menu-item" onclick="toggleSubmenu('muhasebe-submenu', 'arrow-muhasebe-icon')">
-                    <span><i class="fa-solid fa-coins"></i> <span class="menu-text">Muhasebe</span></span>
+                    <span><i class="fa-solid fa-coins"></i> <span class="menu-text">Finans</span></span>
                     <span id="arrow-muhasebe-icon"><i class="fa-solid fa-chevron-down"></i></span>
                 </li>
                 <div id="muhasebe-submenu" class="submenu-list">
                     <div id="sub-nakit-dekont" class="submenu-item" onclick="menudenSayfaAc('nakit-dekont', 'nakit-dekont-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Nakit Ödeme Dekontu</span></div>
-                    <div id="sub-is-muhasebe-olustur" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe-olustur', 'is-muhasebe-olustur-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">İş Muhasebesi Oluştur</span></div>
+                    <div id="sub-is-muhasebe-olustur" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe-olustur', 'is-muhasebe-olustur-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Yeni İş Muhasebesi</span></div>
                     <div id="sub-is-muhasebe" class="submenu-item" onclick="menudenSayfaAc('is-muhasebe', 'is-muhasebe-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">İş Muhasebesi Takibi</span></div>
                     <div id="sub-tamamlanan-is-muhasebe" class="submenu-item" onclick="menudenSayfaAc('tamamlanan-is-muhasebe', 'tamamlanan-is-muhasebeleri-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Tamamlanan İş Muhasebeleri</span></div>
                     <div id="sub-hesap-takip" class="submenu-item" onclick="menudenSayfaAc('hesap-takip', 'hesap-takip-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i> <span class="menu-text">Hesap Takip Sistemi</span></div>
@@ -125,7 +125,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.32.14</div>
+                <div class="version-tag">V1.32.15</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1824,7 +1824,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.32.14"></script>
+    <script src="script.js?v=1.32.15"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
