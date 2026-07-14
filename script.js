@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.32.11';
+        var APP_VERSION = 'V1.32.12';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -4845,6 +4845,7 @@ function gorevMailGonder(gorev) {
 
             const kalan = kalem.tutar - (kalem.odenenTutar || 0);
             if(kalan <= 0) { tmNotify("Bu ödeme kaleminin kalan tutarı bulunmamaktadır.", "error"); return; }
+            if(yeniOdeme > kalan) { tmNotify("Ödenen tutar, kalan tutardan (" + tmTl(kalan) + ") büyük olamaz!", "error"); return; }
 
             kalem.odenenTutar = (kalem.odenenTutar || 0) + yeniOdeme;
             kalem.odemeTarihi = tarih;
