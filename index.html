@@ -17,9 +17,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.35.0">
-    <link rel="stylesheet" href="pdf.css?v=1.35.0">
-    <link rel="stylesheet" href="responsive.css?v=1.35.0">
+    <link rel="stylesheet" href="style.css?v=1.36.0">
+    <link rel="stylesheet" href="pdf.css?v=1.36.0">
+    <link rel="stylesheet" href="responsive.css?v=1.36.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -125,7 +125,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.35.0</div>
+                <div class="version-tag">V1.36.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -550,18 +550,21 @@
                             <button class="ht-ekle-btn primary" onclick="htIslemModalAc()"><i class="fa-solid fa-plus"></i> Yeni İşlem</button>
                         </div>
                     </div>
+                    <div class="ht-ay-nav">
+                        <button class="ht-ay-btn" onclick="htAyDegistir(-1)" title="Önceki Ay"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span id="htAyBaslik" class="ht-ay-baslik"></span>
+                        <button class="ht-ay-btn" onclick="htAyDegistir(1)" title="Sonraki Ay"><i class="fa-solid fa-chevron-right"></i></button>
+                        <button class="ht-ay-btn" onclick="htAyBugun()" title="Bu Ay" style="margin-left:4px;"><i class="fa-solid fa-calendar-day"></i></button>
+                    </div>
                     <div class="ht-siralama" id="htSiralama">
-                        <button class="ht-sirala-btn" data-key="tarih" onclick="htSiralamaDegistir('tarih')">Tarih Sırası</button>
-                        <button class="ht-sirala-btn" data-key="aciklama" onclick="htSiralamaDegistir('aciklama')">Açıklama</button>
-                        <button class="ht-sirala-btn" data-key="hesap" onclick="htSiralamaDegistir('hesap')">Hesap</button>
-                        <button class="ht-sirala-btn" data-key="tutar" onclick="htSiralamaDegistir('tutar')">Tutar</button>
-                        <button class="ht-sirala-btn" data-key="islem" onclick="htSiralamaDegistir('islem')">İşlem</button>
+                        <button class="ht-sirala-btn active" data-key="tarih" onclick="htSiralamaDegistir()"><i class="fa-solid fa-arrow-up-wide-short"></i> Tarih Sırası</button>
                     </div>
                     <div class="ht-search-wrap">
                         <span class="ht-search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" id="htArama" onkeyup="htIslemFiltrele()" placeholder="Tüm hareketlerde ara...">
+                        <input type="text" id="htArama" onkeyup="htIslemleriGoster()" placeholder="Tüm hareketlerde ara...">
                     </div>
                     <div id="htIslemListesi"></div>
+                    <div id="htSayfalama" class="ht-sayfalama"></div>
                 </div>
                 <div id="htHesapDetayAlan" style="display:none;">
                     <div class="ht-detay-header" style="margin-bottom:16px;">
@@ -573,12 +576,19 @@
                     <div class="ht-detay-actions" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
                         <button class="ht-ekle-btn primary" onclick="htPdfModalAc(HT_AKTIF_DETAY_HESAP)"><i class="fa-regular fa-file-lines"></i> Hesap Raporu</button>
                         <button class="ht-ekle-btn primary" onclick="htIslemModalAc(null, HT_AKTIF_DETAY_HESAP)"><i class="fa-solid fa-plus"></i> Hareket Ekle</button>
+                        <div class="ht-ay-nav" style="flex:1;min-width:200px;">
+                            <button class="ht-ay-btn" onclick="htDetayAyDegistir(-1)" title="Önceki Ay"><i class="fa-solid fa-chevron-left"></i></button>
+                            <span id="htDetayAyBaslik" class="ht-ay-baslik"></span>
+                            <button class="ht-ay-btn" onclick="htDetayAyDegistir(1)" title="Sonraki Ay"><i class="fa-solid fa-chevron-right"></i></button>
+                            <button class="ht-ay-btn" onclick="htDetayAyBugun()" title="Bu Ay" style="margin-left:4px;"><i class="fa-solid fa-calendar-day"></i></button>
+                        </div>
                         <div class="ht-search-wrap" style="flex:1;min-width:160px;">
                             <span class="ht-search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                            <input type="text" id="htDetayArama" onkeyup="htDetayIslemFiltrele()" placeholder="Hareketlerde ara...">
+                            <input type="text" id="htDetayArama" onkeyup="htDetayIslemleriGoster()" placeholder="Hareketlerde ara...">
                         </div>
                     </div>
                     <div id="htDetayIslemler"></div>
+                    <div id="htDetaySayfalama" class="ht-sayfalama"></div>
                 </div>
             </div>
             <div id="fatura-takip-page" class="page">
@@ -1840,7 +1850,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.35.0"></script>
+    <script src="script.js?v=1.36.0"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">

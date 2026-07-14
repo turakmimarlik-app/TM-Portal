@@ -1,9 +1,13 @@
-        var APP_VERSION = 'V1.35.0';
+        var APP_VERSION = 'V1.36.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
 
 function htAttrEsc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function trToLower(s) { return (s||'').replace(/İ/g,'i').replace(/ı/g,'i').replace(/Ğ/g,'g').replace(/ğ/g,'g').replace(/Ş/g,'s').replace(/ş/g,'s').replace(/Ç/g,'c').replace(/ç/g,'c').replace(/Ö/g,'o').replace(/ö/g,'o').replace(/Ü/g,'u').replace(/ü/g,'u').toLowerCase(); }
+
+function trPdfText(s) { return (s||'').replace(/İ/g,'I').replace(/ı/g,'i').replace(/Ğ/g,'G').replace(/ğ/g,'g').replace(/Ş/g,'S').replace(/ş/g,'s'); }
 
         /* --- Ses Bildirim Sistemi --- */
 function tmSesCal(tur) {
@@ -7228,14 +7232,17 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
         function htDetayIslemleriGoster() {
             var konteyner = document.getElementById("htDetayIslemler");
+            var sayfalamaEl = document.getElementById("htDetaySayfalama");
             if(!konteyner) return;
             var db = htVeriYukle();
-            var islemler = db.islemler.filter(function(i){
+            var hesapIslemler = db.islemler.filter(function(i){
                 if(HT_AKTIF_DETAY_HESAP === -1) return i.hesapId === -1 || i.hedefId === -1;
                 return i.hesapId === HT_AKTIF_DETAY_HESAP || i.hedefId === HT_AKTIF_DETAY_HESAP;
             });
-            if(islemler.length === 0) {
+            if(hesapIslemler.length === 0) {
                 konteyner.innerHTML = "<p style='color:var(--text-light); padding:15px;'>Bu hesaba ait işlem bulunamadı.</p>";
+                if(sayfalamaEl) sayfalamaEl.innerHTML = "";
+                document.getElementById("htDetayAyBaslik").innerText = "";
                 return;
             }
             function hesapAdiBul(id) {
@@ -7250,14 +7257,36 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var hx = db.hesaplar.find(function(hs){return hs.id===id;});
                 return hx ? trToUpper(hx.bankaAdi)+" - "+trToUpper(hx.hesapSahibi) : ("ID:"+id);
             }
+            var arama = trToLower(document.getElementById("htDetayArama").value);
+            var simdi = new Date();
+            var secYil = HT_DETAY_AKTIF_AY ? HT_DETAY_AKTIF_AY.yil : simdi.getFullYear();
+            var secAy = HT_DETAY_AKTIF_AY ? HT_DETAY_AKTIF_AY.ay : simdi.getMonth();
+            var filtreli = hesapIslemler.filter(function(i) {
+                if(!arama && i.tarih) {
+                    var t = new Date(i.tarih);
+                    if(t.getFullYear() !== secYil || t.getMonth() !== secAy) return false;
+                }
+                if(arama) {
+                    var txt = trToLower(i.aciklama||"") + " " + trToLower(hesapAdiBulPlain(i.hesapId));
+                    if(i.hedefId) txt += " " + trToLower(hesapAdiBulPlain(i.hedefId));
+                    if(!txt.includes(arama)) return false;
+                }
+                return true;
+            });
+            filtreli.sort(function(a,b){ return (a.tarih||"").localeCompare(b.tarih||"") * HT_SIRALAMA.yon; });
+            var toplamSayfa = Math.max(1, Math.ceil(filtreli.length / HT_SAYFA_BOYUT));
+            if(HT_DETAY_SAYFA > toplamSayfa) HT_DETAY_SAYFA = toplamSayfa;
+            var basIdx = (HT_DETAY_SAYFA - 1) * HT_SAYFA_BOYUT;
+            var sayfaListe = filtreli.slice(basIdx, basIdx + HT_SAYFA_BOYUT);
+            document.getElementById("htDetayAyBaslik").innerHTML = '<i class="fa-regular fa-calendar"></i> ' + htAyBaslikGetir(secYil, secAy);
             var h = '<div class="ht-islem-kart-list">';
-            islemler.slice().reverse().forEach(function(i) {
+            sayfaListe.forEach(function(i) {
                 var gorunenIslem = i.islem;
-                var gorunenYon = hesapAdiBul(i.hesapId) + " › " + (i.hedefId ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ');
+                var gorunenYon = hesapAdiBul(i.hesapId) + " → " + (i.hedefId ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ');
                 var gorunenYonPlain = hesapAdiBulPlain(i.hesapId) + " > " + (i.hedefId ? hesapAdiBulPlain(i.hedefId) : 'HARİCİ');
                 var ikon = '<i class="fa-solid fa-paper-plane"></i>';
                 if(i.islem === "GELEN") {
-                    gorunenYon = '<i class="fa-solid fa-globe"></i> HARİCİ › ' + hesapAdiBul(i.hesapId);
+                    gorunenYon = '<i class="fa-solid fa-globe"></i> HARİCİ → ' + hesapAdiBul(i.hesapId);
                     gorunenYonPlain = 'HARİCİ > ' + hesapAdiBulPlain(i.hesapId);
                     ikon = '<i class="fa-solid fa-inbox"></i>';
                 } else if(i.islem === "GİDEN") {
@@ -7275,7 +7304,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     }
                 }
                 var cls = gorunenIslem === "GELEN" ? "gelen" : "giden";
-                h += '<div class="ht-islem-kart" data-detay-search="'+htAttrEsc((i.aciklama||"").toLowerCase()+' '+gorunenYonPlain.toLowerCase())+'">';
+                h += '<div class="ht-islem-kart" data-detay-search="'+htAttrEsc(trToLower(i.aciklama||'')+' '+trToLower(gorunenYonPlain))+'">';
                 h += '<div class="ht-islem-kart-ust">';
                 h += '<span class="ht-islem-kart-aciklama">'+i.aciklama+'</span>';
                 h += '<span class="ht-islem-kart-tutar '+cls+'">'+htTl(i.tutar)+'</span>';
@@ -7286,11 +7315,28 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
             h += '</div>';
             konteyner.innerHTML = h;
-            htDetayIslemFiltrele();
+            var sayfaHtml = '';
+            if(!arama) {
+                sayfaHtml += '<button class="ht-sayfa-btn" onclick="htDetayAyDegistir(-1)" title="Önceki Ay"><i class="fa-solid fa-chevron-left"></i></button>';
+                sayfaHtml += '<span class="ht-sayfa-bilgi">'+htAyBaslikGetir(secYil, secAy)+' ('+filtreli.length+' işlem)</span>';
+                sayfaHtml += '<button class="ht-sayfa-btn" onclick="htDetayAyDegistir(1)" title="Sonraki Ay"><i class="fa-solid fa-chevron-right"></i></button>';
+                if(secYil !== simdi.getFullYear() || secAy !== simdi.getMonth()) {
+                    sayfaHtml += '<button class="ht-sayfa-btn" onclick="htDetayAyBugun()" title="Bu Ay" style="margin-left:6px;"><i class="fa-solid fa-calendar-day"></i></button>';
+                }
+            }
+            sayfaHtml += '<div class="ht-sayfa-numara">';
+            if(toplamSayfa > 1) {
+                for(var p=1; p<=toplamSayfa; p++) {
+                    if(p === HT_DETAY_SAYFA) sayfaHtml += '<span class="ht-sayfa-num ht-sayfa-aktif">'+p+'</span>';
+                    else sayfaHtml += '<button class="ht-sayfa-num" onclick="htDetaySayfayiDegistir('+p+')">'+p+'</button>';
+                }
+            }
+            sayfaHtml += '</div>';
+            if(sayfalamaEl) sayfalamaEl.innerHTML = sayfaHtml;
         }
 
         function htDetayIslemFiltrele() {
-            var kelime = document.getElementById("htDetayArama").value.toLowerCase().trim();
+            var kelime = trToLower(document.getElementById("htDetayArama").value);
             var list = document.getElementById("htDetayIslemler");
             if(!list) return;
             list.querySelectorAll(".ht-islem-kart").forEach(function(k) {
@@ -7481,14 +7527,69 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
         }
 
-        var HT_SIRALAMA = { anahtar: "id", yon: -1 };
+        var HT_SIRALAMA = { anahtar: "tarih", yon: -1 };
+        var HT_AKTIF_AY = null;
+        var HT_DETAY_AKTIF_AY = null;
+        var HT_AKTIF_SAYFA = 1;
+        var HT_DETAY_SAYFA = 1;
+        var HT_SAYFA_BOYUT = 20;
+
+        function htAyBaslikGetir(yil, ay) {
+            var aylar = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+            return aylar[ay] + " " + yil;
+        }
+
+        function htAyBugun() {
+            HT_AKTIF_AY = null;
+            HT_AKTIF_SAYFA = 1;
+            htIslemleriGoster();
+        }
+
+        function htAyDegistir(delta) {
+            var simdi = new Date();
+            var yil = HT_AKTIF_AY ? HT_AKTIF_AY.yil : simdi.getFullYear();
+            var ay = HT_AKTIF_AY ? HT_AKTIF_AY.ay : simdi.getMonth();
+            var d = new Date(yil, ay + delta, 1);
+            HT_AKTIF_AY = { yil: d.getFullYear(), ay: d.getMonth() };
+            HT_AKTIF_SAYFA = 1;
+            htIslemleriGoster();
+        }
+
+        function htSayfayiDegistir(sayfa) {
+            HT_AKTIF_SAYFA = sayfa;
+            htIslemleriGoster();
+        }
+
+        function htDetayAyBugun() {
+            HT_DETAY_AKTIF_AY = null;
+            HT_DETAY_SAYFA = 1;
+            htDetayIslemleriGoster();
+        }
+
+        function htDetayAyDegistir(delta) {
+            var simdi = new Date();
+            var yil = HT_DETAY_AKTIF_AY ? HT_DETAY_AKTIF_AY.yil : simdi.getFullYear();
+            var ay = HT_DETAY_AKTIF_AY ? HT_DETAY_AKTIF_AY.ay : simdi.getMonth();
+            var d = new Date(yil, ay + delta, 1);
+            HT_DETAY_AKTIF_AY = { yil: d.getFullYear(), ay: d.getMonth() };
+            HT_DETAY_SAYFA = 1;
+            htDetayIslemleriGoster();
+        }
+
+        function htDetaySayfayiDegistir(sayfa) {
+            HT_DETAY_SAYFA = sayfa;
+            htDetayIslemleriGoster();
+        }
 
         function htIslemleriGoster() {
             var konteyner = document.getElementById("htIslemListesi");
+            var sayfalamaEl = document.getElementById("htSayfalama");
             if(!konteyner) return;
             var db = htVeriYukle();
             if(!db.islemler || db.islemler.length === 0) {
                 konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-credit-card"></i>','Henüz hesap hareketi bulunmamaktadır.','Hesap hareketi eklemek için "Hareket Ekle" butonunu kullanın.');
+                document.getElementById("htAyBaslik").innerText = "";
+                if(sayfalamaEl) sayfalamaEl.innerHTML = "";
                 return;
             }
             function hesapAdiBul(id) {
@@ -7503,37 +7604,46 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var hx = db.hesaplar.find(function(hs){return hs.id===id;});
                 return hx ? trToUpper(hx.bankaAdi)+" - "+trToUpper(hx.hesapSahibi) : ("ID:"+id);
             }
-            var sirali = db.islemler.slice();
-            sirali.sort(function(a, b) {
-                var va, vb;
-                if(HT_SIRALAMA.anahtar === "id") { va = a.id; vb = b.id; }
-                else if(HT_SIRALAMA.anahtar === "aciklama") { va = (a.aciklama||"").toLowerCase(); vb = (b.aciklama||"").toLowerCase(); }
-                else if(HT_SIRALAMA.anahtar === "hesap") { va = hesapAdiBulPlain(a.hesapId).toLowerCase()+(a.hedefId?" > "+hesapAdiBulPlain(a.hedefId).toLowerCase():""); vb = hesapAdiBulPlain(b.hesapId).toLowerCase()+(b.hedefId?" > "+hesapAdiBulPlain(b.hedefId).toLowerCase():""); }
-                else if(HT_SIRALAMA.anahtar === "tarih") { va = a.tarih||""; vb = b.tarih||""; }
-                else if(HT_SIRALAMA.anahtar === "tutar") { va = a.tutar; vb = b.tutar; }
-                else if(HT_SIRALAMA.anahtar === "islem") { va = a.islem; vb = b.islem; }
-                if(va < vb) return -1 * HT_SIRALAMA.yon;
-                if(va > vb) return 1 * HT_SIRALAMA.yon;
-                return 0;
+            var arama = trToLower(document.getElementById("htArama").value);
+            var simdi = new Date();
+            var secYil = HT_AKTIF_AY ? HT_AKTIF_AY.yil : simdi.getFullYear();
+            var secAy = HT_AKTIF_AY ? HT_AKTIF_AY.ay : simdi.getMonth();
+            var filtreli = db.islemler.filter(function(i) {
+                if(!arama && i.tarih) {
+                    var t = new Date(i.tarih);
+                    if(t.getFullYear() !== secYil || t.getMonth() !== secAy) return false;
+                }
+                if(arama) {
+                    var txt = trToLower(i.aciklama||"") + " " + trToLower(hesapAdiBulPlain(i.hesapId));
+                    if(i.hedefId) txt += " " + trToLower(hesapAdiBulPlain(i.hedefId));
+                    if(!txt.includes(arama)) return false;
+                }
+                return true;
             });
+            filtreli.sort(function(a,b){ return (a.tarih||"").localeCompare(b.tarih||"") * HT_SIRALAMA.yon; });
+            var toplamSayfa = Math.max(1, Math.ceil(filtreli.length / HT_SAYFA_BOYUT));
+            if(HT_AKTIF_SAYFA > toplamSayfa) HT_AKTIF_SAYFA = toplamSayfa;
+            var basIdx = (HT_AKTIF_SAYFA - 1) * HT_SAYFA_BOYUT;
+            var sayfaListe = filtreli.slice(basIdx, basIdx + HT_SAYFA_BOYUT);
+            document.getElementById("htAyBaslik").innerHTML = '<i class="fa-regular fa-calendar"></i> ' + htAyBaslikGetir(secYil, secAy);
             var h = '<div class="ht-islem-kart-list">';
-            sirali.forEach(function(i) {
+            sayfaListe.forEach(function(i) {
                 var cls = i.islem === "GELEN" ? "gelen" : (i.islem === "GİDEN" ? "giden" : "transfer");
                 var hAd, hAdPlain, ikon;
                 if(i.islem === "TRANSFER") {
-                    hAd = hesapAdiBul(i.hesapId) + " › " + hesapAdiBul(i.hedefId);
-                    hAdPlain = hesapAdiBulPlain(i.hesapId) + " > " + hesapAdiBulPlain(i.hedefId);
+                    hAd = hesapAdiBul(i.hesapId) + ' → ' + hesapAdiBul(i.hedefId);
+                    hAdPlain = hesapAdiBulPlain(i.hesapId) + ' > ' + hesapAdiBulPlain(i.hedefId);
                     ikon = '<i class="fa-solid fa-rotate"></i>';
                 } else if(i.islem === "GELEN") {
-                    hAd = '<i class="fa-solid fa-globe"></i> HARİCİ' + (i.hesapId === -1 ? ' / <i class="fa-solid fa-money-bill-wave"></i> NAKİT' : '') + ' › ' + hesapAdiBul(i.hesapId);
+                    hAd = '<i class="fa-solid fa-globe"></i> HARİCİ' + (i.hesapId === -1 ? ' / <i class="fa-solid fa-money-bill-wave"></i> NAKİT' : '') + ' → ' + hesapAdiBul(i.hesapId);
                     hAdPlain = 'HARİCİ' + (i.hesapId === -1 ? ' / NAKİT' : '') + ' > ' + hesapAdiBulPlain(i.hesapId);
                     ikon = '<i class="fa-solid fa-inbox"></i>';
                 } else {
-                    hAd = hesapAdiBul(i.hesapId) + ' › ' + (i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ');
+                    hAd = hesapAdiBul(i.hesapId) + ' → ' + (i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ');
                     hAdPlain = hesapAdiBulPlain(i.hesapId) + ' > ' + (i.hedefId && i.hedefId !== 0 ? hesapAdiBulPlain(i.hedefId) : 'HARİCİ');
                     ikon = '<i class="fa-solid fa-paper-plane"></i>';
                 }
-                h += '<div class="ht-islem-kart" data-search="'+htAttrEsc((i.aciklama||"").toLowerCase()+' '+hAdPlain.toLowerCase())+'">';
+                h += '<div class="ht-islem-kart" data-search="'+htAttrEsc(trToLower(i.aciklama||'')+' '+trToLower(hAdPlain))+'">';
                 h += '<div class="ht-islem-kart-ust">';
                 h += '<span class="ht-islem-kart-aciklama">'+i.aciklama+'</span>';
                 h += '<span class="ht-islem-kart-tutar '+cls+'">'+htTl(i.tutar)+'</span>';
@@ -7548,24 +7658,33 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
             h += '</div>';
             konteyner.innerHTML = h;
+            var sayfaHtml = '';
+            if(!arama) {
+                sayfaHtml += '<button class="ht-sayfa-btn" onclick="htAyDegistir(-1)" title="Önceki Ay"><i class="fa-solid fa-chevron-left"></i></button>';
+                sayfaHtml += '<span class="ht-sayfa-bilgi">'+htAyBaslikGetir(secYil, secAy)+' ('+filtreli.length+' işlem)</span>';
+                sayfaHtml += '<button class="ht-sayfa-btn" onclick="htAyDegistir(1)" title="Sonraki Ay"><i class="fa-solid fa-chevron-right"></i></button>';
+                if(secYil !== simdi.getFullYear() || secAy !== simdi.getMonth()) {
+                    sayfaHtml += '<button class="ht-sayfa-btn" onclick="htAyBugun()" title="Bu Ay" style="margin-left:6px;"><i class="fa-solid fa-calendar-day"></i></button>';
+                }
+            }
+            sayfaHtml += '<div class="ht-sayfa-numara">';
+            if(toplamSayfa > 1) {
+                for(var p=1; p<=toplamSayfa; p++) {
+                    if(p === HT_AKTIF_SAYFA) sayfaHtml += '<span class="ht-sayfa-num ht-sayfa-aktif">'+p+'</span>';
+                    else sayfaHtml += '<button class="ht-sayfa-num" onclick="htSayfayiDegistir('+p+')">'+p+'</button>';
+                }
+            }
+            sayfaHtml += '</div>';
+            if(sayfalamaEl) sayfalamaEl.innerHTML = sayfaHtml;
         }
 
-        function htSiralamaDegistir(anahtar) {
-            if(HT_SIRALAMA.anahtar === anahtar) {
-                HT_SIRALAMA.yon *= -1;
-            } else {
-                HT_SIRALAMA.anahtar = anahtar;
-                HT_SIRALAMA.yon = -1;
-            }
-            document.querySelectorAll("#htSiralama .ht-sirala-btn").forEach(function(b) {
-                b.classList.toggle("active", b.getAttribute("data-key") === HT_SIRALAMA.anahtar);
-            });
+        function htSiralamaDegistir() {
+            HT_SIRALAMA.yon *= -1;
             htIslemleriGoster();
-            htIslemFiltrele();
         }
 
         function htIslemFiltrele() {
-            var kelime = document.getElementById("htArama").value.toLowerCase().trim();
+            var kelime = trToLower(document.getElementById("htArama").value);
             var list = document.getElementById("htIslemListesi");
             if(!list) return;
             list.querySelectorAll(".ht-islem-kart").forEach(function(k) {
@@ -7669,15 +7788,15 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             doc.setFontSize(18);
             doc.setFont(undefined,'bold');
             doc.setTextColor(26,26,46);
-            doc.text(firmaAd, logoData&&logoData.length>100?42:10, 15);
+            doc.text(trPdfText(firmaAd), logoData&&logoData.length>100?42:10, 15);
             doc.setFontSize(9);
             doc.setFont(undefined,'normal');
             doc.setTextColor(136,136,136);
-            doc.text(donemStr, doc.internal.pageSize.width-10, 12, {align:'right'});
+            doc.text(trPdfText(donemStr), doc.internal.pageSize.width-10, 12, {align:'right'});
             doc.setFontSize(14);
             doc.setFont(undefined,'bold');
             doc.setTextColor(26,58,92);
-            doc.text(baslik, doc.internal.pageSize.width-10, 18, {align:'right'});
+            doc.text(trPdfText(baslik), doc.internal.pageSize.width-10, 18, {align:'right'});
 
             doc.setDrawColor(26,26,46);
             doc.setLineWidth(0.4);
@@ -7685,7 +7804,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             doc.setFontSize(6);
             doc.setFont(undefined,'normal');
             doc.setTextColor(136,136,136);
-            doc.text("RAPORLANAN HESAP: " + hesapStr, 10, 27);
+            doc.text(trPdfText("RAPORLANAN HESAP: " + hesapStr), 10, 27);
 
             var yBas = 31;
             var kutuGenislik = 58;
@@ -7707,7 +7826,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 doc.setFontSize(6);
                 doc.setFont(undefined,'bold');
                 doc.setTextColor(136,136,136);
-                doc.text(kutuBilgiler[ki].label, kx+2, yBas+4);
+                doc.text(trPdfText(kutuBilgiler[ki].label), kx+2, yBas+4);
                 doc.setFontSize(10);
                 doc.setTextColor(kutuBilgiler[ki].renk[0], kutuBilgiler[ki].renk[1], kutuBilgiler[ki].renk[2]);
                 doc.text(kutuBilgiler[ki].deger, kx+2, yBas+11);
@@ -7715,32 +7834,32 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             doc.setFontSize(6);
             doc.setFont(undefined,'normal');
             doc.setTextColor(136,136,136);
-            doc.text("Toplam İşlem: " + islemler.length + " adet", 200-10, yBas+4, {align:'right'});
+            doc.text(trPdfText("Toplam Islem: " + islemler.length + " adet"), 200-10, yBas+4, {align:'right'});
 
             var tableY = yBas + 18;
             var tableHead = [
-                { header:'TARİH', dataKey:'tarih' },
-                { header:'AÇIKLAMA', dataKey:'aciklama' },
-                { header:'NEREDEN → NEREYE', dataKey:'hesap' },
-                { header:'TÜR', dataKey:'islem' },
+                { header:'TARIH', dataKey:'tarih' },
+                { header:'ACIKLAMA', dataKey:'aciklama' },
+                { header:'NEREDEN -> NEREYE', dataKey:'hesap' },
+                { header:'TUR', dataKey:'islem' },
                 { header:'TUTAR', dataKey:'tutar' }
             ];
             var tableData = islemler.map(function(i) {
                 var hStr = '';
                 if(i.islem === "TRANSFER") {
-                    hStr = hesapAdiBul(i.hesapId) + " → " + hesapAdiBul(i.hedefId);
+                    hStr = trPdfText(hesapAdiBul(i.hesapId) + " -> " + hesapAdiBul(i.hedefId));
                 } else if(i.islem === "GELEN") {
-                    hStr = 'HARİCİ → ' + hesapAdiBul(i.hesapId);
+                    hStr = trPdfText('HARICI -> ' + hesapAdiBul(i.hesapId));
                 } else {
-                    hStr = hesapAdiBul(i.hesapId) + ' → ' + (i.hedefId && i.hedefId!==0 ? hesapAdiBul(i.hedefId) : 'HARİCİ');
+                    hStr = trPdfText(hesapAdiBul(i.hesapId) + ' -> ' + (i.hedefId && i.hedefId!==0 ? hesapAdiBul(i.hedefId) : 'HARICI'));
                 }
                 var renk = i.islem === "GELEN" ? [46,125,50] : (i.islem === "GİDEN" ? [158,42,43] : [160,184,204]);
                 return {
                     tarih: i.tarih ? new Date(i.tarih).toLocaleDateString("tr-TR") : "-",
-                    aciklama: i.aciklama || "",
+                    aciklama: trPdfText(i.aciklama || ""),
                     hesap: hStr,
-                    islem: i.islem,
-                    tutar: { text: (i.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', color: renk }
+                    islem: i.islem === "GELEN" || i.islem === "GİDEN" ? trPdfText(i.islem) : "TRANSFER",
+                    tutar: { text: (i.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL', color: renk }
                 };
             });
 
@@ -7770,7 +7889,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             doc.line(10, sonY+5, 200, sonY+5);
             doc.setFontSize(6);
             doc.setTextColor(136,136,136);
-            doc.text('TM-Portal Hesap Takip Sistemi · Rapor: '+donemStr+' · '+hesapStr, 105, sonY+9, {align:'center'});
+            doc.text(trPdfText('TM-Portal Hesap Takip Sistemi · Rapor: '+donemStr+' · '+hesapStr), 105, sonY+9, {align:'center'});
 
             doc.save("HESAP_RAPORU_" + hesapStr.replace(/[^a-zA-Z0-9]/g,"_") + ".pdf");
             tmNotify("Rapor PDF olarak kaydedildi.", "success");

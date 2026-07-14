@@ -419,17 +419,17 @@
         .ht-islem-list { display:flex; flex-direction:column; gap:3px; }
         .ht-islem-kart { display:flex; flex-direction:row; align-items:center; gap:12px; padding:8px 14px; background:var(--ht-card); border:1px solid var(--ht-border); border-radius:6px; transition:0.15s; }
         .ht-islem-kart:hover { border-color:var(--ht-text-light); background:rgba(255,255,255,0.02); }
-        .ht-islem-kart-ust { display:flex; align-items:center; gap:10px; flex:1; min-width:0; }
+        .ht-islem-kart-ust { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
         .ht-islem-kart-alt { display:none; }
         .ht-islem-kart-aksiyon { display:flex; gap:4px; flex-shrink:0; }
-        .ht-islem-kart-aciklama { font-size:12px; font-weight:600; color:var(--ht-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; min-width:80px; }
-        .ht-islem-kart-tutar { font-size:13px; font-weight:800; white-space:nowrap; min-width:80px; text-align:right; }
+        .ht-islem-kart-aciklama { font-size:12px; font-weight:600; color:var(--ht-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:100px; max-width:220px; }
+        .ht-islem-kart-tutar { font-size:13px; font-weight:800; white-space:nowrap; min-width:90px; text-align:right; margin-left:auto; }
         .ht-islem-kart-tutar.gelen { color:var(--ht-gelir); }
         .ht-islem-kart-tutar.giden { color:var(--ht-gider); }
         .ht-islem-kart-tutar.transfer { color:var(--ht-accent); }
-        .ht-islem-kart-hesap { font-size:10px; color:var(--ht-text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; min-width:60px; }
-        .ht-islem-kart-tarih { font-size:10px; color:var(--ht-text-light); white-space:nowrap; min-width:68px; text-align:center; }
-        .ht-islem-kart-islem { font-size:9px; font-weight:700; padding:1px 8px; border-radius:3px; white-space:nowrap; min-width:44px; text-align:center; }
+        .ht-islem-kart-hesap { font-size:10px; color:var(--ht-text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:110px; max-width:200px; margin-left:6px; }
+        .ht-islem-kart-tarih { font-size:10px; color:var(--ht-text-light); white-space:nowrap; min-width:75px; text-align:center; margin-left:4px; }
+        .ht-islem-kart-islem { font-size:9px; font-weight:700; padding:1px 8px; border-radius:3px; white-space:nowrap; min-width:50px; text-align:center; margin-left:4px; }
         .ht-islem-kart-islem.gelen { background:rgba(46,204,113,0.15); color:var(--ht-gelir); }
         .ht-islem-kart-islem.giden { background:rgba(231,76,60,0.15); color:var(--ht-gider); }
         .ht-islem-kart-islem.transfer { background:rgba(160,184,204,0.15); color:var(--ht-accent); }
@@ -463,6 +463,22 @@
         .ht-ekle-btn.secondary { background:transparent; border:1px solid #243b52; color:#7a94ad; }
         .ht-ekle-btn.secondary:hover { border-color:#a0b8cc; color:#e4eaf2; background:rgba(0,0,0,0.2); }
 
+        /* Ay Navigasyonu */
+        .ht-ay-nav { display:flex; align-items:center; gap:4px; }
+        .ht-ay-btn { width:28px; height:28px; border:1px solid var(--ht-border); border-radius:6px; background:transparent; color:var(--ht-text-light); font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s; }
+        .ht-ay-btn:hover { border-color:var(--ht-accent); color:var(--ht-text); background:rgba(255,255,255,0.04); }
+        .ht-ay-baslik { font-size:12px; font-weight:700; color:var(--ht-text); white-space:nowrap; padding:0 6px; min-width:100px; text-align:center; }
+
+        /* Sayfalama */
+        .ht-sayfalama { display:flex; align-items:center; justify-content:flex-end; gap:6px; margin-top:12px; padding:8px 4px; flex-wrap:wrap; }
+        .ht-sayfa-btn { width:28px; height:28px; border:1px solid var(--ht-border); border-radius:6px; background:transparent; color:var(--ht-text-light); font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s; }
+        .ht-sayfa-btn:hover { border-color:var(--ht-accent); color:var(--ht-text); background:rgba(255,255,255,0.04); }
+        .ht-sayfa-bilgi { font-size:10px; color:var(--ht-text-light); white-space:nowrap; }
+        .ht-sayfa-numara { display:flex; align-items:center; gap:3px; margin-left:8px; }
+        .ht-sayfa-num { min-width:24px; height:24px; border:1px solid var(--ht-border); border-radius:4px; background:transparent; color:var(--ht-text-light); font-size:10px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.15s; padding:0 4px; }
+        .ht-sayfa-num:hover { border-color:var(--ht-accent); color:var(--ht-text); }
+        .ht-sayfa-num.ht-sayfa-aktif { background:var(--ht-accent); color:#0d1b2a; border-color:var(--ht-accent); cursor:default; }
+
         /* Hesap Modal */
         #htHesapModal .modal-box { max-width:480px; background:#162436; border:1px solid #243b52; }
         #htHesapModal .modal-header { background:#0d1b2a; color:#e4eaf2; border-bottom:1px solid #243b52; }
@@ -481,6 +497,8 @@
 
         /* İşlem Modal */
         #htIslemModal .modal-box { max-width:520px; background:#162436; border:1px solid #243b52; overflow:visible; }
+        #htPdfModal .modal-box { overflow:visible; }
+        #htHesapModal .modal-box { overflow:visible; }
         #htIslemModal .modal-header { background:#0d1b2a; color:#e4eaf2; border-bottom:1px solid #243b52; }
         #htIslemModal .modal-header h3 { margin:0; font-size:14px; border:none; padding:0; }
         #htIslemModal .modal-body { padding:20px; }
