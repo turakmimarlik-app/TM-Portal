@@ -5006,11 +5006,30 @@ function gorevMailGonder(gorev) {
 
             db.sort((a, b) => new Date(b.bitisTarihi || b.anlasmaTarihi || b.tarih) - new Date(a.bitisTarihi || a.anlasmaTarihi || a.tarih));
 
+            let genelHacim = 0, genelKar = 0, genelOdeme = 0;
+            db.forEach(kayit => {
+                let toplamVerecek = 0, toplamOdenen = 0;
+                kayit.kalemler.forEach(k => {
+                    if(k.tip !== "alacak") { toplamVerecek += k.tutar; toplamOdenen += (k.odenenTutar || 0); }
+                });
+                genelHacim += kayit.anlasmaUcreti || 0;
+                genelKar += (kayit.anlasmaUcreti || 0) - toplamVerecek;
+                genelOdeme += toplamOdenen;
+            });
+            const genelKarYuzde = genelHacim > 0 ? ((genelKar / genelHacim) * 100).toFixed(1) : "0.0";
+            const gKarRenk = genelKar >= 0 ? "var(--btn-green)" : "var(--accent-red)";
+            const gKarYuzdeRenk = parseFloat(genelKarYuzde) >= 0 ? "var(--btn-green)" : "var(--accent-red)";
+
             let toplamHTML = `
-                <div class="tam-status-strip">
-                    <div style="text-align:center;">
-                        <small>TAMAMLANAN İŞ SAYISI</small>
-                        <span>${db.length}</span>
+                <div style="display:flex; flex-direction:column; gap:10px; width:100%; padding:18px 10px; box-sizing:border-box; background:var(--ht-card); border-radius:12px; border:1px solid var(--ht-border); margin-bottom:18px;">
+                    <div style="display:flex; justify-content:center; text-align:center; gap:8px; padding-bottom:8px; border-bottom:1px solid var(--ht-border);">
+                        <div style="padding:0 20px;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">TAMAMLANAN İŞ SAYISI</small><span style="font-weight:900; color:var(--accent-red); font-size:28px;">${db.length}</span></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-around; text-align:center; gap:8px;">
+                        <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">TAMAMLANAN İŞ HACMİ</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelHacim.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                        <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR</small><span style="font-weight:900; color:${gKarRenk}; font-size:22px;">${genelKar.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                        <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR %</small><span style="font-weight:900; color:${gKarYuzdeRenk}; font-size:22px;">%${genelKarYuzde}</span></div>
+                        <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL ÖDEME</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelOdeme.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
                     </div>
                 </div>
             `;
