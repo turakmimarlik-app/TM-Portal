@@ -7376,8 +7376,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             selectNereden.innerHTML = opts;
             selectNereye.innerHTML = opts;
             if(islem) {
-                selectNereden.value = islem.hesapId;
-                selectNereye.value = islem.hedefId || "0";
+                if(islem.islem === "GELEN") {
+                    selectNereden.value = "";
+                    selectNereye.value = islem.hesapId;
+                } else {
+                    selectNereden.value = islem.hesapId;
+                    selectNereye.value = islem.hedefId || "0";
+                }
             } else {
                 selectNereden.value = "";
                 selectNereye.value = "";
@@ -7395,11 +7400,9 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var neredenDiv = document.getElementById("htModalNereden").closest("div");
             var nereyeDiv = document.getElementById("htModalNereye").closest("div");
             if(tur === "GELEN") {
-                document.getElementById("htModalNereden").value = "";
                 neredenDiv.style.display = "none";
                 nereyeDiv.style.display = "";
             } else if(tur === "GİDEN") {
-                document.getElementById("htModalNereye").value = "";
                 neredenDiv.style.display = "";
                 nereyeDiv.style.display = "none";
             } else {
@@ -7440,50 +7443,52 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if(!aciklama) { tmNotify("Açıklama zorunludur!", "error"); return; }
             var tur = document.getElementById("htModalIslemTur").value;
             if(!tur) { tmNotify("İşlem türü seçiniz!", "error"); return; }
-            var fromId = parseInt(document.getElementById("htModalNereden").value);
-            var toId = parseInt(document.getElementById("htModalNereye").value);
-            if(isNaN(fromId) || isNaN(toId)) { tmNotify("Lütfen hesap seçimi yapın!", "error"); return; }
-            if(tur === "TRANSFER") {
-                if(fromId === toId || fromId === 0 || toId === 0) { tmNotify("Transfer için geçerli iki hesap seçin!", "error"); return; }
-            } else if(tur === "GELEN") {
-                if(toId === 0) { tmNotify("GELEN işleminde alıcı hesap seçilmelidir!", "error"); return; }
-            } else {
-                if(fromId === 0) { tmNotify("GİDEN işleminde gönderen hesap seçilmelidir!", "error"); return; }
-            }
+            var fromRaw = document.getElementById("htModalNereden").value;
+            var toRaw = document.getElementById("htModalNereye").value;
+            var fromId = parseInt(fromRaw);
+            var toId = parseInt(toRaw);
+            if(tur === "GELEN" && (toRaw==="" || isNaN(toId) || toId === 0)) { tmNotify("Lütfen alıcı hesap seçin!", "error"); return; }
+            if(tur === "GİDEN" && (fromRaw==="" || isNaN(fromId) || fromId === 0)) { tmNotify("Lütfen gönderen hesap seçin!", "error"); return; }
+            if(tur === "TRANSFER" && (fromRaw==="" || toRaw==="" || isNaN(fromId) || isNaN(toId) || fromId === 0 || toId === 0)) { tmNotify("Lütfen her iki hesabı da seçin!", "error"); return; }
+            if(tur === "TRANSFER" && fromId === toId) { tmNotify("Transfer için farklı iki hesap seçin!", "error"); return; }
             var tarih = document.getElementById("htModalTarih").value;
             var tutar = tmTutarCoz(document.getElementById("htModalTutar").value);
             if(tutar <= 0) { tmNotify("Geçerli bir tutar giriniz!", "error"); return; }
             var db = htVeriYukle();
+            var hesapId, hedefId;
+            if(tur === "GELEN") { hesapId = toId; hedefId = null; }
+            else if(tur === "GİDEN") { hesapId = fromId; hedefId = (!isNaN(toId) && toId !== 0) ? toId : null; }
+            else { hesapId = fromId; hedefId = toId; }
             if(id) {
                 id = parseInt(id);
                 var eski = db.islemler.find(function(i){return i.id===id;});
                 if(eski) htIslemTersineCevir(db, eski);
-                if(!htEksiBakiyeKontrol(db, tur==="GELEN"?null:fromId, tutar, tur)) {
+                if(!htEksiBakiyeKontrol(db, tur==="GELEN"?null:hesapId, tutar, tur)) {
                     if(eski) htIslemTersineCevir(db, eski);
                     return;
                 }
                 var idx = db.islemler.findIndex(function(i){return i.id===id;});
-                if(idx!==-1) db.islemler[idx] = { id:id, hesapId:fromId, hedefId:tur==="GELEN"?null:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:tur };
+                if(idx!==-1) db.islemler[idx] = { id:id, hesapId:hesapId, hedefId:hedefId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:tur };
             } else {
-                if(!htEksiBakiyeKontrol(db, fromId, tutar, tur)) return;
+                if(!htEksiBakiyeKontrol(db, hesapId, tutar, tur)) return;
                 var maxId = db.islemler.reduce(function(m,i){return Math.max(m,i.id);},0);
                 var yeniId = maxId + 1;
                 if(tur === "TRANSFER") {
-                    if(!htEksiBakiyeKontrol(db, fromId, tutar, "TRANSFER")) return;
-                    db.islemler.push({ id:yeniId, hesapId:fromId, hedefId:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"TRANSFER" });
-                    htBakiyeGuncelle(db, fromId, tutar, "GİDEN");
-                    htBakiyeGuncelle(db, toId, tutar, "GELEN");
+                    if(!htEksiBakiyeKontrol(db, hesapId, tutar, "TRANSFER")) return;
+                    db.islemler.push({ id:yeniId, hesapId:hesapId, hedefId:hedefId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"TRANSFER" });
+                    htBakiyeGuncelle(db, hesapId, tutar, "GİDEN");
+                    htBakiyeGuncelle(db, hedefId, tutar, "GELEN");
                 } else if(tur === "GELEN") {
-                    db.islemler.push({ id:yeniId, hesapId:toId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GELEN" });
-                    htBakiyeGuncelle(db, toId, tutar, "GELEN");
+                    db.islemler.push({ id:yeniId, hesapId:hesapId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GELEN" });
+                    htBakiyeGuncelle(db, hesapId, tutar, "GELEN");
                 } else {
-                    var gidenKayit = { id:yeniId, hesapId:fromId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GİDEN" };
-                    if(toId !== 0) {
-                        gidenKayit.hedefId = toId;
-                        if(toId === 1 || toId === -1) htBakiyeGuncelle(db, toId, tutar, "GELEN");
+                    var gidenKayit = { id:yeniId, hesapId:hesapId, aciklama:aciklama, tarih:tarih, tutar:tutar, islem:"GİDEN" };
+                    if(hedefId !== null) {
+                        gidenKayit.hedefId = hedefId;
+                        if(hedefId === -1) htBakiyeGuncelle(db, hedefId, tutar, "GELEN");
                     }
                     db.islemler.push(gidenKayit);
-                    htBakiyeGuncelle(db, fromId, tutar, "GİDEN");
+                    htBakiyeGuncelle(db, hesapId, tutar, "GİDEN");
                 }
             }
             htVeriKaydet(db);
