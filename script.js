@@ -7320,7 +7320,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             document.getElementById("htModalIslemAciklama").value = islem ? islem.aciklama : "";
             document.getElementById("htModalTarih").value = islem ? islem.tarih : anlikTarihGetir();
             document.getElementById("htModalTutar").value = islem ? htTl(islem.tutar) : "0,00";
-            document.getElementById("htModalIslemTur").value = islem ? islem.islem : "GELEN";
+            document.getElementById("htModalIslemTur").value = islem ? islem.islem : "";
             var selectNereden = document.getElementById("htModalNereden");
             var selectNereye = document.getElementById("htModalNereye");
             var opts = '<option value="" disabled selected>SEÇİNİZ</option><option value="0"><i class="fa-solid fa-globe"></i> HARİCİ</option><option value="-1"><i class="fa-solid fa-money-bill-wave"></i> NAKİT</option>';
@@ -7393,6 +7393,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var aciklama = document.getElementById("htModalIslemAciklama").value.trim();
             if(!aciklama) { tmNotify("Açıklama zorunludur!", "error"); return; }
             var tur = document.getElementById("htModalIslemTur").value;
+            if(!tur) { tmNotify("İşlem türü seçiniz!", "error"); return; }
             var fromId = parseInt(document.getElementById("htModalNereden").value);
             var toId = parseInt(document.getElementById("htModalNereye").value);
             if(isNaN(fromId) || isNaN(toId)) { tmNotify("Lütfen hesap seçimi yapın!", "error"); return; }
