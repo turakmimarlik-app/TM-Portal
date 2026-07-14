@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.32.12';
+        var APP_VERSION = 'V1.32.13';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -4778,6 +4778,10 @@ function gorevMailGonder(gorev) {
             const kayit = db.find(k => k.id === dbId);
             if(!kayit) return;
 
+            const toplamAlacak = kayit.kalemler.filter(k => k.tip === "alacak").reduce((s, k) => s + k.tutar, 0);
+            const kalanTahsilat = (kayit.anlasmaUcreti || 0) - toplamAlacak;
+            if(tutar > kalanTahsilat) { tmAlert("Tahsilat tutarı, kalan tahsilat limitinden (" + tmTl(kalanTahsilat) + ") büyük olamaz!"); return; }
+
             kayit.kalemler.push({
                 kalemId: Date.now() + Math.floor(Math.random() * 1000),
                 aciklama: aciklama,
@@ -4802,7 +4806,7 @@ function gorevMailGonder(gorev) {
             if(!dal) { tmNotify("Lütfen bir Proje / Hizmet Dalı seçiniz!", "error"); return; }
             if(isNaN(tutar) || tutar <= 0) { tmNotify("Geçerli bir toplam tutar giriniz!", "error"); return; }
             if(odenen < 0) { tmNotify("Ödenen tutar negatif olamaz!", "error"); return; }
-            if(odenen > tutar) { tmNotify("Ödenen tutar, toplam tutardan büyük olamaz!", "error"); return; }
+            if(odenen > tutar) { tmAlert("Ödenen tutar, toplam tutardan (" + tmTl(tutar) + ") büyük olamaz!"); return; }
             if(!tarih) { tmNotify("Tarih seçiniz!", "error"); return; }
 
             let db = isMuhasebeVerileriniYukle();
@@ -4845,7 +4849,7 @@ function gorevMailGonder(gorev) {
 
             const kalan = kalem.tutar - (kalem.odenenTutar || 0);
             if(kalan <= 0) { tmNotify("Bu ödeme kaleminin kalan tutarı bulunmamaktadır.", "error"); return; }
-            if(yeniOdeme > kalan) { tmNotify("Ödenen tutar, kalan tutardan (" + tmTl(kalan) + ") büyük olamaz!", "error"); return; }
+            if(yeniOdeme > kalan) { tmAlert("Ödenen tutar, kalan tutardan (" + tmTl(kalan) + ") büyük olamaz!"); return; }
 
             kalem.odenenTutar = (kalem.odenenTutar || 0) + yeniOdeme;
             kalem.odemeTarihi = tarih;
