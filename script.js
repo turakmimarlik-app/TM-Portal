@@ -7198,7 +7198,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var hs = db.hesaplar.find(function(h){return h.id===hesapId;});
                 if(!hs) { tmNotify("Hesap bulunamadı!", "error"); return; }
                 baslik = '<i class="fa-solid fa-building-columns"></i> '+trToUpper(hs.bankaAdi)+' &middot; '+trToUpper(hs.hesapSahibi);
-                detayBilgi = '<span title="IBAN">📘 '+htIbanGoster(hs.iban)+'</span> &nbsp;|&nbsp; Kart: '+trToUpper(hs.kartSifre||'-');
+                detayBilgi = '<span title="IBAN">📘 '+htIbanGoster(hs.iban)+'</span> &nbsp;|&nbsp; Kart: '+trToUpper(hs.kartSifre||'-')+' &nbsp;|&nbsp; Net: '+trToUpper(hs.internetSifre||'-');
                 var bak = hs.bakiye || 0;
                 bakiyeEl.innerHTML = (bak >= 0 ? '<span style="color:#4CAF50">' : '<span style="color:#f44336">') + htTl(bak) + '</span>';
             }
