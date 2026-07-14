@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.32.6';
+        var APP_VERSION = 'V1.32.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -4986,6 +4986,16 @@ function gorevMailGonder(gorev) {
         function tamamlananIsMuhasebeListesiniYenile() {
             const konteyner = document.getElementById("tamamlananIsMuhasebeKonteyner");
             if(!konteyner) return;
+
+            var acikKartlar = {};
+            konteyner.querySelectorAll('.is-muh-card').forEach(function(kart) {
+                var content = kart.querySelector('[id^="tamIsMuhKartContent_"]');
+                if(content && content.style.display !== "none" && content.style.display !== "") {
+                    var id = content.id.replace("tamIsMuhKartContent_", "");
+                    acikKartlar[id] = true;
+                }
+            });
+
             konteyner.innerHTML = "";
 
             const db = tamamlananIsMuhasebeVerileriniYukle();
@@ -5090,11 +5100,24 @@ function gorevMailGonder(gorev) {
                             ${(() => {
                                 const verecekKalemler = kayit.kalemler.filter(k => k.tip !== "alacak");
                                 if(verecekKalemler.length === 0) return '<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">Henüz ödeme kalemi bulunmuyor.</p>';
-                                let tbl = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr style="background:var(--bg-main);"><th style="padding:8px 6px; text-align:left; font-size:11px;">Proje / Hizmet Dalı</th><th style="padding:8px 6px; text-align:left; font-size:11px;">Kişi / Firma</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Toplam</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Ödenen</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Kalan</th></tr></thead><tbody>';
+                                let tbl = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr style="background:var(--bg-main);"><th style="padding:8px 6px; text-align:left; font-size:11px;">Proje / Hizmet Dalı</th><th style="padding:8px 6px; text-align:left; font-size:11px;">Kişi / Firma</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Toplam</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Ödenen</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Kalan</th><th style="padding:8px 6px; text-align:left; font-size:11px;">Giriş Tarihi</th></tr></thead><tbody>';
                                 verecekKalemler.forEach(k => {
                                     const odenen = k.odenenTutar || 0;
                                     const kalan = k.tutar - odenen;
-                                    tbl += '<tr><td style="padding:6px; font-size:12px;">' + (k.dal || k.aciklama || "-") + '</td><td style="padding:6px; font-size:11px; color:var(--text-light);">' + (k.kisi || "-") + '</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:700;">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:600; color:var(--btn-green);">' + odenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:600; color:var(--accent-red);">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td></tr>';
+                                    const girisTarih = k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-";
+                                    tbl += '<tr><td style="padding:6px; font-size:12px;">' + (k.dal || k.aciklama || "-") + '</td><td style="padding:6px; font-size:11px; color:var(--text-light);">' + (k.kisi || "-") + '</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:700;">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:600; color:var(--btn-green);">' + odenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:600; color:var(--accent-red);">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; font-size:11px; color:var(--text-light);">' + girisTarih + '</td></tr>';
+                                    const kayitlar = k.odemeKayitlari || [];
+                                    if(kayitlar.length > 0) {
+                                        tbl += '<tr><td colspan="6" style="padding:2px 8px 8px 8px;"><div style="font-size:11px; background:var(--bg-main); border-radius:4px; padding:6px 10px; border:1px solid var(--border-color);">';
+                                        tbl += '<span style="font-weight:700; font-size:10px; color:var(--text-light); display:block; margin-bottom:4px;">ÖDEME GEÇMİŞİ</span>';
+                                        kayitlar.forEach(od => {
+                                            const odemeTarih = od.tarih ? new Date(od.tarih).toLocaleDateString("tr-TR") : "-";
+                                            tbl += '<div style="display:flex; align-items:center; gap:8px; margin:3px 0; flex-wrap:wrap;">';
+                                            tbl += '<span style="font-size:12px;">• ' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺ <span style="color:var(--text-light);">(' + odemeTarih + ')</span></span>';
+                                            tbl += '</div>';
+                                        });
+                                        tbl += '</div></td></tr>';
+                                    }
                                 });
                                 tbl += '</tbody></table>';
                                 return tbl;
@@ -5112,6 +5135,11 @@ function gorevMailGonder(gorev) {
             });
 
             konteyner.innerHTML = toplamHTML;
+
+            Object.keys(acikKartlar).forEach(function(id) {
+                var content = document.getElementById("tamIsMuhKartContent_" + id);
+                if(content) content.style.display = "block";
+            });
         }
 
         function tamIsMuhKartToggle(id) {

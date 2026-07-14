@@ -617,6 +617,14 @@
         #tamamlanan-is-muhasebeleri-page h2 { color:var(--ht-text); font-size:18px; border-left:3px solid var(--ht-accent); padding-left:12px; margin:0 0 16px 0; }
         #tamamlanan-is-muhasebeleri-page .search-box { width:100% !important; max-width:100% !important; padding:9px 14px 9px 36px !important; border:1px solid var(--ht-border) !important; border-radius:8px !important; background:var(--ht-card) !important; color:var(--ht-text) !important; font-size:12px !important; box-sizing:border-box !important; margin-bottom:14px !important; }
         #tamamlanan-is-muhasebeleri-page .search-box:focus { border-color:var(--ht-accent) !important; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card { padding:16px 0 !important; border:1px solid var(--ht-border) !important; border-top:3px solid var(--ht-accent) !important; background:var(--ht-card) !important; border-radius:12px !important; box-shadow:0 4px 16px rgba(0,0,0,0.2) !important; transition:0.2s !important; display:flex; flex-direction:column; overflow:hidden; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card:hover { transform:translateY(-2px) !important; border-color:var(--ht-accent) !important; box-shadow:0 8px 24px rgba(0,0,0,0.25) !important; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card .card-main-header { padding:0 20px !important; margin-bottom:6px !important; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card h4 { margin:0; font-size:15px; font-weight:700; color:var(--ht-text); }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card .card-actions { padding:10px 20px 0 20px; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card [id^="tamIsMuhKartContent_"] > * { padding-left:20px; padding-right:20px; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card [id^="tamIsMuhKartContent_"] .inline-form { margin-left:20px; margin-right:20px; width:auto; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card [id^="tamIsMuhKartContent_"] table { width:calc(100% + 40px); margin-left:-20px; }
 
         /* ===== TM FİYAT LİSTESİ — FİYAT KARTLARI ===== */
         #tm-fiyatlar-page { }
