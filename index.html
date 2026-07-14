@@ -17,9 +17,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.32.17">
-    <link rel="stylesheet" href="pdf.css?v=1.32.17">
-    <link rel="stylesheet" href="responsive.css?v=1.32.17">
+    <link rel="stylesheet" href="style.css?v=1.32.18">
+    <link rel="stylesheet" href="pdf.css?v=1.32.18">
+    <link rel="stylesheet" href="responsive.css?v=1.32.18">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -75,7 +75,7 @@
                 
                 <li id="menu-teklif-root" class="menu-item" onclick="toggleSubmenu('teklif-submenu', 'arrow-icon')">
                     <span><i class="fa-regular fa-file-lines" style="color:#43A047"></i> <span class="menu-text">Teklif & Fiyat</span></span>
-                    <span id="arrow-icon"><i class="fa-solid fa-chevron-down"></i></span>
+                    <span id="arrow-icon"><i class="fa-solid fa-chevron-down" style="color:#43A047"></i></span>
                 </li>
                 <div id="teklif-submenu" class="submenu-list">
                     <div id="sub-teklif-olustur" class="submenu-item" onclick="menudenSayfaAc('teklif-olustur', 'teklif-olustur-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;color:#66BB6A;"></i> <span class="menu-text">Yeni Teklif</span></div>
@@ -89,8 +89,8 @@
                 <li id="menu-istakibi" class="menu-item" onclick="menudenSayfaAc('istakibi', 'istakibi-page', this)"><span><i class="fa-solid fa-chart-gantt" style="color:#00ACC1"></i> <span class="menu-text">İş Takibi</span></span></li>
 
                 <li id="menu-portfoy-root" class="menu-item" onclick="toggleSubmenu('portfoy-submenu', 'arrow-portfoy-icon')">
-                    <span><i class="fa-regular fa-folder" style="color:#FDD835"></i> <span class="menu-text">Portföy</span></span>
-                    <span id="arrow-portfoy-icon"><i class="fa-solid fa-chevron-down"></i></span>
+                    <span><i class="fa-regular fa-folder" style="color:#FFB300"></i> <span class="menu-text">Portföy</span></span>
+                    <span id="arrow-portfoy-icon"><i class="fa-solid fa-chevron-down" style="color:#FFB300"></i></span>
                 </li>
                 <div id="portfoy-submenu" class="submenu-list">
                     <div id="sub-musteriler" class="submenu-item" onclick="menudenSayfaAc('musteriler', 'musteriler-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;color:#AB47BC;"></i> <span class="menu-text">Müşteriler</span></div>
@@ -99,7 +99,7 @@
 
                 <li id="menu-muhasebe-root" class="menu-item" onclick="toggleSubmenu('muhasebe-submenu', 'arrow-muhasebe-icon')">
                     <span><i class="fa-solid fa-coins" style="color:#8E24AA"></i> <span class="menu-text">Finans</span></span>
-                    <span id="arrow-muhasebe-icon"><i class="fa-solid fa-chevron-down"></i></span>
+                    <span id="arrow-muhasebe-icon"><i class="fa-solid fa-chevron-down" style="color:#8E24AA"></i></span>
                 </li>
                 <div id="muhasebe-submenu" class="submenu-list">
                     <div id="sub-nakit-dekont" class="submenu-item" onclick="menudenSayfaAc('nakit-dekont', 'nakit-dekont-page', this)"><i class="fa-solid fa-chevron-right" style="font-size:8px;color:#EF5350;"></i> <span class="menu-text">Nakit Ödeme Dekontu</span></div>
@@ -125,7 +125,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.32.17</div>
+                <div class="version-tag">V1.32.18</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1824,7 +1824,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.32.17"></script>
+    <script src="script.js?v=1.32.18"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
