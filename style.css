@@ -416,20 +416,20 @@
         .ht-kart-detay input:focus { border-color:var(--ht-accent); }
 
         /* İşlem Kartları */
-        .ht-islem-list { display:flex; flex-direction:column; gap:6px; }
-        .ht-islem-kart { display:flex; flex-direction:column; gap:8px; padding:14px 18px; background:var(--ht-card); border:1px solid var(--ht-border); border-radius:8px; transition:0.15s; }
-        .ht-islem-kart:hover { border-color:var(--ht-text-light); }
-        .ht-islem-kart-ust { display:flex; justify-content:space-between; align-items:center; width:100%; }
-        .ht-islem-kart-alt { display:flex; justify-content:space-between; align-items:center; width:100%; gap:16px; }
-        .ht-islem-kart-aksiyon { display:flex; justify-content:flex-end; gap:6px; }
-        .ht-islem-kart-aciklama { font-size:13px; font-weight:600; color:var(--ht-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
-        .ht-islem-kart-tutar { font-size:15px; font-weight:800; white-space:nowrap; }
+        .ht-islem-list { display:flex; flex-direction:column; gap:3px; }
+        .ht-islem-kart { display:flex; flex-direction:row; align-items:center; gap:12px; padding:8px 14px; background:var(--ht-card); border:1px solid var(--ht-border); border-radius:6px; transition:0.15s; }
+        .ht-islem-kart:hover { border-color:var(--ht-text-light); background:rgba(255,255,255,0.02); }
+        .ht-islem-kart-ust { display:flex; align-items:center; gap:10px; flex:1; min-width:0; }
+        .ht-islem-kart-alt { display:none; }
+        .ht-islem-kart-aksiyon { display:flex; gap:4px; flex-shrink:0; }
+        .ht-islem-kart-aciklama { font-size:12px; font-weight:600; color:var(--ht-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; min-width:80px; }
+        .ht-islem-kart-tutar { font-size:13px; font-weight:800; white-space:nowrap; min-width:80px; text-align:right; }
         .ht-islem-kart-tutar.gelen { color:var(--ht-gelir); }
         .ht-islem-kart-tutar.giden { color:var(--ht-gider); }
         .ht-islem-kart-tutar.transfer { color:var(--ht-accent); }
-        .ht-islem-kart-hesap { font-size:11px; color:var(--ht-text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-        .ht-islem-kart-tarih { font-size:11px; color:var(--ht-text-light); white-space:nowrap; }
-        .ht-islem-kart-islem { font-size:10px; font-weight:700; padding:2px 10px; border-radius:4px; white-space:nowrap; }
+        .ht-islem-kart-hesap { font-size:10px; color:var(--ht-text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; min-width:60px; }
+        .ht-islem-kart-tarih { font-size:10px; color:var(--ht-text-light); white-space:nowrap; min-width:68px; text-align:center; }
+        .ht-islem-kart-islem { font-size:9px; font-weight:700; padding:1px 8px; border-radius:3px; white-space:nowrap; min-width:44px; text-align:center; }
         .ht-islem-kart-islem.gelen { background:rgba(46,204,113,0.15); color:var(--ht-gelir); }
         .ht-islem-kart-islem.giden { background:rgba(231,76,60,0.15); color:var(--ht-gider); }
         .ht-islem-kart-islem.transfer { background:rgba(160,184,204,0.15); color:var(--ht-accent); }

@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.32.18';
+        var APP_VERSION = 'V1.34.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7001,6 +7001,19 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             document.getElementById("htSirketBakiye").innerText = htTl(toplamHesap + toplamNakit);
             document.getElementById("htToplamHesapBakiye").innerText = htTl(toplamHesap);
             document.getElementById("htToplamNakitBakiye").innerText = htTl(toplamNakit);
+            var bugun = new Date();
+            var ayBaslangic = new Date(bugun.getFullYear(), bugun.getMonth(), 1);
+            var buAyGelen = 0, buAyGiden = 0;
+            db.islemler.forEach(function(i) {
+                if(!i.tarih) return;
+                var t = new Date(i.tarih);
+                if(t < ayBaslangic) return;
+                if(i.islem === "GELEN" || (i.islem === "GİDEN" && i.hedefId && (i.hedefId === 1 || i.hedefId === -1))) buAyGelen += i.tutar;
+                else if(i.islem === "GİDEN") buAyGiden += i.tutar;
+            });
+            document.getElementById("htBuAyGelen").innerText = htTl(buAyGelen);
+            document.getElementById("htBuAyGiden").innerText = htTl(buAyGiden);
+            document.getElementById("htBuAyNet").innerText = htTl(buAyGelen - buAyGiden);
         }
 
         function htHesapKartlariGoster() {
@@ -7024,8 +7037,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     h += '</div>';
                     h += '<div class="kart-bakiye '+bakiyeTipi+'">'+htTl(hs.bakiye)+'</div>';
                     h += '<div class="kart-iban">'+ibanStr+'</div>';
-                    h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">'+hs.hesapSahibi+'</div></div>';
-                    h += '<div class="kart-alt-sag"><div class="kart-sifreler"><span>KART: '+kartSifre+'</span><span>NET: '+netSifre+'</span></div></div></div>';
+                    h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">'+hs.hesapSahibi+'</div></div></div>';
                     h += '</div>';
                     h += '<div class="kart-chip"></div>';
                     h += '</div>';
@@ -7038,8 +7050,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             h += '<div class="kart-top"><div class="kart-banka">NAKİT HESABI</div><div class="kart-actions"></div></div>';
             h += '<div class="kart-bakiye '+nakitBakiyeTipi+'">'+htTl(db.nakit)+'</div>';
             h += '<div class="kart-iban">•••• •••• •••• ••••</div>';
-            h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">Fiziki Nakit Para</div></div>';
-            h += '<div class="kart-alt-sag"><div class="kart-sifreler"><span>KART: —</span><span>NET: —</span></div></div></div>';
+            h += '<div class="kart-alt"><div class="kart-alt-sol"><div class="kart-sahip">Fiziki Nakit Para</div></div></div>';
             h += '</div>';
             h += '<div class="kart-chip"></div>';
             h += '</div>';
@@ -7107,21 +7118,40 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         }
 
         function htHesapSil(id) {
-            tmConfirm("Bu hesabı silmek istediğinize emin misiniz?", function() {
-                var db = htVeriYukle();
-                var silinen = db.hesaplar.find(function(h){return h.id===id;});
-                db.hesaplar = db.hesaplar.filter(function(h){return h.id!==id;});
-                db.islemler = db.islemler.filter(function(i){return i.hesapId!==id;});
-                htVeriKaydet(db);
-                htHesapKartlariGoster();
-                htNakitKartGoster();
-                htYeniIslemFormuDoldur();
-                htIslemleriGoster();
-                htDurumGuncelle();
-                if(HT_AKTIF_DETAY_HESAP === id) htHesapDetayKapat();
-                tmNotify("Hesap silindi.", "success");
-                aktiviteEkle("Hesap silindi: " + (silinen ? silinen.bankaAdi : ""), "Muhasebe");
-            });
+            var db2 = htVeriYukle();
+            var h = db2.hesaplar.find(function(x){return x.id===id;});
+            if(!h) return;
+            var bakiye = h.bakiye || 0;
+            if(bakiye !== 0) {
+                tmConfirm("Bu hesabın bakiyesi (" + htTl(bakiye) + ") bulunuyor. Silince bakiye Nakit hesabına aktarılsın mı?", function() {
+                    var db = htVeriYukle();
+                    db.nakit = (db.nakit||0) + bakiye;
+                    db.hesaplar = db.hesaplar.filter(function(x){return x.id!==id;});
+                    db.islemler = db.islemler.filter(function(i){return i.hesapId!==id;});
+                    htVeriKaydet(db);
+                    htHesapKartlariGoster();
+                    htNakitKartGoster();
+                    htIslemleriGoster();
+                    htDurumGuncelle();
+                    if(HT_AKTIF_DETAY_HESAP === id) htHesapDetayKapat();
+                    tmNotify("Hesap silindi. Bakiye Nakite aktarıldı.", "success");
+                    aktiviteEkle("Hesap silindi (bakiye nakite): " + h.bankaAdi, "Muhasebe");
+                });
+            } else {
+                tmConfirm("Bu hesabı silmek istediğinize emin misiniz?", function() {
+                    var db = htVeriYukle();
+                    db.hesaplar = db.hesaplar.filter(function(x){return x.id!==id;});
+                    db.islemler = db.islemler.filter(function(i){return i.hesapId!==id;});
+                    htVeriKaydet(db);
+                    htHesapKartlariGoster();
+                    htNakitKartGoster();
+                    htIslemleriGoster();
+                    htDurumGuncelle();
+                    if(HT_AKTIF_DETAY_HESAP === id) htHesapDetayKapat();
+                    tmNotify("Hesap silindi.", "success");
+                    aktiviteEkle("Hesap silindi: " + h.bankaAdi, "Muhasebe");
+                });
+            }
         }
 
         function htNakitKartGoster() {
@@ -7139,8 +7169,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             } else {
                 var hs = db.hesaplar.find(function(h){return h.id===hesapId;});
                 if(!hs) { tmNotify("Hesap bulunamadı!", "error"); return; }
-                baslik = '<i class="fa-solid fa-building-columns"></i> ' + hs.bankaAdi + " - " + hs.hesapSahibi + " (Bakiye: " + htTl(hs.bakiye) + ")";
-                detayBilgi = "IBAN: " + htIbanGoster(hs.iban) + " &nbsp;|&nbsp; Kart Şifre: " + hs.kartSifre + " &nbsp;|&nbsp; İnternet Şifre: " + hs.internetSifre;
+                baslik = '<i class="fa-solid fa-building-columns"></i> '+trToUpper(hs.bankaAdi)+' &middot; '+trToUpper(hs.hesapSahibi);
+                detayBilgi = '<span title="IBAN">📘 '+htIbanGoster(hs.iban)+'</span> &nbsp;|&nbsp; Bakiye: '+htTl(hs.bakiye);
             }
             document.getElementById("htDetayBaslik").innerHTML = baslik;
             document.getElementById("htDetayBilgi").innerHTML = detayBilgi;
@@ -7178,15 +7208,23 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 if(id === -1) return '<i class="fa-solid fa-money-bill-wave"></i> NAKİT';
                 if(id === 0) return '<i class="fa-solid fa-globe"></i> HARİCİ';
                 var h = db.hesaplar.find(function(hs){return hs.id===id;});
-                return h ? h.bankaAdi+" - "+h.hesapSahibi : ("ID:"+id);
+                return h ? trToUpper(h.bankaAdi)+" - "+trToUpper(h.hesapSahibi) : ("ID:"+id);
+            }
+            function hesapAdiBulPlain(id) {
+                if(id === -1) return 'NAKİT';
+                if(id === 0) return 'HARİCİ';
+                var hx = db.hesaplar.find(function(hs){return hs.id===id;});
+                return hx ? trToUpper(hx.bankaAdi)+" - "+trToUpper(hx.hesapSahibi) : ("ID:"+id);
             }
             var h = '<div class="ht-islem-kart-list">';
             islemler.slice().reverse().forEach(function(i) {
                 var gorunenIslem = i.islem;
                 var gorunenYon = hesapAdiBul(i.hesapId) + " › " + (i.hedefId ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ');
+                var gorunenYonPlain = hesapAdiBulPlain(i.hesapId) + " > " + (i.hedefId ? hesapAdiBulPlain(i.hedefId) : 'HARİCİ');
                 var ikon = '<i class="fa-solid fa-paper-plane"></i>';
                 if(i.islem === "GELEN") {
                     gorunenYon = '<i class="fa-solid fa-globe"></i> HARİCİ › ' + hesapAdiBul(i.hesapId);
+                    gorunenYonPlain = 'HARİCİ > ' + hesapAdiBulPlain(i.hesapId);
                     ikon = '<i class="fa-solid fa-inbox"></i>';
                 } else if(i.islem === "GİDEN") {
                     if(i.hedefId && i.hesapId !== HT_AKTIF_DETAY_HESAP) {
@@ -7203,12 +7241,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     }
                 }
                 var cls = gorunenIslem === "GELEN" ? "gelen" : "giden";
-                h += '<div class="ht-islem-kart" data-detay-search="'+(i.aciklama||"").toLowerCase()+' '+gorunenYon.toLowerCase()+'">';
+                h += '<div class="ht-islem-kart" data-detay-search="'+(i.aciklama||"").toLowerCase()+' '+gorunenYonPlain.toLowerCase()+'">';
                 h += '<div class="ht-islem-kart-ust">';
                 h += '<span class="ht-islem-kart-aciklama">'+i.aciklama+'</span>';
                 h += '<span class="ht-islem-kart-tutar '+cls+'">'+htTl(i.tutar)+'</span>';
-                h += '</div>';
-                h += '<div class="ht-islem-kart-alt">';
                 h += '<span class="ht-islem-kart-hesap">'+ikon+' '+gorunenYon+'</span>';
                 h += '<span class="ht-islem-kart-tarih">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</span>';
                 h += '<span class="ht-islem-kart-islem '+cls+'">'+gorunenIslem+'</span>';
@@ -7292,9 +7328,12 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         }
 
         function htIslemTersineCevir(db, islem) {
-            if(islem.islem === "TRANSFER" || (islem.islem === "GİDEN" && islem.hedefId)) {
+            if(islem.islem === "TRANSFER") {
                 htBakiyeGuncelle(db, islem.hesapId, islem.tutar, "GİDEN", true);
-                if(islem.hedefId && (islem.hedefId === 1 || islem.hedefId === -1)) htBakiyeGuncelle(db, islem.hedefId, islem.tutar, "GELEN", true);
+                if(islem.hedefId) htBakiyeGuncelle(db, islem.hedefId, islem.tutar, "GELEN", true);
+            } else if(islem.islem === "GİDEN" && islem.hedefId) {
+                htBakiyeGuncelle(db, islem.hesapId, islem.tutar, "GİDEN", true);
+                if(islem.hedefId === -1) htBakiyeGuncelle(db, islem.hedefId, islem.tutar, "GELEN", true);
             } else {
                 htBakiyeGuncelle(db, islem.hesapId, islem.tutar, islem.islem, true);
             }
@@ -7418,14 +7457,20 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 if(id === -1) return '<i class="fa-solid fa-money-bill-wave"></i> NAKİT';
                 if(id === 0) return '<i class="fa-solid fa-globe"></i> HARİCİ';
                 var h = db.hesaplar.find(function(hs){return hs.id===id;});
-                return h ? h.bankaAdi+" - "+h.hesapSahibi : ("ID:"+id);
+                return h ? trToUpper(h.bankaAdi)+" - "+trToUpper(h.hesapSahibi) : ("ID:"+id);
+            }
+            function hesapAdiBulPlain(id) {
+                if(id === -1) return 'NAKİT';
+                if(id === 0) return 'HARİCİ';
+                var hx = db.hesaplar.find(function(hs){return hs.id===id;});
+                return hx ? trToUpper(hx.bankaAdi)+" - "+trToUpper(hx.hesapSahibi) : ("ID:"+id);
             }
             var sirali = db.islemler.slice();
             sirali.sort(function(a, b) {
                 var va, vb;
                 if(HT_SIRALAMA.anahtar === "id") { va = a.id; vb = b.id; }
                 else if(HT_SIRALAMA.anahtar === "aciklama") { va = (a.aciklama||"").toLowerCase(); vb = (b.aciklama||"").toLowerCase(); }
-                else if(HT_SIRALAMA.anahtar === "hesap") { va = hesapAdiBul(a.hesapId).toLowerCase()+(a.hedefId?" › "+hesapAdiBul(a.hedefId).toLowerCase():""); vb = hesapAdiBul(b.hesapId).toLowerCase()+(b.hedefId?" › "+hesapAdiBul(b.hedefId).toLowerCase():""); }
+                else if(HT_SIRALAMA.anahtar === "hesap") { va = hesapAdiBulPlain(a.hesapId).toLowerCase()+(a.hedefId?" > "+hesapAdiBulPlain(a.hedefId).toLowerCase():""); vb = hesapAdiBulPlain(b.hesapId).toLowerCase()+(b.hedefId?" > "+hesapAdiBulPlain(b.hedefId).toLowerCase():""); }
                 else if(HT_SIRALAMA.anahtar === "tarih") { va = a.tarih||""; vb = b.tarih||""; }
                 else if(HT_SIRALAMA.anahtar === "tutar") { va = a.tutar; vb = b.tutar; }
                 else if(HT_SIRALAMA.anahtar === "islem") { va = a.islem; vb = b.islem; }
@@ -7436,23 +7481,24 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var h = '<div class="ht-islem-kart-list">';
             sirali.forEach(function(i) {
                 var cls = i.islem === "GELEN" ? "gelen" : (i.islem === "GİDEN" ? "giden" : "transfer");
-                var hAd, ikon;
+                var hAd, hAdPlain, ikon;
                 if(i.islem === "TRANSFER") {
                     hAd = hesapAdiBul(i.hesapId) + " › " + hesapAdiBul(i.hedefId);
+                    hAdPlain = hesapAdiBulPlain(i.hesapId) + " > " + hesapAdiBulPlain(i.hedefId);
                     ikon = '<i class="fa-solid fa-rotate"></i>';
                 } else if(i.islem === "GELEN") {
                     hAd = hesapAdiBul(i.hesapId);
+                    hAdPlain = hesapAdiBulPlain(i.hesapId);
                     ikon = '<i class="fa-solid fa-inbox"></i>';
                 } else {
                     hAd = (i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ');
+                    hAdPlain = (i.hedefId && i.hedefId !== 0 ? hesapAdiBulPlain(i.hedefId) : 'HARİCİ');
                     ikon = '<i class="fa-solid fa-paper-plane"></i>';
                 }
-                h += '<div class="ht-islem-kart" data-search="'+(i.aciklama||"").toLowerCase()+' '+hAd.toLowerCase()+'">';
+                h += '<div class="ht-islem-kart" data-search="'+(i.aciklama||"").toLowerCase()+' '+hAdPlain.toLowerCase()+'">';
                 h += '<div class="ht-islem-kart-ust">';
                 h += '<span class="ht-islem-kart-aciklama">'+i.aciklama+'</span>';
                 h += '<span class="ht-islem-kart-tutar '+cls+'">'+htTl(i.tutar)+'</span>';
-                h += '</div>';
-                h += '<div class="ht-islem-kart-alt">';
                 h += '<span class="ht-islem-kart-hesap">'+ikon+' '+hAd+'</span>';
                 h += '<span class="ht-islem-kart-tarih">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</span>';
                 h += '<span class="ht-islem-kart-islem '+cls+'">'+i.islem+'</span>';
@@ -7614,15 +7660,15 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     <div style="display:flex;gap:4mm;margin-bottom:3mm;">
                         <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;">
                             <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM GELİR</div>
-                            <div style="font-size:16px;font-weight:900;color:#2E7D32;">`+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+` ?</div>
+                            <div style="font-size:16px;font-weight:900;color:#2E7D32;">`+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+` ₺</div>
                         </div>
                         <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;">
                             <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM GİDER</div>
-                            <div style="font-size:16px;font-weight:900;color:#9E2A2B;">`+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+` ?</div>
+                            <div style="font-size:16px;font-weight:900;color:#9E2A2B;">`+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+` ₺</div>
                         </div>
                         <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;background:`+(netDegisim>=0?'rgba(46,125,50,0.06)':'rgba(158,42,43,0.06)')+`;">
                             <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">NET DEĞİŞİM</div>
-                            <div style="font-size:16px;font-weight:900;color:`+(netDegisim>=0?'#2E7D32':'#9E2A2B')+`;">`+netDegisim.toLocaleString('tr-TR',{minFractionDigits:2})+` ?</div>
+                            <div style="font-size:16px;font-weight:900;color:`+(netDegisim>=0?'#2E7D32':'#9E2A2B')+`;">`+netDegisim.toLocaleString('tr-TR',{minFractionDigits:2})+` ₺</div>
                         </div>
                     </div>
                     <div style="border:1.5px solid #e0e0e0;border-radius:3px;overflow:hidden;">

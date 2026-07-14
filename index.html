@@ -17,9 +17,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.32.18">
-    <link rel="stylesheet" href="pdf.css?v=1.32.18">
-    <link rel="stylesheet" href="responsive.css?v=1.32.18">
+    <link rel="stylesheet" href="style.css?v=1.34.0">
+    <link rel="stylesheet" href="pdf.css?v=1.34.0">
+    <link rel="stylesheet" href="responsive.css?v=1.34.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -125,7 +125,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.32.18</div>
+                <div class="version-tag">V1.34.0</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -524,6 +524,20 @@
                             <div class="oz-deger nakit" id="htToplamNakitBakiye">0,00 ₺</div>
                         </div>
                     </div>
+                    <div class="ht-ozet-row" style="margin-bottom:18px;">
+                        <div class="ht-ozet-kart" style="flex:1;background:rgba(46,204,113,0.06);border-color:rgba(46,204,113,0.2);">
+                            <div class="oz-label">Bu Ay Gelen</div>
+                            <div class="oz-deger" style="color:var(--ht-gelir);font-size:18px;" id="htBuAyGelen">0,00 ₺</div>
+                        </div>
+                        <div class="ht-ozet-kart" style="flex:1;background:rgba(231,76,60,0.06);border-color:rgba(231,76,60,0.2);">
+                            <div class="oz-label">Bu Ay Giden</div>
+                            <div class="oz-deger" style="color:var(--ht-gider);font-size:18px;" id="htBuAyGiden">0,00 ₺</div>
+                        </div>
+                        <div class="ht-ozet-kart" style="flex:1;background:rgba(160,184,204,0.06);border-color:rgba(160,184,204,0.2);">
+                            <div class="oz-label">Bu Ay Net</div>
+                            <div class="oz-deger" style="color:var(--ht-accent);font-size:18px;" id="htBuAyNet">0,00 ₺</div>
+                        </div>
+                    </div>
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
                         <h3 style="margin:0;"><i class="fa-solid fa-building-columns"></i> Banka Hesapları</h3>
                         <button class="ht-ekle-btn primary" onclick="htHesapModalAc()"><i class="fa-solid fa-plus"></i> Yeni Hesap</button>
@@ -537,7 +551,7 @@
                         </div>
                     </div>
                     <div class="ht-siralama" id="htSiralama">
-                        <button class="ht-sirala-btn" data-key="id" onclick="htSiralamaDegistir('id')">Tarih Sırası</button>
+                        <button class="ht-sirala-btn" data-key="tarih" onclick="htSiralamaDegistir('tarih')">Tarih Sırası</button>
                         <button class="ht-sirala-btn" data-key="aciklama" onclick="htSiralamaDegistir('aciklama')">Açıklama</button>
                         <button class="ht-sirala-btn" data-key="hesap" onclick="htSiralamaDegistir('hesap')">Hesap</button>
                         <button class="ht-sirala-btn" data-key="tutar" onclick="htSiralamaDegistir('tutar')">Tutar</button>
@@ -1824,7 +1838,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.32.18"></script>
+    <script src="script.js?v=1.34.0"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
