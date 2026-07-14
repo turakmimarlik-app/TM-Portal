@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.34.1';
+        var APP_VERSION = 'V1.34.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -51,12 +51,29 @@ function tmSesCal(tur) {
             pad(293.66, t + 0.16, 0.1, v * 0.5);
             pad(261.63, t + 0.24, 0.4, v * 0.4);
         } else if (tur === 'para') {
-            pad(523.25, t, 0.06, v * 0.5);
-            pad(659.25, t + 0.05, 0.06, v * 0.6);
-            pad(783.99, t + 0.1, 0.06, v * 0.7);
-            pad(1046.5, t + 0.15, 0.06, v * 0.8);
-            pad(783.99, t + 0.2, 0.06, v * 0.6);
-            pad(1046.5, t + 0.25, 0.15, v * 0.7);
+            for(var ci=0; ci<3; ci++) {
+                var cf = 300 + Math.random()*800;
+                var co = ctx.createOscillator();
+                var cg = ctx.createGain();
+                co.connect(cg); cg.connect(ctx.destination);
+                co.type = 'triangle';
+                co.frequency.value = cf;
+                cg.gain.setValueAtTime(0, t + ci*0.08);
+                cg.gain.linearRampToValueAtTime(v*0.3, t + ci*0.08 + 0.02);
+                cg.gain.exponentialRampToValueAtTime(0.001, t + ci*0.08 + 0.15);
+                co.start(t + ci*0.08); co.stop(t + ci*0.08 + 0.15);
+            }
+            var bn = ctx.createBufferSource();
+            var noiseLen = 0.07;
+            var buf = ctx.createBuffer(1, ctx.sampleRate * noiseLen, ctx.sampleRate);
+            var data = buf.getChannelData(0);
+            for(var ni=0; ni<data.length; ni++) data[ni] = (Math.random()*2-1) * Math.exp(-ni/(ctx.sampleRate*0.02));
+            bn.buffer = buf;
+            var bng = ctx.createGain();
+            bn.connect(bng); bng.connect(ctx.destination);
+            bng.gain.setValueAtTime(v*0.15, t);
+            bng.gain.exponentialRampToValueAtTime(0.001, t + noiseLen);
+            bn.start(t); bn.stop(t + noiseLen);
         } else {
             pad(800, t, 0.12, v * 0.6);
         }
