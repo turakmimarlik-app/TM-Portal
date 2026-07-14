@@ -480,7 +480,7 @@
         #htHesapModal .modal-actions .ht-modal-kaydet:hover { opacity:0.9; }
 
         /* İşlem Modal */
-        #htIslemModal .modal-box { max-width:520px; background:#162436; border:1px solid #243b52; }
+        #htIslemModal .modal-box { max-width:520px; background:#162436; border:1px solid #243b52; overflow:visible; }
         #htIslemModal .modal-header { background:#0d1b2a; color:#e4eaf2; border-bottom:1px solid #243b52; }
         #htIslemModal .modal-header h3 { margin:0; font-size:14px; border:none; padding:0; }
         #htIslemModal .modal-body { padding:20px; }
@@ -499,6 +499,9 @@
         #htIslemModal .modal-actions .ht-modal-kaydet:hover { opacity:0.9; }
 
         .ht-bos { text-align:center; padding:30px; color:var(--ht-text-light); font-size:13px; }
+
+        #htDetayBakiye { font-size:26px; font-weight:800; padding:10px 0 6px 0; letter-spacing:-0.5px; display:flex; align-items:center; gap:10px; }
+        #htDetayBakiye::before { content:"Bakiye"; font-size:10px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.8px; background:rgba(255,255,255,0.06); padding:4px 10px; border-radius:4px; line-height:1; }
 
         /* ===== NAKİT ÖDEME DEKONTU — HTS KONSEPTİ ===== */
         #nakit-dekont-page { --ht-bg:#0d1b2a; --ht-card:#162436; --ht-border:#243b52; --ht-text:#e4eaf2; --ht-text-light:#7a94ad; --ht-accent:#a0b8cc; --ht-gelir:#2ecc71; --ht-gider:#e74c3c; background:var(--ht-bg); color:var(--ht-text); }

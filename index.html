@@ -17,9 +17,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.34.2">
-    <link rel="stylesheet" href="pdf.css?v=1.34.2">
-    <link rel="stylesheet" href="responsive.css?v=1.34.2">
+    <link rel="stylesheet" href="style.css?v=1.34.3">
+    <link rel="stylesheet" href="pdf.css?v=1.34.3">
+    <link rel="stylesheet" href="responsive.css?v=1.34.3">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -125,7 +125,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.34.2</div>
+                <div class="version-tag">V1.34.3</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -568,6 +568,7 @@
                         <button class="ht-ekle-btn secondary" onclick="htHesapDetayKapat()">← Geri Dön</button>
                         <h3 id="htDetayBaslik" style="margin:8px 0 4px 0;"></h3>
                         <div id="htDetayBilgi" style="font-size:12px;color:var(--text-light);"></div>
+                        <div id="htDetayBakiye"></div>
                     </div>
                     <div class="ht-detay-actions" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
                         <button class="ht-ekle-btn primary" onclick="htPdfModalAc(HT_AKTIF_DETAY_HESAP)"><i class="fa-regular fa-file-lines"></i> Hesap Raporu</button>
@@ -1608,7 +1609,7 @@
                     <div class="modal-header"><h3><i class="fa-regular fa-note-sticky"></i> Hesap Hareketi</h3></div>
                     <div class="modal-body">
                         <label>Açıklama</label>
-                        <input type="text" id="htModalIslemAciklama" oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase;">
+                        <input type="text" id="htModalIslemAciklama" oninput="this.value=trToUpper(this.value)" style="text-transform:uppercase;">
                         <label>İşlem Türü</label>
                         <select id="htModalIslemTur" class="islem-turu-select" style="width:100%;" onchange="htIslemModalTurDegisti()">
                             <option value="GELEN">GELEN</option>
@@ -1838,7 +1839,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.34.2"></script>
+    <script src="script.js?v=1.34.3"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">

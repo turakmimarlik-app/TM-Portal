@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.34.2';
+        var APP_VERSION = 'V1.34.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7189,14 +7189,18 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var db = htVeriYukle();
             document.getElementById("htAnaSayfa").style.display = "none";
             var baslik = "", detayBilgi = "";
+            var bakiyeEl = document.getElementById("htDetayBakiye");
             if(hesapId === -1) {
                 baslik = '<i class="fa-solid fa-money-bill-wave"></i> Nakit Hesabı';
-                detayBilgi = "Fiziki Nakit Para — " + htTl(db.nakit);
+                detayBilgi = "Fiziki Nakit Para";
+                bakiyeEl.innerHTML = '<span style="color:#4CAF50">' + htTl(db.nakit) + '</span>';
             } else {
                 var hs = db.hesaplar.find(function(h){return h.id===hesapId;});
                 if(!hs) { tmNotify("Hesap bulunamadı!", "error"); return; }
                 baslik = '<i class="fa-solid fa-building-columns"></i> '+trToUpper(hs.bankaAdi)+' &middot; '+trToUpper(hs.hesapSahibi);
-                detayBilgi = '<span title="IBAN">📘 '+htIbanGoster(hs.iban)+'</span> &nbsp;|&nbsp; Bakiye: '+htTl(hs.bakiye);
+                detayBilgi = '<span title="IBAN">📘 '+htIbanGoster(hs.iban)+'</span> &nbsp;|&nbsp; Kart: '+trToUpper(hs.kartSifre||'-');
+                var bak = hs.bakiye || 0;
+                bakiyeEl.innerHTML = (bak >= 0 ? '<span style="color:#4CAF50">' : '<span style="color:#f44336">') + htTl(bak) + '</span>';
             }
             document.getElementById("htDetayBaslik").innerHTML = baslik;
             document.getElementById("htDetayBilgi").innerHTML = detayBilgi;
