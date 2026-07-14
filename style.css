@@ -598,11 +598,15 @@
         /* Card info text */
         #is-muhasebe-page .portfolio-card .p-detail { font-size:12px; color:var(--ht-text-light); }
         #is-muhasebe-page .portfolio-card .p-detail b { color:var(--ht-text-light); font-weight:600; width:80px; display:inline-block; font-size:9px; text-transform:uppercase; }
-        /* Card bottom spacing for dropdown room */
+        /* Card bottom spacing - only when open */
+        #is-muhasebe-page .portfolio-card.is-muh-card.open,
+        #tamamlanan-is-muhasebeleri-page .portfolio-card.is-muh-card.open { margin-bottom:100px; }
         #is-muhasebe-page .portfolio-card.is-muh-card,
-        #tamamlanan-is-muhasebeleri-page .portfolio-card.is-muh-card { margin-bottom:100px; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card.is-muh-card { margin-bottom:15px; }
         /* Card inner sections padding */
         #is-muhasebe-page .portfolio-card .card-actions { padding:10px 20px 0 20px; }
+        #is-muhasebe-page .portfolio-card [id^="isMuhKartContent_"] { display:none; }
+        #is-muhasebe-page .portfolio-card [id^="isMuhKartContent_"].open { display:block; }
         #is-muhasebe-page .portfolio-card [id^="isMuhKartContent_"] > * { padding-left:20px; padding-right:20px; }
         #is-muhasebe-page .portfolio-card [id^="isMuhKartContent_"] .inline-form { margin-left:20px; margin-right:20px; width:auto; }
         #is-muhasebe-page .portfolio-card [id^="isMuhKartContent_"] table { width:calc(100% + 40px); margin-left:-20px; }

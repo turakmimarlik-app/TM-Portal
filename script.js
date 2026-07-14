@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.32.10';
+        var APP_VERSION = 'V1.32.11';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -4441,7 +4441,8 @@ function gorevMailGonder(gorev) {
             if(event && event.target.closest('button, input, select, a, label, .card-actions')) return;
             const content = document.getElementById("isMuhKartContent_" + id);
             if(content) {
-                content.style.display = content.style.display === "none" ? "block" : "none";
+                content.classList.toggle("open");
+                content.closest('.is-muh-card')?.classList.toggle("open");
             }
         }
 
@@ -4452,7 +4453,7 @@ function gorevMailGonder(gorev) {
             const onceExpanded = new Set();
             document.querySelectorAll('.is-muh-card').forEach(card => {
                 const content = card.querySelector('[id^="isMuhKartContent_"]');
-                if(content && content.style.display !== 'none') {
+                if(content && content.classList.contains('open')) {
                     const id = content.id.replace('isMuhKartContent_', '');
                     onceExpanded.add(parseInt(id));
                 }
@@ -4640,7 +4641,7 @@ function gorevMailGonder(gorev) {
                                 <span style="font-weight:700; color:var(--accent-red); font-size:18px;">${formatliId}</span>
                             </div>
                         </div>
-                        <div id="isMuhKartContent_${kayit.id}" style="display:none;">
+                        <div id="isMuhKartContent_${kayit.id}">
 
                         <div style="display:flex; flex-direction:column; gap:3px; background:var(--bg-main); padding:8px 20px; border-radius:8px; margin:5px 0 10px 0; border:1px solid var(--border-color);">
                             <div style="display:flex; justify-content:space-between; text-align:center; gap:2px;">
@@ -4737,7 +4738,8 @@ function gorevMailGonder(gorev) {
             onceExpanded.forEach(id => {
                 const content = document.getElementById("isMuhKartContent_" + id);
                 if(content) {
-                    content.style.display = "block";
+                    content.classList.add("open");
+                    content.closest('.is-muh-card')?.classList.add("open");
                 }
             });
         }
@@ -4800,6 +4802,7 @@ function gorevMailGonder(gorev) {
             if(!dal) { tmNotify("Lütfen bir Proje / Hizmet Dalı seçiniz!", "error"); return; }
             if(isNaN(tutar) || tutar <= 0) { tmNotify("Geçerli bir toplam tutar giriniz!", "error"); return; }
             if(odenen < 0) { tmNotify("Ödenen tutar negatif olamaz!", "error"); return; }
+            if(odenen > tutar) { tmNotify("Ödenen tutar, toplam tutardan büyük olamaz!", "error"); return; }
             if(!tarih) { tmNotify("Tarih seçiniz!", "error"); return; }
 
             let db = isMuhasebeVerileriniYukle();
@@ -4925,18 +4928,40 @@ function gorevMailGonder(gorev) {
         }
 
         function isMuhasebeBitirVeTasi(id) {
+            let db = isMuhasebeVerileriniYukle();
+            const kayit = db.find(k => k.id === id);
+            if(!kayit) return;
+
+            let toplamAlacak = 0, toplamVerecek = 0, toplamOdenen = 0;
+            kayit.kalemler.forEach(k => {
+                if(k.tip === "alacak") toplamAlacak += k.tutar;
+                else { toplamVerecek += k.tutar; toplamOdenen += (k.odenenTutar || 0); }
+            });
+            const kalanTahsilat = (kayit.anlasmaUcreti || 0) - toplamAlacak;
+            const kalanOdeme = toplamVerecek - toplamOdenen;
+            if(kalanTahsilat !== 0 || kalanOdeme !== 0) {
+                tmNotify("İş bitirme için tüm tahsilat ve ödemelerin tamamlanmış olması gerekir! Kalan tahsilat: " + tmTl(kalanTahsilat) + ", Kalan ödeme: " + tmTl(kalanOdeme), "error");
+                return;
+            }
+
             tmConfirm("Bu iş muhasebesini 'Tamamlanan İşler' kategorisine taşımak istediğinize emin misiniz?", function() {
-                let db = isMuhasebeVerileriniYukle();
-                const kayit = db.find(k => k.id === id);
-                if(!kayit) return;
+                let db2 = isMuhasebeVerileriniYukle();
+                const kayit2 = db2.find(k => k.id === id);
+                if(!kayit2) return;
+
+                kayit2.bitisTarihi = anlikTarihGetir();
 
                 let tamamlananDb = JSON.parse(localStorage.getItem("tm_is_muhasebe_tamamlanan_db")) || [];
-                kayit.bitisTarihi = anlikTarihGetir();
-                tamamlananDb.push(kayit);
-                localStorage.setItem("tm_is_muhasebe_tamamlanan_db", JSON.stringify(tamamlananDb));
+                tamamlananDb.push(kayit2);
 
-                db = db.filter(k => k.id !== id);
-                localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db));
+                db2 = db2.filter(k => k.id !== id);
+
+                const fsWasReady = fsReady;
+                fsReady = false;
+                localStorage.setItem("tm_is_muhasebe_tamamlanan_db", JSON.stringify(tamamlananDb));
+                localStorage.setItem("tm_is_muhasebe_db", JSON.stringify(db2));
+                fsReady = fsWasReady;
+                if(fsReady) fsSync();
 
                 isMuhasebeListesiniYenile();
                 tamamlananIsMuhasebeListesiniYenile();
@@ -4980,6 +5005,7 @@ function gorevMailGonder(gorev) {
                 tamamlananIsMuhasebeListesiniYenile();
                 musteriKartlariniYenile();
                 isOrtaklariKartlariniYenile();
+                tmNotify("Tamamlanan iş muhasebesi kaydı silindi.", "success");
             });
         }
 
@@ -5006,19 +5032,23 @@ function gorevMailGonder(gorev) {
 
             db.sort((a, b) => new Date(b.bitisTarihi || b.anlasmaTarihi || b.tarih) - new Date(a.bitisTarihi || a.anlasmaTarihi || a.tarih));
 
-            let genelHacim = 0, genelKar = 0, genelOdeme = 0;
+            let genelHacim = 0, genelTahsilat = 0, genelKar = 0, genelOdeme = 0;
             db.forEach(kayit => {
-                let toplamVerecek = 0, toplamOdenen = 0;
+                let toplamAlacak = 0, toplamVerecek = 0, toplamOdenen = 0;
                 kayit.kalemler.forEach(k => {
-                    if(k.tip !== "alacak") { toplamVerecek += k.tutar; toplamOdenen += (k.odenenTutar || 0); }
+                    if(k.tip === "alacak") toplamAlacak += k.tutar;
+                    else { toplamVerecek += k.tutar; toplamOdenen += (k.odenenTutar || 0); }
                 });
                 genelHacim += kayit.anlasmaUcreti || 0;
+                genelTahsilat += toplamAlacak;
                 genelKar += (kayit.anlasmaUcreti || 0) - toplamVerecek;
                 genelOdeme += toplamOdenen;
             });
+            const genelNet = genelTahsilat - (genelHacim - genelKar);
             const genelKarYuzde = genelHacim > 0 ? ((genelKar / genelHacim) * 100).toFixed(1) : "0.0";
             const gKarRenk = genelKar >= 0 ? "var(--btn-green)" : "var(--accent-red)";
             const gKarYuzdeRenk = parseFloat(genelKarYuzde) >= 0 ? "var(--btn-green)" : "var(--accent-red)";
+            const gNetRenk = genelNet >= 0 ? "var(--btn-green)" : "var(--accent-red)";
 
             let toplamHTML = `
                 <div style="display:flex; flex-direction:column; gap:10px; width:100%; padding:18px 10px; box-sizing:border-box; background:var(--ht-card); border-radius:12px; border:1px solid var(--ht-border); margin-bottom:18px;">
@@ -5027,9 +5057,13 @@ function gorevMailGonder(gorev) {
                     </div>
                     <div style="display:flex; justify-content:space-around; text-align:center; gap:8px;">
                         <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">TAMAMLANAN İŞ HACMİ</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelHacim.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                        <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL TAHSİLAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
                         <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR</small><span style="font-weight:900; color:${gKarRenk}; font-size:22px;">${genelKar.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
                         <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR %</small><span style="font-weight:900; color:${gKarYuzdeRenk}; font-size:22px;">%${genelKarYuzde}</span></div>
                         <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL ÖDEME</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelOdeme.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-around; text-align:center; gap:8px; padding-top:8px; border-top:1px solid var(--ht-border);">
+                        <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">NET</small><span style="font-weight:900; color:${gNetRenk}; font-size:22px;">${genelNet.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
                     </div>
                 </div>
             `;
@@ -5160,13 +5194,19 @@ function gorevMailGonder(gorev) {
 
             Object.keys(acikKartlar).forEach(function(id) {
                 var content = document.getElementById("tamIsMuhKartContent_" + id);
-                if(content) content.classList.add("open");
+                if(content) {
+                    content.classList.add("open");
+                    content.closest('.is-muh-card')?.classList.add("open");
+                }
             });
         }
 
         function tamIsMuhKartToggle(id) {
             const content = document.getElementById("tamIsMuhKartContent_" + id);
-            if(content) content.classList.toggle("open");
+            if(content) {
+                content.classList.toggle("open");
+                content.closest('.is-muh-card')?.classList.toggle("open");
+            }
         }
 
         function tamamlananIsMuhasebeListesiniFiltrele() {
