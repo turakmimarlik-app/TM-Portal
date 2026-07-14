@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.32.7';
+        var APP_VERSION = 'V1.32.8';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -4990,7 +4990,7 @@ function gorevMailGonder(gorev) {
             var acikKartlar = {};
             konteyner.querySelectorAll('.is-muh-card').forEach(function(kart) {
                 var content = kart.querySelector('[id^="tamIsMuhKartContent_"]');
-                if(content && content.style.display !== "none" && content.style.display !== "") {
+                if(content && content.classList.contains("open")) {
                     var id = content.id.replace("tamIsMuhKartContent_", "");
                     acikKartlar[id] = true;
                 }
@@ -5007,8 +5007,11 @@ function gorevMailGonder(gorev) {
             db.sort((a, b) => new Date(b.bitisTarihi || b.anlasmaTarihi || b.tarih) - new Date(a.bitisTarihi || a.anlasmaTarihi || a.tarih));
 
             let toplamHTML = `
-                <div style="display:flex; gap:20px; background:var(--bg-main); padding:15px 20px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px; justify-content:space-around; font-weight:600;">
-                    <div style="text-align:center;"><small style="font-size:10px; color:var(--text-light); font-weight:600; display:block;">TAMAMLANAN İŞ SAYISI</small><span style="font-weight:700; color:var(--accent-red); font-size:18px;">${db.length}</span></div>
+                <div class="tam-summary-bar">
+                    <div class="tam-summary-item">
+                        <span class="tam-summary-label">TAMAMLANAN İŞ SAYISI</span>
+                        <span class="tam-summary-value">${db.length}</span>
+                    </div>
                 </div>
             `;
 
@@ -5041,80 +5044,72 @@ function gorevMailGonder(gorev) {
                     <div class="portfolio-card is-muh-card" data-search="${isAdi} ${firma} ${paftaAdaParsel} ${formatliId}" style="width:100%; margin-bottom:15px;">
                         <div class="card-main-header" onclick="tamIsMuhKartToggle(${kayit.id})" style="cursor:pointer;">
                             <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-                                <div style="display:flex; align-items:center; gap:10px;">
-
-                                    <h4 style="margin:0;">${isAdi}</h4>
+                                <div style="display:flex; align-items:center; gap:10px; flex:1;">
+                                    <i class="fa-solid fa-chevron-right tam-chevron" id="tamChevron_${kayit.id}"></i>
+                                    <div style="flex:1;">
+                                        <h4 style="margin:0;">${isAdi}</h4>
+                                        <div class="tam-header-info">
+                                            <span><b>Firma:</b> ${firma}</span>
+                                            <span>${paftaAdaParsel}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div style="display:flex; align-items:center; gap:15px;">
-                                    <span style="background:var(--btn-green); color:white; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">TAMAMLANDI</span>
-                                    <span style="font-weight:700; color:var(--accent-red); font-size:14px;">${formatliId}</span>
+                                <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+                                    <span class="tam-badge tam-badge-complete"><i class="fa-solid fa-check-circle" style="font-size:10px;"></i> TAMAMLANDI</span>
+                                    <span class="tam-badge tam-badge-id">${formatliId}</span>
                                 </div>
-                            </div>
-                            <div style="display:flex; gap:15px; margin-top:4px; font-size:13px;">
-                                <span style="color:var(--text-light);"><b>Firma:</b> ${firma}</span>
-                                <span style="color:var(--text-light);">${paftaAdaParsel}</span>
                             </div>
                         </div>
-                        <div id="tamIsMuhKartContent_${kayit.id}" style="display:none;">
+                        <div id="tamIsMuhKartContent_${kayit.id}">
 
-                        <div style="display:flex; flex-direction:column; gap:3px; background:var(--bg-main); padding:8px 20px; border-radius:8px; margin:5px 0 10px 0; border:1px solid var(--border-color);">
-                            <div style="display:flex; justify-content:space-between; text-align:center; gap:2px;">
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAŞMA ÜCRETİ</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM KAR</small><span style="font-weight:800; color:${karRenk}; font-size:15px; line-height:1.3;">${toplamKar.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KAR %</small><span style="font-weight:800; color:${karYuzdeRenkKart}; font-size:15px; line-height:1.3;">%${karYuzde}</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM GİDER</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
-                                <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAŞMA TARİHİ</small><span style="font-weight:700; color:var(--text-dark); font-size:15px; line-height:1.3;">${basTarih ? new Date(basTarih).toLocaleDateString("tr-TR") : "-"}</span></div>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; text-align:center; gap:2px; padding-top:4px; border-top:1px solid var(--border-color);">
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TAHSİLAT</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ÖDENEN</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN ÖDEME</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
-                                <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">NET</small><span style="font-weight:800; color:${netRenk}; font-size:15px; line-height:1.3;">${netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; text-align:center; gap:2px; padding-top:4px; border-top:1px dashed var(--border-color);">
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">BİTİŞ ONAY TARİHİ</small><span style="font-weight:700; color:var(--btn-green); font-size:15px; line-height:1.3;">${kayit.bitisTarihi ? new Date(kayit.bitisTarihi).toLocaleDateString("tr-TR") : "-"}</span></div>
-                                <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">DURUM</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;"><i class="fa-solid fa-check"></i> TAMAMLANDI</span></div>
-                            </div>
+                        <div class="tam-stat-grid">
+                            <div class="tam-stat-item"><span class="tam-stat-label">ANLAŞMA ÜCRETİ</span><span class="tam-stat-value" style="color:var(--accent-red);">${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                            <div class="tam-stat-item"><span class="tam-stat-label">TOPLAM KAR</span><span class="tam-stat-value" style="color:${karRenk};">${toplamKar.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                            <div class="tam-stat-item"><span class="tam-stat-label">KAR %</span><span class="tam-stat-value" style="color:${karYuzdeRenkKart};">%${karYuzde}</span></div>
+                            <div class="tam-stat-item"><span class="tam-stat-label">TOPLAM GİDER</span><span class="tam-stat-value" style="color:var(--accent-red);">${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                            <div class="tam-stat-item"><span class="tam-stat-label">TAHSİLAT</span><span class="tam-stat-value" style="color:var(--btn-green);">${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                            <div class="tam-stat-item"><span class="tam-stat-label">ÖDENEN</span><span class="tam-stat-value" style="color:var(--btn-green);">${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                            <div class="tam-stat-item"><span class="tam-stat-label">KALAN ÖDEME</span><span class="tam-stat-value" style="color:var(--accent-red);">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
                         </div>
 
-                        <div style="margin-top:6px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                                <span style="font-weight:700; font-size:13px; color:var(--btn-green);"><i class="fa-solid fa-list"></i> Tahsilatlar</span>
-                            </div>
+                        <div class="tam-stat-grid" style="margin-top:-4px; grid-template-columns:repeat(4,1fr);">
+                            <div class="tam-stat-item"><span class="tam-stat-label">NET</span><span class="tam-stat-value" style="color:${netRenk};">${netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2})} ₺</span></div>
+                            <div class="tam-stat-item"><span class="tam-stat-label">ANLAŞMA TARİHİ</span><span class="tam-stat-value" style="color:var(--ht-text); font-size:13px;">${basTarih ? new Date(basTarih).toLocaleDateString("tr-TR") : "-"}</span></div>
+                            <div class="tam-stat-item"><span class="tam-stat-label">BİTİŞ ONAY TARİHİ</span><span class="tam-stat-value" style="color:var(--btn-green); font-size:13px;">${kayit.bitisTarihi ? new Date(kayit.bitisTarihi).toLocaleDateString("tr-TR") : "-"}</span></div>
+                            <div class="tam-stat-item"><span class="tam-stat-label">DURUM</span><span class="tam-stat-value" style="color:var(--btn-green); font-size:13px;"><i class="fa-solid fa-check-circle"></i> TAMAMLANDI</span></div>
+                        </div>
+
+                        <div class="tam-section">
+                            <div class="tam-section-title" style="color:var(--btn-green);"><i class="fa-solid fa-arrow-down"></i> Tahsilatlar</div>
                             ${(() => {
                                 const alacakKalemler = kayit.kalemler.filter(k => k.tip === "alacak");
-                                if(alacakKalemler.length === 0) return '<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">Henüz tahsilat kalemi bulunmuyor.</p>';
-                                let tbl = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr style="background:var(--bg-main);"><th style="padding:8px 6px; text-align:left; font-size:11px;">Açıklama</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Tutar</th><th style="padding:8px 6px; text-align:left; font-size:11px;">Tarih</th></tr></thead><tbody>';
+                                if(alacakKalemler.length === 0) return '<p style="font-size:12px; color:var(--ht-text-light); font-style:italic; padding:4px 20px;">Henüz tahsilat kalemi bulunmuyor.</p>';
+                                let tbl = '<table class="tam-table"><thead><tr><th style="padding:7px 6px; text-align:left;">Açıklama</th><th style="padding:7px 6px; text-align:right;">Tutar</th><th style="padding:7px 6px; text-align:left;">Tarih</th></tr></thead><tbody>';
                                 alacakKalemler.forEach(k => {
-                                    tbl += '<tr><td style="padding:6px; font-size:12px;">' + (k.aciklama || "-") + '</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:700; color:var(--btn-green);">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; font-size:11px;">' + (k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-") + '</td></tr>';
+                                    tbl += '<tr><td style="padding:6px;">' + (k.aciklama || "-") + '</td><td style="padding:6px; text-align:right; font-weight:700; color:var(--btn-green);">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px;">' + (k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-") + '</td></tr>';
                                 });
                                 tbl += '</tbody></table>';
                                 return tbl;
                             })()}
                         </div>
 
-                        <div style="margin-top:12px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                                <span style="font-weight:700; font-size:13px; color:var(--accent-red);"><i class="fa-solid fa-list"></i> Ödemeler</span>
-                            </div>
+                        <div class="tam-section">
+                            <div class="tam-section-title" style="color:var(--accent-red);"><i class="fa-solid fa-arrow-up"></i> Ödemeler</div>
                             ${(() => {
                                 const verecekKalemler = kayit.kalemler.filter(k => k.tip !== "alacak");
-                                if(verecekKalemler.length === 0) return '<p style="font-size:12px; color:var(--text-light); font-style:italic; padding:8px;">Henüz ödeme kalemi bulunmuyor.</p>';
-                                let tbl = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr style="background:var(--bg-main);"><th style="padding:8px 6px; text-align:left; font-size:11px;">Proje / Hizmet Dalı</th><th style="padding:8px 6px; text-align:left; font-size:11px;">Kişi / Firma</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Toplam</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Ödenen</th><th style="padding:8px 6px; text-align:right; font-size:11px;">Kalan</th><th style="padding:8px 6px; text-align:left; font-size:11px;">Giriş Tarihi</th></tr></thead><tbody>';
+                                if(verecekKalemler.length === 0) return '<p style="font-size:12px; color:var(--ht-text-light); font-style:italic; padding:4px 20px;">Henüz ödeme kalemi bulunmuyor.</p>';
+                                let tbl = '<table class="tam-table"><thead><tr><th style="padding:7px 6px; text-align:left;">Proje / Hizmet Dalı</th><th style="padding:7px 6px; text-align:left;">Kişi / Firma</th><th style="padding:7px 6px; text-align:right;">Toplam</th><th style="padding:7px 6px; text-align:right;">Ödenen</th><th style="padding:7px 6px; text-align:right;">Kalan</th><th style="padding:7px 6px; text-align:left;">Giriş Tarihi</th></tr></thead><tbody>';
                                 verecekKalemler.forEach(k => {
                                     const odenen = k.odenenTutar || 0;
                                     const kalan = k.tutar - odenen;
                                     const girisTarih = k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-";
-                                    tbl += '<tr><td style="padding:6px; font-size:12px;">' + (k.dal || k.aciklama || "-") + '</td><td style="padding:6px; font-size:11px; color:var(--text-light);">' + (k.kisi || "-") + '</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:700;">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:600; color:var(--btn-green);">' + odenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; font-size:12px; text-align:right; font-weight:600; color:var(--accent-red);">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; font-size:11px; color:var(--text-light);">' + girisTarih + '</td></tr>';
+                                    tbl += '<tr><td style="padding:6px;">' + (k.dal || k.aciklama || "-") + '</td><td style="padding:6px; color:var(--ht-text-light);">' + (k.kisi || "-") + '</td><td style="padding:6px; text-align:right; font-weight:700;">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; text-align:right; font-weight:600; color:var(--btn-green);">' + odenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px; text-align:right; font-weight:600; color:var(--accent-red);">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺</td><td style="padding:6px;">' + girisTarih + '</td></tr>';
                                     const kayitlar = k.odemeKayitlari || [];
                                     if(kayitlar.length > 0) {
-                                        tbl += '<tr><td colspan="6" style="padding:2px 8px 8px 8px;"><div style="font-size:11px; background:var(--bg-main); border-radius:4px; padding:6px 10px; border:1px solid var(--border-color);">';
-                                        tbl += '<span style="font-weight:700; font-size:10px; color:var(--text-light); display:block; margin-bottom:4px;">ÖDEME GEÇMİŞİ</span>';
+                                        tbl += '<tr><td colspan="6" class="tam-pay-cell"><div class="tam-pay-history"><span class="tam-pay-history-title">ÖDEME GEÇMİŞİ</span>';
                                         kayitlar.forEach(od => {
                                             const odemeTarih = od.tarih ? new Date(od.tarih).toLocaleDateString("tr-TR") : "-";
-                                            tbl += '<div style="display:flex; align-items:center; gap:8px; margin:3px 0; flex-wrap:wrap;">';
-                                            tbl += '<span style="font-size:12px;">• ' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺ <span style="color:var(--text-light);">(' + odemeTarih + ')</span></span>';
-                                            tbl += '</div>';
+                                            tbl += '<div class="tam-pay-history-item"><span>• ' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺ <span style="color:var(--ht-text-light);">(' + odemeTarih + ')</span></span></div>';
                                         });
                                         tbl += '</div></td></tr>';
                                     }
@@ -5124,10 +5119,10 @@ function gorevMailGonder(gorev) {
                             })()}
                         </div>
 
-                        <div class="card-actions">
-                            <button class="btn-warning" onclick="event.stopPropagation(); tamamlananIsMuhasebeGeriAl(${kayit.id})">↩ Geri Al</button>
-                            <button class="btn btn-pdf-red" onclick="event.stopPropagation(); isMuhasebePdfUret(${kayit.id})"><i class="fa-regular fa-file-lines"></i> PDF</button>
-                            <button class="btn-danger" onclick="event.stopPropagation(); tamamlananIsMuhasebeSil(${kayit.id})">Sil</button>
+                        <div class="tam-actions">
+                            <button class="btn-back" onclick="event.stopPropagation(); tamamlananIsMuhasebeGeriAl(${kayit.id})"><i class="fa-solid fa-rotate-left"></i> Geri Al</button>
+                            <button class="btn-pdf" onclick="event.stopPropagation(); isMuhasebePdfUret(${kayit.id})"><i class="fa-regular fa-file-lines"></i> PDF</button>
+                            <button class="btn-delete" onclick="event.stopPropagation(); tamamlananIsMuhasebeSil(${kayit.id})"><i class="fa-solid fa-trash-can"></i> Sil</button>
                         </div>
                         </div>
                     </div>
@@ -5138,14 +5133,18 @@ function gorevMailGonder(gorev) {
 
             Object.keys(acikKartlar).forEach(function(id) {
                 var content = document.getElementById("tamIsMuhKartContent_" + id);
-                if(content) content.style.display = "block";
+                if(content) content.classList.add("open");
+                var chevron = document.getElementById("tamChevron_" + id);
+                if(chevron) chevron.classList.add("open");
             });
         }
 
         function tamIsMuhKartToggle(id) {
             const content = document.getElementById("tamIsMuhKartContent_" + id);
             if(content) {
-                content.style.display = content.style.display === "none" ? "block" : "none";
+                content.classList.toggle("open");
+                const chevron = document.getElementById("tamChevron_" + id);
+                if(chevron) chevron.classList.toggle("open");
             }
         }
 

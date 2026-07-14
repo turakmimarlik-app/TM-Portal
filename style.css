@@ -618,13 +618,58 @@
         #tamamlanan-is-muhasebeleri-page .search-box { width:100% !important; max-width:100% !important; padding:9px 14px 9px 36px !important; border:1px solid var(--ht-border) !important; border-radius:8px !important; background:var(--ht-card) !important; color:var(--ht-text) !important; font-size:12px !important; box-sizing:border-box !important; margin-bottom:14px !important; }
         #tamamlanan-is-muhasebeleri-page .search-box:focus { border-color:var(--ht-accent) !important; }
         #tamamlanan-is-muhasebeleri-page .portfolio-card { padding:16px 0 !important; border:1px solid var(--ht-border) !important; border-top:3px solid var(--ht-accent) !important; background:var(--ht-card) !important; border-radius:12px !important; box-shadow:0 4px 16px rgba(0,0,0,0.2) !important; transition:0.2s !important; display:flex; flex-direction:column; overflow:hidden; }
-        #tamamlanan-is-muhasebeleri-page .portfolio-card:hover { transform:translateY(-2px) !important; border-color:var(--ht-accent) !important; box-shadow:0 8px 24px rgba(0,0,0,0.25) !important; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card:hover { transform:translateY(-2px) !important; border-color:var(--accent-red) !important; box-shadow:0 8px 24px rgba(0,0,0,0.35) !important; }
         #tamamlanan-is-muhasebeleri-page .portfolio-card .card-main-header { padding:0 20px !important; margin-bottom:6px !important; }
         #tamamlanan-is-muhasebeleri-page .portfolio-card h4 { margin:0; font-size:15px; font-weight:700; color:var(--ht-text); }
         #tamamlanan-is-muhasebeleri-page .portfolio-card .card-actions { padding:10px 20px 0 20px; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card [id^="tamIsMuhKartContent_"] { display:none; overflow:hidden; }
+        #tamamlanan-is-muhasebeleri-page .portfolio-card [id^="tamIsMuhKartContent_"].open { display:block; animation:tamFadeIn 0.25s ease; }
+        @keyframes tamFadeIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
         #tamamlanan-is-muhasebeleri-page .portfolio-card [id^="tamIsMuhKartContent_"] > * { padding-left:20px; padding-right:20px; }
         #tamamlanan-is-muhasebeleri-page .portfolio-card [id^="tamIsMuhKartContent_"] .inline-form { margin-left:20px; margin-right:20px; width:auto; }
         #tamamlanan-is-muhasebeleri-page .portfolio-card [id^="tamIsMuhKartContent_"] table { width:calc(100% + 40px); margin-left:-20px; }
+        /* --- Modern redesign: stats grid --- */
+        #tamamlanan-is-muhasebeleri-page .tam-stat-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; background:var(--ht-card); padding:10px 14px; border-radius:10px; margin:4px 0 10px 0; border:1px solid var(--ht-border); }
+        #tamamlanan-is-muhasebeleri-page .tam-stat-item { display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 2px; text-align:center; }
+        #tamamlanan-is-muhasebeleri-page .tam-stat-item+.tam-stat-item { border-left:1px solid var(--ht-border); }
+        #tamamlanan-is-muhasebeleri-page .tam-stat-label { font-size:9px; font-weight:700; color:var(--ht-text-light); letter-spacing:0.5px; text-transform:uppercase; line-height:1.3; }
+        #tamamlanan-is-muhasebeleri-page .tam-stat-value { font-size:14px; font-weight:800; line-height:1.3; }
+        /* --- Modern redesign: sections --- */
+        #tamamlanan-is-muhasebeleri-page .tam-section { margin-top:10px; }
+        #tamamlanan-is-muhasebeleri-page .tam-section-title { display:flex; align-items:center; gap:6px; font-weight:700; font-size:13px; margin-bottom:6px; padding:0 20px; }
+        #tamamlanan-is-muhasebeleri-page .tam-table { width:100%; border-collapse:collapse; font-size:12px; }
+        #tamamlanan-is-muhasebeleri-page .tam-table thead th { padding:7px 6px; font-size:10px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.3px; border-bottom:1px solid var(--ht-border); background:rgba(255,255,255,0.03); }
+        #tamamlanan-is-muhasebeleri-page .tam-table tbody td { padding:6px; border-bottom:1px solid rgba(255,255,255,0.04); }
+        #tamamlanan-is-muhasebeleri-page .tam-table tbody tr:last-child td { border-bottom:none; }
+        #tamamlanan-is-muhasebeleri-page .tam-table tbody tr:hover td { background:rgba(255,255,255,0.04); }
+        #tamamlanan-is-muhasebeleri-page .tam-table .tam-pay-history { background:rgba(255,255,255,0.03); border-radius:6px; padding:6px 10px; border:1px solid var(--ht-border); font-size:11px; margin:2px 0; }
+        #tamamlanan-is-muhasebeleri-page .tam-table .tam-pay-history-title { font-weight:700; font-size:9px; color:var(--ht-text-light); display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.3px; }
+        #tamamlanan-is-muhasebeleri-page .tam-table .tam-pay-history-item { display:flex; align-items:center; gap:6px; margin:2px 0; flex-wrap:wrap; }
+        /* --- Modern redesign: actions --- */
+        #tamamlanan-is-muhasebeleri-page .tam-actions { display:flex; justify-content:flex-end; gap:8px; padding:10px 20px 0 20px; border-top:1px solid var(--ht-border); margin-top:10px; }
+        #tamamlanan-is-muhasebeleri-page .tam-actions button { padding:6px 14px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; border:none; font-family:inherit; display:inline-flex; align-items:center; gap:5px; }
+        #tamamlanan-is-muhasebeleri-page .tam-actions .btn-back { background:var(--ht-accent); color:#0d1b2a; }
+        #tamamlanan-is-muhasebeleri-page .tam-actions .btn-back:hover { background:#b8d0e4; transform:translateY(-1px); }
+        #tamamlanan-is-muhasebeleri-page .tam-actions .btn-pdf { background:#c62828; color:#fff; }
+        #tamamlanan-is-muhasebeleri-page .tam-actions .btn-pdf:hover { background:#e53935; transform:translateY(-1px); }
+        #tamamlanan-is-muhasebeleri-page .tam-actions .btn-delete { background:rgba(198,40,40,0.15); color:#ef5350; }
+        #tamamlanan-is-muhasebeleri-page .tam-actions .btn-delete:hover { background:rgba(198,40,40,0.3); transform:translateY(-1px); }
+        /* --- Modern redesign: header badge --- */
+        #tamamlanan-is-muhasebeleri-page .tam-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.3px; }
+        #tamamlanan-is-muhasebeleri-page .tam-badge-complete { background:rgba(76,175,80,0.2); color:#66bb6a; border:1px solid rgba(76,175,80,0.3); }
+        #tamamlanan-is-muhasebeleri-page .tam-badge-id { background:rgba(255,255,255,0.06); color:var(--ht-text); border:1px solid var(--ht-border); }
+        #tamamlanan-is-muhasebeleri-page .tam-header-info { font-size:12px; color:var(--ht-text-light); display:flex; gap:14px; flex-wrap:wrap; }
+        #tamamlanan-is-muhasebeleri-page .tam-header-info b { color:var(--ht-text-light); font-weight:600; }
+        /* summary bar */
+        #tamamlanan-is-muhasebeleri-page .tam-summary-bar { display:flex; gap:20px; background:var(--ht-card); padding:14px 20px; border-radius:10px; border:1px solid var(--ht-border); margin-bottom:18px; justify-content:space-around; align-items:center; }
+        #tamamlanan-is-muhasebeleri-page .tam-summary-bar .tam-summary-item { text-align:center; }
+        #tamamlanan-is-muhasebeleri-page .tam-summary-bar .tam-summary-label { font-size:9px; color:var(--ht-text-light); font-weight:700; display:block; text-transform:uppercase; letter-spacing:0.5px; }
+        #tamamlanan-is-muhasebeleri-page .tam-summary-bar .tam-summary-value { font-weight:800; font-size:20px; color:var(--accent-red); }
+        /* payment history inside table */
+        #tamamlanan-is-muhasebeleri-page .tam-pay-cell { padding:2px 8px 8px 8px; }
+        /* header chevron */
+        #tamamlanan-is-muhasebeleri-page .tam-chevron { font-size:11px; color:var(--ht-text-light); transition:transform 0.25s ease; }
+        #tamamlanan-is-muhasebeleri-page .tam-chevron.open { transform:rotate(90deg); }
 
         /* ===== TM FİYAT LİSTESİ — FİYAT KARTLARI ===== */
         #tm-fiyatlar-page { }
