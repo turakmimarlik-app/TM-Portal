@@ -437,7 +437,6 @@ function gorevMailGonder(gorev) {
             musteriEtiketleriniDoldur();
             ioStatusSecenekleriniDoldur();
             csInit();var cso=new MutationObserver(function(m){for(var i=0;i<m.length;i++){if(m[i].addedNodes.length){csInit();break;}}});cso.observe(document.body,{childList:true,subtree:true});
-            function ddCardSync(){var p=['is-muhasebe-page','tamamlanan-is-muhasebeleri-page'];p.forEach(function(id){var pg=document.getElementById(id);if(!pg)return;pg.querySelectorAll('.portfolio-card.is-muh-card').forEach(function(c){c.classList.remove('dd-open');});var od=pg.querySelector('.cs-dropdown.open');if(od){var ca=od.closest('.portfolio-card.is-muh-card');if(ca)ca.classList.add('dd-open');}});}var ddObs=new MutationObserver(ddCardSync);ddObs.observe(document.body,{attributes:true,attributeFilter:['class'],subtree:true});ddCardSync();
             document.addEventListener('dragstart', dashDragBasla);
             document.addEventListener('dragover', dashDragOver);
             document.addEventListener('dragleave', dashDragLeave);
