@@ -1,7 +1,9 @@
-        var APP_VERSION = 'V1.34.3';
+        var APP_VERSION = 'V1.35.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
+
+function htAttrEsc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
         /* --- Ses Bildirim Sistemi --- */
 function tmSesCal(tur) {
@@ -1896,8 +1898,9 @@ function gorevMailGonder(gorev) {
             if (!h) {
                 konteyner.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:12px;color:var(--text-light);font-size:12px;">Henüz kısayol bulunmuyor.</div>';
             } else {
-                konteyner.innerHTML = h;
-            }
+            konteyner.innerHTML = h;
+            htIslemFiltrele();
+        }
         }
 
         /* ================= PORTFÖY MODÜLÜ (MÜŞTERİLER) MOTORU ================= */
@@ -7035,9 +7038,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 if(i.islem === "GELEN" || (i.islem === "GİDEN" && i.hedefId && (i.hedefId === 1 || i.hedefId === -1))) buAyGelen += i.tutar;
                 else if(i.islem === "GİDEN") buAyGiden += i.tutar;
             });
+            var buAyNet = buAyGelen - buAyGiden;
             document.getElementById("htBuAyGelen").innerText = htTl(buAyGelen);
             document.getElementById("htBuAyGiden").innerText = htTl(buAyGiden);
-            document.getElementById("htBuAyNet").innerText = htTl(buAyGelen - buAyGiden);
+            document.getElementById("htBuAyNet").innerHTML = '<span style="color:'+(buAyNet>=0?'#4CAF50':'#f44336')+'">'+(buAyNet<0?'−':'')+htTl(Math.abs(buAyNet))+'</span>';
         }
 
         function htHesapKartlariGoster() {
@@ -7271,7 +7275,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     }
                 }
                 var cls = gorunenIslem === "GELEN" ? "gelen" : "giden";
-                h += '<div class="ht-islem-kart" data-detay-search="'+(i.aciklama||"").toLowerCase()+' '+gorunenYonPlain.toLowerCase()+'">';
+                h += '<div class="ht-islem-kart" data-detay-search="'+htAttrEsc((i.aciklama||"").toLowerCase()+' '+gorunenYonPlain.toLowerCase())+'">';
                 h += '<div class="ht-islem-kart-ust">';
                 h += '<span class="ht-islem-kart-aciklama">'+i.aciklama+'</span>';
                 h += '<span class="ht-islem-kart-tutar '+cls+'">'+htTl(i.tutar)+'</span>';
@@ -7282,6 +7286,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
             h += '</div>';
             konteyner.innerHTML = h;
+            htDetayIslemFiltrele();
         }
 
         function htDetayIslemFiltrele() {
@@ -7318,7 +7323,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             document.getElementById("htModalIslemTur").value = islem ? islem.islem : "GELEN";
             var selectNereden = document.getElementById("htModalNereden");
             var selectNereye = document.getElementById("htModalNereye");
-            var opts = '<option value="0"><i class="fa-solid fa-globe"></i> HARİCİ</option><option value="-1"><i class="fa-solid fa-money-bill-wave"></i> NAKİT</option>';
+            var opts = '<option value="" disabled selected>SEÇİNİZ</option><option value="0"><i class="fa-solid fa-globe"></i> HARİCİ</option><option value="-1"><i class="fa-solid fa-money-bill-wave"></i> NAKİT</option>';
             db.hesaplar.forEach(function(h) {
                 opts += '<option value="'+h.id+'">'+h.bankaAdi+' - '+h.hesapSahibi+'</option>';
             });
@@ -7328,8 +7333,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 selectNereden.value = islem.hesapId;
                 selectNereye.value = islem.hedefId || "0";
             } else {
-                selectNereden.value = (hesapId || "0");
-                selectNereye.value = "0";
+                selectNereden.value = "";
+                selectNereye.value = "";
             }
             htIslemModalTurDegisti();
             modal.style.display = "flex";
@@ -7344,11 +7349,11 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var neredenDiv = document.getElementById("htModalNereden").closest("div");
             var nereyeDiv = document.getElementById("htModalNereye").closest("div");
             if(tur === "GELEN") {
-                document.getElementById("htModalNereden").value = "0";
+                document.getElementById("htModalNereden").value = "";
                 neredenDiv.style.display = "none";
                 nereyeDiv.style.display = "";
             } else if(tur === "GİDEN") {
-                document.getElementById("htModalNereye").value = "0";
+                document.getElementById("htModalNereye").value = "";
                 neredenDiv.style.display = "";
                 nereyeDiv.style.display = "none";
             } else {
@@ -7390,6 +7395,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var tur = document.getElementById("htModalIslemTur").value;
             var fromId = parseInt(document.getElementById("htModalNereden").value);
             var toId = parseInt(document.getElementById("htModalNereye").value);
+            if(isNaN(fromId) || isNaN(toId)) { tmNotify("Lütfen hesap seçimi yapın!", "error"); return; }
             if(tur === "TRANSFER") {
                 if(fromId === toId || fromId === 0 || toId === 0) { tmNotify("Transfer için geçerli iki hesap seçin!", "error"); return; }
             } else if(tur === "GELEN") {
@@ -7518,15 +7524,15 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     hAdPlain = hesapAdiBulPlain(i.hesapId) + " > " + hesapAdiBulPlain(i.hedefId);
                     ikon = '<i class="fa-solid fa-rotate"></i>';
                 } else if(i.islem === "GELEN") {
-                    hAd = hesapAdiBul(i.hesapId);
-                    hAdPlain = hesapAdiBulPlain(i.hesapId);
+                    hAd = '<i class="fa-solid fa-globe"></i> HARİCİ' + (i.hesapId === -1 ? ' / <i class="fa-solid fa-money-bill-wave"></i> NAKİT' : '') + ' › ' + hesapAdiBul(i.hesapId);
+                    hAdPlain = 'HARİCİ' + (i.hesapId === -1 ? ' / NAKİT' : '') + ' > ' + hesapAdiBulPlain(i.hesapId);
                     ikon = '<i class="fa-solid fa-inbox"></i>';
                 } else {
-                    hAd = (i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ');
-                    hAdPlain = (i.hedefId && i.hedefId !== 0 ? hesapAdiBulPlain(i.hedefId) : 'HARİCİ');
+                    hAd = hesapAdiBul(i.hesapId) + ' › ' + (i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ');
+                    hAdPlain = hesapAdiBulPlain(i.hesapId) + ' > ' + (i.hedefId && i.hedefId !== 0 ? hesapAdiBulPlain(i.hedefId) : 'HARİCİ');
                     ikon = '<i class="fa-solid fa-paper-plane"></i>';
                 }
-                h += '<div class="ht-islem-kart" data-search="'+(i.aciklama||"").toLowerCase()+' '+hAdPlain.toLowerCase()+'">';
+                h += '<div class="ht-islem-kart" data-search="'+htAttrEsc((i.aciklama||"").toLowerCase()+' '+hAdPlain.toLowerCase())+'">';
                 h += '<div class="ht-islem-kart-ust">';
                 h += '<span class="ht-islem-kart-aciklama">'+i.aciklama+'</span>';
                 h += '<span class="ht-islem-kart-tutar '+cls+'">'+htTl(i.tutar)+'</span>';
@@ -7617,14 +7623,15 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
         function htPdfRaporOlustur() {
             var hesapId = parseInt(document.getElementById("htPdfHesap").value);
-            var gizliId = document.getElementById("htPdfHesapId").value;
-            if(gizliId && parseInt(gizliId) === hesapId && gizliId !== "0") { } 
             var aralik = htPdfTarihAraligiHesapla();
             if(!aralik) return;
+            aralik.bas.setHours(0,0,0,0);
+            aralik.bitis.setHours(23,59,59,999);
             var db = htVeriYukle();
             var islemler = db.islemler.filter(function(i) {
                 if(!i.tarih) return false;
                 var t = new Date(i.tarih);
+                if(isNaN(t.getTime())) return false;
                 if(hesapId !== 0 && i.hesapId !== hesapId && i.hedefId !== hesapId) return false;
                 return t >= aralik.bas && t <= aralik.bitis;
             });
@@ -7648,100 +7655,125 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var donemStr = aralik.bas.toLocaleDateString("tr-TR") + " - " + aralik.bitis.toLocaleDateString("tr-TR");
             var hesapStr = hesapId === 0 ? "TÜM HESAPLAR" : hesapAdiBul(hesapId);
 
-            var satirlar = '';
-            islemler.forEach(function(i) {
-                var ikon = i.islem === "GELEN" ? '<i class="fa-solid fa-inbox"></i>' : (i.islem === "GİDEN" ? '<i class="fa-solid fa-paper-plane"></i>' : '<i class="fa-solid fa-rotate"></i>');
-                var hAd = i.islem === "TRANSFER" ? hesapAdiBul(i.hesapId)+" › "+hesapAdiBul(i.hedefId) : (i.islem === "GELEN" ? hesapAdiBul(i.hesapId) : (i.hedefId&&i.hedefId!==0?hesapAdiBul(i.hedefId):"HARİCİ"));
-                var renk = i.islem === "GELEN" ? "#2E7D32" : (i.islem === "GİDEN" ? "#9E2A2B" : "#a0b8cc");
-                satirlar += '<tr>';
-                satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;text-align:center;font-size:9px;">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</td>';
-                satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;font-size:9px;">'+i.aciklama+'</td>';
-                satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;font-size:8px;">'+hAd+'</td>';
-                satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;font-size:9px;font-weight:700;text-align:center;color:'+renk+';">'+i.islem+'</td>';
-                satirlar += '<td style="padding:5px 8px;border:1px solid #ddd;font-size:9px;text-align:right;font-weight:700;color:'+renk+';">'+(i.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
-                satirlar += '</tr>';
-            });
-
             var logoData = localStorage.getItem("tm_sirket_logo");
-            var logoHtml = (logoData && logoData !== "null" && logoData.length > 100)
-                ? '<img src="'+logoData+'" style="height:12mm;width:auto;vertical-align:middle;" alt="Logo">' : '';
+            var firmaAd = (function(){ try{return JSON.parse(localStorage.getItem("tm_sirket_bilgileri"))||{};}catch(e){return {};} })()["ad"] || "TURAK MİMARLIK";
 
-            var fb = (function(){ try{return JSON.parse(localStorage.getItem("tm_sirket_bilgileri"))||{};}catch(e){return {};} })();
-            var firmaAd = fb.ad || "TURAK MİMARLIK";
+            var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
 
-            var sayfaHtml = `
-                <div style="width:210mm;min-height:297mm;padding:5mm 7mm;box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;background:#fff;color:#222;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:2.5mm;border-bottom:2.5px solid #1a1a2e;margin-bottom:3mm;">
-                        <div>`+logoHtml+`<div style="font-size:16px;font-weight:900;color:#1a1a2e;letter-spacing:2px;">`+firmaAd+`</div></div>
-                        <div style="text-align:right;">
-                            <div style="font-size:18px;font-weight:900;color:#1a3a5c;letter-spacing:1px;">`+baslik+`</div>
-                            <div style="font-size:9px;color:#888;font-weight:600;">`+donemStr+`</div>
-                        </div>
-                    </div>
-                    <div style="display:flex;gap:4mm;margin-bottom:3mm;">
-                        <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;background:#fafafa;text-align:center;">
-                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">RAPORLANAN HESAP</div>
-                            <div style="font-size:12px;font-weight:800;color:#1a1a2e;">`+hesapStr+`</div>
-                        </div>
-                        <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;background:#fafafa;text-align:center;">
-                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM İŞLEM</div>
-                            <div style="font-size:12px;font-weight:800;color:#1a1a2e;">`+islemler.length+` adet</div>
-                        </div>
-                    </div>
-                    <div style="display:flex;gap:4mm;margin-bottom:3mm;">
-                        <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;">
-                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM GELİR</div>
-                            <div style="font-size:16px;font-weight:900;color:#2E7D32;">`+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+` ₺</div>
-                        </div>
-                        <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;">
-                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">TOPLAM GİDER</div>
-                            <div style="font-size:16px;font-weight:900;color:#9E2A2B;">`+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+` ₺</div>
-                        </div>
-                        <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2mm 3mm;text-align:center;background:`+(netDegisim>=0?'rgba(46,125,50,0.06)':'rgba(158,42,43,0.06)')+`;">
-                            <div style="font-size:8px;font-weight:800;color:#888;letter-spacing:1px;">NET DEĞİŞİM</div>
-                            <div style="font-size:16px;font-weight:900;color:`+(netDegisim>=0?'#2E7D32':'#9E2A2B')+`;">`+netDegisim.toLocaleString('tr-TR',{minFractionDigits:2})+` ₺</div>
-                        </div>
-                    </div>
-                    <div style="border:1.5px solid #e0e0e0;border-radius:3px;overflow:hidden;">
-                        <table style="width:100%;border-collapse:collapse;font-size:9px;">
-                            <thead>
-                                <tr style="background:#1a1a2e;color:#fff;">
-                                    <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;width:14%;">TARİH</th>
-                                    <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;">AÇIKLAMA</th>
-                                    <th style="padding:2mm 3mm;text-align:left;font-size:8px;letter-spacing:0.5px;width:22%;">HESAP</th>
-                                    <th style="padding:2mm 3mm;text-align:center;font-size:8px;letter-spacing:0.5px;width:10%;">TÜR</th>
-                                    <th style="padding:2mm 3mm;text-align:right;font-size:8px;letter-spacing:0.5px;width:18%;">TUTAR</th>
-                                </tr>
-                            </thead>
-                            <tbody>`+satirlar+`</tbody>
-                        </table>
-                    </div>
-                    <div style="border-top:2px solid #1a1a2e;padding-top:1.5mm;margin-top:4mm;text-align:center;">
-                        <div style="font-size:7px;color:#888;line-height:1.5;">TM-Portal Hesap Takip Sistemi · Rapor: `+donemStr+` · `+hesapStr+`</div>
-                    </div>
-                </div>
-            `;
+            try {
+                if(logoData && logoData !== "null" && logoData.length > 100) {
+                    doc.addImage(logoData, 'PNG', 10, 8, 30, 10);
+                }
+            } catch(e) {}
+            doc.setFontSize(18);
+            doc.setFont(undefined,'bold');
+            doc.setTextColor(26,26,46);
+            doc.text(firmaAd, logoData&&logoData.length>100?42:10, 15);
+            doc.setFontSize(9);
+            doc.setFont(undefined,'normal');
+            doc.setTextColor(136,136,136);
+            doc.text(donemStr, doc.internal.pageSize.width-10, 12, {align:'right'});
+            doc.setFontSize(14);
+            doc.setFont(undefined,'bold');
+            doc.setTextColor(26,58,92);
+            doc.text(baslik, doc.internal.pageSize.width-10, 18, {align:'right'});
 
-            var sayfaEl = document.createElement("div");
-            sayfaEl.style.cssText = "position:fixed;left:-9999px;top:0;width:210mm;min-height:297mm;overflow:hidden;z-index:99999;";
-            sayfaEl.innerHTML = sayfaHtml;
-            document.body.appendChild(sayfaEl);
+            doc.setDrawColor(26,26,46);
+            doc.setLineWidth(0.4);
+            doc.line(10, 23, 200, 23);
+            doc.setFontSize(6);
+            doc.setFont(undefined,'normal');
+            doc.setTextColor(136,136,136);
+            doc.text("RAPORLANAN HESAP: " + hesapStr, 10, 27);
 
-            tmLoadingGoster("Rapor oluşturuluyor...");
-            html2canvas(sayfaEl, {scale:4,useCORS:true,logging:false,width:793,height:1122}).then(function(cv){
-                var dt = cv.toDataURL('image/jpeg',0.92);
-                var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
-                doc.addImage(dt,'JPEG',0,0,210,297);
-                doc.save("HESAP_RAPORU_" + hesapStr.replace(/[^a-zA-Z0-9]/g,"_") + ".pdf");
-                document.body.removeChild(sayfaEl);
-                tmLoadingGizle();
-                htPdfModalKapat();
-                tmNotify("Rapor PDF olarak kaydedildi.", "success");
-            }).catch(function(e){
-                tmLoadingGizle();
-                tmNotify("PDF oluşturulurken hata: " + (e.message||e), "error");
-                try { document.body.removeChild(sayfaEl); } catch(ex) { console.error(ex); }
+            var yBas = 31;
+            var kutuGenislik = 58;
+            var kutuAralik = 4;
+            var kutuStart = 10;
+            var kutuRenkler = [
+                [250,250,250], [250,250,250], [250,250,250]
+            ];
+            var kutuBilgiler = [
+                { label:"TOPLAM GELİR", deger:toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', renk:[46,125,50] },
+                { label:"TOPLAM GİDER", deger:toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', renk:[158,42,43] },
+                { label:"NET DEĞİŞİM", deger:netDegisim.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', renk:netDegisim>=0?[46,125,50]:[158,42,43] }
+            ];
+            for(var ki=0; ki<3; ki++) {
+                var kx = kutuStart + ki*(kutuGenislik+kutuAralik);
+                doc.setDrawColor(224,224,224);
+                doc.setFillColor(kutuRenkler[ki][0], kutuRenkler[ki][1], kutuRenkler[ki][2]);
+                doc.roundedRect(kx, yBas, kutuGenislik, 14, 1, 1, 'FD');
+                doc.setFontSize(6);
+                doc.setFont(undefined,'bold');
+                doc.setTextColor(136,136,136);
+                doc.text(kutuBilgiler[ki].label, kx+2, yBas+4);
+                doc.setFontSize(10);
+                doc.setTextColor(kutuBilgiler[ki].renk[0], kutuBilgiler[ki].renk[1], kutuBilgiler[ki].renk[2]);
+                doc.text(kutuBilgiler[ki].deger, kx+2, yBas+11);
+            }
+            doc.setFontSize(6);
+            doc.setFont(undefined,'normal');
+            doc.setTextColor(136,136,136);
+            doc.text("Toplam İşlem: " + islemler.length + " adet", 200-10, yBas+4, {align:'right'});
+
+            var tableY = yBas + 18;
+            var tableHead = [
+                { header:'TARİH', dataKey:'tarih' },
+                { header:'AÇIKLAMA', dataKey:'aciklama' },
+                { header:'NEREDEN → NEREYE', dataKey:'hesap' },
+                { header:'TÜR', dataKey:'islem' },
+                { header:'TUTAR', dataKey:'tutar' }
+            ];
+            var tableData = islemler.map(function(i) {
+                var hStr = '';
+                if(i.islem === "TRANSFER") {
+                    hStr = hesapAdiBul(i.hesapId) + " → " + hesapAdiBul(i.hedefId);
+                } else if(i.islem === "GELEN") {
+                    hStr = 'HARİCİ → ' + hesapAdiBul(i.hesapId);
+                } else {
+                    hStr = hesapAdiBul(i.hesapId) + ' → ' + (i.hedefId && i.hedefId!==0 ? hesapAdiBul(i.hedefId) : 'HARİCİ');
+                }
+                var renk = i.islem === "GELEN" ? [46,125,50] : (i.islem === "GİDEN" ? [158,42,43] : [160,184,204]);
+                return {
+                    tarih: i.tarih ? new Date(i.tarih).toLocaleDateString("tr-TR") : "-",
+                    aciklama: i.aciklama || "",
+                    hesap: hStr,
+                    islem: i.islem,
+                    tutar: { text: (i.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', color: renk }
+                };
             });
+
+            doc.autoTable({
+                head: [tableHead.map(function(h){return h.header;})],
+                body: tableData.map(function(r){ return [r.tarih, r.aciklama, r.hesap, r.islem, r.tutar]; }),
+                startY: tableY,
+                theme: 'grid',
+                headStyles: { fillColor:[26,26,46], textColor:255, fontSize:7, fontStyle:'bold' },
+                bodyStyles: { fontSize:7 },
+                columnStyles: {
+                    0: { cellWidth:22 },
+                    2: { cellWidth:45 },
+                    3: { cellWidth:15 },
+                    4: { cellWidth:25, halign:'right' }
+                },
+                didParseCell: function(data) {
+                    if(data.column.index === 4 && data.cell.raw) {
+                        data.cell.styles.textColor = data.cell.raw.color || [0,0,0];
+                    }
+                }
+            });
+
+            var sonY = doc.lastAutoTable.finalY || tableY;
+            doc.setDrawColor(26,26,46);
+            doc.setLineWidth(0.3);
+            doc.line(10, sonY+5, 200, sonY+5);
+            doc.setFontSize(6);
+            doc.setTextColor(136,136,136);
+            doc.text('TM-Portal Hesap Takip Sistemi · Rapor: '+donemStr+' · '+hesapStr, 105, sonY+9, {align:'center'});
+
+            doc.save("HESAP_RAPORU_" + hesapStr.replace(/[^a-zA-Z0-9]/g,"_") + ".pdf");
+            tmNotify("Rapor PDF olarak kaydedildi.", "success");
+            htPdfModalKapat();
         }
         /* ================= TM FİYAT LİSTESİ — FİYAT KARTLARI ================= */
         const TMF_KART_KEY = 'tm_kategorili_fiyatlar';
