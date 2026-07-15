@@ -7036,17 +7036,6 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
         function htSayfayiYukle() {
             htVeriYukle();
-            if(!localStorage.getItem("tm_ht_test_v1.36.7")) {
-                var _db = htVeriYukle();
-                var _maxId = _db.islemler.reduce(function(m,i){return Math.max(m,i.id||0);},0);
-                var _eklenecek = HT_ORNEK_ISLEMLER.map(function(i){ i.id = ++_maxId; return i; });
-                _db.islemler = _db.islemler.concat(_eklenecek);
-                function _bh(islemler, hesapId){var b=0;islemler.forEach(function(i){if(i.islem==="GELEN"&&i.hesapId===hesapId)b+=i.tutar;else if(i.islem==="GİDEN"&&i.hesapId===hesapId)b-=i.tutar;else if(i.islem==="TRANSFER"&&i.hesapId===hesapId)b-=i.tutar;else if(i.islem==="TRANSFER"&&i.hedefId===hesapId)b+=i.tutar;else if(i.islem==="GİDEN"&&i.hedefId===hesapId)b+=i.tutar;});return Math.round(b*100)/100;}
-                _db.hesaplar.forEach(function(h){h.bakiye=_bh(_db.islemler,h.id);});
-                _db.nakit=0;_db.islemler.forEach(function(i){if(i.islem==="GİDEN"&&i.hedefId===-1)_db.nakit-=i.tutar;});
-                htVeriKaydet(_db);
-                origSetItem("tm_ht_test_v1.36.7","1");
-            }
             HT_AKTIF_DETAY_HESAP = null;
             document.getElementById("htHesapDetayAlan").style.display = "none";
             document.getElementById("htAnaSayfa").style.display = "";
