@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.36.4';
+        var APP_VERSION = 'V1.36.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7036,7 +7036,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
         function htSayfayiYukle() {
             htVeriYukle();
-            if(!localStorage.getItem("tm_ht_test_v1.36.4")) {
+            if(!localStorage.getItem("tm_ht_test_v1.36.5")) {
                 var _db = htVeriYukle();
                 var _maxId = _db.islemler.reduce(function(m,i){return Math.max(m,i.id||0);},0);
                 var _eklenecek = HT_ORNEK_ISLEMLER.map(function(i){ i.id = ++_maxId; return i; });
@@ -7045,7 +7045,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 _db.hesaplar.forEach(function(h){h.bakiye=_bh(_db.islemler,h.id);});
                 _db.nakit=0;_db.islemler.forEach(function(i){if(i.islem==="GİDEN"&&i.hedefId===-1)_db.nakit-=i.tutar;});
                 htVeriKaydet(_db);
-                origSetItem("tm_ht_test_v1.36.4","1");
+                origSetItem("tm_ht_test_v1.36.5","1");
             }
             HT_AKTIF_DETAY_HESAP = null;
             document.getElementById("htHesapDetayAlan").style.display = "none";
@@ -7361,7 +7361,6 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 h += '<span class="ht-islem-kart-tarih">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</span>';
                 h += '<span class="ht-islem-kart-islem '+cls+'">'+gorunenIslem+'</span>';
                 h += '<span class="ht-islem-kart-aksiyon">';
-                h += '<button class="ht-islem-btn ht-islem-btn-edit" onclick="htIslemModalAc('+i.id+')">Düzenle</button>';
                 h += '<button class="ht-islem-btn ht-islem-btn-del" onclick="htIslemSil('+i.id+')">Sil</button>';
                 h += '</span></div>';
             });
@@ -7721,7 +7720,6 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 h += '<span class="ht-islem-kart-tarih">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</span>';
                 h += '<span class="ht-islem-kart-islem '+cls+'">'+i.islem+'</span>';
                 h += '<span class="ht-islem-kart-aksiyon">';
-                h += '<button class="ht-islem-btn ht-islem-btn-edit" onclick="htIslemModalAc('+i.id+')">Düzenle</button>';
                 h += '<button class="ht-islem-btn ht-islem-btn-del" onclick="htIslemSil('+i.id+')">Sil</button>';
                 h += '</span></div>';
             });

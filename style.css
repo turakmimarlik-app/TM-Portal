@@ -417,7 +417,7 @@
 
         /* İşlem Kartları */
         .ht-islem-list { display:flex; flex-direction:column; gap:3px; }
-        .ht-islem-kart { display:grid; grid-template-columns:1fr 90px 1fr auto 1fr 75px 56px auto; align-items:center; gap:4px; padding:7px 12px; background:var(--ht-card); border:1px solid var(--ht-border); border-radius:6px; transition:0.15s; }
+        .ht-islem-kart { display:grid; grid-template-columns:2.5fr 90px 0.8fr auto 0.7fr 75px 56px auto; align-items:center; gap:4px; padding:7px 12px; background:var(--ht-card); border:1px solid var(--ht-border); border-radius:6px; transition:0.15s; }
         .ht-islem-kart:hover { border-color:var(--ht-text-light); background:rgba(255,255,255,0.02); }
         .ht-islem-kart-aciklama { font-size:11px; font-weight:600; color:var(--ht-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left; }
         .ht-islem-kart-tutar { font-size:12px; font-weight:800; white-space:nowrap; text-align:center; }
@@ -435,8 +435,6 @@
         .ht-islem-kart-aksiyon { display:flex; gap:4px; justify-content:flex-end; }
         .ht-islem-btn { padding:4px 8px; border:1px solid transparent; border-radius:6px; font-size:9px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
         .ht-islem-btn:hover { transform:translateY(-1px); }
-        .ht-islem-btn-edit { border-color:#243b52; color:#7a94ad; background:transparent; }
-        .ht-islem-btn-edit:hover { border-color:#a0b8cc; color:#e4eaf2; background:rgba(0,0,0,0.2); }
         .ht-islem-btn-del { border-color:#e74c3c; color:#e74c3c; background:transparent; }
         .ht-islem-btn-del:hover { background:#e74c3c; color:#fff; }
 
