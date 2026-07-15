@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.36.2';
+        var APP_VERSION = 'V1.36.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7036,7 +7036,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
         function htSayfayiYukle() {
             htVeriYukle();
-            if(!localStorage.getItem("tm_ht_test_v1.36.2")) {
+            if(!localStorage.getItem("tm_ht_test_v1.36.3")) {
                 var _db = htVeriYukle();
                 var _maxId = _db.islemler.reduce(function(m,i){return Math.max(m,i.id||0);},0);
                 var _eklenecek = HT_ORNEK_ISLEMLER.map(function(i){ i.id = ++_maxId; return i; });
@@ -7045,7 +7045,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 _db.hesaplar.forEach(function(h){h.bakiye=_bh(_db.islemler,h.id);});
                 _db.nakit=0;_db.islemler.forEach(function(i){if(i.islem==="GİDEN"&&i.hedefId===-1)_db.nakit-=i.tutar;});
                 htVeriKaydet(_db);
-                origSetItem("tm_ht_test_v1.36.2","1");
+                origSetItem("tm_ht_test_v1.36.3","1");
             }
             HT_AKTIF_DETAY_HESAP = null;
             document.getElementById("htHesapDetayAlan").style.display = "none";
@@ -7336,14 +7336,33 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     }
                 }
                 var cls = gorunenIslem === "GELEN" ? "gelen" : "giden";
+                var hNeredenDetay, hNereyeDetay;
+                if(i.islem === "GELEN") {
+                    hNeredenDetay = '<i class="fa-solid fa-globe"></i> HARİCİ' + (i.hesapId === -1 ? ' / <i class="fa-solid fa-money-bill-wave"></i> NAKİT' : '');
+                    hNereyeDetay = hesapAdiBul(i.hesapId);
+                } else if(i.islem === "TRANSFER") {
+                    hNeredenDetay = hesapAdiBul(i.hesapId);
+                    hNereyeDetay = hesapAdiBul(i.hedefId);
+                } else {
+                    if(i.hedefId && i.hesapId !== HT_AKTIF_DETAY_HESAP) {
+                        hNeredenDetay = hesapAdiBul(i.hesapId);
+                        hNereyeDetay = i.hedefId ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ';
+                    } else {
+                        hNeredenDetay = hesapAdiBul(i.hesapId);
+                        hNereyeDetay = i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ';
+                    }
+                }
                 h += '<div class="ht-islem-kart" data-detay-search="'+htAttrEsc(trToLower(i.aciklama||'')+' '+trToLower(gorunenYonPlain))+'">';
-                h += '<div class="ht-islem-kart-ust">';
                 h += '<span class="ht-islem-kart-aciklama">'+i.aciklama+'</span>';
                 h += '<span class="ht-islem-kart-tutar '+cls+'">'+htTl(i.tutar)+'</span>';
-                h += '<span class="ht-islem-kart-hesap">'+ikon+' '+gorunenYon+'</span>';
+                h += '<span class="ht-islem-kart-nereden">'+hNeredenDetay+'</span>';
+                h += '<span class="ht-islem-kart-nereye">'+hNereyeDetay+'</span>';
                 h += '<span class="ht-islem-kart-tarih">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</span>';
                 h += '<span class="ht-islem-kart-islem '+cls+'">'+gorunenIslem+'</span>';
-                h += '</div></div>';
+                h += '<span class="ht-islem-kart-aksiyon">';
+                h += '<button class="ht-islem-btn ht-islem-btn-edit" onclick="htIslemModalAc('+i.id+')">Düzenle</button>';
+                h += '<button class="ht-islem-btn ht-islem-btn-del" onclick="htIslemSil('+i.id+')">Sil</button>';
+                h += '</span></div>';
             });
             h += '</div>';
             konteyner.innerHTML = h;
@@ -7680,18 +7699,29 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     hAdPlain = hesapAdiBulPlain(i.hesapId) + ' > ' + (i.hedefId && i.hedefId !== 0 ? hesapAdiBulPlain(i.hedefId) : 'HARİCİ');
                     ikon = '<i class="fa-solid fa-paper-plane"></i>';
                 }
+                /* 7 sütun: aciklama | tutar | nereden | nereye | tarih | islem | aksiyon */
+                var hNereden, hNereye;
+                if(i.islem === "GELEN") {
+                    hNereden = '<i class="fa-solid fa-globe"></i> HARİCİ' + (i.hesapId === -1 ? ' / <i class="fa-solid fa-money-bill-wave"></i> NAKİT' : '');
+                    hNereye = hesapAdiBul(i.hesapId);
+                } else if(i.islem === "TRANSFER") {
+                    hNereden = hesapAdiBul(i.hesapId);
+                    hNereye = hesapAdiBul(i.hedefId);
+                } else {
+                    hNereden = hesapAdiBul(i.hesapId);
+                    hNereye = i.hedefId && i.hedefId !== 0 ? hesapAdiBul(i.hedefId) : '<i class="fa-solid fa-globe"></i> HARİCİ';
+                }
                 h += '<div class="ht-islem-kart" data-search="'+htAttrEsc(trToLower(i.aciklama||'')+' '+trToLower(hAdPlain))+'">';
-                h += '<div class="ht-islem-kart-ust">';
                 h += '<span class="ht-islem-kart-aciklama">'+i.aciklama+'</span>';
                 h += '<span class="ht-islem-kart-tutar '+cls+'">'+htTl(i.tutar)+'</span>';
-                h += '<span class="ht-islem-kart-hesap">'+ikon+' '+hAd+'</span>';
+                h += '<span class="ht-islem-kart-nereden">'+hNereden+'</span>';
+                h += '<span class="ht-islem-kart-nereye">'+hNereye+'</span>';
                 h += '<span class="ht-islem-kart-tarih">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</span>';
                 h += '<span class="ht-islem-kart-islem '+cls+'">'+i.islem+'</span>';
-                h += '</div>';
-                h += '<div class="ht-islem-kart-aksiyon">';
+                h += '<span class="ht-islem-kart-aksiyon">';
                 h += '<button class="ht-islem-btn ht-islem-btn-edit" onclick="htIslemModalAc('+i.id+')">Düzenle</button>';
                 h += '<button class="ht-islem-btn ht-islem-btn-del" onclick="htIslemSil('+i.id+')">Sil</button>';
-                h += '</div></div>';
+                h += '</span></div>';
             });
             h += '</div>';
             konteyner.innerHTML = h;
