@@ -445,8 +445,7 @@
         .ht-search-wrap .ht-search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px; color:var(--ht-text-light); }
 
         /* İşlem Sıralama Başlıkları */
-        .ht-siralama { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
-        .ht-sirala-btn { padding:4px 12px; border:1px solid var(--ht-border); border-radius:6px; background:transparent; color:var(--ht-text-light); font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; }
+        .ht-sirala-btn { padding:4px 10px; border:1px solid var(--ht-border); border-radius:6px; background:transparent; color:var(--ht-text-light); font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
         .ht-sirala-btn:hover { border-color:var(--ht-accent); color:var(--ht-text); transform:translateY(-1px); }
         .ht-sirala-btn.active { background:var(--ht-accent); color:#0d1b2a; border-color:var(--ht-accent); }
 
@@ -468,7 +467,10 @@
         .ht-ay-baslik { font-size:12px; font-weight:700; color:var(--ht-text); white-space:nowrap; padding:0 6px; min-width:100px; text-align:center; }
 
         /* Sayfalama */
-        .ht-sayfalama { display:flex; align-items:center; justify-content:flex-end; gap:6px; margin-top:12px; padding:8px 4px; flex-wrap:wrap; }
+        .ht-sayfalama { display:flex; align-items:center; gap:6px; margin-top:12px; padding:8px 4px; flex-wrap:wrap; }
+        .ht-yil-select { padding:3px 6px; border:1px solid var(--ht-border); border-radius:6px; background:transparent; color:var(--ht-text-light); font-size:10px; font-weight:600; cursor:pointer; outline:none; transition:0.2s; }
+        .ht-yil-select:hover { border-color:var(--ht-accent); color:var(--ht-text); }
+        .ht-yil-select:focus { border-color:var(--ht-accent); }
         .ht-sayfa-btn { width:28px; height:28px; border:1px solid var(--ht-border); border-radius:6px; background:transparent; color:var(--ht-text-light); font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s; }
         .ht-sayfa-btn:hover { border-color:var(--ht-accent); color:var(--ht-text); background:rgba(255,255,255,0.04); }
         .ht-sayfa-bilgi { font-size:10px; color:var(--ht-text-light); white-space:nowrap; }

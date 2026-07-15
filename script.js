@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.36.5';
+        var APP_VERSION = 'V1.36.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7036,7 +7036,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
         function htSayfayiYukle() {
             htVeriYukle();
-            if(!localStorage.getItem("tm_ht_test_v1.36.5")) {
+            if(!localStorage.getItem("tm_ht_test_v1.36.6")) {
                 var _db = htVeriYukle();
                 var _maxId = _db.islemler.reduce(function(m,i){return Math.max(m,i.id||0);},0);
                 var _eklenecek = HT_ORNEK_ISLEMLER.map(function(i){ i.id = ++_maxId; return i; });
@@ -7045,7 +7045,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 _db.hesaplar.forEach(function(h){h.bakiye=_bh(_db.islemler,h.id);});
                 _db.nakit=0;_db.islemler.forEach(function(i){if(i.islem==="GİDEN"&&i.hedefId===-1)_db.nakit-=i.tutar;});
                 htVeriKaydet(_db);
-                origSetItem("tm_ht_test_v1.36.5","1");
+                origSetItem("tm_ht_test_v1.36.6","1");
             }
             HT_AKTIF_DETAY_HESAP = null;
             document.getElementById("htHesapDetayAlan").style.display = "none";
@@ -7305,7 +7305,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 }
                 return true;
             });
-            filtreli.sort(function(a,b){ return (a.tarih||"").localeCompare(b.tarih||"") * HT_SIRALAMA.yon; });
+            filtreli.sort(function(a,b){ var t=(a.tarih||"").localeCompare(b.tarih||"");return t!==0?t*HT_SIRALAMA.yon:(b.id||0)-(a.id||0); });
             var toplamSayfa = Math.max(1, Math.ceil(filtreli.length / HT_SAYFA_BOYUT));
             if(HT_DETAY_SAYFA > toplamSayfa) HT_DETAY_SAYFA = toplamSayfa;
             var basIdx = (HT_DETAY_SAYFA - 1) * HT_SAYFA_BOYUT;
@@ -7366,13 +7366,21 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
             h += '</div>';
             konteyner.innerHTML = h;
-            var sayfaHtml = '';
+            var sayfaHtml = '<button class="ht-sirala-btn" onclick="htDetaySiralamaDegistir()" title="Sıralamayı değiştir">'+(HT_SIRALAMA.yon===-1?'<i class="fa-solid fa-arrow-down-short-wide"></i>':'<i class="fa-solid fa-arrow-up-wide-short"></i>')+' Tarih</button>';
             if(!arama) {
                 sayfaHtml += '<button class="ht-sayfa-btn" onclick="htDetayAyDegistir(-1)" title="Önceki Ay"><i class="fa-solid fa-chevron-left"></i></button>';
                 sayfaHtml += '<span class="ht-sayfa-bilgi">'+htAyBaslikGetir(secYil, secAy)+' ('+filtreli.length+' işlem)</span>';
                 sayfaHtml += '<button class="ht-sayfa-btn" onclick="htDetayAyDegistir(1)" title="Sonraki Ay"><i class="fa-solid fa-chevron-right"></i></button>';
                 if(secYil !== simdi.getFullYear() || secAy !== simdi.getMonth()) {
-                    sayfaHtml += '<button class="ht-sayfa-btn" onclick="htDetayAyBugun()" title="Bu Ay" style="margin-left:6px;"><i class="fa-solid fa-calendar-day"></i></button>';
+                    sayfaHtml += '<button class="ht-sayfa-btn" onclick="htDetayAyBugun()" title="Bu Ay"><i class="fa-solid fa-calendar-day"></i></button>';
+                }
+                var yilSet={};hesapIslemler.forEach(function(i){if(i.tarih){var d=new Date(i.tarih);yilSet[d.getFullYear()]=true;}});
+                var yilList=Object.keys(yilSet).map(Number).sort(function(a,b){return b-a;});
+                if(yilList.length>1) {
+                    sayfaHtml += '<select class="ht-yil-select" onchange="htDetayYilSec(this.value)">';
+                    sayfaHtml += '<option value="">Tüm Yıllar</option>';
+                    yilList.forEach(function(y){ sayfaHtml += '<option value="'+y+'"'+(secYil===y&&HT_DETAY_AKTIF_AY?' selected':'')+'>'+y+'</option>'; });
+                    sayfaHtml += '</select>';
                 }
             }
             sayfaHtml += '<div class="ht-sayfa-numara">';
@@ -7384,6 +7392,18 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             }
             sayfaHtml += '</div>';
             if(sayfalamaEl) sayfalamaEl.innerHTML = sayfaHtml;
+        }
+
+        function htDetaySiralamaDegistir() {
+            HT_SIRALAMA.yon *= -1;
+            htDetayIslemleriGoster();
+        }
+
+        function htDetayYilSec(yil) {
+            if(!yil) { HT_DETAY_AKTIF_AY = null; }
+            else { HT_DETAY_AKTIF_AY = { yil: parseInt(yil), ay: HT_DETAY_AKTIF_AY ? HT_DETAY_AKTIF_AY.ay : new Date().getMonth() }; }
+            HT_DETAY_SAYFA = 1;
+            htDetayIslemleriGoster();
         }
 
         function htDetayIslemFiltrele() {
@@ -7676,7 +7696,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 }
                 return true;
             });
-            filtreli.sort(function(a,b){ return (a.tarih||"").localeCompare(b.tarih||"") * HT_SIRALAMA.yon; });
+            filtreli.sort(function(a,b){ var t=(a.tarih||"").localeCompare(b.tarih||"");return t!==0?t*HT_SIRALAMA.yon:(b.id||0)-(a.id||0); });
             var toplamSayfa = Math.max(1, Math.ceil(filtreli.length / HT_SAYFA_BOYUT));
             if(HT_AKTIF_SAYFA > toplamSayfa) HT_AKTIF_SAYFA = toplamSayfa;
             var basIdx = (HT_AKTIF_SAYFA - 1) * HT_SAYFA_BOYUT;
@@ -7725,13 +7745,21 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
             h += '</div>';
             konteyner.innerHTML = h;
-            var sayfaHtml = '';
+            var sayfaHtml = '<button class="ht-sirala-btn" onclick="htSiralamaDegistir()" title="Sıralamayı değiştir">'+(HT_SIRALAMA.yon===-1?'<i class="fa-solid fa-arrow-down-short-wide"></i>':'<i class="fa-solid fa-arrow-up-wide-short"></i>')+' Tarih</button>';
             if(!arama) {
                 sayfaHtml += '<button class="ht-sayfa-btn" onclick="htAyDegistir(-1)" title="Önceki Ay"><i class="fa-solid fa-chevron-left"></i></button>';
                 sayfaHtml += '<span class="ht-sayfa-bilgi">'+htAyBaslikGetir(secYil, secAy)+' ('+filtreli.length+' işlem)</span>';
                 sayfaHtml += '<button class="ht-sayfa-btn" onclick="htAyDegistir(1)" title="Sonraki Ay"><i class="fa-solid fa-chevron-right"></i></button>';
                 if(secYil !== simdi.getFullYear() || secAy !== simdi.getMonth()) {
-                    sayfaHtml += '<button class="ht-sayfa-btn" onclick="htAyBugun()" title="Bu Ay" style="margin-left:6px;"><i class="fa-solid fa-calendar-day"></i></button>';
+                    sayfaHtml += '<button class="ht-sayfa-btn" onclick="htAyBugun()" title="Bu Ay"><i class="fa-solid fa-calendar-day"></i></button>';
+                }
+                var yilSet={};db.islemler.forEach(function(i){if(i.tarih){var d=new Date(i.tarih);yilSet[d.getFullYear()]=true;}});
+                var yilList=Object.keys(yilSet).map(Number).sort(function(a,b){return b-a;});
+                if(yilList.length>1) {
+                    sayfaHtml += '<select class="ht-yil-select" onchange="htYilSec(this.value)">';
+                    sayfaHtml += '<option value="">Tüm Yıllar</option>';
+                    yilList.forEach(function(y){ sayfaHtml += '<option value="'+y+'"'+(secYil===y&&HT_AKTIF_AY?' selected':'')+'>'+y+'</option>'; });
+                    sayfaHtml += '</select>';
                 }
             }
             sayfaHtml += '<div class="ht-sayfa-numara">';
@@ -7747,6 +7775,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
         function htSiralamaDegistir() {
             HT_SIRALAMA.yon *= -1;
+            htIslemleriGoster();
+        }
+
+        function htYilSec(yil) {
+            if(!yil) { HT_AKTIF_AY = null; }
+            else { HT_AKTIF_AY = { yil: parseInt(yil), ay: HT_AKTIF_AY ? HT_AKTIF_AY.ay : new Date().getMonth() }; }
+            HT_AKTIF_SAYFA = 1;
             htIslemleriGoster();
         }
 
