@@ -7027,7 +7027,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var db;
             try { db = JSON.parse(localStorage.getItem("tm_hesap_takip_db")); } catch(e) { db = null; console.error("Hesap takip yukleme hatasi:", e); }
             if(db && db.hesaplar && db.islemler !== undefined) return db;
-            db = { hesaplar:JSON.parse(JSON.stringify(HT_ORNEK_HESAPLAR)), nakit:0, islemler:JSON.parse(JSON.stringify(HT_ORNEK_ISLEMLER)) };
+            db = { hesaplar:JSON.parse(JSON.stringify(HT_ORNEK_HESAPLAR)), nakit:0, islemler:[] };
             origSetItem("tm_hesap_takip_db", JSON.stringify(db));
             return db;
         }
@@ -7035,6 +7035,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         function htVeriKaydet(db) { try { localStorage.setItem("tm_hesap_takip_db", JSON.stringify(db)); } catch(e) { console.error("Hesap takip kaydetme hatasi:", e); } }
 
         function htSayfayiYukle() {
+            try { var __d=JSON.parse(localStorage.getItem("tm_hesap_takip_db")); if(__d&&(!__d.hesaplar||__d.hesaplar.length===0)) { localStorage.removeItem("tm_hesap_takip_db"); localStorage.removeItem("tm_ht_test_v1.36.7"); } } catch(e){}
             htVeriYukle();
             HT_AKTIF_DETAY_HESAP = null;
             document.getElementById("htHesapDetayAlan").style.display = "none";
