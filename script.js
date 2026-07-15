@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.36.6';
+        var APP_VERSION = 'V1.36.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7036,7 +7036,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
         function htSayfayiYukle() {
             htVeriYukle();
-            if(!localStorage.getItem("tm_ht_test_v1.36.6")) {
+            if(!localStorage.getItem("tm_ht_test_v1.36.7")) {
                 var _db = htVeriYukle();
                 var _maxId = _db.islemler.reduce(function(m,i){return Math.max(m,i.id||0);},0);
                 var _eklenecek = HT_ORNEK_ISLEMLER.map(function(i){ i.id = ++_maxId; return i; });
@@ -7045,7 +7045,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 _db.hesaplar.forEach(function(h){h.bakiye=_bh(_db.islemler,h.id);});
                 _db.nakit=0;_db.islemler.forEach(function(i){if(i.islem==="GİDEN"&&i.hedefId===-1)_db.nakit-=i.tutar;});
                 htVeriKaydet(_db);
-                origSetItem("tm_ht_test_v1.36.6","1");
+                origSetItem("tm_ht_test_v1.36.7","1");
             }
             HT_AKTIF_DETAY_HESAP = null;
             document.getElementById("htHesapDetayAlan").style.display = "none";
@@ -7366,7 +7366,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
             h += '</div>';
             konteyner.innerHTML = h;
-            var sayfaHtml = '<button class="ht-sirala-btn" onclick="htDetaySiralamaDegistir()" title="Sıralamayı değiştir">'+(HT_SIRALAMA.yon===-1?'<i class="fa-solid fa-arrow-down-short-wide"></i>':'<i class="fa-solid fa-arrow-up-wide-short"></i>')+' Tarih</button>';
+            var sayfaHtml = '';
             if(!arama) {
                 sayfaHtml += '<button class="ht-sayfa-btn" onclick="htDetayAyDegistir(-1)" title="Önceki Ay"><i class="fa-solid fa-chevron-left"></i></button>';
                 sayfaHtml += '<span class="ht-sayfa-bilgi">'+htAyBaslikGetir(secYil, secAy)+' ('+filtreli.length+' işlem)</span>';
@@ -7392,6 +7392,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             }
             sayfaHtml += '</div>';
             if(sayfalamaEl) sayfalamaEl.innerHTML = sayfaHtml;
+            var sortBtn=document.getElementById("htDetaySortBtn");
+            if(sortBtn) sortBtn.innerHTML=(HT_SIRALAMA.yon===-1?'<i class="fa-solid fa-arrow-down-short-wide"></i>':'<i class="fa-solid fa-arrow-up-wide-short"></i>')+' Tarih';
+            var ac=document.getElementById("htDetayAramaClear");
+            if(ac) ac.style.display=document.getElementById("htDetayArama").value?"":"none";
         }
 
         function htDetaySiralamaDegistir() {
@@ -7745,7 +7749,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
             h += '</div>';
             konteyner.innerHTML = h;
-            var sayfaHtml = '<button class="ht-sirala-btn" onclick="htSiralamaDegistir()" title="Sıralamayı değiştir">'+(HT_SIRALAMA.yon===-1?'<i class="fa-solid fa-arrow-down-short-wide"></i>':'<i class="fa-solid fa-arrow-up-wide-short"></i>')+' Tarih</button>';
+            var sayfaHtml = '';
             if(!arama) {
                 sayfaHtml += '<button class="ht-sayfa-btn" onclick="htAyDegistir(-1)" title="Önceki Ay"><i class="fa-solid fa-chevron-left"></i></button>';
                 sayfaHtml += '<span class="ht-sayfa-bilgi">'+htAyBaslikGetir(secYil, secAy)+' ('+filtreli.length+' işlem)</span>';
@@ -7771,6 +7775,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             }
             sayfaHtml += '</div>';
             if(sayfalamaEl) sayfalamaEl.innerHTML = sayfaHtml;
+            var sortBtn=document.getElementById("htSortBtn");
+            if(sortBtn) sortBtn.innerHTML=(HT_SIRALAMA.yon===-1?'<i class="fa-solid fa-arrow-down-short-wide"></i>':'<i class="fa-solid fa-arrow-up-wide-short"></i>')+' Tarih';
+            var ac=document.getElementById("htAramaClear");
+            if(ac) ac.style.display=document.getElementById("htArama").value?"":"none";
         }
 
         function htSiralamaDegistir() {
@@ -7783,6 +7791,32 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             else { HT_AKTIF_AY = { yil: parseInt(yil), ay: HT_AKTIF_AY ? HT_AKTIF_AY.ay : new Date().getMonth() }; }
             HT_AKTIF_SAYFA = 1;
             htIslemleriGoster();
+        }
+
+        function htAramaKeyup(e) {
+            htIslemleriGoster();
+            var ac=document.getElementById("htAramaClear");
+            if(ac) ac.style.display=e.target.value?"":"none";
+        }
+
+        function htAramaTemizle() {
+            document.getElementById("htArama").value="";
+            document.getElementById("htAramaClear").style.display="none";
+            document.getElementById("htArama").focus();
+            htIslemleriGoster();
+        }
+
+        function htDetayAramaKeyup(e) {
+            htDetayIslemleriGoster();
+            var ac=document.getElementById("htDetayAramaClear");
+            if(ac) ac.style.display=e.target.value?"":"none";
+        }
+
+        function htDetayAramaTemizle() {
+            document.getElementById("htDetayArama").value="";
+            document.getElementById("htDetayAramaClear").style.display="none";
+            document.getElementById("htDetayArama").focus();
+            htDetayIslemleriGoster();
         }
 
         function htIslemFiltrele() {
