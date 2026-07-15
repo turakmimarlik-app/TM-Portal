@@ -417,7 +417,7 @@
 
         /* İşlem Kartları */
         .ht-islem-list { display:flex; flex-direction:column; gap:3px; }
-        .ht-islem-kart { display:grid; grid-template-columns:2.5fr 90px 0.8fr auto 0.7fr 75px 56px auto; align-items:center; gap:4px; padding:7px 12px; background:var(--ht-card); border:1px solid var(--ht-border); border-radius:6px; transition:0.15s; }
+        .ht-islem-kart { display:grid; grid-template-columns:2.2fr 90px 1fr auto 0.9fr 75px 56px auto; align-items:center; gap:4px; padding:7px 12px; background:var(--ht-card); border:1px solid var(--ht-border); border-radius:6px; transition:0.15s; }
         .ht-islem-kart:hover { border-color:var(--ht-text-light); background:rgba(255,255,255,0.02); }
         .ht-islem-kart-aciklama { font-size:11px; font-weight:600; color:var(--ht-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left; }
         .ht-islem-kart-tutar { font-size:12px; font-weight:800; white-space:nowrap; text-align:center; }
@@ -425,7 +425,7 @@
         .ht-islem-kart-tutar.giden { color:var(--ht-gider); }
         .ht-islem-kart-tutar.transfer { color:var(--ht-accent); }
         .ht-islem-kart-nereden { font-size:9px; color:var(--ht-text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:right; }
-        .ht-islem-kart-arrow { font-size:10px; color:var(--ht-text-light); text-align:center; padding:0 2px; user-select:none; }
+        .ht-islem-kart-arrow { font-size:13px; color:var(--ht-text-light); text-align:center; padding:0 2px; user-select:none; font-weight:700; }
         .ht-islem-kart-nereye { font-size:9px; color:var(--ht-text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left; }
         .ht-islem-kart-tarih { font-size:10px; color:var(--ht-text-light); white-space:nowrap; text-align:center; }
         .ht-islem-kart-islem { font-size:8px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; text-align:center; display:inline-block; }
