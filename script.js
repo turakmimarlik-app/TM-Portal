@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.40.6';
+        var APP_VERSION = 'V1.40.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7542,44 +7542,41 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             try {
                 var modal = document.getElementById("htIslemModal");
                 if(!modal) return;
-                // Önce modalı gizle (varsa)
-                modal.style.display = "none";
-                // Tüm form alanlarını adresleyerek sıfırla
+                var elTur = document.getElementById("htModalIslemTur");
+                var elNereden = document.getElementById("htModalNereden");
+                var elNereye = document.getElementById("htModalNereye");
                 var elId = document.getElementById("htModalIslemId");
                 var elAciklama = document.getElementById("htModalIslemAciklama");
                 var elTarih = document.getElementById("htModalTarih");
                 var elTutar = document.getElementById("htModalTutar");
-                var elTur = document.getElementById("htModalIslemTur");
-                var elNereden = document.getElementById("htModalNereden");
-                var elNereye = document.getElementById("htModalNereye");
                 if(!elTur || !elNereden || !elNereye) return;
-                // 1) İşlem türü select'ini yeniden oluştur (appendChild ile, innerHTML kullanmadan)
-                var yeniTur = document.createElement("select");
-                yeniTur.id = "htModalIslemTur";
-                yeniTur.className = "islem-turu-select";
-                yeniTur.style.cssText = "width:100%;";
-                yeniTur.onchange = htIslemModalTurDegisti;
-                [["","SEÇİNİZ"],["GELEN","GELEN"],["GİDEN","GİDEN"],["TRANSFER","TRANSFER"]].forEach(function(o){
-                    var opt=document.createElement("option"); opt.value=o[0]; opt.textContent=o[1]; yeniTur.appendChild(opt);
-                });
-                elTur.parentNode.replaceChild(yeniTur, elTur);
-                // 2) Nereden/Nereye select'lerini yeniden oluştur
+                // Nereden/Nereye seçeneklerini sadece ilk açılışta doldur (ileri çağrılarda dokunma)
                 var db = htVeriYukle();
-                function selectYap(id, deger) {
-                    var eski = document.getElementById(id);
-                    if(!eski) return;
-                    var yeni = document.createElement("select");
-                    yeni.id = id; yeni.style.cssText = "width:100%;";
+                if(elNereden.options.length===0) {
                     [["","SEÇİNİZ"],["0","HARİCİ"],["-1","NAKİT"]].forEach(function(o){
-                        var opt=document.createElement("option"); opt.value=o[0]; opt.textContent=o[1]; yeni.appendChild(opt);
+                        var opt=document.createElement("option"); opt.value=o[0]; opt.textContent=o[1]; elNereden.appendChild(opt);
                     });
                     db.hesaplar.forEach(function(h){
-                        var o=document.createElement("option"); o.value=String(h.id); o.textContent=h.bankaAdi+" - "+h.hesapSahibi; yeni.appendChild(o);
+                        var o=document.createElement("option"); o.value=String(h.id); o.textContent=h.bankaAdi+" - "+h.hesapSahibi; elNereden.appendChild(o);
                     });
-                    if(deger!==undefined && deger!==null && deger!=="") yeni.value = String(deger);
-                    eski.parentNode.replaceChild(yeni, eski);
                 }
-                // 3) Değerleri doldur
+                if(elNereye.options.length===0) {
+                    [["","SEÇİNİZ"],["0","HARİCİ"],["-1","NAKİT"]].forEach(function(o){
+                        var opt=document.createElement("option"); opt.value=o[0]; opt.textContent=o[1]; elNereye.appendChild(o);
+                    });
+                    db.hesaplar.forEach(function(h){
+                        var o=document.createElement("option"); o.value=String(h.id); o.textContent=h.bankaAdi+" - "+h.hesapSahibi; elNereye.appendChild(o);
+                    });
+                }
+                // Tüm alanları sıfırla (DOM'a dokunmadan sadece değerleri temizle)
+                elTur.selectedIndex = 0;
+                elNereden.selectedIndex = 0;
+                elNereye.selectedIndex = 0;
+                if(elId) elId.value = "";
+                if(elAciklama) elAciklama.value = "";
+                if(elTarih) elTarih.value = anlikTarihGetir();
+                if(elTutar) elTutar.value = "0,00";
+                // Düzenleme modu ise değerleri yerine koy
                 if(id) {
                     var islem = db.islemler.find(function(i){return i.id===id;});
                     if(islem) {
@@ -7587,23 +7584,17 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                         if(elAciklama) elAciklama.value = islem.aciklama || "";
                         if(elTarih) elTarih.value = islem.tarih || anlikTarihGetir();
                         if(elTutar) elTutar.value = htTl(islem.tutar);
-                        if(islem.islem==="GELEN") { selectYap("htModalNereden"); selectYap("htModalNereye", islem.hesapId); }
-                        else { selectYap("htModalNereden", islem.hesapId); selectYap("htModalNereye", islem.hedefId || 0); }
-                    } else { selectYap("htModalNereden"); selectYap("htModalNereye"); }
-                } else {
-                    selectYap("htModalNereden", (hesapId && hesapId!==0) ? hesapId : "");
-                    selectYap("htModalNereye", (hesapId && hesapId!==0) ? hesapId : "");
-                    if(elId) elId.value = "";
-                    if(elAciklama) elAciklama.value = "";
-                    if(elTarih) elTarih.value = anlikTarihGetir();
-                    if(elTutar) elTutar.value = "0,00";
+                        elTur.value = islem.islem;
+                        if(islem.islem==="GELEN") { elNereden.selectedIndex = 0; elNereye.value = String(islem.hesapId); }
+                        else { elNereden.value = String(islem.hesapId); elNereye.value = String(islem.hedefId || "0"); }
+                    }
+                } else if(hesapId && hesapId!==0) {
+                    elNereden.value = String(hesapId);
+                    elNereye.value = String(hesapId);
                 }
-                // 4) Div görünürlüklerini sıfırla
-                var nd = document.getElementById("htModalNereden");
-                var nyd = document.getElementById("htModalNereye");
-                if(nd && nd.parentElement) nd.parentElement.style.display = "";
-                if(nyd && nyd.parentElement) nyd.parentElement.style.display = "";
-                // 5) Görünürlüğü güncelle ve modalı göster
+                // Div görünürlüklerini sıfırla
+                if(elNereden.parentElement) elNereden.parentElement.style.display = "";
+                if(elNereye.parentElement) elNereye.parentElement.style.display = "";
                 htIslemModalTurDegisti();
                 modal.style.display = "flex";
             } catch(e) { console.error("HATA htIslemModalAc:", e); }
