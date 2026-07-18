@@ -17,9 +17,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.41.6">
-    <link rel="stylesheet" href="pdf.css?v=1.41.6">
-    <link rel="stylesheet" href="responsive.css?v=1.41.6">
+    <link rel="stylesheet" href="style.css?v=1.41.7">
+    <link rel="stylesheet" href="pdf.css?v=1.41.7">
+    <link rel="stylesheet" href="responsive.css?v=1.41.7">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -1642,7 +1642,7 @@
                                 <div class="ht-tur-opt" data-value="TRANSFER" style="color:#888;font-weight:600;" onclick="htCustomTurSec('TRANSFER');htCustomTurToggle()">TRANSFER</div>
                             </div>
                         </div>
-                        <select id="htModalIslemTur" style="display:none;" onchange="htIslemModalTurDegisti()"><option value="">SEÇİNİZ</option><option value="GELEN">GELEN</option><option value="GİDEN">GİDEN</option><option value="TRANSFER">TRANSFER</option></select>
+                        <input type="hidden" id="htModalIslemTur" value="">
                         <div class="ht-ikili">
                             <div><label>Nereden (Kaynak)</label><select id="htModalNereden" style="width:100%;"></select></div>
                             <div><label>Nereye (Hedef)</label><select id="htModalNereye" style="width:100%;"></select></div>
@@ -1866,7 +1866,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.41.6"></script>
+    <script src="script.js?v=1.41.7"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">

@@ -1725,11 +1725,11 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .islem-turu-select option[value="GİDEN"] { color: #e53935; font-weight:600; background:#1a1a2e; }
         .islem-turu-select option[value="TRANSFER"] { color: #888; font-weight:600; background:#1a1a2e; }
         .ht-custom-select { position:relative; width:100%; }
-        .ht-custom-select-display { width:100%; padding:8px 10px; background:#16213e; border:1px solid #2a3a5e; border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; box-sizing:border-box; min-height:38px; }
-        .ht-custom-select-display:hover { border-color:#3a5a8e; }
-        .ht-custom-select-options { position:absolute; top:100%; left:0; right:0; background:#16213e; border:1px solid #2a3a5e; border-radius:6px; z-index:1000; display:none; margin-top:2px; overflow:hidden; }
-        .ht-tur-opt { padding:8px 10px; cursor:pointer; transition:0.1s; }
-        .ht-tur-opt:hover { background:#1a2744; }
+        .ht-custom-select-display { width:100%; padding:10px 12px; background:#16213e; border:1px solid #2a3a5e; border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; box-sizing:border-box; min-height:40px; font-size:14px; }
+        .ht-custom-select-display:hover, .ht-custom-select-display:focus { border-color:#3a5a8e; outline:none; }
+        .ht-custom-select-options { position:absolute; top:100%; left:0; right:0; background:#1a1a2e; border:1px solid #2a3a5e; border-radius:6px; z-index:1000; display:none; margin-top:4px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.4); }
+        .ht-tur-opt { padding:10px 12px; cursor:pointer; transition:0.1s; font-size:14px; }
+        .ht-tur-opt:hover { background:#2a3a5e; }
 .rapor-turu-select option { color: var(--text-dark); }
 /* Font Awesome integration */
         .fa-solid, .fa-regular, .fa-brands { vertical-align:-2px; }

@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.41.6';
+        var APP_VERSION = 'V1.41.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7442,7 +7442,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 doldur(elNereden);
                 doldur(elNereye);
                 // Sıfırla
-                elTur.selectedIndex = 0;
+                elTur.value = "";
                 elNereden.selectedIndex = 0;
                 elNereye.selectedIndex = 0;
                 if(elId) elId.value = "";
@@ -7482,11 +7482,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
         function htCustomTurSec(val) {
             var el = document.getElementById("htModalIslemTur");
-            if(el) { el.value = val; if(el.onchange) el.onchange(); }
-            var text = val || "SEÇİNİZ";
-            var colors = {"":"#888","GELEN":"#2ecc71","GİDEN":"#e53935","TRANSFER":"#888"};
-            var st = document.getElementById("htTurText");
-            if(st) { st.textContent = text; st.style.color = colors[val] || "#888"; }
+            if(el) el.value = val;
+            htIslemModalTurDegisti();
         }
         function htCustomTurToggle() {
             var o = document.getElementById("htTurOptions");
