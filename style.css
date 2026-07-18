@@ -444,7 +444,7 @@
         .ht-search-wrap input { width:100%; padding:9px 14px 9px 50px; border:1px solid var(--ht-border); border-radius:8px; background:var(--ht-card); color:var(--ht-text); font-size:12px; outline:none; box-sizing:border-box; }
         .ht-search-wrap input:focus { border-color:var(--ht-accent); }
         .ht-search-wrap .ht-search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px; color:var(--ht-text-light); }
-        .ht-search-clear { position:absolute; left:32px; top:50%; transform:translateY(-50%); background:none; border:none; color:#e53935; font-size:13px; cursor:pointer; padding:2px; display:flex; align-items:center; z-index:1; transition:0.15s; }
+        .ht-search-clear { position:absolute; left:32px; top:50%; transform:translateY(-50%); background:none; border:none; color:#e53935; font-size:13px; cursor:pointer; padding:2px; display:none; align-items:center; z-index:1; transition:0.15s; }
         .ht-search-clear:hover { color:#ff6b6b; }
 
         /* İşlem Sıralama Başlıkları */

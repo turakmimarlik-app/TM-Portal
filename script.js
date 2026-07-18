@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.41.2';
+        var APP_VERSION = 'V1.41.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7390,7 +7390,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var sortBtn=document.getElementById("htDetaySortBtn");
             if(sortBtn) sortBtn.innerHTML='<i class="fa-solid fa-arrow-down-short-wide"></i> Tarih';
             var ac=document.getElementById("htDetayAramaClear");
-            if(ac) ac.style.display=document.getElementById("htDetayArama").value?"":"none";
+            if(ac) ac.style.display=document.getElementById("htDetayArama").value?"flex":"none";
         }
 
         function htDetaySiralamaDegistir() {
@@ -7832,7 +7832,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var sortBtn=document.getElementById("htSortBtn");
             if(sortBtn) sortBtn.innerHTML='<i class="fa-solid fa-arrow-down-short-wide"></i> Tarih';
             var ac=document.getElementById("htAramaClear");
-            if(ac) ac.style.display=document.getElementById("htArama").value?"":"none";
+            if(ac) ac.style.display=document.getElementById("htArama").value?"flex":"none";
         }
 
         function htSiralamaDegistir() {
@@ -7842,20 +7842,20 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         function htAramaKeyup(e) {
             htIslemleriGoster();
             var ac=document.getElementById("htAramaClear");
-            if(ac) ac.style.display=e.target.value?"":"none";
+            if(ac) ac.style.display=e.target.value?"flex":"none";
         }
-
+        
         function htAramaTemizle() {
             document.getElementById("htArama").value="";
             document.getElementById("htAramaClear").style.display="none";
             document.getElementById("htArama").focus();
             htIslemleriGoster();
         }
-
+        
         function htDetayAramaKeyup(e) {
             htDetayIslemleriGoster();
             var ac=document.getElementById("htDetayAramaClear");
-            if(ac) ac.style.display=e.target.value?"":"none";
+            if(ac) ac.style.display=e.target.value?"flex":"none";
         }
 
         function htDetayAramaTemizle() {
