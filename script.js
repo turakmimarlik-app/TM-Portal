@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.40.1';
+        var APP_VERSION = 'V1.40.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7543,63 +7543,58 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if(!modal) return;
             var db = htVeriYukle();
             var islem = id ? db.islemler.find(function(i){return i.id===id;}) : null;
-            // Form alanlarını tamamen sıfırla
+            // Tüm form alanlarını sıfırla
             document.getElementById("htModalIslemId").value = id || "";
             document.getElementById("htModalIslemAciklama").value = islem ? islem.aciklama : "";
             document.getElementById("htModalTarih").value = islem ? islem.tarih : anlikTarihGetir();
             document.getElementById("htModalTutar").value = islem ? htTl(islem.tutar) : "0,00";
-            var turSelect = document.getElementById("htModalIslemTur");
-            var neredenSelect = document.getElementById("htModalNereden");
-            var nereyeSelect = document.getElementById("htModalNereye");
-            // Nereden/Nereye seçeneklerini yeniden oluştur
-            var opts = '<option value="">SEÇİNİZ</option><option value="0">HARİCİ</option><option value="-1">NAKİT</option>';
-            db.hesaplar.forEach(function(h){ opts += '<option value="'+h.id+'">'+h.bankaAdi+' - '+h.hesapSahibi+'</option>'; });
-            neredenSelect.innerHTML = opts;
-            nereyeSelect.innerHTML = opts;
-            // Nereden/Nereye div görünürlüğünü sıfırla
-            var neredenDiv = neredenSelect.closest("div");
-            var nereyeDiv = nereyeSelect.closest("div");
-            neredenDiv.style.display = "";
-            nereyeDiv.style.display = "";
-            if(islem) {
-                turSelect.value = islem.islem;
-                if(islem.islem === "GELEN") {
-                    neredenSelect.selectedIndex = 0;
-                    var ni = Array.from(nereyeSelect.options).findIndex(function(o){return o.value==String(islem.hesapId);});
-                    nereyeSelect.selectedIndex = ni > 0 ? ni : 0;
-                } else {
-                    var ni2 = Array.from(neredenSelect.options).findIndex(function(o){return o.value==String(islem.hesapId);});
-                    neredenSelect.selectedIndex = ni2 > 0 ? ni2 : 0;
-                    var hedefVal = String(islem.hedefId || 0);
-                    var ni3 = Array.from(nereyeSelect.options).findIndex(function(o){return o.value==hedefVal;});
-                    nereyeSelect.selectedIndex = ni3 >= 0 ? ni3 : 0;
-                }
-            } else {
-                turSelect.selectedIndex = 0;
-                neredenSelect.selectedIndex = 0;
-                nereyeSelect.selectedIndex = 0;
+            // İşlem türü sıfırla
+            document.getElementById("htModalIslemTur").value = islem ? islem.islem : "";
+            // Nereden/Nereye seçeneklerini DOM ile yeniden oluştur (innerHTML yerine)
+            var secenekler = [{v:"",t:"SEÇİNİZ"},{v:"0",t:"HARİCİ"},{v:"-1",t:"NAKİT"}];
+            db.hesaplar.forEach(function(h){secenekler.push({v:String(h.id),t:h.bankaAdi+" - "+h.hesapSahibi});});
+            function selectDoldur(id, deger){
+                var sel = document.getElementById(id); if(!sel) return;
+                sel.innerHTML = "";
+                secenekler.forEach(function(o){var opt=document.createElement("option");opt.value=o.v;opt.textContent=o.t;sel.appendChild(opt);});
+                sel.value = (deger!==undefined && deger!==null) ? String(deger) : "";
             }
+            if(islem) {
+                if(islem.islem==="GELEN"){selectDoldur("htModalNereden","");selectDoldur("htModalNereye",islem.hesapId);}
+                else {selectDoldur("htModalNereden",islem.hesapId);selectDoldur("htModalNereye",islem.hedefId||0);}
+            } else {
+                // hesapId parametresi gelmişse (detay görünümünden) o hesabı ön seç
+                var onSec = (hesapId !== undefined && hesapId !== null && hesapId !== 0) ? String(hesapId) : "";
+                selectDoldur("htModalNereden", onSec || "");
+                selectDoldur("htModalNereye", onSec || "");
+            }
+            // Div görünürlüklerini sıfırla
+            var nd=document.getElementById("htModalNereden"), nyd=document.getElementById("htModalNereye");
+            if(nd&&nd.closest("div"))nd.closest("div").style.display="";
+            if(nyd&&nyd.closest("div"))nyd.closest("div").style.display="";
             htIslemModalTurDegisti();
             modal.style.display = "flex";
         }
-
+        
         function htIslemModalKapat() {
             document.getElementById("htIslemModal").style.display = "none";
         }
 
         function htIslemModalTurDegisti() {
             var tur = document.getElementById("htModalIslemTur").value;
-            var neredenDiv = document.getElementById("htModalNereden").closest("div");
-            var nereyeDiv = document.getElementById("htModalNereye").closest("div");
+            var nd = document.getElementById("htModalNereden");
+            var nyd = document.getElementById("htModalNereye");
+            var ndDiv = nd ? nd.closest("div") : null;
+            var nydDiv = nyd ? nyd.closest("div") : null;
             if(tur === "GELEN") {
-                neredenDiv.style.display = "none";
-                nereyeDiv.style.display = "";
+                if(ndDiv) ndDiv.style.display = "none";
+                if(nydDiv) nydDiv.style.display = "";
             } else if(tur === "GİDEN") {
-                neredenDiv.style.display = "";
-                nereyeDiv.style.display = "none";
+                if(ndDiv) ndDiv.style.display = "";
+                if(nydDiv) nydDiv.style.display = "none";
             } else {
-                neredenDiv.style.display = "";
-                nereyeDiv.style.display = "";
+                if(ndDiv) ndDiv.style.display = "";
+                if(nydDiv) nydDiv.style.display = "";
             }
         }
 
