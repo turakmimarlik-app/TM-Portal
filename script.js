@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.41.8';
+        var APP_VERSION = 'V1.41.9';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -167,6 +167,7 @@ function gorevMailGonder(gorev) {
             var curVal = localStorage.getItem(k);
             if (curVal !== strVal && !fsDirtyKeys[k]) {
                 try { origSetItem(k, strVal); } catch(e) { console.error("Firebase sync local set hatasi:", e); }
+                if (k === "tm_hesap_takip_db") { setTimeout(function(){ try { var ap=document.querySelector('.page.active'); if(ap&&ap.id==='hesap-takip-page') htSayfayiYukle(); } catch(e){} }, 100); }
                 if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") return "logo";
                 return "data";
             }
