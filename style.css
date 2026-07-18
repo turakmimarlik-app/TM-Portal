@@ -1721,9 +1721,9 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         #noteViewerIcerik font[size="6"] { font-size:28px !important; line-height:1.5 !important; }
         #noteViewerIcerik font[size="7"] { font-size:40px !important; line-height:1.4 !important; }
         /* İşlem türü select renklendirme */
-.islem-turu-select option[value="GELEN"] { color: #2E7D32; font-weight:600; }
-.islem-turu-select option[value="GİDEN"] { color: #C0392B; font-weight:600; }
-.islem-turu-select option[value="TRANSFER"] { color: #2B6CB0; font-weight:600; }
+        .islem-turu-select option[value="GELEN"] { color: #2ecc71; font-weight:600; background:#1a1a2e; }
+        .islem-turu-select option[value="GİDEN"] { color: #e53935; font-weight:600; background:#1a1a2e; }
+        .islem-turu-select option[value="TRANSFER"] { color: #888; font-weight:600; background:#1a1a2e; }
 .rapor-turu-select option { color: var(--text-dark); }
 /* Font Awesome integration */
         .fa-solid, .fa-regular, .fa-brands { vertical-align:-2px; }

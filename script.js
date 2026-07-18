@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.41.4';
+        var APP_VERSION = 'V1.41.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7481,7 +7481,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         }
 
         function htIslemModalTurDegisti() {
-            var tur = document.getElementById("htModalIslemTur").value;
+            var el = document.getElementById("htModalIslemTur");
+            var tur = el.value;
+            // Select rengini seçilen türe göre değiştir
+            if(tur === "GELEN") el.style.color = "#2ecc71";
+            else if(tur === "GİDEN") el.style.color = "#e53935";
+            else if(tur === "TRANSFER") el.style.color = "#888";
+            else el.style.color = "";
             var nd = document.getElementById("htModalNereden");
             var nyd = document.getElementById("htModalNereye");
             var ndDiv = nd ? nd.closest("div") : null;
