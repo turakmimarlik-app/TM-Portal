@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.41.0';
+        var APP_VERSION = 'V1.41.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7037,9 +7037,11 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         function htVeriKaydet(db) { try { localStorage.setItem("tm_hesap_takip_db", JSON.stringify(db)); } catch(e) { console.error("Hesap takip kaydetme hatasi:", e); } }
 
         function htSayfayiYukle() {
-            if(!localStorage.getItem("tm_ht_test_temizlendi")) {
-                try { var __t=JSON.parse(localStorage.getItem("tm_hesap_takip_db")); if(__t&&__t.islemler&&__t.islemler.length>50) { localStorage.removeItem("tm_hesap_takip_db"); localStorage.removeItem("tm_ht_test_v1.36.7"); } } catch(e){}
-                localStorage.setItem("tm_ht_test_temizlendi","1");
+            // Test verilerini temizle (bir kere)
+            if(localStorage.getItem("tm_hesap_takip_db") && !localStorage.getItem("tm_ht_temiz_v1.41.0")) {
+                localStorage.removeItem("tm_hesap_takip_db");
+                localStorage.removeItem("tm_ht_test_v1.36.7");
+                localStorage.setItem("tm_ht_temiz_v1.41.0","1");
             }
             try { var __d=JSON.parse(localStorage.getItem("tm_hesap_takip_db")); if(__d&&(!__d.hesaplar||__d.hesaplar.length===0)) { localStorage.removeItem("tm_hesap_takip_db"); localStorage.removeItem("tm_ht_test_v1.36.7"); } } catch(e){}
             htVeriYukle();
