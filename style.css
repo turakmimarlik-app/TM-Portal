@@ -461,6 +461,8 @@
         .ht-ekle-btn.primary:hover { background:#152d4a; }
         .ht-ekle-btn.secondary { background:transparent; border:1px solid #243b52; color:#7a94ad; }
         .ht-ekle-btn.secondary:hover { border-color:#a0b8cc; color:#e4eaf2; background:rgba(0,0,0,0.2); }
+        .ht-ekle-btn.warning { background:linear-gradient(135deg,#5c3a1a,#2a1a0d); border:1px solid #cc8800; color:#ffaa00; }
+        .ht-ekle-btn.warning:hover { background:#4a2d15; }
 
         /* Ay Navigasyonu */
         .ht-ay-nav { display:flex; align-items:center; gap:4px; }
