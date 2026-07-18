@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.41.5';
+        var APP_VERSION = 'V1.41.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7480,14 +7480,29 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if(modal) modal.style.display = "none";
         }
 
+        function htCustomTurSec(val) {
+            var el = document.getElementById("htModalIslemTur");
+            if(el) { el.value = val; if(el.onchange) el.onchange(); }
+            var text = val || "SEÇİNİZ";
+            var colors = {"":"#888","GELEN":"#2ecc71","GİDEN":"#e53935","TRANSFER":"#888"};
+            var st = document.getElementById("htTurText");
+            if(st) { st.textContent = text; st.style.color = colors[val] || "#888"; }
+        }
+        function htCustomTurToggle() {
+            var o = document.getElementById("htTurOptions");
+            if(!o) return;
+            o.style.display = o.style.display === "block" ? "none" : "block";
+        }
+        document.addEventListener("click", function(e) {
+            var o = document.getElementById("htTurOptions");
+            if(o && !e.target.closest("#htTurSelectWrapper")) o.style.display = "none";
+        });
         function htIslemModalTurDegisti() {
             var el = document.getElementById("htModalIslemTur");
             var tur = el.value;
-            // Select rengini seçilen türe göre değiştir
-            if(tur === "GELEN") el.style.color = "#2ecc71";
-            else if(tur === "GİDEN") el.style.color = "#e53935";
-            else if(tur === "TRANSFER") el.style.color = "#888";
-            else el.style.color = "";
+            var colors = {"":"#888","GELEN":"#2ecc71","GİDEN":"#e53935","TRANSFER":"#888"};
+            var st = document.getElementById("htTurText");
+            if(st) { st.textContent = tur || "SEÇİNİZ"; st.style.color = colors[tur] || "#888"; }
             var nd = document.getElementById("htModalNereden");
             var nyd = document.getElementById("htModalNereye");
             var ndDiv = nd ? nd.closest("div") : null;

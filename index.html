@@ -17,9 +17,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.41.5">
-    <link rel="stylesheet" href="pdf.css?v=1.41.5">
-    <link rel="stylesheet" href="responsive.css?v=1.41.5">
+    <link rel="stylesheet" href="style.css?v=1.41.6">
+    <link rel="stylesheet" href="pdf.css?v=1.41.6">
+    <link rel="stylesheet" href="responsive.css?v=1.41.6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -1630,12 +1630,19 @@
                         <label>Açıklama</label>
                         <input type="text" id="htModalIslemAciklama" oninput="this.value=trToUpper(this.value)" style="text-transform:uppercase;">
                         <label>İşlem Türü</label>
-                        <select id="htModalIslemTur" class="islem-turu-select" style="width:100%;" onchange="htIslemModalTurDegisti()">
-                            <option value="">SEÇİNİZ</option>
-                            <option value="GELEN">GELEN</option>
-                            <option value="GİDEN">GİDEN</option>
-                            <option value="TRANSFER">TRANSFER</option>
-                        </select>
+                        <div class="ht-custom-select" id="htTurSelectWrapper">
+                            <div class="ht-custom-select-display" id="htTurDisplay" tabindex="0" onclick="htCustomTurToggle()">
+                                <span id="htTurText" style="color:#888;">SEÇİNİZ</span>
+                                <i class="fa-solid fa-chevron-down" style="color:#888;font-size:12px;"></i>
+                            </div>
+                            <div class="ht-custom-select-options" id="htTurOptions">
+                                <div class="ht-tur-opt" data-value="" style="color:#888;" onclick="htCustomTurSec('');htCustomTurToggle()">SEÇİNİZ</div>
+                                <div class="ht-tur-opt" data-value="GELEN" style="color:#2ecc71;font-weight:600;" onclick="htCustomTurSec('GELEN');htCustomTurToggle()">GELEN</div>
+                                <div class="ht-tur-opt" data-value="GİDEN" style="color:#e53935;font-weight:600;" onclick="htCustomTurSec('GİDEN');htCustomTurToggle()">GİDEN</div>
+                                <div class="ht-tur-opt" data-value="TRANSFER" style="color:#888;font-weight:600;" onclick="htCustomTurSec('TRANSFER');htCustomTurToggle()">TRANSFER</div>
+                            </div>
+                        </div>
+                        <select id="htModalIslemTur" style="display:none;" onchange="htIslemModalTurDegisti()"><option value="">SEÇİNİZ</option><option value="GELEN">GELEN</option><option value="GİDEN">GİDEN</option><option value="TRANSFER">TRANSFER</option></select>
                         <div class="ht-ikili">
                             <div><label>Nereden (Kaynak)</label><select id="htModalNereden" style="width:100%;"></select></div>
                             <div><label>Nereye (Hedef)</label><select id="htModalNereye" style="width:100%;"></select></div>
@@ -1859,7 +1866,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.41.5"></script>
+    <script src="script.js?v=1.41.6"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
