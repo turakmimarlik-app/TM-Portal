@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.40.0';
+        var APP_VERSION = 'V1.40.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7543,30 +7543,41 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if(!modal) return;
             var db = htVeriYukle();
             var islem = id ? db.islemler.find(function(i){return i.id===id;}) : null;
+            // Form alanlarını tamamen sıfırla
             document.getElementById("htModalIslemId").value = id || "";
             document.getElementById("htModalIslemAciklama").value = islem ? islem.aciklama : "";
             document.getElementById("htModalTarih").value = islem ? islem.tarih : anlikTarihGetir();
             document.getElementById("htModalTutar").value = islem ? htTl(islem.tutar) : "0,00";
-            document.getElementById("htModalIslemTur").value = islem ? islem.islem : "";
-            var selectNereden = document.getElementById("htModalNereden");
-            var selectNereye = document.getElementById("htModalNereye");
-            var opts = '<option value="" disabled selected>SEÇİNİZ</option><option value="0"><i class="fa-solid fa-globe"></i> HARİCİ</option><option value="-1"><i class="fa-solid fa-money-bill-wave"></i> NAKİT</option>';
-            db.hesaplar.forEach(function(h) {
-                opts += '<option value="'+h.id+'">'+h.bankaAdi+' - '+h.hesapSahibi+'</option>';
-            });
-            selectNereden.innerHTML = opts;
-            selectNereye.innerHTML = opts;
+            var turSelect = document.getElementById("htModalIslemTur");
+            var neredenSelect = document.getElementById("htModalNereden");
+            var nereyeSelect = document.getElementById("htModalNereye");
+            // Nereden/Nereye seçeneklerini yeniden oluştur
+            var opts = '<option value="">SEÇİNİZ</option><option value="0">HARİCİ</option><option value="-1">NAKİT</option>';
+            db.hesaplar.forEach(function(h){ opts += '<option value="'+h.id+'">'+h.bankaAdi+' - '+h.hesapSahibi+'</option>'; });
+            neredenSelect.innerHTML = opts;
+            nereyeSelect.innerHTML = opts;
+            // Nereden/Nereye div görünürlüğünü sıfırla
+            var neredenDiv = neredenSelect.closest("div");
+            var nereyeDiv = nereyeSelect.closest("div");
+            neredenDiv.style.display = "";
+            nereyeDiv.style.display = "";
             if(islem) {
+                turSelect.value = islem.islem;
                 if(islem.islem === "GELEN") {
-                    selectNereden.value = "";
-                    selectNereye.value = islem.hesapId;
+                    neredenSelect.selectedIndex = 0;
+                    var ni = Array.from(nereyeSelect.options).findIndex(function(o){return o.value==String(islem.hesapId);});
+                    nereyeSelect.selectedIndex = ni > 0 ? ni : 0;
                 } else {
-                    selectNereden.value = islem.hesapId;
-                    selectNereye.value = islem.hedefId || "0";
+                    var ni2 = Array.from(neredenSelect.options).findIndex(function(o){return o.value==String(islem.hesapId);});
+                    neredenSelect.selectedIndex = ni2 > 0 ? ni2 : 0;
+                    var hedefVal = String(islem.hedefId || 0);
+                    var ni3 = Array.from(nereyeSelect.options).findIndex(function(o){return o.value==hedefVal;});
+                    nereyeSelect.selectedIndex = ni3 >= 0 ? ni3 : 0;
                 }
             } else {
-                selectNereden.value = "";
-                selectNereye.value = "";
+                turSelect.selectedIndex = 0;
+                neredenSelect.selectedIndex = 0;
+                nereyeSelect.selectedIndex = 0;
             }
             htIslemModalTurDegisti();
             modal.style.display = "flex";
