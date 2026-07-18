@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.40.8';
+        var APP_VERSION = 'V1.40.9';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7699,14 +7699,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             }
             htVeriKaydet(db);
             htIslemModalKapat();
-            htHesapKartlariGoster();
-            htNakitKartGoster();
-            htIslemleriGoster();
-            if(HT_AKTIF_DETAY_HESAP !== null) htDetayIslemleriGoster();
-            htDurumGuncelle();
-            tmNotify(id ? "Hareket güncellendi." : "Hareket eklendi.", "success");
-            if(!id && (tur === "GELEN" || tur === "TRANSFER")) tmSesCal('para');
-            aktiviteEkle((id ? "Hareket güncellendi: " : "Hareket eklendi: ") + aciklama, "Muhasebe");
+            setTimeout(function(){ location.reload(); }, 300);
         }
 
         function htBakiyeGuncelle(db, hesapId, tutar, islem, geriAl) {
