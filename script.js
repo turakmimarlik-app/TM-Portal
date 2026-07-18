@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.41.9';
+        var APP_VERSION = 'V1.41.10';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -326,6 +326,7 @@ function gorevMailGonder(gorev) {
             // Hesap Takip ilk temizlik sonrasi Firebase restore engeli kalkti
             if(!localStorage.getItem("tm_ht_temiz_v1.41.0")) {
                 localStorage.setItem("tm_ht_temiz_v1.41.0","1");
+                try { origSetItem("tm_ht_clean", "v1.20.0"); } catch(e){}
             }
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
