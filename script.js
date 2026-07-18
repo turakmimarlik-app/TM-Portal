@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.40.9';
+        var APP_VERSION = 'V1.41.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6964,136 +6964,7 @@ function gorevMailGonder(gorev) {
             return _islemler;
         })();
 
-        function htTestVerisiOlustur() {
-            var stored = localStorage.getItem("tm_hesap_takip_db");
-            if (!stored) { alert("Önce Hesap Takip sayfasını açın."); return; }
-            if (!confirm("Bu işlem MEVCUT TÜM HESAP HAREKETLERİNİ SİLECEK ve 2024-2026 arası örnek test verileri yükleyecek.\n\nMevcut verileriniz otomatik yedeklenecek. Devam etmek istiyor musunuz?")) return;
-            var backupKey = "tm_hesap_takip_db_yedek_" + new Date().toISOString().slice(0,10);
-            localStorage.setItem(backupKey, stored);
-            var db = JSON.parse(stored);
-            db.islemler = [];
-            db.hesaplar.forEach(function(h){ h.bakiye = 50000; });
-            db.nakit = 15000;
-            var sira = 4, islemler = [];
-            [1,2,3].forEach(function(hid){islemler.push({id:hid,hesapId:hid,islem:"GELEN",tutar:50000,aciklama:"DEVREDEN BAKİYE",tarih:"2024-01-01"});});
-            islemler.push({id:4,hesapId:-1,islem:"GELEN",tutar:15000,aciklama:"DEVREDEN NAKİT",tarih:"2024-01-01"});
-            function ekle(hId, tip, tutar, aciklama, tarih, hedefId) {
-                sira++; var obj = {id:sira, hesapId:hId, islem:tip, tutar:tutar, aciklama:aciklama, tarih:tarih};
-                if(hedefId!==undefined) obj.hedefId=hedefId;
-                islemler.push(obj);
-            }
-            // Bakiyeleri ay sonunda toplu hesapla
-            function hesapBakiye(id){
-                var net=0;
-                islemler.forEach(function(i){
-                    if(i.islem==="GELEN"){if(i.hesapId===id)net+=i.tutar;}
-                    else if(i.islem==="GİDEN"){if(i.hesapId===id)net-=i.tutar;if(i.hedefId===id)net+=i.tutar;}
-                    else if(i.islem==="TRANSFER"){if(i.hesapId===id)net-=i.tutar;if(i.hedefId===id)net+=i.tutar;}
-                });
-                return net;
-            }
-            function tg(y,m,d){return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
-            function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
-            function rp(a,b){return Math.round(ri(a,b)/100)*100;}
-            var gelirAc = ["KEŞİF RAPORU BEDELİ","PROJE TESLİM BEDELİ","DANIŞMANLIK ÜCRETİ","RÖLÖVE BEDELİ","FİZİBİLİTE RAPORU","KONTROLLÜK HİZMETİ","ZEMİN ETÜDÜ RAPORU","YAPI DENETİM BEDELİ","AVAN PROJE BEDELİ","UYGULAMA PROJESİ","İÇ MİMARLIK HİZMETİ","PEYZAJ PROJESİ","TAŞIYICI SİSTEM ANALİZİ","ISIL YALITIM RAPORU","YANGIN PROJESİ","STATİK PROJE","MİMARİ AVAN PROJE","SES YALITIM RAPORU","ENERJİ KİMLİK BELGESİ","İMAR DURUMU BELGESİ"];
-            var projeler = ["KONUT PROJESİ","VİLLA PROJESİ","OFİS İÇ MEKAN","RESTORAN PROJESİ","MÜSTAKİL EV","APARTMAN PROJESİ","DÜKKAN DÖNÜŞÜMÜ","OTEL ÖN ETÜDÜ","KAFE TASARIMI","İŞ MERKEZİ KEŞİF","İMAR BARIŞI","OKUL BİNASI","DÜKKAN İÇ MEKAN","HAVUZLU VİLLA","YAZLIK KONUT","HASTANE EK BİNA","SPOR TESİSİ","ALIŞVERİŞ MERKEZİ","KAMU BİNASI","OTOPARK PROJESİ","FABRİKA BİNASI","SOYUNMA ODALARI"];
-            var projeAsama = ["AVANS","HAKEDİŞ 1","HAKEDİŞ 2","KESİF BEDELİ","TESLİM ÖDEMESİ","EK KEŞİF","İLAVE İŞ"];
-            var giderAc = ["KIRTASİYE MALZEMESİ","YAKIT GİDERİ","ULAŞIM GİDERİ","YEMEK GİDERİ","TEMİZLİK MALZEMESİ","BAKIM ONARIM","KOPYALAMA BASKI","TOPLANTI MASRAFI","OTO PARK ÜCRETİ","NAKLİYE GİDERİ","TEKNİK GEZİ","NUMUNE TESLİM","BELEDİYE RUHSAT","İMAR MÜDÜRLÜĞÜ","POSTA KARGO","OFİS İKMALİ","MUTFAK GİDERİ","ÇAY KAHVE İKMALİ","TEKNİK MALZEME","NUMUNE BASKISI","ÇİZİM ÇIKTISI","İNŞAAT MALZEMESİ","KEŞİF DOSYASI","TOPOGRAFİ ÖLÇÜM","BİLGİSAYAR SARF","MOBİLYA TAMİRAT","ELEKTRİK TESİSAT","BOYA BADANA","TADİLAT MALZEMESİ","İZOLASYON MALZEMESİ"];
-            var duzenliAd = ["OFİS KİRASI","ELEKTRİK","SU","DOĞALGAZ","İNTERNET","TELEFON","MAAŞ","SGK","MUHASEBE","SİGORTA","AİDAT","OGS","POS KOMİSYON","KREDİ KARTI","MUHTASAR","YAZILIM LİSANSI","BAĞ-KUR"];
-            var nakitGiderAc = ["YEMEK","TAKSİ","OTOBÜS","KANTİN","GAZETE","ÇAY","AYAKKABI","KARGO","FOTOKOPİ","PARK","SU","EKMEK","ŞARJ","KAHVALTI"];
-            var yillar=[2024,2025,2026], sG={1:31,2:28,3:31,4:30,5:31,6:30,7:31,8:31,9:30,10:31,11:30,12:31};
-            yillar.forEach(function(y){
-                if(y===2026) sG[2]=29; else sG[2]=28;
-                for(var m=1;m<=12;m++){
-                    if(y===2026 && m>7) break;
-                    var mx=sG[m], cy=y, ca=m;
-                    function hd(g){return tg(cy,ca,Math.min(g,mx));}
-                    var yf=1+(y-2024)*0.18;
-                    // ===== GELIRLER ===== (toplam ~18-26 adet)
-                    // Ana hesap proje gelirleri (6-9 adet)
-                    for(var p=0;p<ri(6,9);p++) ekle(1,"GELEN",rp(ri(5000,95000)*yf),projeler[ri(0,projeler.length-1)]+" "+projeAsama[ri(0,projeAsama.length-1)],hd(ri(1,mx)));
-                    // Ana hesap ek gelir (3-5 adet)
-                    for(var e=0;e<ri(3,5);e++) ekle(1,"GELEN",rp(ri(3000,35000)*yf),gelirAc[ri(0,gelirAc.length-1)],hd(ri(1,mx)));
-                    // Ziraat gelir (3-5 adet)
-                    for(var z=0;z<ri(3,5);z++) ekle(2,"GELEN",rp(ri(5000,45000)*yf),gelirAc[ri(0,gelirAc.length-1)],hd(ri(1,mx)));
-                    // Ahsen maaş + ek (3 adet)
-                    ekle(3,"GELEN",rp(ri(10000,20000)*yf),"AHSEN MAAŞ ÖDEMESİ",hd(ri(24,28)));
-                    ekle(3,"GELEN",rp(ri(3000,10000)*yf),gelirAc[ri(0,gelirAc.length-1)],hd(ri(1,15)));
-                    ekle(3,"GELEN",rp(ri(2000,8000)*yf),gelirAc[ri(0,gelirAc.length-1)],hd(ri(16,23)));
-                    // Nakit tahsilat (1-2 adet)
-                    for(var n=0;n<ri(1,2);n++) ekle(-1,"GELEN",rp(ri(1000,8000)*yf),"NAKİT TAHSİLAT",hd(ri(1,mx)));
-                    // ===== GIDERLER ===== (toplam ~28-38 adet)
-                    // Düzenli giderler ana hesap (tümü eklenir, 17 adet)
-                    duzenliAd.forEach(function(da){
-                        var dTut, gun=ri(1,28);
-                        if(da==="OFİS KİRASI") dTut=rp(ri(8000,11000)*yf);
-                        else if(da==="ELEKTRİK") dTut=rp(ri(600,1500)*yf);
-                        else if(da==="SU") dTut=rp(ri(180,400)*yf);
-                        else if(da==="DOĞALGAZ"){if([6,7,8,9].indexOf(m)!==-1)dTut=rp(ri(150,500)*yf);else if([3,4,5,10,11].indexOf(m)!==-1)dTut=rp(ri(300,1500)*yf);else dTut=rp(ri(1000,3500)*yf);}
-                        else if(da==="İNTERNET") dTut=rp(ri(300,450)*yf);
-                        else if(da==="TELEFON") dTut=rp(ri(300,550)*yf);
-                        else if(da==="MAAŞ"){dTut=rp(ri(17000,25000)*yf);gun=26;}
-                        else if(da==="SGK") dTut=rp(ri(5000,9000)*yf);
-                        else if(da==="MUHASEBE") dTut=rp(ri(2000,4000)*yf);
-                        else if(da==="SİGORTA"){dTut=rp(ri(1500,3000)*yf);gun=10;}
-                        else if(da==="AİDAT") dTut=rp(ri(400,900)*yf);
-                        else if(da==="OGS") dTut=rp(ri(200,600)*yf);
-                        else if(da==="POS KOMİSYON") dTut=rp(ri(100,500)*yf);
-                        else if(da==="KREDİ KARTI") dTut=rp(ri(200,600)*yf);
-                        else if(da==="MUHTASAR") dTut=rp(ri(1500,4000)*yf);
-                        else if(da==="YAZILIM LİSANSI"){dTut=rp(ri(1000,4000)*yf);gun=18;}
-                        else if(da==="BAĞ-KUR") dTut=rp(ri(3000,6000)*yf);
-                        if(dTut>50) ekle(1,"GİDEN",dTut,da,hd(gun));
-                    });
-                    // Rastgele gider ana hesap (11-16 adet)
-                    for(var r=0;r<ri(11,16);r++){
-                        var rTut=rp(ri(200,9000)*yf); if(rTut<100) rTut=100;
-                        ekle(1,"GİDEN",rTut,giderAc[ri(0,giderAc.length-1)],hd(ri(1,mx)));
-                    }
-                    // Ziraat giderleri (5-8 adet)
-                    for(var zgi=0;zgi<ri(5,8);zgi++){
-                        var zt=rp(ri(300,8000)*yf); if(zt<100) zt=100;
-                        ekle(2,"GİDEN",zt,giderAc[ri(0,giderAc.length-1)],hd(ri(1,mx)));
-                    }
-                    // Ahsen giderleri (5-8 adet)
-                    for(var agi=0;agi<ri(5,8);agi++){
-                        var at=rp(ri(100,5000)*yf); if(at<50) at=50;
-                        ekle(3,"GİDEN",at,giderAc[ri(0,giderAc.length-1)],hd(ri(1,mx)));
-                    }
-                    // Nakit harcamaları (5-8 adet)
-                    for(var nki=0;nki<ri(5,8);nki++){
-                        var nt=rp(ri(50,2000)*yf); if(nt<20) nt=20;
-                        ekle(-1,"GİDEN",nt,nakitGiderAc[ri(0,nakitGiderAc.length-1)],hd(ri(1,mx)));
-                    }
-                    // ===== TRANSFERLER (4-6 adet) =====
-                    for(var ti=0;ti<ri(4,6);ti++){
-                        var kay, hede;
-                        var rr=Math.random();
-                        if(rr<0.25){kay=1;hede=2;}
-                        else if(rr<0.45){kay=1;hede=-1;}
-                        else if(rr<0.62){kay=1;hede=3;}
-                        else if(rr<0.76){kay=2;hede=1;}
-                        else if(rr<0.88){kay=2;hede=-1;}
-                        else{kay=3;hede=1;}
-                        var trTut=rp(ri(500,25000)*yf); if(trTut<200) trTut=200;
-                        ekle(kay,"TRANSFER",trTut,["HESAPLAR ARASI AKTARIM","NAKİT AKTARIMI","BANKA HAVALESİ","FON AKTARIMI","VADELİYE AKTARIM"][ri(0,4)],hd(ri(1,mx)),hede);
-                    }
-                }
-            });
-            // Son bakiyeleri hesapla ve db'ye yaz
-            db.hesaplar.forEach(function(h){ h.bakiye = Math.max(0, hesapBakiye(h.id)); });
-            db.nakit = Math.max(0, hesapBakiye(-1));
-            db.islemler = islemler;
-            localStorage.setItem("tm_hesap_takip_db", JSON.stringify(db));
-            htSayfayiYukle();
-            var mesaj = "Test verileri başarıyla yüklendi!\n\n";
-            mesaj += "Toplam işlem: " + sira + "\n";
-            mesaj += "Hesaplar: " + db.hesaplar.length + " banka + Nakit\n";
-            mesaj += "Dönem: Ocak 2024 - Temmuz 2026\n\n";
-            mesaj += "Yedek anahtarı: " + backupKey;
-            alert(mesaj);
-        }
-
+        
         var HT_AKTIF_DETAY_HESAP = null;
 
 function htTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " ₺"; }
@@ -7166,6 +7037,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         function htVeriKaydet(db) { try { localStorage.setItem("tm_hesap_takip_db", JSON.stringify(db)); } catch(e) { console.error("Hesap takip kaydetme hatasi:", e); } }
 
         function htSayfayiYukle() {
+            if(!localStorage.getItem("tm_ht_test_temizlendi")) {
+                try { var __t=JSON.parse(localStorage.getItem("tm_hesap_takip_db")); if(__t&&__t.islemler&&__t.islemler.length>50) { localStorage.removeItem("tm_hesap_takip_db"); localStorage.removeItem("tm_ht_test_v1.36.7"); } } catch(e){}
+                localStorage.setItem("tm_ht_test_temizlendi","1");
+            }
             try { var __d=JSON.parse(localStorage.getItem("tm_hesap_takip_db")); if(__d&&(!__d.hesaplar||__d.hesaplar.length===0)) { localStorage.removeItem("tm_hesap_takip_db"); localStorage.removeItem("tm_ht_test_v1.36.7"); } } catch(e){}
             htVeriYukle();
             HT_AKTIF_DETAY_HESAP = null;
