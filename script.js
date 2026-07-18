@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.41.10';
+        var APP_VERSION = 'V1.41.11';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7431,7 +7431,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var db = htVeriYukle();
                 function doldur(el) {
                     if(el.options.length>0) return;
-                    var h="<option value=\"\">SEÇİNİZ</option><option value=\"0\">HARİCİ</option><option value=\"-1\">NAKİT</option>";
+                    var h="<option value=\"\">SEÇİNİZ</option><option value=\"-1\">NAKİT</option>";
                     db.hesaplar.forEach(function(a){ h+="<option value=\""+a.id+"\">"+a.bankaAdi+" - "+a.hesapSahibi+"</option>"; });
                     el.innerHTML = h;
                 }
