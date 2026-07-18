@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.39.1';
+        var APP_VERSION = 'V1.40.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7215,7 +7215,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     var netSifre = hs.internetSifre || "—";
                     h += '<div class="ht-kart-3d" style="--ht-kart-renk:'+bankaRenk+'" onclick="htHesapDetayGoster('+hs.id+')">';
                     h += '<div class="kart-yuz">';
-                    h += '<div class="kart-top"><div class="kart-banka">'+hs.bankaAdi+'</div></div>';
+                    var sirketBadge = (hs.iban && hs.iban.replace(/\s/g,"") === "TR770006400000114210405843") ? '<span class="kart-badge-sirket">ŞİRKET</span>' : '';
+                    h += '<div class="kart-top"><div class="kart-banka">'+hs.bankaAdi+sirketBadge+'</div></div>';
                     h += '<div class="kart-actions">';
                     h += '<button class="kart-duzenle" onclick="event.stopPropagation();htHesapModalAc('+hs.id+')" title="Düzenle">?</button>';
                     h += '<button class="kart-sil" onclick="event.stopPropagation();htHesapSil('+hs.id+')" title="Sil"><i class="fa-solid fa-xmark"></i></button>';
@@ -7426,7 +7427,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 }
                 return true;
             });
-            filtreli.sort(function(a,b){ var t=(a.tarih||"").localeCompare(b.tarih||"");return t!==0?t*HT_SIRALAMA.yon:(b.id||0)-(a.id||0); });
+            filtreli.sort(function(a,b){ var t=(b.tarih||"").localeCompare(a.tarih||"");return t!==0?t:(b.id||0)-(a.id||0); });
             var toplamSayfa = Math.max(1, Math.ceil(filtreli.length / HT_SAYFA_BOYUT));
             if(HT_DETAY_SAYFA > toplamSayfa) HT_DETAY_SAYFA = toplamSayfa;
             var basIdx = (HT_DETAY_SAYFA - 1) * HT_SAYFA_BOYUT;
@@ -7495,14 +7496,6 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 if(secYil !== simdi.getFullYear() || secAy !== simdi.getMonth()) {
                     sayfaHtml += '<button class="ht-sayfa-btn" onclick="htDetayAyBugun()" title="Bu Ay"><i class="fa-solid fa-calendar-day"></i></button>';
                 }
-                var yilSet={};hesapIslemler.forEach(function(i){if(i.tarih){var d=new Date(i.tarih);yilSet[d.getFullYear()]=true;}});
-                var yilList=Object.keys(yilSet).map(Number).sort(function(a,b){return b-a;});
-                if(yilList.length>1) {
-                    sayfaHtml += '<select class="ht-yil-select" onchange="htDetayYilSec(this.value)">';
-                    sayfaHtml += '<option value="">Tüm Yıllar</option>';
-                    yilList.forEach(function(y){ sayfaHtml += '<option value="'+y+'"'+(secYil===y&&HT_DETAY_AKTIF_AY?' selected':'')+'>'+y+'</option>'; });
-                    sayfaHtml += '</select>';
-                }
             }
             sayfaHtml += '<div class="ht-sayfa-numara">';
             if(toplamSayfa > 1) {
@@ -7514,21 +7507,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             sayfaHtml += '</div>';
             if(sayfalamaEl) sayfalamaEl.innerHTML = sayfaHtml;
             var sortBtn=document.getElementById("htDetaySortBtn");
-            if(sortBtn) sortBtn.innerHTML=(HT_SIRALAMA.yon===-1?'<i class="fa-solid fa-arrow-down-short-wide"></i>':'<i class="fa-solid fa-arrow-up-wide-short"></i>')+' Tarih';
+            if(sortBtn) sortBtn.innerHTML='<i class="fa-solid fa-arrow-down-short-wide"></i> Tarih';
             var ac=document.getElementById("htDetayAramaClear");
             if(ac) ac.style.display=document.getElementById("htDetayArama").value?"":"none";
         }
 
         function htDetaySiralamaDegistir() {
-            HT_SIRALAMA.yon *= -1;
-            htDetayIslemleriGoster();
-        }
-
-        function htDetayYilSec(yil) {
-            if(!yil) { HT_DETAY_AKTIF_AY = null; }
-            else { HT_DETAY_AKTIF_AY = { yil: parseInt(yil), ay: HT_DETAY_AKTIF_AY ? HT_DETAY_AKTIF_AY.ay : new Date().getMonth() }; }
-            HT_DETAY_SAYFA = 1;
-            htDetayIslemleriGoster();
+            // Sabit: en yeni en üstte
         }
 
         function htDetayIslemFiltrele() {
@@ -7728,7 +7713,6 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
         }
 
-        var HT_SIRALAMA = { anahtar: "tarih", yon: -1 };
         var HT_AKTIF_AY = null;
         var HT_DETAY_AKTIF_AY = null;
         var HT_AKTIF_SAYFA = 1;
@@ -7738,6 +7722,64 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         function htAyBaslikGetir(yil, ay) {
             var aylar = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
             return aylar[ay] + " " + yil;
+        }
+
+        var HT_PICKER_DETAY = false;
+        function htAySecimGoster(el, forDetay) {
+            var picker = document.getElementById("htAyPicker");
+            if(!picker) return;
+            var rect = el.getBoundingClientRect();
+            HT_PICKER_DETAY = forDetay;
+            var simdi = new Date();
+            var secYil = forDetay ? (HT_DETAY_AKTIF_AY ? HT_DETAY_AKTIF_AY.yil : simdi.getFullYear()) : (HT_AKTIF_AY ? HT_AKTIF_AY.yil : simdi.getFullYear());
+            var secAy = forDetay ? (HT_DETAY_AKTIF_AY ? HT_DETAY_AKTIF_AY.ay : simdi.getMonth()) : (HT_AKTIF_AY ? HT_AKTIF_AY.ay : simdi.getMonth());
+            document.getElementById("htPickerYil").textContent = secYil;
+            picker.style.display = "block";
+            picker.style.left = Math.min(rect.left, window.innerWidth - 240) + "px";
+            picker.style.top = (rect.bottom + 4) + "px";
+            var grid = document.getElementById("htPickerAylar");
+            var aylar = ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
+            grid.innerHTML = "";
+            aylar.forEach(function(a,i){
+                var btn = document.createElement("button");
+                btn.textContent = a;
+                if(i === secAy) btn.className = "secili";
+                btn.onclick = function(){ htPickerAySec(i); };
+                grid.appendChild(btn);
+            });
+            document.addEventListener("click", htPickerDisariKapat, false);
+        }
+        function htPickerDisariKapat(e) {
+            var picker = document.getElementById("htAyPicker");
+            if(picker && !picker.contains(e.target) && !e.target.closest(".ht-ay-baslik")) {
+                picker.style.display = "none";
+                document.removeEventListener("click", htPickerDisariKapat, false);
+            }
+        }
+        function htPickerAySec(ay) {
+            var picker = document.getElementById("htAyPicker");
+            var yil = parseInt(document.getElementById("htPickerYil").textContent);
+            picker.style.display = "none";
+            document.removeEventListener("click", htPickerDisariKapat, false);
+            if(HT_PICKER_DETAY) {
+                HT_DETAY_AKTIF_AY = { yil: yil, ay: ay };
+                HT_DETAY_SAYFA = 1;
+                htDetayIslemleriGoster();
+            } else {
+                HT_AKTIF_AY = { yil: yil, ay: ay };
+                HT_AKTIF_SAYFA = 1;
+                htIslemleriGoster();
+            }
+        }
+        function htPickerYilDegistir(delta) {
+            var el = document.getElementById("htPickerYil");
+            var yil = parseInt(el.textContent) + delta;
+            el.textContent = yil;
+            // Highlight current month in new year
+            var grid = document.getElementById("htPickerAylar");
+            var simdi = new Date();
+            var secAy = HT_PICKER_DETAY ? (HT_DETAY_AKTIF_AY ? HT_DETAY_AKTIF_AY.ay : simdi.getMonth()) : (HT_AKTIF_AY ? HT_AKTIF_AY.ay : simdi.getMonth());
+            grid.querySelectorAll("button").forEach(function(b,i){ b.className = i===secAy ? "secili" : ""; });
         }
 
         function htAyBugun() {
@@ -7821,7 +7863,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 }
                 return true;
             });
-            filtreli.sort(function(a,b){ var t=(a.tarih||"").localeCompare(b.tarih||"");return t!==0?t*HT_SIRALAMA.yon:(b.id||0)-(a.id||0); });
+            filtreli.sort(function(a,b){ var t=(b.tarih||"").localeCompare(a.tarih||"");return t!==0?t:(b.id||0)-(a.id||0); });
             var toplamSayfa = Math.max(1, Math.ceil(filtreli.length / HT_SAYFA_BOYUT));
             if(HT_AKTIF_SAYFA > toplamSayfa) HT_AKTIF_SAYFA = toplamSayfa;
             var basIdx = (HT_AKTIF_SAYFA - 1) * HT_SAYFA_BOYUT;
@@ -7878,14 +7920,6 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 if(secYil !== simdi.getFullYear() || secAy !== simdi.getMonth()) {
                     sayfaHtml += '<button class="ht-sayfa-btn" onclick="htAyBugun()" title="Bu Ay"><i class="fa-solid fa-calendar-day"></i></button>';
                 }
-                var yilSet={};db.islemler.forEach(function(i){if(i.tarih){var d=new Date(i.tarih);yilSet[d.getFullYear()]=true;}});
-                var yilList=Object.keys(yilSet).map(Number).sort(function(a,b){return b-a;});
-                if(yilList.length>1) {
-                    sayfaHtml += '<select class="ht-yil-select" onchange="htYilSec(this.value)">';
-                    sayfaHtml += '<option value="">Tüm Yıllar</option>';
-                    yilList.forEach(function(y){ sayfaHtml += '<option value="'+y+'"'+(secYil===y&&HT_AKTIF_AY?' selected':'')+'>'+y+'</option>'; });
-                    sayfaHtml += '</select>';
-                }
             }
             sayfaHtml += '<div class="ht-sayfa-numara">';
             if(toplamSayfa > 1) {
@@ -7897,21 +7931,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             sayfaHtml += '</div>';
             if(sayfalamaEl) sayfalamaEl.innerHTML = sayfaHtml;
             var sortBtn=document.getElementById("htSortBtn");
-            if(sortBtn) sortBtn.innerHTML=(HT_SIRALAMA.yon===-1?'<i class="fa-solid fa-arrow-down-short-wide"></i>':'<i class="fa-solid fa-arrow-up-wide-short"></i>')+' Tarih';
+            if(sortBtn) sortBtn.innerHTML='<i class="fa-solid fa-arrow-down-short-wide"></i> Tarih';
             var ac=document.getElementById("htAramaClear");
             if(ac) ac.style.display=document.getElementById("htArama").value?"":"none";
         }
 
         function htSiralamaDegistir() {
-            HT_SIRALAMA.yon *= -1;
-            htIslemleriGoster();
-        }
-
-        function htYilSec(yil) {
-            if(!yil) { HT_AKTIF_AY = null; }
-            else { HT_AKTIF_AY = { yil: parseInt(yil), ay: HT_AKTIF_AY ? HT_AKTIF_AY.ay : new Date().getMonth() }; }
-            HT_AKTIF_SAYFA = 1;
-            htIslemleriGoster();
+            // Sabit: en yeni en üstte
         }
 
         function htAramaKeyup(e) {

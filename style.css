@@ -389,7 +389,8 @@
         .ht-kart-3d .kart-yuz { position:relative; padding:24px 22px 18px 22px; min-height:170px; display:flex; flex-direction:column; justify-content:space-between; background:linear-gradient(145deg, color-mix(in srgb, var(--ht-kart-renk) 90%, #fff) 0%, color-mix(in srgb, var(--ht-kart-renk) 70%, #000) 100%); }
         .ht-kart-3d .kart-yuz::before { content:'₺'; position:absolute; top:10px; right:14px; width:48px; height:36px; border-radius:5px; border:2px solid rgba(255,255,255,0.2); background:linear-gradient(135deg,rgba(255,255,255,0.08) 0%,rgba(255,255,255,0.02) 100%); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:rgba(255,255,255,0.35); }
         .ht-kart-3d .kart-yuz::after { content:'● ● ● ●    ● ● ● ●    ● ● ● ●'; position:absolute; top:72px; left:68px; font-size:13px; letter-spacing:3px; color:rgba(255,255,255,0.25); font-weight:700; font-family:monospace; }
-        .ht-kart-3d .kart-banka { font-size:16px; font-weight:700; color:rgba(255,255,255,0.6); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+        .ht-kart-3d .kart-banka { font-size:16px; font-weight:700; color:rgba(255,255,255,0.6); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+        .ht-kart-3d .kart-badge-sirket { font-size:9px; font-weight:800; background:#e53935; color:#fff; padding:2px 8px; border-radius:4px; letter-spacing:0.5px; text-transform:uppercase; }
         .ht-kart-3d .kart-bakiye { font-size:26px; font-weight:900; color:#fff; letter-spacing:0.5px; text-shadow:0 2px 4px rgba(0,0,0,0.3); position:relative; z-index:1; margin-top:28px; }
         .ht-kart-3d .kart-bakiye.pozitif { color:#5ee89b; }
         .ht-kart-3d .kart-bakiye.negatif { color:#f5a097; }
@@ -443,8 +444,8 @@
         .ht-search-wrap input { width:100%; padding:9px 14px 9px 50px; border:1px solid var(--ht-border); border-radius:8px; background:var(--ht-card); color:var(--ht-text); font-size:12px; outline:none; box-sizing:border-box; }
         .ht-search-wrap input:focus { border-color:var(--ht-accent); }
         .ht-search-wrap .ht-search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px; color:var(--ht-text-light); }
-        .ht-search-clear { position:absolute; left:32px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--ht-text-light); font-size:13px; cursor:pointer; padding:2px; display:flex; align-items:center; z-index:1; transition:0.15s; }
-        .ht-search-clear:hover { color:var(--ht-text); }
+        .ht-search-clear { position:absolute; left:32px; top:50%; transform:translateY(-50%); background:none; border:none; color:#e53935; font-size:13px; cursor:pointer; padding:2px; display:flex; align-items:center; z-index:1; transition:0.15s; }
+        .ht-search-clear:hover { color:#ff6b6b; }
 
         /* İşlem Sıralama Başlıkları */
         .ht-sirala-btn { padding:4px 10px; border:1px solid var(--ht-border); border-radius:6px; background:transparent; color:var(--ht-text-light); font-size:10px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
@@ -472,16 +473,23 @@
 
         /* Sayfalama */
         .ht-sayfalama { display:flex; align-items:center; gap:6px; margin-top:12px; padding:8px 4px; flex-wrap:wrap; }
-        .ht-yil-select { padding:3px 6px; border:1px solid var(--ht-border); border-radius:6px; background:transparent; color:var(--ht-text-light); font-size:10px; font-weight:600; cursor:pointer; outline:none; transition:0.2s; }
-        .ht-yil-select:hover { border-color:var(--ht-accent); color:var(--ht-text); }
-        .ht-yil-select:focus { border-color:var(--ht-accent); }
+        /* Ay seçici popup */
+        .ht-ay-picker { position:fixed; z-index:9999; background:#162436; border:1px solid #243b52; border-radius:10px; padding:14px; box-shadow:0 8px 30px rgba(0,0,0,0.5); min-width:220px; }
+        .ht-ay-picker-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+        .ht-ay-picker-nav { width:28px; height:28px; border:1px solid #243b52; border-radius:6px; background:transparent; color:#7a94ad; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:11px; transition:0.15s; }
+        .ht-ay-picker-nav:hover { border-color:#a0b8cc; color:#e4eaf2; }
+        .ht-ay-picker-yil-ad { font-size:13px; font-weight:700; color:#e4eaf2; }
+        .ht-ay-picker-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; }
+        .ht-ay-picker-grid button { padding:6px 4px; border:1px solid #1a2a3a; border-radius:6px; background:rgba(255,255,255,0.04); color:#7a94ad; font-size:11px; font-weight:600; cursor:pointer; transition:0.15s; font-family:inherit; }
+        .ht-ay-picker-grid button:hover { border-color:#a0b8cc; color:#e4eaf2; background:rgba(255,255,255,0.08); }
+        .ht-ay-picker-grid button.secili { background:#e53935; color:#fff; border-color:#e53935; }
         .ht-sayfa-btn { width:28px; height:28px; border:1px solid var(--ht-border); border-radius:6px; background:transparent; color:var(--ht-text-light); font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s; }
         .ht-sayfa-btn:hover { border-color:var(--ht-accent); color:var(--ht-text); background:rgba(255,255,255,0.04); }
         .ht-sayfa-bilgi { font-size:10px; color:var(--ht-text-light); white-space:nowrap; }
         .ht-sayfa-numara { display:flex; align-items:center; gap:3px; margin-left:8px; }
         .ht-sayfa-num { min-width:24px; height:24px; border:1px solid var(--ht-border); border-radius:4px; background:transparent; color:var(--ht-text-light); font-size:10px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.15s; padding:0 4px; }
         .ht-sayfa-num:hover { border-color:var(--ht-accent); color:var(--ht-text); }
-        .ht-sayfa-num.ht-sayfa-aktif { background:var(--ht-accent); color:#0d1b2a; border-color:var(--ht-accent); cursor:default; }
+        .ht-sayfa-num.ht-sayfa-aktif { background:#e53935; color:#fff; border-color:#e53935; cursor:default; }
 
         /* Hesap Modal */
         #htHesapModal .modal-box { max-width:480px; background:#162436; border:1px solid #243b52; }

@@ -17,9 +17,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.39.1">
-    <link rel="stylesheet" href="pdf.css?v=1.39.1">
-    <link rel="stylesheet" href="responsive.css?v=1.39.1">
+    <link rel="stylesheet" href="style.css?v=1.40.0">
+    <link rel="stylesheet" href="pdf.css?v=1.40.0">
+    <link rel="stylesheet" href="responsive.css?v=1.40.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -554,7 +554,7 @@
                     <div class="ht-ay-nav">
                         <button id="htSortBtn" class="ht-sirala-btn" onclick="htSiralamaDegistir()" title="Sıralamayı değiştir"><i class="fa-solid fa-arrow-down-short-wide"></i> Tarih</button>
                         <button class="ht-ay-btn" onclick="htAyDegistir(-1)" title="Önceki Ay"><i class="fa-solid fa-chevron-left"></i></button>
-                        <span id="htAyBaslik" class="ht-ay-baslik"></span>
+                        <span id="htAyBaslik" class="ht-ay-baslik" onclick="htAySecimGoster(this,false)" style="cursor:pointer;"></span>
                         <button class="ht-ay-btn" onclick="htAyDegistir(1)" title="Sonraki Ay"><i class="fa-solid fa-chevron-right"></i></button>
                         <button class="ht-ay-btn" onclick="htAyBugun()" title="Bu Ay" style="margin-left:4px;"><i class="fa-solid fa-calendar-day"></i></button>
                     </div>
@@ -579,7 +579,7 @@
                         <div class="ht-ay-nav" style="flex:1;min-width:200px;">
                             <button id="htDetaySortBtn" class="ht-sirala-btn" onclick="htDetaySiralamaDegistir()" title="Sıralamayı değiştir"><i class="fa-solid fa-arrow-down-short-wide"></i> Tarih</button>
                             <button class="ht-ay-btn" onclick="htDetayAyDegistir(-1)" title="Önceki Ay"><i class="fa-solid fa-chevron-left"></i></button>
-                            <span id="htDetayAyBaslik" class="ht-ay-baslik"></span>
+                            <span id="htDetayAyBaslik" class="ht-ay-baslik" onclick="htAySecimGoster(this,true)" style="cursor:pointer;"></span>
                             <button class="ht-ay-btn" onclick="htDetayAyDegistir(1)" title="Sonraki Ay"><i class="fa-solid fa-chevron-right"></i></button>
                             <button class="ht-ay-btn" onclick="htDetayAyBugun()" title="Bu Ay" style="margin-left:4px;"><i class="fa-solid fa-calendar-day"></i></button>
                         </div>
@@ -591,6 +591,14 @@
                     </div>
                     <div id="htDetayIslemler"></div>
                     <div id="htDetaySayfalama" class="ht-sayfalama"></div>
+                </div>
+                <div id="htAyPicker" class="ht-ay-picker" style="display:none;">
+                    <div class="ht-ay-picker-header">
+                        <button class="ht-ay-picker-nav" onclick="htPickerYilDegistir(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span id="htPickerYil" class="ht-ay-picker-yil-ad"></span>
+                        <button class="ht-ay-picker-nav" onclick="htPickerYilDegistir(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="ht-ay-picker-grid" id="htPickerAylar"></div>
                 </div>
             </div>
             <div id="fatura-takip-page" class="page">
@@ -1852,7 +1860,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.39.1"></script>
+    <script src="script.js?v=1.40.0"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
