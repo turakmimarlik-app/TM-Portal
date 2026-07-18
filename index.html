@@ -17,9 +17,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.41.3">
-    <link rel="stylesheet" href="pdf.css?v=1.41.3">
-    <link rel="stylesheet" href="responsive.css?v=1.41.3">
+    <link rel="stylesheet" href="style.css?v=1.41.4">
+    <link rel="stylesheet" href="pdf.css?v=1.41.4">
+    <link rel="stylesheet" href="responsive.css?v=1.41.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -1632,9 +1632,9 @@
                         <label>İşlem Türü</label>
                         <select id="htModalIslemTur" class="islem-turu-select" style="width:100%;" onchange="htIslemModalTurDegisti()">
                             <option value="">SEÇİNİZ</option>
-                            <option value="GELEN">GELEN</option>
-                            <option value="GİDEN">GİDEN</option>
-                            <option value="TRANSFER">TRANSFER</option>
+                            <option value="GELEN" style="color:#2ecc71;font-weight:600;">GELEN</option>
+                            <option value="GİDEN" style="color:#e53935;font-weight:600;">GİDEN</option>
+                            <option value="TRANSFER" style="color:#888;font-weight:600;">TRANSFER</option>
                         </select>
                         <div class="ht-ikili">
                             <div><label>Nereden (Kaynak)</label><select id="htModalNereden" style="width:100%;"></select></div>
@@ -1859,7 +1859,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.41.3"></script>
+    <script src="script.js?v=1.41.4"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
