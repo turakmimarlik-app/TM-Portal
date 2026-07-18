@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.41.11';
+        var APP_VERSION = 'V1.42.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6947,30 +6947,6 @@ function gorevMailGonder(gorev) {
             { id:2, bankaAdi:"ZİRAAT BANKASI", hesapSahibi:"OKAN TUGAY TURAK", bakiye:0, iban:"TR04 0010 0049 1575 0075 3501", kartSifre:"8998", internetSifre:"258046" },
             { id:3, bankaAdi:"İŞ BANKASI", hesapSahibi:"AHSEN TURAK", bakiye:0, iban:"TR81 0006 4000 0011 4210 4057 71", kartSifre:"XXXX", internetSifre:"XXXX" }
         ];
-        const HT_ORNEK_ISLEMLER = (function(){
-            var _islemler = [];
-            var _sonId = 0;
-            function _r(min,max) { return Math.round((Math.random()*(max-min)+min)*100)/100; }
-            function _ri(min,max) { return Math.floor(Math.random()*(max-min+1))+min; }
-            var _bugun = new Date();
-            var _bas = new Date(_bugun.getFullYear(), _bugun.getMonth()-3, 1);
-            var _gunler = [];
-            for(var _d=new Date(_bas); _d<=_bugun; _d.setDate(_d.getDate()+1)) _gunler.push(new Date(_d));
-            function _gs() { return _gunler[_ri(0,_gunler.length-1)]; }
-            function _ts(g) { return g.getFullYear()+'-'+String(g.getMonth()+1).padStart(2,'0')+'-'+String(g.getDate()).padStart(2,'0'); }
-            var _gelAc = ["MÜŞTERİ ÖDEMESİ","PROJE BEDELİ","DANIŞMANLIK ÜCRETİ","AVANS ÖDEMESİ","HİZMET BEDELİ","KEŞİF BEDELİ","PROJE TESLİM ÖDEMESİ","RÖLÖVE BEDELİ","HAKEDİŞ ÖDEMESİ","KAT KARŞILIĞI ÖDEME","İNŞAAT DANIŞMANLIK","PROJE AVANS","MÜHENDİSLİK HİZMETİ","ÇİZİM BEDELİ","FİZİBİLİTE RAPORU","ZEMİN ETÜDÜ","YAPI DENETİM","RUHSAT BAŞVURU BEDELİ"];
-            var _gitAc = ["KIRA ÖDEMESİ","ELEKTRİK FATURASI","SU FATURASI","DOĞALGAZ FATURASI","İNTERNET ÜCRETİ","TELEFON FATURASI","KIRTASİYE MALZEMESİ","YAKIT GİDERİ","ULAŞIM GİDERİ","PERSONEL MAAŞI","SGK PRİMİ","VERGİ ÖDEMESİ","YEMEK GİDERİ","TEMİZLİK MALZEMESİ","BAKIM ONARIM","YAZILIM LİSANSI","SİGORTA PRİMİ","KOPYALAMA BASKI","TOPLANTI MASRAFI","OTO PARK ÜCRETİ"];
-            var _trfAc = ["HESAPLAR ARASI AKTARIM","VADELİ HESABA AKTARIM","NAKİT AKTARIMI","BANKA HAVALESİ","FON AKTARIMI"];
-            [1,2,3].forEach(function(hid){
-                for(var i=0;i<22;i++){var g=_gs(),t=_r(1500,25000);_sonId++;_islemler.push({id:_sonId,hesapId:hid,aciklama:_gelAc[_ri(0,_gelAc.length-1)],tarih:_ts(g),tutar:t,islem:"GELEN"});}
-                for(var j=0;j<20;j++){var g2=_gs(),t2=_r(200,8000);_sonId++;var k={id:_sonId,hesapId:hid,aciklama:_gitAc[_ri(0,_gitAc.length-1)],tarih:_ts(g2),tutar:t2,islem:"GİDEN"};if(Math.random()<0.3)k.hedefId=-1;_islemler.push(k);}
-                var _dh=[1,2,3].filter(function(h){return h!==hid;});
-                for(var k2=0;k2<8;k2++){var g3=_gs(),t3=_r(500,10000);_sonId++;_islemler.push({id:_sonId,hesapId:hid,hedefId:_dh[_ri(0,_dh.length-1)],aciklama:_trfAc[_ri(0,_trfAc.length-1)],tarih:_ts(g3),tutar:t3,islem:"TRANSFER"});}
-            });
-            return _islemler;
-        })();
-
-        
         var HT_AKTIF_DETAY_HESAP = null;
 
 function htTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " ₺"; }
