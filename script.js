@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.44.0';
+        var APP_VERSION = 'V1.44.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7922,10 +7922,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var db = htVeriYukle();
 
             function hesapAdiBul(id) {
-                if(id === -1) return "NAKİT";
-                if(id === 0) return "HARİCİ";
+                if(id === -1) return "NAKIT";
+                if(id === 0) return "HARICI";
                 var h = db.hesaplar.find(function(hs){return hs.id===id;});
-                return h ? h.bankaAdi+" - "+h.hesapSahibi : ("ID:"+id);
+                return h ? trPdfText(h.bankaAdi+" - "+h.hesapSahibi) : ("ID:"+id);
             }
 
             function hesapIbanBul(id) {
@@ -7951,10 +7951,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     var h = (i.hedefId === hid);
                     if(hid === 0) {
                         if(i.islem === "GELEN") g += i.tutar;
-                        else if(i.islem === "GIDEN") gd += i.tutar;
+                        else if(i.islem === "GİDEN") gd += i.tutar;
                     } else {
                         if(i.islem === "GELEN" && k) g += i.tutar;
-                        else if(i.islem === "GIDEN" && k) gd += i.tutar;
+                        else if(i.islem === "GİDEN" && k) gd += i.tutar;
                         else if(i.islem === "TRANSFER") {
                             if(k) gd += i.tutar;
                             if(h) g += i.tutar;
@@ -7967,10 +7967,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     var h = (i.hedefId === hid);
                     if(hid === 0) {
                         if(i.islem === "GELEN") ac += i.tutar;
-                        else if(i.islem === "GIDEN") ac -= i.tutar;
+                        else if(i.islem === "GİDEN") ac -= i.tutar;
                     } else {
                         if(i.islem === "GELEN" && k) ac += i.tutar;
-                        else if(i.islem === "GIDEN" && k) ac -= i.tutar;
+                        else if(i.islem === "GİDEN" && k) ac -= i.tutar;
                         else if(i.islem === "TRANSFER") {
                             if(k) ac -= i.tutar;
                             if(h) ac += i.tutar;
@@ -7995,7 +7995,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var ozet = hesapOzeti(islemler, oncekiIslemler, hesapId);
 
             var donemStr = aralik.bas.toLocaleDateString("tr-TR") + " - " + aralik.bitis.toLocaleDateString("tr-TR");
-            var hesapStr = hesapId === 0 ? "TÜM HESAPLAR" : hesapAdiBul(hesapId);
+            var hesapStr = hesapId === 0 ? "TUM HESAPLAR" : hesapAdiBul(hesapId);
             var ibanStr = hesapId > 0 ? hesapIbanBul(hesapId) : "";
             var raporNo = "HR-" + new Date().getFullYear() + String(new Date().getMonth()+1).padStart(2,'0') + String(new Date().getDate()).padStart(2,'0') + "-" + String(Math.floor(Math.random()*900)+100);
 
@@ -8042,7 +8042,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             doc.setTextColor(RNK_GRI[0], RNK_GRI[1], RNK_GRI[2]);
             doc.text("Hesap: " + hesapStr, M, 31);
             if(ibanStr) doc.text("IBAN: " + ibanStr, M + 70, 31);
-            doc.text("İşlem: " + islemler.length + " adet", sayfaW - M, 31, {align:'right'});
+            doc.text("Islem: " + islemler.length + " adet", sayfaW - M, 31, {align:'right'});
 
             var kartY = 36;
             var kartH = 14;
@@ -8050,11 +8050,11 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var kartGap = 1;
 
             var kartlar = [
-                { etiket: "AÇILIŞ BAKİYESİ", deger: ozet.acilis, renk: RNK_MAVI, arka: [235,240,250] },
-                { etiket: "TOPLAM GELİR", deger: ozet.gelir, renk: RNK_YESIL, arka: [230,245,230] },
-                { etiket: "TOPLAM GİDER", deger: ozet.gider, renk: RNK_KIRMIZI, arka: [250,232,232] },
-                { etiket: "NET DEĞİŞİM", deger: ozet.net, renk: ozet.net>=0?RNK_YESIL:RNK_KIRMIZI, arka: ozet.net>=0?[230,245,230]:[250,232,232] },
-                { etiket: "KAPANIŞ BAKİYESİ", deger: ozet.kapanis, renk: RNK_ANA, arka: [235,235,248] }
+                { etiket: "ACILIS BAKIYESI", deger: ozet.acilis, renk: RNK_MAVI, arka: [235,240,250] },
+                { etiket: "TOPLAM GELIR", deger: ozet.gelir, renk: RNK_YESIL, arka: [230,245,230] },
+                { etiket: "TOPLAM GIDER", deger: ozet.gider, renk: RNK_KIRMIZI, arka: [250,232,232] },
+                { etiket: "NET DEGISIM", deger: ozet.net, renk: ozet.net>=0?RNK_YESIL:RNK_KIRMIZI, arka: ozet.net>=0?[230,245,230]:[250,232,232] },
+                { etiket: "KAPANIS BAKIYESI", deger: ozet.kapanis, renk: RNK_ANA, arka: [235,235,248] }
             ];
 
             for(var ci = 0; ci < 5; ci++) {
@@ -8069,7 +8069,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 doc.setFont(FONT, 'bold');
                 doc.setFontSize(7);
                 doc.setTextColor(kartlar[ci].renk[0], kartlar[ci].renk[1], kartlar[ci].renk[2]);
-                doc.text(kartlar[ci].deger.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' TL', cx + kartW/2, kartY + 10.5, {align:'center'});
+                doc.text(kartlar[ci].deger.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' ₺', cx + kartW/2, kartY + 10.5, {align:'center'});
             }
 
             doc.setDrawColor(200,200,215);
@@ -8077,8 +8077,15 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             doc.line(M, kartY + kartH + 4, sayfaW - M, kartY + kartH + 4);
 
             var tabloY = kartY + kartH + 8;
-            var basliklar = ['TARİH', 'AÇIKLAMA', 'HESAP HAREKETİ', 'TÜR', 'TUTAR'];
-            var colGenislik = [20, 55, 55, 18, 42];
+            var basliklar = ['TARIH', 'ACIKLAMA', 'HESAP HAREKETI', 'TÜR', 'TUTAR'];
+            var colGenislik = [18, 48, 62, 18, 44];
+            var colStil = [
+                { cellWidth: colGenislik[0], halign: 'center' },
+                { cellWidth: colGenislik[1], overflow: 'linebreak' },
+                { cellWidth: colGenislik[2], overflow: 'linebreak' },
+                { cellWidth: colGenislik[3], halign: 'center' },
+                { cellWidth: colGenislik[4], halign: 'right' }
+            ];
 
             function tabloSatirlari(islemList, hid) {
                 var satirlar = islemList.map(function(i) {
@@ -8090,14 +8097,14 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     } else {
                         hStr = hesapAdiBul(i.hesapId) + ' -> Harici';
                     }
-                    var tur = i.islem === "GELEN" ? "GELIR" : (i.islem === "GIDEN" ? "GIDER" : "TRANSFER");
-                    var renk = i.islem === "GELEN" ? RNK_YESIL : (i.islem === "GIDEN" ? RNK_KIRMIZI : RNK_MAVI_ACIK);
+                    var tur = i.islem === "GELEN" ? "GELIR" : (i.islem === "GİDEN" ? "GIDER" : "TRANSFER");
+                    var renk = i.islem === "GELEN" ? RNK_YESIL : (i.islem === "GİDEN" ? RNK_KIRMIZI : RNK_MAVI_ACIK);
                     return [
                         i.tarih ? new Date(i.tarih).toLocaleDateString("tr-TR") : "-",
-                        (i.aciklama || "-"),
+                        trPdfText(i.aciklama || "-"),
                         hStr,
                         tur,
-                        { t: (i.tutar||0).toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' TL', c: renk }
+                        { t: (i.tutar||0).toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' ₺', c: renk }
                     ];
                 });
                 return satirlar;
@@ -8105,10 +8112,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
             function tabloCiz(veri, yBas, hidOzet) {
                 if(!veri || veri.length === 0) {
-                    veri = [["-", "Bu donem icin islem bulunamadi.", "-", "-", { t: "0,00 TL", c: RNK_GRI }]];
+                    veri = [["-", "Bu donem icin islem bulunamadi.", "-", "-", { t: "0,00 ₺", c: RNK_GRI }]];
                 } else if(hidOzet) {
                     var netR = hidOzet.net >= 0 ? RNK_YESIL : RNK_KIRMIZI;
-                    veri.push(["", "DONEM TOPLAMI", "", "", { t: hidOzet.net.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' TL', c: netR }]);
+                    veri.push(["", "DÖNEM TOPLAMI", "", "", { t: hidOzet.net.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' ₺', c: netR }]);
                 }
                 doc.autoTable({
                     head: [basliklar],
@@ -8119,11 +8126,11 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     bodyStyles: { fontSize: 6, lineColor: [220,220,225] },
                     alternateRowStyles: { fillColor: [248,248,252] },
                     columnStyles: {
-                        0: { cellWidth: colGenislik[0], halign: 'center' },
-                        1: { cellWidth: colGenislik[1] },
-                        2: { cellWidth: colGenislik[2] },
-                        3: { cellWidth: colGenislik[3], halign: 'center' },
-                        4: { cellWidth: colGenislik[4], halign: 'right' }
+                        0: colStil[0],
+                        1: colStil[1],
+                        2: colStil[2],
+                        3: colStil[3],
+                        4: colStil[4]
                     },
                     margin: { left: M, right: M },
                     didParseCell: function(data) {
@@ -8173,7 +8180,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     doc.setFont(FONT, 'normal');
                     doc.setFontSize(5.5);
                     doc.setTextColor(RNK_GRI[0], RNK_GRI[1], RNK_GRI[2]);
-                    doc.text("Gelir: " + gOzet.gelir.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' TL  |  Gider: ' + gOzet.gider.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' TL  |  Net: ' + gOzet.net.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' TL', sayfaW - M, tabloY, {align:'right'});
+                    doc.text("Gelir: " + gOzet.gelir.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' ₺  |  Gider: ' + gOzet.gider.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' ₺  |  Net: ' + gOzet.net.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' ₺', sayfaW - M, tabloY, {align:'right'});
 
                     tabloY += 5;
 
