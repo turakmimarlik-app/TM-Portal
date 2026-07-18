@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.40.3';
+        var APP_VERSION = 'V1.40.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7538,73 +7538,55 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             document.getElementById("htYeniTarih").value = anlikTarihGetir();
         }
 
-        function htIslemModalSifirla() {
-            // Form alanlarını komple sıfırla
-            var elId = document.getElementById("htModalIslemId");
-            if(elId) elId.value = "";
-            var elAciklama = document.getElementById("htModalIslemAciklama");
-            if(elAciklama) elAciklama.value = "";
-            var elTarih = document.getElementById("htModalTarih");
-            if(elTarih) elTarih.value = anlikTarihGetir();
-            var elTutar = document.getElementById("htModalTutar");
-            if(elTutar) elTutar.value = "0,00";
-            var elTur = document.getElementById("htModalIslemTur");
-            if(elTur) { elTur.innerHTML = '<option value="">SEÇİNİZ</option><option value="GELEN">GELEN</option><option value="GİDEN">GİDEN</option><option value="TRANSFER">TRANSFER</option>'; }
-            // Nereden/Nereye'yi temizle
-            var dbTemp = htVeriYukle();
-            function selectSifirla(id) {
-                var sel = document.getElementById(id);
-                if(!sel) return;
-                sel.innerHTML = '<option value="">SEÇİNİZ</option>';
-                var o1 = document.createElement("option"); o1.value="0"; o1.textContent="HARİCİ"; sel.appendChild(o1);
-                var o2 = document.createElement("option"); o2.value="-1"; o2.textContent="NAKİT"; sel.appendChild(o2);
-                dbTemp.hesaplar.forEach(function(h){
-                    var o = document.createElement("option"); o.value=String(h.id); o.textContent=h.bankaAdi+" - "+h.hesapSahibi; sel.appendChild(o);
-                });
-            }
-            selectSifirla("htModalNereden");
-            selectSifirla("htModalNereye");
-            // Div görünürlüklerini sıfırla
-            var nd=document.getElementById("htModalNereden"), nyd=document.getElementById("htModalNereye");
-            if(nd&&nd.closest("div"))nd.closest("div").style.display="";
-            if(nyd&&nyd.closest("div"))nyd.closest("div").style.display="";
-        }
+        var HT_MODAL_TEMPLATE = '';
         
         function htIslemModalAc(id, hesapId) {
             try {
-                var modal = document.getElementById("htIslemModal");
-                if(!modal) return;
-                // Önce komple sıfırla
-                htIslemModalSifirla();
-                // Düzenleme modu: değerleri ayarla
+                var eskiModal = document.getElementById("htIslemModal");
+                if(!eskiModal) return;
+                // İlk açılışta şablonu kaydet
+                if(!HT_MODAL_TEMPLATE) HT_MODAL_TEMPLATE = eskiModal.outerHTML;
+                // Modal'ı komple DEĞİŞTİR (bellekteki bozuk state'ten kurtulmak için)
+                var yedek = document.createElement("div");
+                yedek.innerHTML = HT_MODAL_TEMPLATE;
+                var yeniModal = yedek.firstElementChild;
+                eskiModal.parentNode.replaceChild(yeniModal, eskiModal);
+                // Nereden/Nereye seçeneklerini güncelle
+                var db = htVeriYukle();
+                function selectGuncelle(id, deger) {
+                    var sel = document.getElementById(id);
+                    if(!sel) return;
+                    sel.innerHTML = '<option value="">SEÇİNİZ</option>';
+                    var o1=document.createElement("option"); o1.value="0"; o1.textContent="HARİCİ"; sel.appendChild(o1);
+                    var o2=document.createElement("option"); o2.value="-1"; o2.textContent="NAKİT"; sel.appendChild(o2);
+                    db.hesaplar.forEach(function(h){
+                        var o=document.createElement("option"); o.value=String(h.id); o.textContent=h.bankaAdi+" - "+h.hesapSahibi; sel.appendChild(o);
+                    });
+                    if(deger!==undefined && deger!==null) sel.value=String(deger);
+                }
                 if(id) {
-                    var db = htVeriYukle();
                     var islem = db.islemler.find(function(i){return i.id===id;});
                     if(islem) {
                         document.getElementById("htModalIslemId").value = id;
                         document.getElementById("htModalIslemAciklama").value = islem.aciklama || "";
                         document.getElementById("htModalTarih").value = islem.tarih || anlikTarihGetir();
                         document.getElementById("htModalTutar").value = htTl(islem.tutar);
-                        var turEl = document.getElementById("htModalIslemTur");
-                        if(turEl) turEl.value = islem.islem;
-                        var nSel = document.getElementById("htModalNereden");
-                        var nySel = document.getElementById("htModalNereye");
-                        if(islem.islem==="GELEN"){if(nSel)nSel.selectedIndex=0;if(nySel)nySel.value=String(islem.hesapId);}
-                        else {if(nSel)nSel.value=String(islem.hesapId);if(nySel)nySel.value=String(islem.hedefId||0);}
+                        document.getElementById("htModalIslemTur").value = islem.islem;
+                        if(islem.islem==="GELEN") { selectGuncelle("htModalNereden"); selectGuncelle("htModalNereye", islem.hesapId); }
+                        else { selectGuncelle("htModalNereden", islem.hesapId); selectGuncelle("htModalNereye", islem.hedefId || 0); }
                     }
-                } else if(hesapId!==undefined && hesapId!==null && hesapId!==0) {
-                    // Detay görünümü: hesapId ön seç
-                    var nSel2=document.getElementById("htModalNereden"), nySel2=document.getElementById("htModalNereye");
-                    var hStr=String(hesapId);
-                    if(nSel2)nSel2.value=hStr; if(nySel2)nySel2.value=hStr;
+                } else {
+                    selectGuncelle("htModalNereden", (hesapId && hesapId!==0) ? hesapId : "");
+                    selectGuncelle("htModalNereye", (hesapId && hesapId!==0) ? hesapId : "");
                 }
                 htIslemModalTurDegisti();
-                modal.style.display = "flex";
+                document.getElementById("htIslemModal").style.display = "flex";
             } catch(e) { console.error("HATA htIslemModalAc:", e); }
         }
         
         function htIslemModalKapat() {
-            document.getElementById("htIslemModal").style.display = "none";
+            var modal = document.getElementById("htIslemModal");
+            if(modal) modal.style.display = "none";
         }
 
         function htIslemModalTurDegisti() {
