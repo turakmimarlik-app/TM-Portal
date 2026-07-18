@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.40.4';
+        var APP_VERSION = 'V1.40.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7538,49 +7538,72 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             document.getElementById("htYeniTarih").value = anlikTarihGetir();
         }
 
-        var HT_MODAL_TEMPLATE = '';
-        
         function htIslemModalAc(id, hesapId) {
             try {
-                var eskiModal = document.getElementById("htIslemModal");
-                if(!eskiModal) return;
-                // İlk açılışta şablonu kaydet
-                if(!HT_MODAL_TEMPLATE) HT_MODAL_TEMPLATE = eskiModal.outerHTML;
-                // Modal'ı komple DEĞİŞTİR (bellekteki bozuk state'ten kurtulmak için)
-                var yedek = document.createElement("div");
-                yedek.innerHTML = HT_MODAL_TEMPLATE;
-                var yeniModal = yedek.firstElementChild;
-                eskiModal.parentNode.replaceChild(yeniModal, eskiModal);
-                // Nereden/Nereye seçeneklerini güncelle
+                var modal = document.getElementById("htIslemModal");
+                if(!modal) return;
+                // Önce modalı gizle (varsa)
+                modal.style.display = "none";
+                // Tüm form alanlarını adresleyerek sıfırla
+                var elId = document.getElementById("htModalIslemId");
+                var elAciklama = document.getElementById("htModalIslemAciklama");
+                var elTarih = document.getElementById("htModalTarih");
+                var elTutar = document.getElementById("htModalTutar");
+                var elTur = document.getElementById("htModalIslemTur");
+                var elNereden = document.getElementById("htModalNereden");
+                var elNereye = document.getElementById("htModalNereye");
+                if(!elTur || !elNereden || !elNereye) return;
+                // 1) İşlem türü select'ini yeniden oluştur
+                var yeniTur = document.createElement("select");
+                yeniTur.id = "htModalIslemTur";
+                yeniTur.className = "islem-turu-select";
+                yeniTur.style.cssText = "width:100%;";
+                yeniTur.innerHTML = '<option value="">SEÇİNİZ</option><option value="GELEN">GELEN</option><option value="GİDEN">GİDEN</option><option value="TRANSFER">TRANSFER</option>';
+                yeniTur.onchange = htIslemModalTurDegisti;
+                elTur.parentNode.replaceChild(yeniTur, elTur);
+                // 2) Nereden/Nereye select'lerini yeniden oluştur
                 var db = htVeriYukle();
-                function selectGuncelle(id, deger) {
-                    var sel = document.getElementById(id);
-                    if(!sel) return;
-                    sel.innerHTML = '<option value="">SEÇİNİZ</option>';
-                    var o1=document.createElement("option"); o1.value="0"; o1.textContent="HARİCİ"; sel.appendChild(o1);
-                    var o2=document.createElement("option"); o2.value="-1"; o2.textContent="NAKİT"; sel.appendChild(o2);
+                function selectYap(id, deger) {
+                    var eski = document.getElementById(id);
+                    if(!eski) return;
+                    var yeni = document.createElement("select");
+                    yeni.id = id; yeni.style.cssText = "width:100%;";
+                    yeni.innerHTML = '<option value="">SEÇİNİZ</option>';
+                    var o1=document.createElement("option"); o1.value="0"; o1.textContent="HARİCİ"; yeni.appendChild(o1);
+                    var o2=document.createElement("option"); o2.value="-1"; o2.textContent="NAKİT"; yeni.appendChild(o2);
                     db.hesaplar.forEach(function(h){
-                        var o=document.createElement("option"); o.value=String(h.id); o.textContent=h.bankaAdi+" - "+h.hesapSahibi; sel.appendChild(o);
+                        var o=document.createElement("option"); o.value=String(h.id); o.textContent=h.bankaAdi+" - "+h.hesapSahibi; yeni.appendChild(o);
                     });
-                    if(deger!==undefined && deger!==null) sel.value=String(deger);
+                    if(deger!==undefined && deger!==null && deger!=="") yeni.value = String(deger);
+                    eski.parentNode.replaceChild(yeni, eski);
                 }
+                // 3) Değerleri doldur
                 if(id) {
                     var islem = db.islemler.find(function(i){return i.id===id;});
                     if(islem) {
-                        document.getElementById("htModalIslemId").value = id;
-                        document.getElementById("htModalIslemAciklama").value = islem.aciklama || "";
-                        document.getElementById("htModalTarih").value = islem.tarih || anlikTarihGetir();
-                        document.getElementById("htModalTutar").value = htTl(islem.tutar);
-                        document.getElementById("htModalIslemTur").value = islem.islem;
-                        if(islem.islem==="GELEN") { selectGuncelle("htModalNereden"); selectGuncelle("htModalNereye", islem.hesapId); }
-                        else { selectGuncelle("htModalNereden", islem.hesapId); selectGuncelle("htModalNereye", islem.hedefId || 0); }
-                    }
+                        if(elId) elId.value = id;
+                        if(elAciklama) elAciklama.value = islem.aciklama || "";
+                        if(elTarih) elTarih.value = islem.tarih || anlikTarihGetir();
+                        if(elTutar) elTutar.value = htTl(islem.tutar);
+                        if(islem.islem==="GELEN") { selectYap("htModalNereden"); selectYap("htModalNereye", islem.hesapId); }
+                        else { selectYap("htModalNereden", islem.hesapId); selectYap("htModalNereye", islem.hedefId || 0); }
+                    } else { selectYap("htModalNereden"); selectYap("htModalNereye"); }
                 } else {
-                    selectGuncelle("htModalNereden", (hesapId && hesapId!==0) ? hesapId : "");
-                    selectGuncelle("htModalNereye", (hesapId && hesapId!==0) ? hesapId : "");
+                    selectYap("htModalNereden", (hesapId && hesapId!==0) ? hesapId : "");
+                    selectYap("htModalNereye", (hesapId && hesapId!==0) ? hesapId : "");
+                    if(elId) elId.value = "";
+                    if(elAciklama) elAciklama.value = "";
+                    if(elTarih) elTarih.value = anlikTarihGetir();
+                    if(elTutar) elTutar.value = "0,00";
                 }
+                // 4) Div görünürlüklerini sıfırla
+                var nd = document.getElementById("htModalNereden");
+                var nyd = document.getElementById("htModalNereye");
+                if(nd && nd.parentElement) nd.parentElement.style.display = "";
+                if(nyd && nyd.parentElement) nyd.parentElement.style.display = "";
+                // 5) Görünürlüğü güncelle ve modalı göster
                 htIslemModalTurDegisti();
-                document.getElementById("htIslemModal").style.display = "flex";
+                modal.style.display = "flex";
             } catch(e) { console.error("HATA htIslemModalAc:", e); }
         }
         
