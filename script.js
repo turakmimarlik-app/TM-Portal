@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.41.7';
+        var APP_VERSION = 'V1.41.8';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -163,8 +163,6 @@ function gorevMailGonder(gorev) {
             return false;
         }
         function fsDosyaIslem(k, raw) {
-            // Test verisi temizlik flagi varsa hesap takip db'yi Firestore'dan geri yukleme
-            if(k === "tm_hesap_takip_db" && localStorage.getItem("tm_ht_temiz_v1.41.0")) return null;
             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
             var curVal = localStorage.getItem(k);
             if (curVal !== strVal && !fsDirtyKeys[k]) {
@@ -324,13 +322,9 @@ function gorevMailGonder(gorev) {
             if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function(){}); }
 
             if(!localStorage.getItem("tm_yillik_butce_clean")) { localStorage.removeItem("tm_yillik_butce_db"); origSetItem("tm_yillik_butce_clean","1"); }
-            // Hesap Takip test verisi temizligi (bir kere)
+            // Hesap Takip ilk temizlik sonrasi Firebase restore engeli kalkti
             if(!localStorage.getItem("tm_ht_temiz_v1.41.0")) {
-                localStorage.removeItem("tm_hesap_takip_db");
-                localStorage.removeItem("tm_ht_test_v1.36.7");
                 localStorage.setItem("tm_ht_temiz_v1.41.0","1");
-                // Firestore'dan da sil
-                try { if(typeof fdb !== 'undefined') fdb.collection(FS_COLLECTION).doc("tm_hesap_takip_db").delete().catch(function(){}); } catch(e){}
             }
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
