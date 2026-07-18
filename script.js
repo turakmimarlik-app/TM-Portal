@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.40.5';
+        var APP_VERSION = 'V1.40.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7553,13 +7553,15 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var elNereden = document.getElementById("htModalNereden");
                 var elNereye = document.getElementById("htModalNereye");
                 if(!elTur || !elNereden || !elNereye) return;
-                // 1) İşlem türü select'ini yeniden oluştur
+                // 1) İşlem türü select'ini yeniden oluştur (appendChild ile, innerHTML kullanmadan)
                 var yeniTur = document.createElement("select");
                 yeniTur.id = "htModalIslemTur";
                 yeniTur.className = "islem-turu-select";
                 yeniTur.style.cssText = "width:100%;";
-                yeniTur.innerHTML = '<option value="">SEÇİNİZ</option><option value="GELEN">GELEN</option><option value="GİDEN">GİDEN</option><option value="TRANSFER">TRANSFER</option>';
                 yeniTur.onchange = htIslemModalTurDegisti;
+                [["","SEÇİNİZ"],["GELEN","GELEN"],["GİDEN","GİDEN"],["TRANSFER","TRANSFER"]].forEach(function(o){
+                    var opt=document.createElement("option"); opt.value=o[0]; opt.textContent=o[1]; yeniTur.appendChild(opt);
+                });
                 elTur.parentNode.replaceChild(yeniTur, elTur);
                 // 2) Nereden/Nereye select'lerini yeniden oluştur
                 var db = htVeriYukle();
@@ -7568,9 +7570,9 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     if(!eski) return;
                     var yeni = document.createElement("select");
                     yeni.id = id; yeni.style.cssText = "width:100%;";
-                    yeni.innerHTML = '<option value="">SEÇİNİZ</option>';
-                    var o1=document.createElement("option"); o1.value="0"; o1.textContent="HARİCİ"; yeni.appendChild(o1);
-                    var o2=document.createElement("option"); o2.value="-1"; o2.textContent="NAKİT"; yeni.appendChild(o2);
+                    [["","SEÇİNİZ"],["0","HARİCİ"],["-1","NAKİT"]].forEach(function(o){
+                        var opt=document.createElement("option"); opt.value=o[0]; opt.textContent=o[1]; yeni.appendChild(opt);
+                    });
                     db.hesaplar.forEach(function(h){
                         var o=document.createElement("option"); o.value=String(h.id); o.textContent=h.bankaAdi+" - "+h.hesapSahibi; yeni.appendChild(o);
                     });
