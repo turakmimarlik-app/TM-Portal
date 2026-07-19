@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.70.0';
+        var APP_VERSION = 'V1.71.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8958,7 +8958,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var dataVal = (f.firmaAdi||'') + ' ' + (f.faturaNo||'');
                 h += '<div class="ft-card' + (vg?' ft-card-vadegecmis':'') + '" data-ftgelen="' + dataVal.toLowerCase() + '">';
                 h += '<div class="ft-card-head">';
-                h += '<div class="ft-card-head-left"><input type="checkbox" class="ft-gelen-cb" value="' + f.id + '"><strong>' + esc(f.firmaAdi) + '</strong><span class="ft-card-meta"><span class="ft-mlabel">Fatura No:</span> ' + esc(f.faturaNo) + ' · <span class="ft-mlabel">Vergi Dairesi:</span> ' + esc(f.vergiDairesi||'-') + ' · <span class="ft-mlabel">Vergi No:</span> ' + esc(f.vergiNo||'-') + '</span></div>';
+                h += '<div class="ft-card-head-left"><input type="checkbox" class="ft-gelen-cb" value="' + f.id + '"><div class="ft-card-head-firma"><strong>' + esc(f.firmaAdi) + '</strong><span class="ft-card-meta"><span class="ft-mlabel">Fatura No:</span> ' + esc(f.faturaNo) + ' · <span class="ft-mlabel">Vergi Dairesi:</span> ' + esc(f.vergiDairesi||'-') + ' · <span class="ft-mlabel">Vergi No:</span> ' + esc(f.vergiNo||'-') + '</span></div></div>';
                 h += '<div class="ft-card-head-right"><span class="ft-badge ' + dc + '">' + dt + '</span>' + (f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'') + '<button class="ft-btn-sm ft-btn-edit" onclick="ftGelenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGelenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></div>';
                 h += '</div>';
                 h += '<div class="ft-card-body">';
@@ -9138,7 +9138,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var dataVal = (f.firmaAdi||'') + ' ' + (f.faturaNo||'');
                 h += '<div class="ft-card' + (vg?' ft-card-vadegecmis':'') + '" data-ftgiden="' + dataVal.toLowerCase() + '">';
                 h += '<div class="ft-card-head">';
-                h += '<div class="ft-card-head-left"><input type="checkbox" class="ft-giden-cb" value="' + f.id + '"><strong>' + esc(f.firmaAdi) + '</strong><span class="ft-card-meta"><span class="ft-mlabel">Fatura No:</span> ' + esc(f.faturaNo) + ' · <span class="ft-mlabel">Vergi Dairesi:</span> ' + esc(f.vergiDairesi||'-') + ' · <span class="ft-mlabel">Vergi No:</span> ' + esc(f.vergiNo||'-') + '</span></div>';
+                h += '<div class="ft-card-head-left"><input type="checkbox" class="ft-giden-cb" value="' + f.id + '"><div class="ft-card-head-firma"><strong>' + esc(f.firmaAdi) + '</strong><span class="ft-card-meta"><span class="ft-mlabel">Fatura No:</span> ' + esc(f.faturaNo) + ' · <span class="ft-mlabel">Vergi Dairesi:</span> ' + esc(f.vergiDairesi||'-') + ' · <span class="ft-mlabel">Vergi No:</span> ' + esc(f.vergiNo||'-') + '</span></div></div>';
                 h += '<div class="ft-card-head-right"><span class="ft-badge ' + dc + '">' + dt + '</span>' + (f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'') + '<button class="ft-btn-sm ft-btn-edit" onclick="ftGidenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGidenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></div>';
                 h += '</div>';
                 h += '<div class="ft-card-body">';
