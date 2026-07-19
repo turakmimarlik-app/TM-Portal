@@ -9239,8 +9239,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vade Tarihi</label><input type="date" id="ftOVVadeTarih" value="'+(v?v.vadeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
-                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Asıl Borç (₺)</label><input type="text" id="ftOVAsilBorç" value="'+asilVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this);ftOVToplamHesapla()" onblur="tmTutarBlur(this);ftOVToplamHesapla()"></div>' +
-                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Gecikme Zammı (₺)</label><input type="text" id="ftOVGecikme" value="'+gecikmeVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this);ftOVToplamHesapla()" onblur="tmTutarBlur(this);ftOVToplamHesapla()"></div>' +
+                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Asıl Borç (₺)</label><input type="text" id="ftOVAsilBorc" value="'+asilVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="ftOVInputIsle(this)" onblur="tmTutarBlur(this);ftOVToplamHesapla()"></div>' +
+                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Gecikme Zammı (₺)</label><input type="text" id="ftOVGecikme" value="'+gecikmeVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="ftOVInputIsle(this)" onblur="tmTutarBlur(this);ftOVToplamHesapla()"></div>' +
                 '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Toplam Borç (₺)</label><input type="text" id="ftOVToplam" value="'+toplamVal+'" readonly style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;background:rgba(255,255,255,0.05);"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Ödeme Tarihi</label><input type="date" id="ftOVOdemeTarih" value="'+(v?v.odemeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
@@ -9250,13 +9250,24 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 '<div style="display:flex;gap:8px;justify-content:center;padding-top:6px;">' +
                 '<button class="btn-form btn-form-save" onclick="'+fn+'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-floppy-disk"></i> '+(isEdit?"Güncelle":"Ekle")+'</button>' +
                 '<button class="btn-form btn-form-cancel" onclick="document.getElementById(\'ftOdenenVergiForm\').style.display=\'none\'" style="padding:8px 20px;font-size:13px;"><i class="fa-solid fa-xmark"></i> İptal</button></div></div>';
+            ftOVToplamHesapla();
+        }
+
+        function ftOVInputIsle(el) {
+            if (!el) return;
+            tmTutarFormatla(el);
+            ftOVToplamHesapla();
         }
 
         function ftOVToplamHesapla() {
-            var asil = tmTutarCoz(document.getElementById("ftOVAsilBorç").value);
-            var gecikme = tmTutarCoz(document.getElementById("ftOVGecikme").value);
+            var asilEl = document.getElementById("ftOVAsilBorc");
+            var gecikmeEl = document.getElementById("ftOVGecikme");
+            var toplamEl = document.getElementById("ftOVToplam");
+            if (!asilEl || !gecikmeEl || !toplamEl) return;
+            var asil = parseFloat((asilEl.value || "0").replace(/\./g, '').replace(',', '.')) || 0;
+            var gecikme = parseFloat((gecikmeEl.value || "0").replace(/\./g, '').replace(',', '.')) || 0;
             var toplam = asil + gecikme;
-            document.getElementById("ftOVToplam").value = toplam.toLocaleString('tr-TR',{minimumFractionDigits:2});
+            toplamEl.value = toplam.toLocaleString('tr-TR',{minimumFractionDigits:2});
         }
 
         function ftOdenenVergiKaydet(id) {
@@ -9264,8 +9275,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var belgeNo = document.getElementById("ftOVBelgeNo").value.trim();
             var donem = document.getElementById("ftOVDonem").value.trim();
             var vadeTarihi = document.getElementById("ftOVVadeTarih").value;
-            var asilBorç = tmTutarCoz(document.getElementById("ftOVAsilBorç").value);
-            var gecikmeZammi = tmTutarCoz(document.getElementById("ftOVGecikme").value);
+            var asilBorç = parseFloat((document.getElementById("ftOVAsilBorc").value || "0").replace(/\./g, '').replace(',', '.')) || 0;
+            var gecikmeZammi = parseFloat((document.getElementById("ftOVGecikme").value || "0").replace(/\./g, '').replace(',', '.')) || 0;
             var odemeTarihi = document.getElementById("ftOVOdemeTarih").value;
             var aciklama = document.getElementById("ftOVAciklama").value.trim();
             var toplamBorç = asilBorç + gecikmeZammi;
