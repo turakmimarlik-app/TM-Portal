@@ -1119,100 +1119,164 @@
         .tm-autocomplete-item { padding: 10px 14px; cursor: pointer; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--bg-main); transition: 0.15s; color: var(--accent-red); }
         .tm-autocomplete-item:hover { background: var(--bg-main); color: var(--accent-red); }
 
-        /* FATURA TAKİP SİSTEMİ */
-        .ft-wrap { max-width:1400px; margin:0 auto; }
-        .ft-top-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
-        .ft-yil-select { display:flex; align-items:center; gap:10px; }
-        .ft-yil-select select { padding:8px 14px; border-radius:6px; border:1px solid var(--border-color); font-size:14px; font-weight:600; background:var(--input-bg); color:var(--text-dark); cursor:pointer; }
-        .ft-ozet { display:grid; grid-template-columns:repeat(5, 1fr); gap:14px; margin-bottom:25px; }
-        .ft-ozet-card { background:var(--panel-bg); border:1px solid var(--border-color); border-radius:12px; padding:18px 14px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.03); transition:0.2s; }
-        .ft-ozet-card:hover { box-shadow:0 4px 16px rgba(0,0,0,0.06); transform:translateY(-2px); }
-        .ft-ozet-card .ft-ico { font-size:22px; margin-bottom:4px; }
-        .ft-ozet-card .ft-lbl { font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
-        .ft-ozet-card .ft-val { font-size:20px; font-weight:900; }
-        .ft-ozet-card .ft-val.green { color:var(--btn-green); }
-        .ft-ozet-card .ft-val.red { color:var(--accent-red); }
-        .ft-ozet-card .ft-val.blue { color:#1565C0; }
-        .ft-ozet-card .ft-val.orange { color:#e67e22; }
-        .ft-bolum { background:var(--panel-bg); border:1px solid var(--border-color); border-radius:12px; padding:18px 16px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02); }
-        .ft-bolum > h3 { margin:0 0 14px 0; font-size:15px; display:flex; align-items:center; gap:8px; border:none; padding:0 0 10px 0; border-bottom:1px solid var(--border-color); }
-        .ft-tbl-wrap { overflow-x:auto; }
-        .ft-table { width:100%; border-collapse:collapse; margin-top:6px; }
-        .ft-table th { background:var(--bg-main); text-align:center; padding:10px 8px; font-size:11px; color:var(--text-light); border-bottom:2px solid var(--border-color); font-weight:700; white-space:nowrap; }
-        .ft-table td { padding:10px 8px; border-bottom:1px solid var(--border-color); font-size:12px; text-align:center; }
-        .ft-badge { font-weight:700; font-size:10px; padding:3px 10px; border-radius:12px; display:inline-block; white-space:nowrap; }
-        .ft-badge.odendi,.ft-badge.tahsilEdildi { background:#e8f5e9; color:#2e7d32; }
-        .ft-badge.kismi { background:#fff8e1; color:#f57f17; }
-        .ft-badge.odenmedi,.ft-badge.tahsilEdilmedi { background:#ffebee; color:#c62828; }
-        .ft-btn-sm { padding:4px 10px; font-size:11px; border-radius:6px; cursor:pointer; font-weight:700; transition:0.2s; display:inline-flex; align-items:center; gap:4px; }
-        .ft-btn-sm:hover { transform:translateY(-1px); }
-        .ft-btn-edit { background:transparent; border:1px solid var(--border-color); color:var(--text-light); }
-        .ft-btn-edit:hover { background:var(--bg-main); }
-        .ft-btn-del { background:transparent; border:1px solid #ff4757; color:#ff4757; }
-        .ft-btn-del:hover { background:#ff4757; color:#fff; }
-        .ft-takvim-list { display:flex; flex-direction:column; gap:8px; }
-        .ft-takvim-item { display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--bg-main); border-radius:8px; border-left:4px solid var(--accent-red); transition:0.2s; }
-        .ft-takvim-item:hover { background:var(--panel-bg); }
-        .ft-takvim-item.tamamlandi { opacity:0.55; border-left-color:var(--btn-green); }
-        .ft-takvim-item .ft-takvim-tarih { font-size:12px; font-weight:700; color:var(--text-light); min-width:75px; text-align:center; }
-        .ft-takvim-item .ft-takvim-baslik { flex:1; font-size:13px; font-weight:600; text-align:center; }
-        .ft-takvim-item .ft-takvim-tur { font-size:10px; font-weight:700; padding:2px 10px; border-radius:8px; background:var(--panel-bg); white-space:nowrap; text-align:center; }
-        .ft-takvim-item .ft-takvim-aciklama { font-size:11px; color:var(--text-light); flex:0 1 200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center; }
-        .ft-takvim-item .ft-takvim-kalan { font-size:11px; font-weight:600; white-space:nowrap; min-width:80px; text-align:center; }
+        /* ==================== FATURA TAKİP SİSTEMİ (YENİ TASARIM) ==================== */
+        #fatura-takip-page { --ft-bg:#0d1b2a; --ft-card:#162436; --ft-card-hover:#1a2c42; --ft-border:#243b52; --ft-text:#e4eaf2; --ft-text-light:#7a94ad; --ft-accent:#a0b8cc; --ft-red:#e74c3c; --ft-green:#2ecc71; --ft-orange:#e67e22; --ft-blue:#5b9bd5; background:var(--ft-bg); color:var(--ft-text); padding:20px 28px 40px; min-height:100vh; box-sizing:border-box; }
+        #fatura-takip-page h2 { color:var(--ft-text); font-size:18px; border-left:3px solid var(--ft-accent); padding-left:12px; margin:0; display:inline-flex; align-items:center; gap:8px; }
+        #fatura-takip-page h2 i { color:var(--ft-accent); }
+        #fatura-takip-page .page-lock-overlay { position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:100; display:none; border-radius:0; }
+        .ft-container { max-width:1400px; margin:0 auto; }
 
-        /* Renkli özet kartları */
-        .ft-ozet-card.card-1,
-        .ft-ozet-card.card-2 { border-left:4px solid #1565C0; background:rgba(21,101,192,0.06); }
-        .ft-ozet-card.card-3,
-        .ft-ozet-card.card-5 { border-left:4px solid var(--accent-red); background:rgba(158,42,43,0.06); }
-        .ft-ozet-card.card-4,
-        .ft-ozet-card.card-6 { border-left:4px solid var(--btn-green); background:rgba(46,125,50,0.06); }
-        .ft-ozet-card.card-7 { border-left:4px solid #e67e22; background:rgba(230,126,34,0.06); }
-        /* Birleşik KDV net kartı */
-        .ft-ozet-card.card-kdv-net { grid-column:1 / -1; border-left:4px solid #757575; background:rgba(117,117,117,0.06); padding:22px 14px; }
-        .ft-ozet-card.card-kdv-net .ft-ico { font-size:28px; }
-        .ft-ozet-card.card-kdv-net .ft-lbl { font-size:12px; }
-        .ft-ozet-card.card-kdv-net .ft-val { font-size:28px; }
-        .ft-ozet-card.card-kdv-net.kdv-odenecek { border-left-color:var(--accent-red); background:rgba(158,42,43,0.08); }
-        .ft-ozet-card.card-kdv-net.kdv-alacak { border-left-color:var(--btn-green); background:rgba(46,125,50,0.08); }
-        [data-theme="dark"] .ft-ozet-card.card-kdv-net.kdv-odenecek { background:rgba(158,42,43,0.18); }
-        [data-theme="dark"] .ft-ozet-card.card-kdv-net.kdv-alacak { background:rgba(46,125,50,0.18); }
-        [data-theme="dark"] .ft-ozet-card.card-1,
-        [data-theme="dark"] .ft-ozet-card.card-2 { background:rgba(21,101,192,0.2); }
-        [data-theme="dark"] .ft-ozet-card.card-3 { background:rgba(158,42,43,0.2); }
-        [data-theme="dark"] .ft-ozet-card.card-4 { background:rgba(46,125,50,0.2); }
-        [data-theme="dark"] .ft-ozet-card.card-7 { background:rgba(230,126,34,0.2); }
-        /* Tablo satır bölme çizgisi */
-        .ft-table tbody tr { border-bottom:1px solid var(--border-color); }
+        /* Header */
+        .ft-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:22px; }
+        .ft-header-left { display:flex; align-items:center; gap:14px; }
+        .ft-header-date { font-size:12px; font-weight:600; color:var(--ft-text-light); padding:4px 12px; background:var(--ft-card); border-radius:6px; border:1px solid var(--ft-border); white-space:nowrap; }
+        .ft-header-right { display:flex; align-items:center; gap:10px; }
+        .ft-yil-select { display:flex; align-items:center; gap:8px; }
+        .ft-yil-select label { font-size:11px; font-weight:700; color:var(--ft-text-light); text-transform:uppercase; letter-spacing:0.5px; }
+        .ft-yil-select select { padding:7px 12px; border-radius:6px; border:1px solid var(--ft-border); font-size:13px; font-weight:600; background:var(--ft-card); color:var(--ft-text); cursor:pointer; outline:none; transition:0.2s; }
+        .ft-yil-select select:focus { border-color:var(--ft-accent); }
+        .ft-btn-action { padding:7px 16px; border:1px solid var(--ft-border); border-radius:6px; background:var(--ft-card); color:var(--ft-accent); font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+        .ft-btn-action:hover { border-color:var(--ft-accent); background:var(--ft-card-hover); transform:translateY(-1px); }
+
+        /* Balance Card (KDV Net) */
+        .ft-balance-card { background:linear-gradient(135deg,#1a2c42 0%,#0d1b2a 100%); border:1px solid var(--ft-border); border-radius:14px; padding:28px 24px; text-align:center; margin-bottom:14px; box-shadow:0 4px 20px rgba(0,0,0,0.3); transition:0.3s; }
+        .ft-balance-card:hover { box-shadow:0 6px 28px rgba(0,0,0,0.4); }
+        .ft-balance-top { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:6px; }
+        .ft-balance-icon { font-size:22px; color:var(--ft-accent); }
+        .ft-balance-label { font-size:11px; font-weight:700; color:var(--ft-text-light); letter-spacing:1.2px; text-transform:uppercase; }
+        .ft-balance-value { font-size:42px; font-weight:900; letter-spacing:1px; color:#fff; text-shadow:0 2px 4px rgba(0,0,0,0.3); margin:4px 0; transition:color 0.3s; }
+        .ft-balance-sub { font-size:10px; color:var(--ft-text-light); font-weight:600; letter-spacing:0.5px; }
+        .ft-balance-card.kdv-odenecek { border-left:4px solid var(--ft-red); }
+        .ft-balance-card.kdv-odenecek .ft-balance-value { color:var(--ft-red); }
+        .ft-balance-card.kdv-alacak { border-left:4px solid var(--ft-green); }
+        .ft-balance-card.kdv-alacak .ft-balance-value { color:var(--ft-green); }
+
+        /* Global Search */
+        .ft-global-search { position:relative; margin-bottom:16px; }
+        .ft-global-search input { width:100%; padding:10px 14px 10px 40px; border:1px solid var(--ft-border); border-radius:8px; background:var(--ft-card); color:var(--ft-text); font-size:13px; outline:none; box-sizing:border-box; transition:0.2s; }
+        .ft-global-search input:focus { border-color:var(--ft-accent); box-shadow:0 0 0 3px rgba(160,184,204,0.1); }
+        .ft-global-search input::placeholder { color:var(--ft-text-light); font-size:12px; }
+        .ft-global-search > i { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--ft-text-light); font-size:13px; }
+
+        /* Summary Row */
+        .ft-summary-row { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:22px; }
+        .ft-summary-card { background:var(--ft-card); border:1px solid var(--ft-border); border-radius:12px; padding:16px 12px; text-align:center; transition:0.2s; }
+        .ft-summary-card:hover { border-color:var(--ft-accent); transform:translateY(-2px); box-shadow:0 4px 16px rgba(0,0,0,0.2); }
+        .ft-summary-card .ft-sc-icon { font-size:18px; margin-bottom:4px; }
+        .ft-summary-card .ft-sc-icon i { font-size:16px; }
+        .ft-summary-card .ft-sc-lbl { font-size:9px; font-weight:700; color:var(--ft-text-light); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:3px; }
+        .ft-summary-card .ft-sc-val { font-size:18px; font-weight:800; }
+        .ft-summary-card .ft-sc-val.green { color:var(--ft-green); }
+        .ft-summary-card .ft-sc-val.red { color:var(--ft-red); }
+        .ft-summary-card .ft-sc-val.blue { color:var(--ft-blue); }
+        .ft-summary-card .ft-sc-val.orange { color:var(--ft-orange); }
+        .ft-summary-card.card-gelen { border-left:3px solid var(--ft-blue); }
+        .ft-summary-card.card-giden { border-left:3px solid var(--ft-blue); }
+        .ft-summary-card.card-gelen-kdv { border-left:3px solid var(--ft-red); }
+        .ft-summary-card.card-giden-kdv { border-left:3px solid var(--ft-green); }
+        .ft-summary-card.card-odenenv { border-left:3px solid var(--ft-orange); }
+        [data-theme="dark"] .ft-summary-card { background:var(--ft-card); }
+
+        /* Sections */
+        .ft-section { background:var(--ft-card); border:1px solid var(--ft-border); border-radius:12px; padding:18px 20px; margin-bottom:18px; transition:0.2s; }
+        .ft-section:hover { border-color:rgba(160,184,204,0.2); }
+        .ft-section-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 14px 0; padding:0 0 12px 0; border-bottom:1px solid var(--ft-border); font-size:14px; font-weight:700; color:var(--ft-text); }
+        .ft-section-header i { color:var(--ft-accent); margin-right:6px; }
+        .ft-section-sub { font-size:11px; font-weight:400; color:var(--ft-text-light); margin-left:4px; }
+        .ft-section-badge { font-size:9px; font-weight:700; color:var(--ft-text-light); text-transform:uppercase; letter-spacing:0.5px; padding:3px 10px; background:rgba(255,255,255,0.05); border-radius:10px; white-space:nowrap; }
+        .ft-section-gelen { border-left:3px solid var(--ft-red); }
+        .ft-section-giden { border-left:3px solid var(--ft-green); }
+        [data-theme="dark"] .ft-section-gelen { background:rgba(231,76,60,0.08); }
+        [data-theme="dark"] .ft-section-giden { background:rgba(46,204,113,0.06); }
+
+        /* Toolbar */
+        .ft-toolbar { display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+        .ft-toolbar-group { display:flex; gap:4px; }
+        .ft-btn { padding:7px 14px; border:1px solid var(--ft-border); border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; background:transparent; color:var(--ft-text); }
+        .ft-btn:hover { transform:translateY(-1px); }
+        .ft-btn-primary { background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid var(--ft-accent); color:var(--ft-accent); }
+        .ft-btn-primary:hover { background:#152d4a; }
+        .ft-btn-sm { padding:5px 10px; font-size:10px; }
+        .ft-btn-batch { border-color:var(--ft-green); color:var(--ft-green); }
+        .ft-btn-batch:hover { background:rgba(46,204,113,0.15); }
+        .ft-btn-batch-del { border-color:var(--ft-red); color:var(--ft-red); }
+        .ft-btn-batch-del:hover { background:rgba(231,76,60,0.15); }
+        .ft-search-box { position:relative; display:inline-flex; align-items:center; }
+        .ft-search-box input { padding:6px 10px 6px 28px; border:1px solid var(--ft-border); border-radius:6px; background:rgba(255,255,255,0.04); color:var(--ft-text); font-size:11px; outline:none; width:160px; box-sizing:border-box; transition:0.2s; }
+        .ft-search-box input:focus { border-color:var(--ft-accent); width:200px; }
+        .ft-search-box input::placeholder { color:var(--ft-text-light); }
+        .ft-search-box i { position:absolute; left:8px; font-size:11px; color:var(--ft-text-light); pointer-events:none; }
+        .ft-count { font-size:10px; color:var(--ft-text-light); font-weight:600; white-space:nowrap; margin-left:auto; }
+
+        /* Tables */
+        .ft-table-container { overflow-x:auto; }
+        .ft-table { width:100%; border-collapse:collapse; margin-top:2px; font-size:12px; }
+        .ft-table thead th { background:rgba(255,255,255,0.04); text-align:center; padding:8px 6px; font-size:10px; color:var(--ft-text-light); border-bottom:2px solid var(--ft-border); font-weight:700; white-space:nowrap; text-transform:uppercase; letter-spacing:0.3px; cursor:pointer; user-select:none; transition:0.15s; }
+        .ft-table thead th:hover { color:var(--ft-text); background:rgba(255,255,255,0.07); }
+        .ft-table thead th .sort-arrow { font-size:8px; margin-left:2px; color:var(--ft-accent); }
+        .ft-table tbody tr { border-bottom:1px solid rgba(255,255,255,0.04); transition:0.15s; }
+        .ft-table tbody tr:hover { background:rgba(255,255,255,0.03); }
         .ft-table tbody tr:last-child { border-bottom:none; }
-        /* KDV tablosu renk */
-        #ftKdvTablosu .ft-kdv-header { background:var(--accent-red); color:#fff; }
-        #ftKdvTablosu .ft-kdv-header th { color:#fff; background:transparent; border-color:transparent; }
-        #ftKdvTablosu .ft-kdv-row-odenecek { background:rgba(158,42,43,0.04); }
-        #ftKdvTablosu .ft-kdv-row-alacak { background:rgba(46,125,50,0.04); }
-        [data-theme="dark"] #ftKdvTablosu .ft-kdv-row-odenecek { background:rgba(158,42,43,0.15); }
-        [data-theme="dark"] #ftKdvTablosu .ft-kdv-row-alacak { background:rgba(46,125,50,0.15); }
-        /* Gelen (Ödenecek=gider=red) / Giden (Tahsil Edilecek=gelir=green) bölüm renkleri */
-        .ft-bolum.ft-bolum-gelir { border-left:4px solid var(--accent-red); background:rgba(158,42,43,0.08); }
-        .ft-bolum.ft-bolum-gider { border-left:4px solid var(--btn-green); background:rgba(46,125,50,0.08); }
-        [data-theme="dark"] .ft-bolum.ft-bolum-gelir { background:rgba(158,42,43,0.15); }
-        [data-theme="dark"] .ft-bolum.ft-bolum-gider { background:rgba(46,125,50,0.15); }
-        /* Vergi Takvimi başlık satırı */
-        .ft-takvim-header { display:flex; align-items:center; gap:12px; padding:8px 14px; font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.5px; border-bottom:2px solid var(--border-color); margin-bottom:6px; }
-        .ft-takvim-header .ft-takvim-h-chk { width:16px; }
-        .ft-takvim-header .ft-takvim-h-tarih { min-width:75px; text-align:center; }
-        .ft-takvim-header .ft-takvim-h-baslik { flex:1; text-align:center; }
-        .ft-takvim-header .ft-takvim-h-tur { min-width:70px; text-align:center; }
-        .ft-takvim-header .ft-takvim-h-kalan { min-width:80px; text-align:center; }
-        .ft-takvim-header .ft-takvim-h-aciklama { flex:0 1 200px; text-align:center; }
-        .ft-takvim-header .ft-takvim-h-aksiyon { min-width:55px; }
-        /* Vergi badge (tablo sağ üst köşesi) */
-        .ft-vergi-badge { position:absolute; top:6px; right:10px; font-size:10px; font-weight:700; padding:4px 12px; border-radius:8px; white-space:nowrap; z-index:2; pointer-events:none; }
-        .ft-vergi-badge-gelir { background:rgba(46,125,50,0.12); color:#2e7d32; border:1px solid rgba(46,125,50,0.25); }
-        .ft-vergi-badge-gider { background:rgba(158,42,43,0.12); color:#c62828; border:1px solid rgba(158,42,43,0.25); }
-        [data-theme="dark"] .ft-vergi-badge-gelir { background:rgba(76,175,80,0.15); color:#81c784; border-color:rgba(76,175,80,0.3); }
-        [data-theme="dark"] .ft-vergi-badge-gider { background:rgba(229,115,115,0.15); color:#ef9a9a; border-color:rgba(229,115,115,0.3); }
-        .ft-tbl-wrap { position:relative; }
+        .ft-table td { padding:8px 6px; text-align:center; font-size:11px; color:var(--ft-text); vertical-align:middle; }
+        .ft-table td .ft-file-link { color:var(--ft-accent); font-size:13px; cursor:pointer; transition:0.2s; }
+        .ft-table td .ft-file-link:hover { color:#fff; }
+        .ft-table tr.ft-vade-gecmis { background:rgba(231,76,60,0.08); border-left:3px solid var(--ft-red); }
+        .ft-table tr.ft-vade-gecmis:hover { background:rgba(231,76,60,0.14); }
+
+        /* Badges */
+        .ft-badge { font-weight:700; font-size:9px; padding:2px 8px; border-radius:8px; display:inline-block; white-space:nowrap; letter-spacing:0.3px; }
+        .ft-badge.odendi,.ft-badge.tahsilEdildi { background:rgba(46,204,113,0.15); color:var(--ft-green); }
+        .ft-badge.kismi { background:rgba(230,126,34,0.15); color:var(--ft-orange); }
+        .ft-badge.odenmedi,.ft-badge.tahsilEdilmedi { background:rgba(231,76,60,0.15); color:var(--ft-red); }
+        .ft-btn-xs { padding:3px 7px; border-radius:4px; cursor:pointer; font-size:10px; font-weight:700; transition:0.2s; display:inline-flex; align-items:center; gap:3px; border:1px solid transparent; }
+        .ft-btn-edit { border-color:var(--ft-border); color:var(--ft-text-light); background:transparent; }
+        .ft-btn-edit:hover { border-color:var(--ft-accent); color:var(--ft-text); background:rgba(255,255,255,0.05); }
+        .ft-btn-del { border-color:var(--ft-red); color:var(--ft-red); background:transparent; }
+        .ft-btn-del:hover { background:var(--ft-red); color:#fff; }
+
+        /* KDV Table */
+        #ftKdvTablosu .ft-kdv-header { background:linear-gradient(135deg,#1a3a5c,#0d1b2a); }
+        #ftKdvTablosu .ft-kdv-header th { color:var(--ft-accent); background:transparent; border-color:transparent; font-size:10px; }
+        #ftKdvTablosu .ft-kdv-row-odenecek { background:rgba(231,76,60,0.06); }
+        #ftKdvTablosu .ft-kdv-row-alacak { background:rgba(46,204,113,0.06); }
+        [data-theme="dark"] #ftKdvTablosu .ft-kdv-row-odenecek { background:rgba(231,76,60,0.12); }
+        [data-theme="dark"] #ftKdvTablosu .ft-kdv-row-alacak { background:rgba(46,204,113,0.1); }
+
+        /* Vergi Badge (section corner) */
+        .ft-vergi-badge { font-size:9px; font-weight:700; padding:3px 10px; border-radius:8px; white-space:nowrap; letter-spacing:0.3px; }
+        .ft-vergi-badge-gelir { background:rgba(46,204,113,0.12); color:var(--ft-green); border:1px solid rgba(46,204,113,0.2); }
+        .ft-vergi-badge-gider { background:rgba(231,76,60,0.12); color:var(--ft-red); border:1px solid rgba(231,76,60,0.2); }
+        [data-theme="dark"] .ft-vergi-badge-gelir { background:rgba(46,204,113,0.15); color:#81c784; }
+        [data-theme="dark"] .ft-vergi-badge-gider { background:rgba(231,76,60,0.15); color:#ef9a9a; }
+
+        /* Inline Form */
+        .ft-inline-form { display:none; background:rgba(255,255,255,0.03); border:1px solid var(--ft-border); border-radius:8px; padding:14px; margin-bottom:12px; }
+        .ft-inline-form label { display:block; text-align:center; font-size:9px; font-weight:700; color:var(--ft-text-light); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px; }
+        .ft-inline-form input, .ft-inline-form select { width:100%; padding:8px 10px; border:1px solid var(--ft-border); border-radius:6px; background:rgba(255,255,255,0.04); color:var(--ft-text); font-size:12px; outline:none; box-sizing:border-box; text-align:center; transition:0.2s; }
+        .ft-inline-form input:focus, .ft-inline-form select:focus { border-color:var(--ft-accent); }
+        .ft-inline-form input::placeholder { color:var(--ft-text-light); }
+
+        /* Calendar List */
+        .ft-calendar-list { display:flex; flex-direction:column; gap:6px; }
+        .ft-cal-item { display:flex; align-items:center; gap:10px; padding:10px 14px; background:rgba(255,255,255,0.02); border-radius:8px; border-left:3px solid var(--ft-accent); transition:0.2s; }
+        .ft-cal-item:hover { background:rgba(255,255,255,0.04); }
+        .ft-cal-item.tamamlandi { opacity:0.5; border-left-color:var(--ft-green); }
+        .ft-cal-item .ft-cal-chk { width:16px; height:16px; cursor:pointer; accent-color:var(--ft-green); }
+        .ft-cal-item .ft-cal-tarih { font-size:11px; font-weight:700; color:var(--ft-text-light); min-width:72px; text-align:center; }
+        .ft-cal-item .ft-cal-baslik { flex:1; font-size:12px; font-weight:600; }
+        .ft-cal-item .ft-cal-tur { font-size:9px; font-weight:700; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.05); white-space:nowrap; }
+        .ft-cal-item .ft-cal-kalan { font-size:10px; font-weight:600; min-width:72px; text-align:center; }
+        .ft-cal-item .ft-cal-aciklama { font-size:10px; color:var(--ft-text-light); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+        /* Calendar Header */
+        .ft-cal-header { display:flex; align-items:center; gap:10px; padding:8px 14px; font-size:9px; font-weight:700; color:var(--ft-text-light); text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--ft-border); margin-bottom:4px; }
+        .ft-cal-header .ft-cal-h-chk { width:16px; }
+        .ft-cal-header .ft-cal-h-tarih { min-width:72px; text-align:center; }
+        .ft-cal-header .ft-cal-h-baslik { flex:1; text-align:center; }
+        .ft-cal-header .ft-cal-h-tur { min-width:60px; text-align:center; }
+        .ft-cal-header .ft-cal-h-kalan { min-width:72px; text-align:center; }
+        .ft-cal-header .ft-cal-h-aciklama { max-width:160px; text-align:center; }
+        .ft-cal-header .ft-cal-h-aksiyon { min-width:50px; text-align:center; }
         /* İş Takibi Yeni Tasarım */
         .it-btn-yeni-is { display:block; width:100%; padding:16px; margin-bottom:24px; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #a0b8cc; color:#a0b8cc; border-radius:10px; font-size:17px; font-weight:700; cursor:pointer; transition:0.25s; letter-spacing:0.5px; }
         .it-btn-yeni-is:hover { background:#152d4a; transform:translateY(-1px); }

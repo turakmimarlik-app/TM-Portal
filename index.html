@@ -252,6 +252,18 @@
                     </div>
                     <div id="dashPiyasaIndexList" class="dash-widget-body"></div>
                 </div>
+                <!-- Vadesi Geçen Faturalar -->
+                <div class="dash-modern-card" data-widget="vade" data-perm="fatura-takip" draggable="true">
+                    <div class="dash-widget-head" onclick="yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null" style="cursor:pointer;">
+                        <span class="dash-drag-handle" onclick="event.stopPropagation()">⠿</span>
+                        <span class="dash-widget-title"><i class="fa-solid fa-clock" style="color:#e74c3c;"></i> VADESİ GEÇEN FATURALAR</span>
+                        <span class="dash-widget-actions">
+                            <span class="dash-widget-link" onclick="event.stopPropagation();yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null">TÜMÜNÜ GÖR →</span>
+                            <span class="dash-widget-hide" onclick="event.stopPropagation();dashWidgetGizle('vade')" title="Gizle"><i class="fa-solid fa-xmark"></i></span>
+                        </span>
+                    </div>
+                    <div id="dashVadesiGecmis" class="dash-widget-body"></div>
+                </div>
                 <!-- Vergi Takvimi -->
                 <div class="dash-modern-card" data-widget="vergi" data-perm="fatura-takip" draggable="true">
                     <div class="dash-widget-head" onclick="yetkiSayfaAc('fatura-takip')?menudenSayfaAc('fatura-takip','fatura-takip-page',document.getElementById('sub-fatura-takip')):null" style="cursor:pointer;">
@@ -602,69 +614,130 @@
             </div>
             <div id="fatura-takip-page" class="page">
                 <div id="lock-fatura-takip" class="page-lock-overlay"></div>
-                <div class="ft-wrap">
-                    <div class="ft-top-bar">
-                        <h2 style="margin:0; border:none; padding:0;"><i class="fa-solid fa-coins"></i> Fatura Takip Sistemi</h2>
-                        <div class="ft-tarih-goster" id="ftTarihGoster" style="flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--text-light);"></div>
-                        <div class="ft-yil-select">
-                            <label style="font-size:12px; font-weight:600;">Yıl:</label>
-                            <select id="ftYilSec" onchange="faturaYilDegistir(this.value)"></select>
-                            <button class="btn btn-pdf-red" onclick="faturaPdfIndir()"><i class="fa-regular fa-file-lines"></i> PDF Rapor</button>
+                <div class="ft-container">
+                    <!-- Header -->
+                    <div class="ft-header">
+                        <div class="ft-header-left">
+                            <h2><i class="fa-solid fa-coins"></i> Fatura Takip Sistemi</h2>
+                            <span class="ft-header-date" id="ftTarihGoster"></span>
+                        </div>
+                        <div class="ft-header-right">
+                            <div class="ft-yil-select">
+                                <label>Yıl:</label>
+                                <select id="ftYilSec" onchange="faturaYilDegistir(this.value)"></select>
+                                <button class="ft-btn-action" onclick="faturaPdfIndir()"><i class="fa-regular fa-file-lines"></i> PDF Rapor</button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="ft-ozet" id="ftOzet">
-                        <div class="ft-ozet-card card-kdv-net" id="ftKdvNetKart"><div class="ft-ico" id="ftKdvNetIco"><i class="fa-solid fa-coins"></i></div><div class="ft-lbl" id="ftKdvNetLbl">KDV Net Durum</div><div class="ft-val" id="ftKdvNet">0,00 ₺</div></div>
-                        <div class="ft-ozet-card card-1"><div class="ft-ico"><i class="fa-solid fa-inbox"></i></div><div class="ft-lbl">Gelen Fatura</div><div class="ft-val blue" id="ftGelenAdet">0</div></div>
-                        <div class="ft-ozet-card card-2"><div class="ft-ico"><i class="fa-solid fa-paper-plane"></i></div><div class="ft-lbl">Giden Fatura</div><div class="ft-val blue" id="ftGidenAdet">0</div></div>
-                        <div class="ft-ozet-card card-3"><div class="ft-ico"><i class="fa-solid fa-download"></i></div><div class="ft-lbl">Gelen KDV</div><div class="ft-val red" id="ftGelenKdv">0,00 ₺</div></div>
-                        <div class="ft-ozet-card card-4"><div class="ft-ico"><i class="fa-solid fa-upload"></i></div><div class="ft-lbl">Giden KDV</div><div class="ft-val green" id="ftGidenKdv">0,00 ₺</div></div>
-                        <div class="ft-ozet-card card-7"><div class="ft-ico"><i class="fa-solid fa-receipt"></i></div><div class="ft-lbl">Ödenen Vergiler</div><div class="ft-val orange" id="ftOdenenVergiToplam">0,00 ₺</div></div>
-                    </div>
-
-                    <div class="ft-bolum">
-                        <h3><i class="fa-solid fa-chart-simple"></i> KDV Takibi <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Dönem bazlı KDV analizi)</span></h3>
-                        <div class="ft-tbl-wrap"><div id="ftKdvTablosu"></div></div>
-                    </div>
-
-                    <div class="ft-bolum ft-bolum-gelir">
-                        <h3 style="display:flex;align-items:center;justify-content:space-between;"><span><i class="fa-solid fa-inbox"></i> Gelen Faturalar <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Ödenecek)</span></span><span class="ft-vergi-badge ft-vergi-badge-gelir" style="position:static;font-size:11px;padding:4px 14px;"><i class="fa-solid fa-chart-line fa-rotate-180"></i> VERGI OLARAK DÜŞECEK</span></h3>
-                        <div id="ftGelenForm" class="inline-form" style="margin-bottom:12px;"></div>
-                        <div style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                            <button class="btn btn-primary" onclick="ftGelenFormAc()"><i class="fa-solid fa-plus"></i> Gelen Fatura Ekle</button>
-                            <input type="text" id="ftGelenArama" class="search-box" onkeyup="ftGelenFiltrele()" placeholder="Firma veya fatura no ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
-                            <span id="ftGelenSayac" style="font-size:11px; color:var(--text-light); margin-left:auto;">0 kayıt</span>
+                    <!-- KDV Net Kartı -->
+                    <div class="ft-balance-card" id="ftKdvNetKart">
+                        <div class="ft-balance-top">
+                            <span class="ft-balance-icon" id="ftKdvNetIco"><i class="fa-solid fa-coins"></i></span>
+                            <span class="ft-balance-label" id="ftKdvNetLbl">KDV Net Durum</span>
                         </div>
-                        <div id="ftGelenTablosu"></div>
+                        <div class="ft-balance-value" id="ftKdvNet">0,00 ₺</div>
+                        <div class="ft-balance-sub">Yıl sonu KDV pozisyonu</div>
                     </div>
 
-                    <div class="ft-bolum ft-bolum-gider">
-                        <h3 style="display:flex;align-items:center;justify-content:space-between;"><span><i class="fa-solid fa-paper-plane"></i> Giden Faturalar <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Tahsil Edilecek)</span></span><span class="ft-vergi-badge ft-vergi-badge-gider" style="position:static;font-size:11px;padding:4px 14px;"><i class="fa-solid fa-chart-line"></i> VERGI OLARAK ÖDENECEK</span></h3>
-                        <div id="ftGidenForm" class="inline-form" style="margin-bottom:12px;"></div>
-                        <div style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                            <button class="btn btn-primary" onclick="ftGidenFormAc()"><i class="fa-solid fa-plus"></i> Giden Fatura Ekle</button>
-                            <input type="text" id="ftGidenArama" class="search-box" onkeyup="ftGidenFiltrele()" placeholder="Firma veya fatura no ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
-                            <span id="ftGidenSayac" style="font-size:11px; color:var(--text-light); margin-left:auto;">0 kayıt</span>
+                    <!-- Genel Arama -->
+                    <div class="ft-global-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="ftGenelArama" onkeyup="ftGenelAra(event)" placeholder="Tüm yıllarda firma veya fatura no ile ara..." autocomplete="off">
+                        <div id="ftGlobalAramaModal" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:var(--ft-card);border:1px solid var(--ft-border);border-radius:8px;margin-top:4px;box-shadow:0 8px 30px rgba(0,0,0,0.4);max-height:350px;overflow-y:auto;"></div>
+                    </div>
+
+                    <!-- Özet Kartları -->
+                    <div class="ft-summary-row">
+                        <div class="ft-summary-card card-gelen"><div class="ft-sc-icon"><i class="fa-solid fa-inbox"></i></div><div class="ft-sc-lbl">Gelen Fatura</div><div class="ft-sc-val blue" id="ftGelenAdet">0</div></div>
+                        <div class="ft-summary-card card-giden"><div class="ft-sc-icon"><i class="fa-solid fa-paper-plane"></i></div><div class="ft-sc-lbl">Giden Fatura</div><div class="ft-sc-val blue" id="ftGidenAdet">0</div></div>
+                        <div class="ft-summary-card card-gelen-kdv"><div class="ft-sc-icon"><i class="fa-solid fa-download"></i></div><div class="ft-sc-lbl">Gelen KDV</div><div class="ft-sc-val red" id="ftGelenKdv">0,00 ₺</div></div>
+                        <div class="ft-summary-card card-giden-kdv"><div class="ft-sc-icon"><i class="fa-solid fa-upload"></i></div><div class="ft-sc-lbl">Giden KDV</div><div class="ft-sc-val green" id="ftGidenKdv">0,00 ₺</div></div>
+                        <div class="ft-summary-card card-odenenv"><div class="ft-sc-icon"><i class="fa-solid fa-receipt"></i></div><div class="ft-sc-lbl">Ödenen Vergi</div><div class="ft-sc-val orange" id="ftOdenenVergiToplam">0,00 ₺</div></div>
+                    </div>
+
+                    <!-- KDV Takibi -->
+                    <div class="ft-section">
+                        <div class="ft-section-header">
+                            <span><i class="fa-solid fa-chart-simple"></i> KDV Takibi</span>
+                            <span class="ft-section-badge">Dönem bazlı analiz</span>
                         </div>
-                        <div id="ftGidenTablosu"></div>
+                        <div id="ftKdvTablosu" class="ft-table-container"></div>
                     </div>
 
-                    <div class="ft-bolum">
-                        <h3><i class="fa-solid fa-receipt"></i> Ödenen Vergiler <span id="ftOdenenVergiTurleri" style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;"></span></h3>
-                        <div id="ftOdenenVergiForm" class="inline-form" style="margin-bottom:12px;"></div>
-                        <div style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                            <button class="btn btn-primary" onclick="ftOdenenVergiFormAc()"><i class="fa-solid fa-plus"></i> Ödenen Vergi Ekle</button>
-                            <input type="text" id="ftOdenenVergiArama" class="search-box" onkeyup="ftOdenenVergiFiltrele()" placeholder="Vergi adı ile ara..." style="max-width:260px; margin:0; padding:8px 12px;">
-                            <span id="ftOdenenVergiSayac" style="font-size:11px; color:var(--text-light); margin-left:auto;">0 kayıt</span>
+                    <!-- Gelen Faturalar -->
+                    <div class="ft-section ft-section-gelen">
+                        <div class="ft-section-header">
+                            <span><i class="fa-solid fa-inbox"></i> Gelen Faturalar <span class="ft-section-sub">(Ödenecek)</span></span>
+                            <span class="ft-vergi-badge ft-vergi-badge-gelir">VERGİDEN DÜŞER</span>
                         </div>
-                        <div id="ftOdenenVergiTablosu"></div>
+                        <div id="ftGelenForm" class="ft-inline-form"></div>
+                        <div class="ft-toolbar">
+                            <button class="ft-btn ft-btn-primary" onclick="ftGelenFormAc()"><i class="fa-solid fa-plus"></i> Gelen Fatura Ekle</button>
+                            <div class="ft-toolbar-group">
+                                <button class="ft-btn ft-btn-sm ft-btn-batch" onclick="ftGelenTopluIslem('odendi')" title="Seçili faturaları ödendi işaretle"><i class="fa-solid fa-check"></i> Ödendi</button>
+                                <button class="ft-btn ft-btn-sm ft-btn-batch-del" onclick="ftGelenTopluIslem('sil')" title="Seçili faturaları sil"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                            <div class="ft-search-box">
+                                <i class="fa-solid fa-search"></i>
+                                <input type="text" id="ftGelenArama" onkeyup="ftGelenFiltrele()" placeholder="Ara..." autocomplete="off">
+                            </div>
+                            <span class="ft-count" id="ftGelenSayac">0 kayıt</span>
+                        </div>
+                        <div id="ftGelenTablosu" class="ft-table-container"></div>
                     </div>
 
-                    <div class="ft-bolum">
-                        <h3><i class="fa-regular fa-calendar"></i> Vergi Takvimi <span style="font-size:11px; font-weight:400; color:var(--text-light); margin-left:4px;">(Ödeme tarihleri ve hatırlatıcılar)</span></h3>
-                        <div id="ftTakvimForm" class="inline-form" style="margin-bottom:12px;"></div>
-                        <div style="margin-bottom:12px;"><button class="btn btn-primary" onclick="ftTakvimFormAc()"><i class="fa-solid fa-plus"></i> Vergi Etkinliği Ekle</button></div>
-                        <div id="ftTakvimListesi"></div>
+                    <!-- Giden Faturalar -->
+                    <div class="ft-section ft-section-giden">
+                        <div class="ft-section-header">
+                            <span><i class="fa-solid fa-paper-plane"></i> Giden Faturalar <span class="ft-section-sub">(Tahsil Edilecek)</span></span>
+                            <span class="ft-vergi-badge ft-vergi-badge-gider">VERGİ OLARAK ÖDENECEK</span>
+                        </div>
+                        <div id="ftGidenForm" class="ft-inline-form"></div>
+                        <div class="ft-toolbar">
+                            <button class="ft-btn ft-btn-primary" onclick="ftGidenFormAc()"><i class="fa-solid fa-plus"></i> Giden Fatura Ekle</button>
+                            <div class="ft-toolbar-group">
+                                <button class="ft-btn ft-btn-sm ft-btn-batch" onclick="ftGidenTopluIslem('tahsilEdildi')" title="Seçili faturaları tahsil edildi işaretle"><i class="fa-solid fa-check"></i> Tahsil</button>
+                                <button class="ft-btn ft-btn-sm ft-btn-batch-del" onclick="ftGidenTopluIslem('sil')" title="Seçili faturaları sil"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                            <div class="ft-search-box">
+                                <i class="fa-solid fa-search"></i>
+                                <input type="text" id="ftGidenArama" onkeyup="ftGidenFiltrele()" placeholder="Ara..." autocomplete="off">
+                            </div>
+                            <span class="ft-count" id="ftGidenSayac">0 kayıt</span>
+                        </div>
+                        <div id="ftGidenTablosu" class="ft-table-container"></div>
+                    </div>
+
+                    <!-- Ödenen Vergiler -->
+                    <div class="ft-section">
+                        <div class="ft-section-header">
+                            <span><i class="fa-solid fa-receipt"></i> Ödenen Vergiler</span>
+                            <span class="ft-section-badge" id="ftOdenenVergiTurleri"></span>
+                        </div>
+                        <div id="ftOdenenVergiForm" class="ft-inline-form"></div>
+                        <div class="ft-toolbar">
+                            <button class="ft-btn ft-btn-primary" onclick="ftOdenenVergiFormAc()"><i class="fa-solid fa-plus"></i> Ödenen Vergi Ekle</button>
+                            <div class="ft-search-box">
+                                <i class="fa-solid fa-search"></i>
+                                <input type="text" id="ftOdenenVergiArama" onkeyup="ftOdenenVergiFiltrele()" placeholder="Ara..." autocomplete="off">
+                            </div>
+                            <span class="ft-count" id="ftOdenenVergiSayac">0 kayıt</span>
+                        </div>
+                        <div id="ftOdenenVergiTablosu" class="ft-table-container"></div>
+                    </div>
+
+                    <!-- Vergi Takvimi -->
+                    <div class="ft-section">
+                        <div class="ft-section-header">
+                            <span><i class="fa-regular fa-calendar"></i> Vergi Takvimi</span>
+                            <span class="ft-section-badge">Ödeme hatırlatıcılar</span>
+                        </div>
+                        <div id="ftTakvimForm" class="ft-inline-form"></div>
+                        <div class="ft-toolbar">
+                            <button class="ft-btn ft-btn-primary" onclick="ftTakvimFormAc()"><i class="fa-solid fa-plus"></i> Etkinlik Ekle</button>
+                        </div>
+                        <div id="ftTakvimListesi" class="ft-calendar-list"></div>
                     </div>
                 </div>
             </div>

@@ -47,7 +47,8 @@
 
             .sidebar.collapsed .sidebar-header .sidebar-logo-img { display:block; }
             .form-row-3 { grid-template-columns:1fr; }
-            .ft-filter-grid { grid-template-columns:1fr; }
+            .ft-summary-row { grid-template-columns:repeat(2,1fr); }
+            .ft-global-search input { font-size:12px; }
             .tmf-excel { font-size:12px; }
             .tmf-excel .tmf-ex-input { font-size:12px; padding:4px; }
             /* Yeni dashboard mobil */
