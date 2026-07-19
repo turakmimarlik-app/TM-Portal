@@ -7994,8 +7994,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             function tl(v) { return (v||0).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺'; }
 
             function karti(e, d, r, bg) {
-                var w = (CONT_W - 12) / 5;
-                return '<div style="width:'+w+'px;margin:0 1px;border:1px solid #d0d0dc;border-radius:4px;padding:6px 0;background:'+bg+';text-align:center;float:left;">'
+                return '<div style="flex:1;margin:0 2px;border:1px solid #d0d0dc;border-radius:4px;padding:6px 0;background:'+bg+';text-align:center;">'
                     + '<div style="font-size:7.5px;font-weight:700;color:#888;margin-bottom:4px;">'+e+'</div>'
                     + '<div style="font-size:13px;font-weight:800;color:'+r+';">'+tl(d)+'</div></div>';
             }
@@ -8066,24 +8065,25 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     govde = tabloSatirlar(siraIslemler, hesapId, ozet);
                 }
 
-                return '<div style="width:'+PAGE_W+'px;padding:'+PAD_T+'px '+PAD_R+'px '+PAD_B+'px '+PAD_L+'px;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222;">'
+                return '<div style="width:'+PAGE_W+'px;padding:'+PAD_T+'px 0 '+PAD_B+'px 0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222;">'
+                    + '<div style="width:'+CONT_W+'px;margin:0 auto;">'
                     + '<div style="display:flex;justify-content:space-between;align-items:center;">'
                     + '<div>'+(logoHtml||'')+'</div>'
                     + '<div style="text-align:right;"><div style="font-size:16px;font-weight:800;color:#1a3a5c;">HESAP HAREKET RAPORU</div></div></div>'
                     + '<hr style="border:none;border-top:2px solid #1a1a2e;margin:5px 0;">'
                     + '<div style="display:flex;justify-content:space-between;font-size:7.5px;color:#888;margin-bottom:1px;"><span>Rapor No: '+raporNo+'</span><span>Dönem: '+donemStr+'</span><span>'+new Date().toLocaleDateString("tr-TR")+'</span></div>'
                     + '<div style="display:flex;justify-content:space-between;font-size:7.5px;color:#888;margin-bottom:5px;"><span>Hesap: '+hesapStr+'</span>'+(ibanStr?'<span>IBAN: '+ibanStr+'</span>':'')+'<span>İşlem: '+islemler.length+' adet</span></div>'
-                    + '<div style="margin-bottom:4px;overflow:hidden;">'+kartHtml+'</div>'
+                    + '<div style="display:flex;gap:2px;margin-bottom:4px;">'+kartHtml+'</div>'
                     + '<hr style="border:none;border-top:1px solid #d0d0d7;margin:0 0 4px 0;">'
                     + '<table style="width:100%;border-collapse:collapse;table-layout:fixed;">'
                     + '<thead><tr style="background:#1a1a2e;color:#fff;">'
-                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:66px;">TARİH</th>'
-                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:178px;">AÇIKLAMA</th>'
-                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:230px;">HESAP HAREKETİ</th>'
-                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:66px;">TÜR</th>'
-                    + '<th style="text-align:right;padding:3px 4px;font-size:7.5px;font-weight:700;width:169px;">TUTAR</th>'
+                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:62px;">TARİH</th>'
+                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:172px;">AÇIKLAMA</th>'
+                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:224px;">HESAP HAREKETİ</th>'
+                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:62px;">TÜR</th>'
+                    + '<th style="text-align:right;padding:3px 4px;font-size:7.5px;font-weight:700;width:165px;">TUTAR</th>'
                     + '</tr></thead><tbody>'+govde+'</tbody></table>'
-                    + '</div>';
+                    + '</div></div>';
             }
 
             // Tek seferde tum icerigi render et, kanvasi A4 sayfalara bol
@@ -8092,11 +8092,11 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             el.style.cssText = "position:fixed;left:-9999px;top:0;";
             el.innerHTML = sayfaHtml();
             document.body.appendChild(el);
-            html2canvas(el, {scale:PAGE_S,useCORS:true,logging:false,width:PAGE_W}).then(function(cv){
+            html2canvas(el, {scale:PAGE_S,useCORS:true,logging:false}).then(function(cv){
                 document.body.removeChild(el);
                 var totalH = cv.height;
                 var pageH = PAGE_H * PAGE_S;
-                var pageW = PAGE_W * PAGE_S;
+                var pageW = cv.width;
                 var pageCount = Math.ceil(totalH / pageH);
                 var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
                 var sira = 0;
