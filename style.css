@@ -1246,14 +1246,14 @@
         .ft-card-head-right { display:flex; align-items:center; gap:6px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; }
         .ft-card-head-right .ft-file-link { width:26px; height:26px; border-radius:5px; background:rgba(255,255,255,0.06); color:var(--ft-accent); font-size:12px; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
         .ft-card-head-right .ft-file-link:hover { background:var(--ft-accent); color:#fff; }
-        .ft-card-body { display:flex; gap:12px; font-size:13px; line-height:1.8; }
+        .ft-card-body { display:flex; gap:4px; font-size:13px; line-height:1.8; align-items:stretch; }
         .ft-card-body-left { flex:1; min-width:0; }
         .ft-card-body-left .ft-card-row { display:flex; flex-wrap:wrap; gap:1px 16px; }
         .ft-card-body-left .ft-card-row .ft-clabel { opacity:0.5; margin-right:1px; }
         .ft-card-body-left .ft-card-row .ft-cvalue-toplam { font-weight:700; }
         .ft-card-body-right { width:180px; flex-shrink:0; display:none; }
-        .ft-card-body-right.ft-has-aciklama { display:block; }
-        .ft-card-body-right .ft-card-aciklama { font-size:11px; color:var(--ft-text-light); line-height:1.6; padding:6px 10px; background:rgba(255,255,255,0.03); border-radius:6px; border-left:2px solid var(--ft-accent); height:100%; }
+        .ft-card-body-right.ft-has-aciklama { display:flex; flex-direction:column; }
+        .ft-card-body-right .ft-card-aciklama { flex:1; font-size:11px; color:var(--ft-text-light); line-height:1.6; padding:4px 8px; background:rgba(255,255,255,0.03); border-radius:4px; border-left:2px solid var(--ft-accent); }
 
         /* Badges */
         .ft-badge { font-weight:700; font-size:9px; padding:2px 8px; border-radius:8px; display:inline-block; white-space:nowrap; letter-spacing:0.3px; }
