@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.46.4';
+        var APP_VERSION = 'V1.46.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8047,7 +8047,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var govde = '';
                 if(hesapId === 0) {
                     var gMap = {};
-                    siraIslemler.forEach(function(i){var a=i.hesapId;if(!gMap[a])gMap[a]=[];gMap[a].push(i);});
+                    siraIslemler.forEach(function(i){
+                        var a=i.hesapId;if(!gMap[a])gMap[a]=[];gMap[a].push(i);
+                        if(i.hedefId && i.islem==="TRANSFER"){if(!gMap[i.hedefId])gMap[i.hedefId]=[];gMap[i.hedefId].push(i);}
+                    });
                     db.hesaplar.forEach(function(hs){if(!gMap[hs.id])gMap[hs.id]=[];});
                     var aids = Object.keys(gMap).map(Number);
                     aids.sort(function(a,b){return(hesapAdiBul(a)||"").localeCompare(hesapAdiBul(b)||"");});
