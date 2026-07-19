@@ -6105,9 +6105,9 @@ function gorevMailGonder(gorev) {
 
             // 3 separate summary cards
             h += '<div class="yb-sum-row">'+
-                '<div class="yb-sum-card sc-gelir"><div class="sc-label">Aylık Gelir</div><div class="sc-value">'+aylikGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</div></div>'+
-                '<div class="yb-sum-card sc-gider"><div class="sc-label">Aylık Gider</div><div class="sc-value">'+aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</div></div>'+
-                '<div class="yb-sum-card sc-fark"><div class="sc-label">Fark</div><div class="sc-value">'+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</div></div></div>';
+                '<div class="yb-sum-card sc-gelir"><div class="sc-label">Aylık Gelir</div><div class="sc-value">'+aylikGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div>'+
+                '<div class="yb-sum-card sc-gider"><div class="sc-label">Aylık Gider</div><div class="sc-value">'+aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div>'+
+                '<div class="yb-sum-card sc-fark"><div class="sc-label">Fark</div><div class="sc-value">'+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div></div>';
 
             // Gelir accordion
             h += '<div class="yb-acc-section"><h4 class="acc-gelir"><i class="fa-solid fa-chart-line"></i> Gelirler</h4>';
@@ -6118,7 +6118,7 @@ function gorevMailGonder(gorev) {
                 h += '<div class="yb-acc-item">'+
                     '<div class="yb-acc-header" onclick="document.getElementById(\''+itemId+'\').classList.toggle(\'open\');this.classList.toggle(\'open\');">'+
                     '<span class="acc-kat">'+ybTrUpper(ktg)+'</span>'+
-                    '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span>'+
+                    '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span>'+
                     '<span class="acc-ok">¡</span></div>'+
                     '<div class="yb-acc-body" id="'+itemId+'">';
                 if(items.length>0) {
@@ -6128,7 +6128,7 @@ function gorevMailGonder(gorev) {
                             '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
                             '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
-                                ' <span class="acc-tl-simge">?</span></div></td>'+
+                                ' <span class="acc-tl-simge">₺</span></div></td>'+
                             '<td style="width:15%;"><button class="acc-btn-sil" onclick="ybKalemSil('+k.id+','+ayIdx+')" title="Sil"><i class="fa-solid fa-xmark"></i></button></td>'+
                         '</tr>';
                     });
@@ -6148,7 +6148,7 @@ function gorevMailGonder(gorev) {
                 h += '<div class="yb-acc-item">'+
                     '<div class="yb-acc-header" onclick="document.getElementById(\''+itemId+'\').classList.toggle(\'open\');this.classList.toggle(\'open\');">'+
                     '<span class="acc-kat">'+ybTrUpper(ktg)+'</span>'+
-                    '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span>'+
+                    '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span>'+
                     '<span class="acc-ok">¡</span></div>'+
                     '<div class="yb-acc-body" id="'+itemId+'">';
                 if(items.length>0) {
@@ -6158,7 +6158,7 @@ function gorevMailGonder(gorev) {
                             '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
                             '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
-                                ' <span class="acc-tl-simge">?</span></div></td>'+
+                                ' <span class="acc-tl-simge">₺</span></div></td>'+
                             '<td style="width:15%;"><button class="acc-btn-sil" onclick="ybKalemSil('+k.id+','+ayIdx+')" title="Sil"><i class="fa-solid fa-xmark"></i></button></td>'+
                         '</tr>';
                     });
@@ -6192,10 +6192,10 @@ function gorevMailGonder(gorev) {
                 '<div class="yb-graph-box full"><canvas id="ybChartAylikKarsilastirma"></canvas></div></div>';
 
             h += '<div class="yb-ozet-row">'+
-                '<div class="yb-ozet-card"><span class="oz-label">Başlangıç Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gelir</span><span class="oz-val green">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gider</span><span class="oz-val red">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Şirket Bakiyesi</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div></div>';
+                '<div class="yb-ozet-card"><span class="oz-label">Başlangıç Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gelir</span><span class="oz-val green">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gider</span><span class="oz-val red">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Şirket Bakiyesi</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div></div>';
 
             h += '<h4 style="color:var(--yb-gelir);margin:0 0 6px 0;"><i class="fa-solid fa-chart-line"></i> Gelir Dağılımı</h4>'+
                 '<table class="yb-dagilim-tablo"><thead><tr><th style="padding:6px 4px;text-align:left;">Kategori</th>';
@@ -6266,15 +6266,15 @@ function gorevMailGonder(gorev) {
                 '</select></div>';
 
             h += '<div class="yb-kars-grid">'+
-                '<div class="yb-kars-card"><span class="kc-label">'+cariYil+' Gelir</span><span class="kc-value green">'+cTopG.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-kars-card"><span class="kc-label">'+seciliYil+' Gelir</span><span class="kc-value green">'+sTopG.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-kars-card"><span class="kc-label">Fark ('+cariYil+' - '+seciliYil+')</span><span class="kc-value '+(cTopG-sTopG>=0?'green':'red')+'">'+(cTopG-sTopG).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">'+cariYil+' Gelir</span><span class="kc-value green">'+cTopG.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">'+seciliYil+' Gelir</span><span class="kc-value green">'+sTopG.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">Fark ('+cariYil+' - '+seciliYil+')</span><span class="kc-value '+(cTopG-sTopG>=0?'green':'red')+'">'+(cTopG-sTopG).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
                 '</div>';
 
             h += '<div class="yb-kars-grid">'+
-                '<div class="yb-kars-card"><span class="kc-label">'+cariYil+' Gider</span><span class="kc-value red">'+cTopGi.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-kars-card"><span class="kc-label">'+seciliYil+' Gider</span><span class="kc-value red">'+sTopGi.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-kars-card"><span class="kc-label">Fark ('+cariYil+' - '+seciliYil+')</span><span class="kc-value '+(cTopGi-sTopGi>=0?'red':'green')+'">'+(cTopGi-sTopGi).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">'+cariYil+' Gider</span><span class="kc-value red">'+cTopGi.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">'+seciliYil+' Gider</span><span class="kc-value red">'+sTopGi.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">Fark ('+cariYil+' - '+seciliYil+')</span><span class="kc-value '+(cTopGi-sTopGi>=0?'red':'green')+'">'+(cTopGi-sTopGi).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
                 '</div>';
 
             h += '<div class="yb-kars-graph"><canvas id="ybChartKarsilastirma"></canvas></div>';
@@ -6403,7 +6403,7 @@ function gorevMailGonder(gorev) {
                 '<td style="width:45%;"><input class="acc-input" type="text" value="'+item.aciklama+'" onchange="ybKalemGuncelle('+item.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
                 '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                     '<input class="acc-tutar-input" type="text" value="'+(item.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+item.id+',\'tutar\',this.value)">'+
-                    ' <span class="acc-tl-simge">?</span></div></td>'+
+                    ' <span class="acc-tl-simge">₺</span></div></td>'+
                 '<td style="width:15%;"><button class="acc-btn-sil" onclick="ybKalemSil('+item.id+','+ayIdx+')" title="Sil"><i class="fa-solid fa-xmark"></i></button></td>'+
             '</tr>';
         }
@@ -6786,6 +6786,10 @@ function gorevMailGonder(gorev) {
                     try {
                     var grafikler, logoResim = null;
 
+                    // ₺ sembolü için canvas görüntüsü (jsPDF Helvetica ₺ desteklemez)
+                    var liraImg = (function(){var c=document.createElement('canvas');c.width=24;c.height=24;var x=c.getContext('2d');x.font='20px Segoe UI';x.textBaseline='top';x.fillStyle='#000';x.fillText('\u20BA',2,2);return c.toDataURL('image/png');})();
+                    function pdfTxtL(s,x,y){var i=s.indexOf('\u20BA');if(i<0){doc.text(s,x,y);return;}var b=s.substring(0,i).replace(/ +$/,'');doc.text(b,x,y);var fs=doc.internal.getFontSize();var ih=fs*0.4;doc.addImage(liraImg,'PNG',x+doc.getTextWidth(b)+0.5,y-fs*0.35,ih*0.6,ih);}
+
                     SB='grafik'; grafikler = await grafikBase64Uret();
 
                     SB='logo';
@@ -6848,7 +6852,7 @@ function gorevMailGonder(gorev) {
                         doc.text(v.l, kx+5, y+8);
                         doc.setFontSize(10);
                         doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        doc.text((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', kx+5, y+19);
+                        pdfTxtL((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', kx+5, y+19);
                     }
                     y += kY + 10;
 
@@ -6885,7 +6889,7 @@ function gorevMailGonder(gorev) {
                             doc.setTextColor(GRI_METIN[0],GRI_METIN[1],GRI_METIN[2]);
                             doc.text((vd[i]/tp*100).toFixed(1)+'%',x+38,yl+1.5);
                             doc.setTextColor(SEKME_RENGI[0],SEKME_RENGI[1],SEKME_RENGI[2]);
-                            doc.text(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+' ₺',x+56,yl+1.5);
+                            pdfTxtL(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+' ₺',x+56,yl+1.5);
                             yl+=3;
                         } return yl;
                     }
@@ -6956,7 +6960,7 @@ function gorevMailGonder(gorev) {
                             doc.text(oItems[oi].l, oiX+5, y+6);
                             doc.setFontSize(9);
                             doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                            doc.text(oItems[oi].v.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', oiX+5, y+14);
+                            pdfTxtL(oItems[oi].v.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', oiX+5, y+14);
                         }
                         y += oKartY + 8;
 
@@ -6990,14 +6994,14 @@ function gorevMailGonder(gorev) {
                         // --- GELIR TABLOSU ---
                         var gRows = [];
                         Object.entries(ayd.gelirler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺']); });
+                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL']); });
                         });
                         _ct("GELIRLER", gRows, POZITIF, [245,252,245]);
 
                         // --- GIDER TABLOSU ---
                         var gdRows = [];
                         Object.entries(ayd.giderler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺']); });
+                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL']); });
                         });
                         _ct("GIDERLER", gdRows, NEGATIF, [252,245,245]);
 
@@ -7008,7 +7012,7 @@ function gorevMailGonder(gorev) {
                         doc.rect(M, y, 3, 10, 'F');
                         doc.setFont(FN, "bold"); doc.setFontSize(10);
                         doc.setTextColor(farkRenk[0], farkRenk[1], farkRenk[2]);
-                        doc.text(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', M+8, y+7);
+                        pdfTxtL(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', M+8, y+7);
                         y += 16;
 
                         // --- Alt Bilgi ---
