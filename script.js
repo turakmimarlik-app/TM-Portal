@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.72.0';
+        var APP_VERSION = 'V1.73.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8969,6 +8969,17 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
             h += '</div>';
             konteyner.innerHTML = h;
+            ftKartSecimDinle(konteyner);
+        }
+
+        function ftKartSecimDinle(konteyner) {
+            konteyner.addEventListener('change', function(e) {
+                if (e.target.matches('.ft-gelen-cb, .ft-giden-cb')) {
+                    var card = e.target.closest('.ft-card');
+                    if (card) card.style.borderColor = e.target.checked ? 'var(--ft-accent)' : '';
+                    if (card) card.style.background = e.target.checked ? 'rgba(122,165,194,0.08)' : '';
+                }
+            });
         }
 
         function ftGelenFiltrele() {
@@ -8980,7 +8991,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         }
 
         function ftGelenToggleAll(checked) {
-            document.querySelectorAll("#ftGelenTablosu .ft-gelen-cb").forEach(function(cb){ cb.checked = checked; });
+            document.querySelectorAll("#ftGelenTablosu .ft-gelen-cb").forEach(function(cb){ cb.checked = checked; cb.dispatchEvent(new Event('change')); });
         }
 
         function ftGelenTopluIslem(action) {
@@ -9149,6 +9160,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
             h += '</div>';
             konteyner.innerHTML = h;
+            ftKartSecimDinle(konteyner);
         }
 
         function ftGidenFiltrele() {
@@ -9160,7 +9172,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         }
 
         function ftGidenToggleAll(checked) {
-            document.querySelectorAll("#ftGidenTablosu .ft-giden-cb").forEach(function(cb){ cb.checked = checked; });
+            document.querySelectorAll("#ftGidenTablosu .ft-giden-cb").forEach(function(cb){ cb.checked = checked; cb.dispatchEvent(new Event('change')); });
         }
 
         function ftGidenTopluIslem(action) {
@@ -9686,7 +9698,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
         }
 
-        function trLower(s) { return (s||'').toLocaleLowerCase('tr'); }
+        function trLower(s) { return (s||'').replace(/İ/g,'i').toLowerCase(); }
 
         function ftTemizle(id) {
             var inp = document.getElementById(id);
@@ -9724,9 +9736,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if (!div) {
                 div = document.createElement('div');
                 div.id = 'ftGlobalAramaSonuc';
-                div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:20px;border-radius:10px;box-shadow:0 12px 48px rgba(0,0,0,0.5);z-index:9999;max-width:700px;width:90%;background:var(--ft-card);border:1px solid var(--ft-border);color:var(--ft-text);';
-                div.innerHTML = '<div style="text-align:right;margin-bottom:8px;"><button onclick="ftKapatModal(this)" style="border:none;background:rgba(255,255,255,0.1);color:var(--ft-text-light);font-size:18px;cursor:pointer;width:32px;height:32px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;">&times;</button></div>';
-                document.body.appendChild(div);
+                div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:24px;border-radius:12px;box-shadow:0 12px 48px rgba(0,0,0,0.5);z-index:9999;max-width:700px;width:90%;background:#111a27;border:1px solid #1a2638;color:#e2e9f2;';
+                div.innerHTML = '<div style="text-align:right;margin-bottom:8px;"><button onclick="ftKapatModal(this)" style="border:none;background:rgba(255,255,255,0.08);color:#7388a2;font-size:18px;cursor:pointer;width:32px;height:32px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;">&times;</button></div>';
+                var page = document.getElementById('fatura-takip-page');
+                (page||document.body).appendChild(div);
             }
             div.style.display = 'block';
             var c = div.querySelector('.ft-sonuc-icerik');
@@ -9735,7 +9748,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         }
 
         function ftKapatModal(el) {
-            (el.closest('#ftGlobalAramaSonuc')||el.parentElement.parentElement).style.display = 'none';
+            var m = document.getElementById('ftGlobalAramaSonuc');
+            if (m) m.style.display = 'none';
         }
 
         /* ---------- İş Takibi ---------- */
