@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.53.0';
+        var APP_VERSION = 'V1.54.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8938,7 +8938,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 '<button class="ft-btn-sm" onclick="ftGelenTopluIslem(\'odendi\')" style="background:var(--btn-green);color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">✓ Seçiliyi Ödendi</button>' +
                 '<button class="ft-btn-sm ft-btn-del" onclick="ftGelenTopluIslem(\'sil\')" style="padding:4px 10px;font-size:11px;">🗑 Seçiliyi Sil</button>' +
                 '<label style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="ftGelenTumSec" onchange="ftGelenToggleAll(this.checked)"> Tümünü Seç</label></div>' +
-                '<table class="ft-table"><thead><tr><th style="width:30px;"><input type="checkbox" onchange="ftGelenToggleAll(this.checked)"></th><th onclick="ftGelenSort(\'firma\')" style="cursor:pointer;">Firma'+(ftGelenSortCol==='firma'?(ftGelenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th onclick="ftGelenSort(\'no\')" style="cursor:pointer;">Fatura No'+(ftGelenSortCol==='no'?(ftGelenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>Vergi D.</th><th>Vergi No</th><th onclick="ftGelenSort(\'tarih\')" style="cursor:pointer;">Tarih'+(ftGelenSortCol==='tarih'?(ftGelenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>Vade</th><th>Açıklama</th><th onclick="ftGelenSort(\'tutar\')" style="cursor:pointer;">Tutar'+(ftGelenSortCol==='tutar'?(ftGelenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>KDV</th><th>Toplam</th><th>Durum</th><th>Yöntem</th><th>Ödeme T.</th><th></th></tr></thead><tbody>';
+                '<table class="ft-table"><thead><tr><th style="width:30px;"><input type="checkbox" onchange="ftGelenToggleAll(this.checked)"></th><th>Firma / Fatura</th><th style="width:100px;">Tutar</th><th style="width:70px;">KDV</th><th style="width:110px;">Toplam</th><th style="width:80px;">Durum</th><th style="width:65px;"></th></tr></thead><tbody>';
             var simdi = new Date(); simdi.setHours(0,0,0,0);
             var siralist = liste.slice();
             if (ftGelenSortCol) {
@@ -8954,17 +8954,29 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             } else { siralist.reverse(); }
             siralist.forEach(function(f) {
                 var dc = f.odemeDurumu, dt = dc==="odendi"?"Ödendi":dc==="kismi"?"Kısmi":"Ödenmedi";
-                var vadeGecmis = false;
-                if (f.vadeTarihi && f.odemeDurumu !== 'odendi') { var vt = new Date(f.vadeTarihi + 'T00:00:00'); vadeGecmis = vt < simdi; }
-                h += '<tr class="'+(vadeGecmis?'ft-vade-gecmis':'')+'" data-ftgelen="'+(f.firmaAdi||"").toLowerCase()+' '+(f.faturaNo||"").toLowerCase()+'">';
-                h += '<td><input type="checkbox" class="ft-gelen-cb" value="'+f.id+'"></td>';
-                h += '<td style="font-weight:600;">'+esc(f.firmaAdi)+'</td><td>'+esc(f.faturaNo)+'</td>';
-                h += '<td style="font-size:11px;color:var(--text-light);">'+esc(f.vergiDairesi)+'</td><td style="font-size:11px;">'+esc(f.vergiNo)+'</td>';
-                h += '<td style="font-size:11px;">'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td><td style="font-size:11px;">'+(f.vadeTarihi?tarihStr(f.vadeTarihi):"-")+'</td>';
-                h += '<td style="font-size:10px;color:var(--text-light);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+esc(f.aciklama||"")+'">'+esc((f.aciklama||"").substring(0,30))+'</td>';
-                h += '<td style="text-align:right;">'+tmTl(f.tutar)+'</td><td style="text-align:right;">'+tmTl(f.kdvTutari)+'</td><td style="text-align:right;font-weight:700;">'+tmTl(f.toplamTutar)+'</td>';
-                h += '<td><span class="ft-badge '+dc+'">'+dt+'</span></td><td style="font-size:10px;">'+esc(f.odemeYontemi||"-")+'</td><td style="font-size:11px;">'+(f.odemeTarihi?tarihStr(f.odemeTarihi):"-")+'</td>';
-                h += '<td>'+(f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'')+'<button class="ft-btn-sm ft-btn-edit" onclick="ftGelenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGelenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
+                var vg = false;
+                if (f.vadeTarihi && f.odemeDurumu !== 'odendi') { var vt = new Date(f.vadeTarihi + 'T00:00:00'); vg = vt < simdi; }
+                var rowCls = vg ? 'ft-vade-gecmis' : '';
+                var dataVal = (f.firmaAdi || '') + ' ' + (f.faturaNo || '');
+                h += '<tr class="ft-row-1 ' + rowCls + '" data-ftgelen="' + dataVal.toLowerCase() + '">';
+                h += '<td class="ft-chk" rowspan="2"><input type="checkbox" class="ft-gelen-cb" value="' + f.id + '"></td>';
+                h += '<td class="ft-firma"><strong>' + esc(f.firmaAdi) + '</strong><span class="ft-meta">Fatura No: ' + esc(f.faturaNo) + '</span></td>';
+                h += '<td class="ft-tutar">' + tmTl(f.tutar) + '</td>';
+                h += '<td class="ft-kdv">' + tmTl(f.kdvTutari) + '</td>';
+                h += '<td class="ft-toplam">' + tmTl(f.toplamTutar) + '</td>';
+                h += '<td class="ft-durum" rowspan="2"><span class="ft-badge ' + dc + '">' + dt + '</span></td>';
+                h += '<td class="ft-actions" rowspan="2">' + (f.dosyaUrl ? '<a href="' + f.dosyaUrl + '" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ' : '') + '<button class="ft-btn-sm ft-btn-edit" onclick="ftGelenFormAc(' + f.id + ')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGelenSil(' + f.id + ')"><i class="fa-solid fa-trash-can"></i></button></td>';
+                h += '</tr>';
+                h += '<tr class="ft-row-2" data-ftgelen="' + dataVal.toLowerCase() + '"><td colspan="4" class="ft-detay">';
+                var detay = [];
+                if (f.vergiDairesi || f.vergiNo) detay.push('<span>Vergi: ' + esc(f.vergiDairesi || '') + (f.vergiDairesi && f.vergiNo ? ' / ' : '') + esc(f.vergiNo || '') + '</span>');
+                if (f.faturaTarihi) detay.push('<span>Tarih: ' + tarihStr(f.faturaTarihi) + '</span>');
+                if (f.vadeTarihi) detay.push('<span>Vade: ' + tarihStr(f.vadeTarihi) + '</span>');
+                if (f.odemeYontemi) detay.push('<span>Yöntem: ' + esc(f.odemeYontemi) + '</span>');
+                if (f.odemeTarihi) detay.push('<span>Ödeme: ' + tarihStr(f.odemeTarihi) + '</span>');
+                h += detay.join(' · ');
+                if (f.aciklama) h += '<br><span class="ft-aciklama">' + esc(f.aciklama) + '</span>';
+                h += '</td></tr>';
             });
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
@@ -9118,7 +9130,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 '<button class="ft-btn-sm" onclick="ftGidenTopluIslem(\'tahsilEdildi\')" style="background:var(--btn-green);color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">✓ Seçiliyi Tahsil Edildi</button>' +
                 '<button class="ft-btn-sm ft-btn-del" onclick="ftGidenTopluIslem(\'sil\')" style="padding:4px 10px;font-size:11px;">🗑 Seçiliyi Sil</button>' +
                 '<label style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="ftGidenTumSec" onchange="ftGidenToggleAll(this.checked)"> Tümünü Seç</label></div>' +
-                '<table class="ft-table"><thead><tr><th style="width:30px;"><input type="checkbox" onchange="ftGidenToggleAll(this.checked)"></th><th onclick="ftGidenSort(\'firma\')" style="cursor:pointer;">Firma'+(ftGidenSortCol==='firma'?(ftGidenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th onclick="ftGidenSort(\'no\')" style="cursor:pointer;">Fatura No'+(ftGidenSortCol==='no'?(ftGidenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>Vergi D.</th><th>Vergi No</th><th onclick="ftGidenSort(\'tarih\')" style="cursor:pointer;">Tarih'+(ftGidenSortCol==='tarih'?(ftGidenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>Vade</th><th>Açıklama</th><th onclick="ftGidenSort(\'tutar\')" style="cursor:pointer;">Tutar'+(ftGidenSortCol==='tutar'?(ftGidenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>KDV</th><th>Toplam</th><th>Durum</th><th>Yöntem</th><th>Tahsilat T.</th><th></th></tr></thead><tbody>';
+                '<table class="ft-table"><thead><tr><th style="width:30px;"><input type="checkbox" onchange="ftGidenToggleAll(this.checked)"></th><th>Firma / Fatura</th><th style="width:100px;">Tutar</th><th style="width:70px;">KDV</th><th style="width:110px;">Toplam</th><th style="width:80px;">Durum</th><th style="width:65px;"></th></tr></thead><tbody>';
             var simdi = new Date(); simdi.setHours(0,0,0,0);
             var siralist = liste.slice();
             if (ftGidenSortCol) {
@@ -9134,17 +9146,29 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             } else { siralist.reverse(); }
             siralist.forEach(function(f) {
                 var dc = f.tahsilatDurumu, dt = dc==="tahsilEdildi"?"Tah.Edildi":dc==="kismi"?"Kısmi":"Tah.Edilmedi";
-                var vadeGecmis = false;
-                if (f.vadeTarihi && f.tahsilatDurumu !== 'tahsilEdildi') { var vt = new Date(f.vadeTarihi + 'T00:00:00'); vadeGecmis = vt < simdi; }
-                h += '<tr class="'+(vadeGecmis?'ft-vade-gecmis':'')+'" data-ftgiden="'+(f.firmaAdi||"").toLowerCase()+' '+(f.faturaNo||"").toLowerCase()+'">';
-                h += '<td><input type="checkbox" class="ft-giden-cb" value="'+f.id+'"></td>';
-                h += '<td style="font-weight:600;">'+esc(f.firmaAdi)+'</td><td>'+esc(f.faturaNo)+'</td>';
-                h += '<td style="font-size:11px;color:var(--text-light);">'+esc(f.vergiDairesi)+'</td><td style="font-size:11px;">'+esc(f.vergiNo)+'</td>';
-                h += '<td style="font-size:11px;">'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td><td style="font-size:11px;">'+(f.vadeTarihi?tarihStr(f.vadeTarihi):"-")+'</td>';
-                h += '<td style="font-size:10px;color:var(--text-light);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+esc(f.aciklama||"")+'">'+esc((f.aciklama||"").substring(0,30))+'</td>';
-                h += '<td style="text-align:right;">'+tmTl(f.tutar)+'</td><td style="text-align:right;">'+tmTl(f.kdvTutari)+'</td><td style="text-align:right;font-weight:700;">'+tmTl(f.toplamTutar)+'</td>';
-                h += '<td><span class="ft-badge '+dc+'">'+dt+'</span></td><td style="font-size:10px;">'+esc(f.tahsilatYontemi||"-")+'</td><td style="font-size:11px;">'+(f.tahsilatTarihi?tarihStr(f.tahsilatTarihi):"-")+'</td>';
-                h += '<td>'+(f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'')+'<button class="ft-btn-sm ft-btn-edit" onclick="ftGidenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGidenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
+                var vg = false;
+                if (f.vadeTarihi && f.tahsilatDurumu !== 'tahsilEdildi') { var vt = new Date(f.vadeTarihi + 'T00:00:00'); vg = vt < simdi; }
+                var rowCls = vg ? 'ft-vade-gecmis' : '';
+                var dataVal = (f.firmaAdi || '') + ' ' + (f.faturaNo || '');
+                h += '<tr class="ft-row-1 ' + rowCls + '" data-ftgiden="' + dataVal.toLowerCase() + '">';
+                h += '<td class="ft-chk" rowspan="2"><input type="checkbox" class="ft-giden-cb" value="' + f.id + '"></td>';
+                h += '<td class="ft-firma"><strong>' + esc(f.firmaAdi) + '</strong><span class="ft-meta">Fatura No: ' + esc(f.faturaNo) + '</span></td>';
+                h += '<td class="ft-tutar">' + tmTl(f.tutar) + '</td>';
+                h += '<td class="ft-kdv">' + tmTl(f.kdvTutari) + '</td>';
+                h += '<td class="ft-toplam">' + tmTl(f.toplamTutar) + '</td>';
+                h += '<td class="ft-durum" rowspan="2"><span class="ft-badge ' + dc + '">' + dt + '</span></td>';
+                h += '<td class="ft-actions" rowspan="2">' + (f.dosyaUrl ? '<a href="' + f.dosyaUrl + '" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ' : '') + '<button class="ft-btn-sm ft-btn-edit" onclick="ftGidenFormAc(' + f.id + ')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGidenSil(' + f.id + ')"><i class="fa-solid fa-trash-can"></i></button></td>';
+                h += '</tr>';
+                h += '<tr class="ft-row-2" data-ftgiden="' + dataVal.toLowerCase() + '"><td colspan="4" class="ft-detay">';
+                var detay = [];
+                if (f.vergiDairesi || f.vergiNo) detay.push('<span>Vergi: ' + esc(f.vergiDairesi || '') + (f.vergiDairesi && f.vergiNo ? ' / ' : '') + esc(f.vergiNo || '') + '</span>');
+                if (f.faturaTarihi) detay.push('<span>Tarih: ' + tarihStr(f.faturaTarihi) + '</span>');
+                if (f.vadeTarihi) detay.push('<span>Vade: ' + tarihStr(f.vadeTarihi) + '</span>');
+                if (f.tahsilatYontemi) detay.push('<span>Yöntem: ' + esc(f.tahsilatYontemi) + '</span>');
+                if (f.tahsilatTarihi) detay.push('<span>Tahsilat: ' + tarihStr(f.tahsilatTarihi) + '</span>');
+                h += detay.join(' · ');
+                if (f.aciklama) h += '<br><span class="ft-aciklama">' + esc(f.aciklama) + '</span>';
+                h += '</td></tr>';
             });
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
@@ -9312,19 +9336,25 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var sayac = document.getElementById("ftOdenenVergiSayac");
             if (sayac) sayac.innerText = liste.length + " kayıt";
             if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-receipt"></i>','Henüz ödenen vergi kaydı bulunmamaktadır.','Ödenen vergi kaydı eklemek için formu kullanın.'); return; }
-            var h = '<div class="ft-tbl-wrap"><table class="ft-table"><thead><tr><th>Belge No</th><th>Vergi Türü</th><th>Dönem</th><th>Vade Tarihi</th><th>Asıl Borç</th><th>Gecikme Zammı</th><th>Toplam</th><th>Ödeme T.</th><th>Açıklama</th><th></th></tr></thead><tbody>';
+            var h = '<div class="ft-tbl-wrap"><table class="ft-table"><thead><tr><th style="width:30px;">#</th><th>Vergi Türü</th><th style="width:100px;">Asıl Borç</th><th style="width:80px;">Gecikme</th><th style="width:110px;">Toplam</th><th style="width:80px;">Ödeme T.</th><th style="width:65px;"></th></tr></thead><tbody>';
             liste.slice().reverse().forEach(function(v) {
-                h += '<tr data-ftodenenv="'+( (v.belgeNo||"")+" "+(v.vergiAdi||"") ).toLowerCase()+'">';
-                h += '<td style="font-size:11px;">'+esc(v.belgeNo||"-")+'</td>';
-                h += '<td style="font-weight:600;">'+esc(v.vergiAdi)+'</td>';
-                h += '<td style="font-size:11px;">'+(v.donem||"-")+'</td>';
-                h += '<td style="font-size:11px;">'+(v.vadeTarihi?tarihStr(v.vadeTarihi):"-")+'</td>';
-                h += '<td style="text-align:right;">'+tmTl(v.asilBorç||0)+'</td>';
-                h += '<td style="text-align:right;font-size:11px;color:var(--accent-red);">'+(v.gecikmeZammi?tmTl(v.gecikmeZammi):"-")+'</td>';
-                h += '<td style="text-align:right;font-weight:700;">'+tmTl(v.toplamBorç||v.tutar||0)+'</td>';
-                h += '<td style="font-size:11px;">'+(v.odemeTarihi?tarihStr(v.odemeTarihi):"-")+'</td>';
-                h += '<td style="font-size:10px;color:var(--text-light);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+esc(v.aciklama||"")+'">'+esc((v.aciklama||"").substring(0,25))+'</td>';
-                h += '<td><button class="ft-btn-sm ft-btn-edit" onclick="ftOdenenVergiFormAc('+v.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftOdenenVergiSil('+v.id+')"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
+                var dataVal = (v.belgeNo || '') + ' ' + (v.vergiAdi || '');
+                h += '<tr class="ft-row-1" data-ftodenenv="' + dataVal.toLowerCase() + '">';
+                h += '<td class="ft-chk" rowspan="2"></td>';
+                h += '<td class="ft-firma"><strong>' + esc(v.vergiAdi) + '</strong><span class="ft-meta">Belge No: ' + esc(v.belgeNo || '-') + '</span></td>';
+                h += '<td class="ft-tutar">' + tmTl(v.asilBorç || 0) + '</td>';
+                h += '<td class="ft-kdv" style="color:var(--ft-red);">' + (v.gecikmeZammi ? tmTl(v.gecikmeZammi) : '-') + '</td>';
+                h += '<td class="ft-toplam">' + tmTl(v.toplamBorç || v.tutar || 0) + '</td>';
+                h += '<td class="ft-durum" rowspan="2">' + (v.odemeTarihi ? tarihStr(v.odemeTarihi) : '-') + '</td>';
+                h += '<td class="ft-actions" rowspan="2"><button class="ft-btn-sm ft-btn-edit" onclick="ftOdenenVergiFormAc(' + v.id + ')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftOdenenVergiSil(' + v.id + ')"><i class="fa-solid fa-trash-can"></i></button></td>';
+                h += '</tr>';
+                h += '<tr class="ft-row-2" data-ftodenenv="' + dataVal.toLowerCase() + '"><td colspan="4" class="ft-detay">';
+                var detay = [];
+                if (v.donem) detay.push('<span>Dönem: ' + esc(v.donem) + '</span>');
+                if (v.vadeTarihi) detay.push('<span>Vade: ' + tarihStr(v.vadeTarihi) + '</span>');
+                h += detay.join(' · ');
+                if (v.aciklama) h += '<br><span class="ft-aciklama">' + esc(v.aciklama) + '</span>';
+                h += '</td></tr>';
             });
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
