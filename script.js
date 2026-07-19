@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.48.0';
+        var APP_VERSION = 'V1.49.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8486,6 +8486,79 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         let FT_AKTIF_FORM = null;
         var ftGelenSortCol = null, ftGelenSortDir = 'asc';
         var ftGidenSortCol = null, ftGidenSortDir = 'asc';
+        var FT_TATIL_CACHE = {};
+
+        function ftTatilGetir(yil, callback) {
+            if (FT_TATIL_CACHE[yil]) { if (callback) callback(FT_TATIL_CACHE[yil]); return; }
+            var key = "tm_tatil_" + yil;
+            try {
+                var c = localStorage.getItem(key);
+                if (c) { FT_TATIL_CACHE[yil] = JSON.parse(c); if (callback) callback(FT_TATIL_CACHE[yil]); return; }
+            } catch(e) {}
+            fetch("https://date.nager.at/api/v3/publicholidays/" + yil + "/TR")
+                .then(function(r) { if (r.ok) return r.json(); throw new Error(); })
+                .then(function(d) {
+                    FT_TATIL_CACHE[yil] = d || [];
+                    try { localStorage.setItem(key, JSON.stringify(FT_TATIL_CACHE[yil])); } catch(e) {}
+                    if (callback) callback(FT_TATIL_CACHE[yil]);
+                })
+                .catch(function() {
+                    FT_TATIL_CACHE[yil] = ftTatilSabitleri(yil);
+                    if (callback) callback(FT_TATIL_CACHE[yil]);
+                });
+        }
+        function ftTatilSabitleri(yil) {
+            var s = [yil+"-01-01", yil+"-04-23", yil+"-05-01", yil+"-05-19", yil+"-07-15", yil+"-08-30", yil+"-10-29"];
+            try { var d = JSON.parse(localStorage.getItem("tm_dini_bayramlar")||"{}"); if (d[yil]) s = s.concat(d[yil]); } catch(e) {}
+            return s.map(function(g){ return {date:g, localName:"Tatil"}; });
+        }
+        function ftTatilMi(tarih, tatiller) {
+            if (!tatiller || !tatiller.length) return false;
+            var dt = new Date(tarih + "T12:00:00");
+            if (dt.getDay() === 0 || dt.getDay() === 6) return true;
+            var ts = tarih.substring(0,10);
+            for (var i=0; i<tatiller.length; i++) { if (tatiller[i].date === ts) return true; }
+            return false;
+        }
+        function ftIsGunu(tarih, tatiller) {
+            var dt = new Date(tarih + "T12:00:00");
+            for (var i=0; i<10; i++) {
+                var ts = dt.toISOString().substring(0,10);
+                if (!ftTatilMi(ts, tatiller)) return ts;
+                dt.setDate(dt.getDate() + 1);
+            }
+            return tarih;
+        }
+        function ftTatilNotu(tarih, tatiller) {
+            if (!tatiller || !tatiller.length) return "";
+            var dt = new Date(tarih + "T12:00:00");
+            if (dt.getDay() === 0 || dt.getDay() === 6) return " (hafta sonu)";
+            var ts = tarih.substring(0,10);
+            for (var i=0; i<tatiller.length; i++) { if (tatiller[i].date === ts) return " (" + (tatiller[i].localName || "tatil") + ")"; }
+            return "";
+        }
+        function ftGercekTarihGoster(tarih, tatiller) {
+            if (!tatiller || !tatiller.length || !tarih) return { gorunen: tarih ? tarihStr(tarih) : "-", not: "" };
+            var adj = ftIsGunu(tarih, tatiller);
+            if (adj !== tarih) {
+                var not = ftTatilNotu(tarih, tatiller);
+                return { gorunen: tarihStr(adj), not: "(planlanan " + tarihStr(tarih) + not + " nedeniyle ertelendi)" };
+            }
+            return { gorunen: tarihStr(tarih), not: "" };
+        }
+        function ftKalanGun(tarih, tatiller) {
+            if (!tarih) return { text: "", cls: "" };
+            var simdi = new Date(); simdi.setHours(0,0,0,0);
+            var guncel = tarih;
+            if (tatiller && tatiller.length) guncel = ftIsGunu(tarih, tatiller);
+            try {
+                var et = new Date(guncel + "T12:00:00");
+                var fark = Math.round((et - simdi) / 86400000);
+                if (fark > 0) return { text: fark + " gün kaldı", cls: fark <= 7 ? "ft-tax-urgent" : fark <= 30 ? "ft-tax-warn" : "ft-tax-normal" };
+                if (fark === 0) return { text: "BUGÜN!", cls: "ft-tax-urgent" };
+                return { text: Math.abs(fark) + " gün geçti", cls: "ft-tax-past" };
+            } catch(e) { return { text: "", cls: "" }; }
+        }
 
         function ftDbYukle() {
             try { if(localStorage.getItem("tm_ft_clean") !== "v1.0.0") {
@@ -8527,24 +8600,24 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var db = ftDbYukle();
             var y = String(yil);
             if (!db.yillar[y]) db.yillar[y] = { gelenFaturalar: [], gidenFaturalar: [], vergiEtkinlikleri: [], odenmisVergiler: [] };
-            var OTO_SURUM = "v2.0";
+            var OTO_SURUM = "v2.1";
             if (db.yillar[y]._otomatikSurum === OTO_SURUM) return;
             var etkinlikler = (db.yillar[y].vergiEtkinlikleri || []).filter(function(e){ return !e.otomatik; });
             var maxId = 0;
             etkinlikler.forEach(function(e){ if (typeof e.id === "number" && e.id > maxId) maxId = e.id; });
             var yeni = [];
+            var tatiller = FT_TATIL_CACHE[y] || null;
+            function tz(plan) { return tatiller ? ftIsGunu(plan, tatiller) : plan; }
             var aylar = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
             for (var a = 0; a < 12; a++) {
-                maxId++;
-                var bm = a + 2; if (bm > 12) bm = 1;
-                var by = bm === 1 ? yil + 1 : yil;
-                yeni.push({ id: maxId, baslik: "KDV Beyannamesi (" + aylar[a] + ")", tur: "KDV", tarih: by + "-" + (bm<10?"0":"") + bm + "-28", aciklama: aylar[a] + " ayı KDV beyannamesi son günü", tamamlandi: false, otomatik: true });
+                maxId++; var bm = a + 2; if (bm > 12) bm = 1; var by = bm === 1 ? yil + 1 : yil;
+                var plan = by + "-" + (bm<10?"0":"") + bm + "-28";
+                yeni.push({ id: maxId, baslik: "KDV Beyannamesi (" + aylar[a] + ")", tur: "KDV", tarih: tz(plan), planlananTarih: plan, aciklama: aylar[a] + " ayı KDV beyannamesi son günü", tamamlandi: false, otomatik: true });
             }
             for (var a = 0; a < 12; a++) {
-                maxId++;
-                var mm = a + 2; if (mm > 12) mm = 1;
-                var my = mm === 1 ? yil + 1 : yil;
-                yeni.push({ id: maxId, baslik: "Muhtasar & SGK Prim (" + aylar[a] + ")", tur: "Stopaj", tarih: my + "-" + (mm<10?"0":"") + mm + "-26", aciklama: aylar[a] + " ayı muhtasar ve prim hizmet beyannamesi son günü", tamamlandi: false, otomatik: true });
+                maxId++; var mm = a + 2; if (mm > 12) mm = 1; var my = mm === 1 ? yil + 1 : yil;
+                var plan = my + "-" + (mm<10?"0":"") + mm + "-26";
+                yeni.push({ id: maxId, baslik: "Muhtasar & SGK Prim (" + aylar[a] + ")", tur: "Stopaj", tarih: tz(plan), planlananTarih: plan, aciklama: aylar[a] + " ayı muhtasar ve prim hizmet beyannamesi son günü", tamamlandi: false, otomatik: true });
             }
             var gv = [
                 { baslik:"Geçici Vergi 1. Dönem (Ocak-Şubat-Mart)", ay:5, gun:17 },
@@ -8553,23 +8626,31 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 { baslik:"Geçici Vergi 4. Dönem (Ekim-Kasım-Aralık)", ay:2, gun:17, nxt:true }
             ];
             gv.forEach(function(g) {
-                maxId++;
-                var gy = g.nxt ? yil + 1 : yil;
-                yeni.push({ id: maxId, baslik: g.baslik, tur: "Kurumlar Vergisi", tarih: gy + "-" + (g.ay<10?"0":"") + g.ay + "-" + (g.gun<10?"0":"") + g.gun, aciklama: g.baslik + " beyannamesi son günü", tamamlandi: false, otomatik: true });
+                maxId++; var gy = g.nxt ? yil + 1 : yil;
+                var plan = gy + "-" + (g.ay<10?"0":"") + g.ay + "-" + (g.gun<10?"0":"") + g.gun;
+                yeni.push({ id: maxId, baslik: g.baslik, tur: "Kurumlar Vergisi", tarih: tz(plan), planlananTarih: plan, aciklama: g.baslik + " beyannamesi son günü", tamamlandi: false, otomatik: true });
             });
-            maxId++;
-            yeni.push({ id: maxId, baslik: "Yıllık Gelir Vergisi (" + (yil-1) + ")", tur: "Gelir Vergisi", tarih: yil + "-03-31", aciklama: (yil-1) + " yılı gelir vergisi beyannamesi (1.taksit) son günü", tamamlandi: false, otomatik: true });
-            maxId++;
-            yeni.push({ id: maxId, baslik: "Gelir Vergisi 2.Taksit (" + (yil-1) + ")", tur: "Gelir Vergisi", tarih: yil + "-07-31", aciklama: (yil-1) + " yılı gelir vergisi 2.taksit ödeme son günü", tamamlandi: false, otomatik: true });
-            maxId++;
-            yeni.push({ id: maxId, baslik: "Kurumlar Vergisi (" + (yil-1) + ")", tur: "Kurumlar Vergisi", tarih: yil + "-04-30", aciklama: (yil-1) + " yılı kurumlar vergisi beyannamesi son günü", tamamlandi: false, otomatik: true });
-            maxId++;
-            yeni.push({ id: maxId, baslik: "MTV 1.Taksit", tur: "Diğer", tarih: yil + "-01-31", aciklama: "Motorlu Taşıtlar Vergisi 1.taksit ödeme son günü", tamamlandi: false, otomatik: true });
-            maxId++;
-            yeni.push({ id: maxId, baslik: "MTV 2.Taksit", tur: "Diğer", tarih: yil + "-07-31", aciklama: "Motorlu Taşıtlar Vergisi 2.taksit ödeme son günü", tamamlandi: false, otomatik: true });
+            maxId++; var p1 = yil + "-03-31"; yeni.push({ id: maxId, baslik: "Yıllık Gelir Vergisi (" + (yil-1) + ")", tur: "Gelir Vergisi", tarih: tz(p1), planlananTarih: p1, aciklama: (yil-1) + " yılı gelir vergisi beyannamesi (1.taksit) son günü", tamamlandi: false, otomatik: true });
+            maxId++; var p2 = yil + "-07-31"; yeni.push({ id: maxId, baslik: "Gelir Vergisi 2.Taksit (" + (yil-1) + ")", tur: "Gelir Vergisi", tarih: tz(p2), planlananTarih: p2, aciklama: (yil-1) + " yılı gelir vergisi 2.taksit ödeme son günü", tamamlandi: false, otomatik: true });
+            maxId++; var p3 = yil + "-04-30"; yeni.push({ id: maxId, baslik: "Kurumlar Vergisi (" + (yil-1) + ")", tur: "Kurumlar Vergisi", tarih: tz(p3), planlananTarih: p3, aciklama: (yil-1) + " yılı kurumlar vergisi beyannamesi son günü", tamamlandi: false, otomatik: true });
+            maxId++; var p4 = yil + "-01-31"; yeni.push({ id: maxId, baslik: "MTV 1.Taksit", tur: "Diğer", tarih: tz(p4), planlananTarih: p4, aciklama: "Motorlu Taşıtlar Vergisi 1.taksit ödeme son günü", tamamlandi: false, otomatik: true });
+            maxId++; var p5 = yil + "-07-31"; yeni.push({ id: maxId, baslik: "MTV 2.Taksit", tur: "Diğer", tarih: tz(p5), planlananTarih: p5, aciklama: "Motorlu Taşıtlar Vergisi 2.taksit ödeme son günü", tamamlandi: false, otomatik: true });
             db.yillar[y].vergiEtkinlikleri = etkinlikler.concat(yeni);
             db.yillar[y]._otomatikSurum = OTO_SURUM;
             origSetItem(FT_DB_KEY, JSON.stringify(db));
+        }
+        function ftTatilSonrasiYenile(yil) {
+            var db = ftDbYukle();
+            var y = String(yil);
+            if (!db.yillar[y] || !FT_TATIL_CACHE[y]) return;
+            var degisti = false;
+            (db.yillar[y].vergiEtkinlikleri || []).forEach(function(e) {
+                if (e.otomatik && e.planlananTarih) {
+                    var yeni = ftIsGunu(e.planlananTarih, FT_TATIL_CACHE[y]);
+                    if (yeni !== e.tarih) { e.tarih = yeni; degisti = true; }
+                }
+            });
+            if (degisti) { origSetItem(FT_DB_KEY, JSON.stringify(db)); ftTakvimGoster(); }
         }
 
         function faturaSayfayiYukle() {
@@ -8595,6 +8676,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if (tg) { var n = new Date(); tg.innerText = n.getDate() + " " + ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"][n.getMonth()] + " " + n.getFullYear(); }
             ftOtomatikEtkinlikleriEkle(parseInt(yv.yil));
             ftGelenGoster(); ftGidenGoster(); ftKdvGoster(); ftOdenenVergiGoster(); ftTakvimGoster(); faturaOzetGuncelle();
+            ftTatilGetir(parseInt(yv.yil), function() {
+                ftOtomatikEtkinlikleriEkle(parseInt(yv.yil));
+                ftTakvimGoster();
+            });
         }
 
         function faturaYilDegistir(yil) {
@@ -9290,38 +9375,32 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var konteyner = document.getElementById("ftTakvimListesi");
             if (!konteyner) return;
             if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-calendar"></i>','Henüz vergi etkinliği bulunmamaktadır.','Vergi takvimine yeni bir etkinlik ekleyin.'); return; }
-            var simdi = new Date();
-            simdi.setHours(0,0,0,0);
+            var tatiller = FT_TATIL_CACHE[String(yv.yil)] || null;
             var h = '<div class="ft-tbl-wrap"><table class="ft-table ft-tax-cal-table"><thead><tr>' +
                 '<th style="width:32px;"></th>' +
-                '<th style="width:80px;">Tarih</th>' +
+                '<th style="width:90px;">Tarih</th>' +
                 '<th>Başlık</th>' +
                 '<th style="width:90px;">Tür</th>' +
                 '<th style="width:100px;">Kalan Süre</th>' +
-                '<th style="min-width:120px;">Açıklama</th>' +
+                '<th style="min-width:140px;">Açıklama</th>' +
                 '<th style="width:60px;"></th></tr></thead><tbody>';
             liste.slice().reverse().forEach(function(e) {
                 var turAd = ftTurAdi(e.tur);
-                var kalanGun = "";
-                var renk = "";
-                if (e.tarih) {
-                    try {
-                        var et = new Date(e.tarih);
-                        et.setHours(0,0,0,0);
-                        var fark = Math.round((et - simdi) / 86400000);
-                        if (fark > 0) { kalanGun = fark + " gün kaldı"; renk = fark <= 7 ? "ft-tax-urgent" : fark <= 30 ? "ft-tax-warn" : "ft-tax-normal"; }
-                        else if (fark === 0) { kalanGun = "BUGÜN!"; renk = "ft-tax-urgent"; }
-                        else { kalanGun = Math.abs(fark) + " gün geçti"; renk = "ft-tax-past"; }
-                    } catch(e) { console.error("Fatura takvim tarih hatasi:", e); }
-                }
+                var goster = ftGercekTarihGoster(e.tarih, tatiller);
+                var kalan = ftKalanGun(e.tarih, tatiller);
                 var cls = e.tamamlandi ? ' ft-tax-done' : '';
+                var aciklama = esc(e.aciklama||"");
+                if (e.planlananTarih && e.planlananTarih !== e.tarih) {
+                    var pNot = ftTatilNotu(e.planlananTarih, tatiller);
+                    aciklama += '<br><small style="opacity:0.6;">Planlanan: ' + tarihStr(e.planlananTarih) + pNot + '</small>';
+                }
                 h += '<tr class="'+cls+'">';
                 h += '<td style="text-align:center;"><input type="checkbox" class="ft-cal-chk" '+(e.tamamlandi?"checked":"")+' onchange="ftTakvimTamamla('+e.id+')"></td>';
-                h += '<td style="font-size:11px;font-weight:600;">'+(e.tarih?tarihStr(e.tarih):"-")+'</td>';
+                h += '<td style="font-size:11px;font-weight:600;">'+goster.gorunen+(goster.not?' <span style="color:var(--ft-orange);font-size:9px;">'+goster.not+'</span>':'')+'</td>';
                 h += '<td style="font-weight:600;">'+esc(e.baslik)+'</td>';
                 h += '<td><span class="ft-tax-tur-badge">'+turAd+'</span></td>';
-                if (kalanGun) h += '<td class="'+renk+'" style="font-size:11px;font-weight:600;">'+kalanGun+'</td>'; else h += '<td></td>';
-                h += '<td style="font-size:11px;color:var(--text-light);word-break:break-word;">'+esc(e.aciklama||"")+'</td>';
+                h += '<td class="'+kalan.cls+'" style="font-size:11px;font-weight:600;">'+kalan.text+'</td>';
+                h += '<td style="font-size:10px;color:var(--text-light);word-break:break-word;">'+aciklama+'</td>';
                 h += '<td style="white-space:nowrap;"><button class="ft-btn-xs ft-btn-edit" onclick="ftTakvimFormAc('+e.id+')" title="Düzenle"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-xs ft-btn-del" onclick="ftTakvimSil('+e.id+')" title="Sil"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
             });
             h += '</tbody></table></div>';
