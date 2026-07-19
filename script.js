@@ -9253,8 +9253,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         }
 
         function ftOVToplamHesapla() {
-            var asil = tmTutarCoz(document.getElementById("ftOVAsilBorç"));
-            var gecikme = tmTutarCoz(document.getElementById("ftOVGecikme"));
+            var asil = tmTutarCoz(document.getElementById("ftOVAsilBorç").value);
+            var gecikme = tmTutarCoz(document.getElementById("ftOVGecikme").value);
             var toplam = asil + gecikme;
             document.getElementById("ftOVToplam").value = toplam.toLocaleString('tr-TR',{minimumFractionDigits:2});
         }
@@ -9264,8 +9264,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var belgeNo = document.getElementById("ftOVBelgeNo").value.trim();
             var donem = document.getElementById("ftOVDonem").value.trim();
             var vadeTarihi = document.getElementById("ftOVVadeTarih").value;
-            var asilBorç = tmTutarCoz(document.getElementById("ftOVAsilBorç"));
-            var gecikmeZammi = tmTutarCoz(document.getElementById("ftOVGecikme"));
+            var asilBorç = tmTutarCoz(document.getElementById("ftOVAsilBorç").value);
+            var gecikmeZammi = tmTutarCoz(document.getElementById("ftOVGecikme").value);
             var odemeTarihi = document.getElementById("ftOVOdemeTarih").value;
             var aciklama = document.getElementById("ftOVAciklama").value.trim();
             var toplamBorç = asilBorç + gecikmeZammi;
