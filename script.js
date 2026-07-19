@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.45.0';
+        var APP_VERSION = 'V1.45.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7986,12 +7986,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 return t >= aralik.bas && t <= aralik.bitis;
             });
             islemler.sort(function(a,b){ return (a.tarih||"").localeCompare(b.tarih||""); });
-
             var oncekiIslemler = filtrele(db.islemler, hesapId).filter(function(i) {
                 var t = new Date(i.tarih);
                 return t < aralik.bas;
             });
-
             var ozet = hesapOzeti(islemler, oncekiIslemler, hesapId);
 
             var donemStr = aralik.bas.toLocaleDateString("tr-TR") + " - " + aralik.bitis.toLocaleDateString("tr-TR");
@@ -8001,155 +7999,144 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var logoData = localStorage.getItem("tm_sirket_logo");
             var logoHtml = '';
             if(logoData && logoData !== "null" && logoData.length > 100) {
-                logoHtml = '<img src="'+logoData+'" style="height:11mm;width:auto;" alt="Logo">';
+                logoHtml = '<img src="'+logoData+'" style="height:42px;width:auto;" alt="Logo">';
             }
 
             function tl(v) { return (v||0).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺'; }
-            function tarihStr(i) { return i.tarih ? new Date(i.tarih).toLocaleDateString("tr-TR") : "-"; }
-            function hesapHareketi(i) {
+            function hStr(i) {
                 if(i.islem === "TRANSFER") return hesapAdiBul(i.hesapId)+" → "+hesapAdiBul(i.hedefId);
                 if(i.islem === "GELEN") return "Harici → "+hesapAdiBul(i.hesapId);
                 return hesapAdiBul(i.hesapId)+" → Harici";
             }
-            function turStr(i) {
+            function tStr(i) {
                 if(i.islem === "GELEN") return "GELİR";
                 if(i.islem === "GİDEN") return "GİDER";
                 return "TRANSFER";
             }
-            function turRenk(i) {
+            function tRenk(i) {
                 if(i.islem === "GELEN") return "#2ecc71";
                 if(i.islem === "GİDEN") return "#e53935";
                 return "#3498db";
             }
 
-            function kartiHtml(e, d, r, bg) {
-                return '<div style="flex:1;margin:0 0.5mm;border:1px solid #d0d0dc;border-radius:3px;padding:2mm 0;background:'+bg+';text-align:center;">'
-                    + '<div style="font-size:6.5px;font-weight:700;color:#888;letter-spacing:0.3px;margin-bottom:1mm;">'+e+'</div>'
-                    + '<div style="font-size:11px;font-weight:800;color:'+r+';">'+tl(d)+'</div></div>';
-            }
+            var gorunenSatir = 0;
 
-            var satirSayisi = islemler.length;
-            var maxSatirSayfa = 40;
-            var sayfaSayisi = Math.max(1, Math.ceil(satirSayisi / maxSatirSayfa));
-
-            function sayfaHtml(basIdx, bitIdx, sayfaNo) {
-                var sayfaIslemler = islemler.slice(basIdx, bitIdx);
-
-                var kartHtmlStr = kartiHtml("AÇILIŞ BAKİYESİ", ozet.acilis, "#1a3a5c", "#ebf0fa")
-                    + kartiHtml("TOPLAM GELİR", ozet.gelir, "#2e7d32", "#e6f5e6")
-                    + kartiHtml("TOPLAM GİDER", ozet.gider, "#c0392b", "#fae8e8")
-                    + kartiHtml("NET DEĞİŞİM", ozet.net, ozet.net>=0?"#2e7d32":"#c0392b", ozet.net>=0?"#e6f5e6":"#fae8e8")
-                    + kartiHtml("KAPANIŞ BAKİYESİ", ozet.kapanis, "#1a1a2e", "#ebebf8");
-
-                function tabloHtml(islemList, hid, gOzet) {
-                    if(!islemList || islemList.length === 0) {
-                        return '<tr><td colspan="5" style="text-align:center;padding:3mm;color:#888;font-size:9px;">Bu dönem için işlem bulunamadı.</td></tr>';
-                    }
-                    var rows = '';
-                    islemList.forEach(function(i) {
-                        var renk = turRenk(i);
-                        rows += '<tr style="background:'+(islemList.indexOf(i)%2===0?'#fff':'#f8f8fc')+';">'
-                            + '<td style="text-align:center;padding:1mm 1.5mm;font-size:8px;color:#555;">'+tarihStr(i)+'</td>'
-                            + '<td style="padding:1mm 1.5mm;font-size:8px;color:#333;word-break:break-word;">'+(i.aciklama||"-")+'</td>'
-                            + '<td style="padding:1mm 1.5mm;font-size:8px;color:#555;word-break:break-word;">'+hesapHareketi(i)+'</td>'
-                            + '<td style="text-align:center;padding:1mm 1.5mm;font-size:8px;color:'+renk+';font-weight:700;">'+turStr(i)+'</td>'
-                            + '<td style="text-align:right;padding:1mm 1.5mm;font-size:8px;color:'+renk+';font-weight:700;white-space:nowrap;">'+tl(i.tutar)+'</td>'
-                            + '</tr>';
-                    });
-                    var netR = gOzet.net>=0?"#2e7d32":"#c0392b";
-                    rows += '<tr style="background:#eeeff8;font-weight:700;">'
-                        + '<td colspan="2" style="padding:1mm 1.5mm;font-size:8px;color:#1a1a2e;border-top:1px solid #c0c0d7;">DÖNEM TOPLAMI</td>'
-                        + '<td style="padding:1mm 1.5mm;font-size:8px;color:#888;border-top:1px solid #c0c0d7;"></td>'
-                        + '<td style="padding:1mm 1.5mm;font-size:8px;color:#888;border-top:1px solid #c0c0d7;"></td>'
-                        + '<td style="text-align:right;padding:1mm 1.5mm;font-size:8px;color:'+netR+';font-weight:700;border-top:1px solid #c0c0d7;">'+tl(gOzet.net)+'</td>'
-                        + '</tr>';
-                    return rows;
+            function sayfaHtml() {
+                var GNL = "#888";
+                var karts = [
+                    ["AÇILIŞ BAKİYESİ", ozet.acilis, "#1a3a5c", "#ebf0fa"],
+                    ["TOPLAM GELİR", ozet.gelir, "#2e7d32", "#e6f5e6"],
+                    ["TOPLAM GİDER", ozet.gider, "#c0392b", "#fae8e8"],
+                    ["NET DEĞİŞİM", ozet.net, ozet.net>=0?"#2e7d32":"#c0392b", ozet.net>=0?"#e6f5e6":"#fae8e8"],
+                    ["KAPANIŞ BAKİYESİ", ozet.kapanis, "#1a1a2e", "#ebebf8"]
+                ];
+                var kartDivs = '';
+                for(var ki=0;ki<5;ki++){
+                    kartDivs += '<div style="flex:1;margin:0 3px;border:1px solid #d0d0dc;border-radius:4px;padding:6px 0;background:'+karts[ki][3]+';text-align:center;">'
+                        + '<div style="font-size:7px;font-weight:700;color:#888;margin-bottom:3px;">'+karts[ki][0]+'</div>'
+                        + '<div style="font-size:12px;font-weight:800;color:'+karts[ki][2]+';">'+tl(karts[ki][1])+'</div></div>';
                 }
 
                 var tabloGovde = '';
-                if(hesapId === 0) {
-                    var gruplar = {};
-                    sayfaIslemler.forEach(function(i) {
-                        var aid = i.hesapId;
-                        if(!gruplar[aid]) gruplar[aid] = [];
-                        gruplar[aid].push(i);
-                    });
-                    var hidList = Object.keys(gruplar).map(Number);
-                    hidList.sort(function(a,b){ return (hesapAdiBul(a)||"").localeCompare(hesapAdiBul(b)||""); });
-                    var gBaslik = true;
-                    hidList.forEach(function(aid) {
-                        var gOnceki = filtrele(oncekiIslemler, aid);
-                        var gOzet = hesapOzeti(gruplar[aid], gOnceki, aid);
-                        if(!gBaslik) tabloGovde += '<tr><td colspan="5" style="padding:1mm;"></td></tr>';
-                        gBaslik = false;
-                        tabloGovde += '<tr><td colspan="5" style="padding:1.5mm 0 0 0;"><div style="font-size:9px;font-weight:800;color:#1a1a2e;">'+hesapAdiBul(aid)+'</div>'
-                            + '<div style="font-size:7px;color:#888;">Gelir: '+tl(gOzet.gelir)+' &nbsp;|&nbsp; Gider: '+tl(gOzet.gider)+' &nbsp;|&nbsp; Net: '+tl(gOzet.net)+'</div></td></tr>';
-                        tabloGovde += tabloHtml(gruplar[aid], aid, gOzet);
-                    });
+                function ekleSatirlar(liste, hid, gO) {
+                    if(!liste || liste.length===0) {
+                        tabloGovde += '<tr><td colspan="5" style="text-align:center;padding:10px;color:#888;font-size:9px;">Bu dönem için işlem bulunamadı.</td></tr>';
+                        return;
+                    }
+                    for(var ri=0;ri<liste.length;ri++){
+                        var i=liste[ri]; var r=tRenk(i);
+                        var bg = (gorunenSatir%2===0) ? '#fff' : '#f8f8fc';
+                        gorunenSatir++;
+                        tabloGovde += '<tr style="background:'+bg+';">'
+                            + '<td style="text-align:center;padding:3px 4px;font-size:8px;color:#555;">'+(i.tarih?new Date(i.tarih).toLocaleDateString("tr-TR"):"-")+'</td>'
+                            + '<td style="padding:3px 4px;font-size:8px;color:#333;word-break:break-word;">'+(i.aciklama||"-")+'</td>'
+                            + '<td style="padding:3px 4px;font-size:8px;color:#555;word-break:break-word;">'+hStr(i)+'</td>'
+                            + '<td style="text-align:center;padding:3px 4px;font-size:8px;color:'+r+';font-weight:700;">'+tStr(i)+'</td>'
+                            + '<td style="text-align:right;padding:3px 4px;font-size:8px;color:'+r+';font-weight:700;white-space:nowrap;">'+tl(i.tutar)+'</td></tr>';
+                    }
+                    var netR = gO.net>=0?"#2e7d32":"#c0392b";
+                    tabloGovde += '<tr style="background:#eeeff8;font-weight:700;">'
+                        + '<td colspan="2" style="padding:3px 4px;font-size:8px;color:#1a1a2e;border-top:1px solid #c0c0d7;">DÖNEM TOPLAMI</td>'
+                        + '<td style="padding:3px 4px;font-size:8px;color:#888;border-top:1px solid #c0c0d7;"></td>'
+                        + '<td style="padding:3px 4px;font-size:8px;color:#888;border-top:1px solid #c0c0d7;"></td>'
+                        + '<td style="text-align:right;padding:3px 4px;font-size:8px;color:'+netR+';font-weight:700;border-top:1px solid #c0c0d7;">'+tl(gO.net)+'</td></tr>';
+                }
+                if(hesapId===0){
+                    var gruplar={};
+                    islemler.forEach(function(i){var a=i.hesapId;if(!gruplar[a])gruplar[a]=[];gruplar[a].push(i);});
+                    var hids=Object.keys(gruplar).map(Number);
+                    hids.sort(function(a,b){return(hesapAdiBul(a)||"").localeCompare(hesapAdiBul(b)||"");});
+                    var ilk=true;
+                    for(var gi=0;gi<hids.length;gi++){
+                        var aid=hids[gi];
+                        var gOnceki=filtrele(oncekiIslemler,aid);
+                        var gOzet=hesapOzeti(gruplar[aid],gOnceki,aid);
+                        if(!ilk)tabloGovde+='<tr><td colspan="5" style="padding:3px;"></td></tr>';
+                        ilk=false;
+                        tabloGovde+='<tr><td colspan="5" style="padding:4px 0 0 0;"><div style="font-size:10px;font-weight:800;color:#1a1a2e;">'+hesapAdiBul(aid)+'</div>'
+                            +'<div style="font-size:7px;color:#888;">Gelir: '+tl(gOzet.gelir)+'  |  Gider: '+tl(gOzet.gider)+'  |  Net: '+tl(gOzet.net)+'</div></td></tr>';
+                        ekleSatirlar(gruplar[aid],aid,gOzet);
+                    }
                 } else {
-                    tabloGovde = tabloHtml(sayfaIslemler, hesapId, ozet);
+                    ekleSatirlar(islemler,hesapId,ozet);
                 }
 
-                return '<div style="width:190mm;padding:8mm 10mm 4mm 10mm;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222;overflow:hidden;">'
-                    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0;">'
-                    + '<div style="flex-shrink:0;">'+(logoHtml||'')+'</div>'
-                    + '<div style="text-align:right;"><div style="font-size:15px;font-weight:800;color:#1a3a5c;">HESAP HAREKET RAPORU</div></div></div>'
-                    + '<hr style="border:none;border-top:2px solid #1a1a2e;margin:1.5mm 0;">'
-                    + '<div style="display:flex;justify-content:space-between;font-size:7px;color:#888;margin-bottom:0.5mm;">'
-                    + '<span>Rapor No: '+raporNo+'</span><span>Dönem: '+donemStr+'</span><span>'+new Date().toLocaleDateString("tr-TR")+'</span></div>'
-                    + '<div style="display:flex;justify-content:space-between;font-size:7px;color:#888;margin-bottom:1.5mm;">'
-                    + '<span>Hesap: '+hesapStr+'</span>'+(ibanStr?'<span>IBAN: '+ibanStr+'</span>':'')+'<span>İşlem: '+satirSayisi+' adet</span></div>'
-                    + '<div style="display:flex;gap:1mm;margin-bottom:1.5mm;">'+kartHtmlStr+'</div>'
-                    + '<hr style="border:none;border-top:1px solid #d0d0d7;margin:0 0 1.5mm 0;">'
+                return '<div style="width:793px;padding:38px 42px 19px 42px;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222;overflow:hidden;">'
+                    + '<div style="display:flex;justify-content:space-between;align-items:center;">'
+                    + '<div>'+(logoHtml||'')+'</div>'
+                    + '<div style="text-align:right;"><div style="font-size:16px;font-weight:800;color:#1a3a5c;">HESAP HAREKET RAPORU</div></div></div>'
+                    + '<hr style="border:none;border-top:2px solid #1a1a2e;margin:5px 0;">'
+                    + '<div style="display:flex;justify-content:space-between;font-size:7.5px;color:#888;margin-bottom:1px;"><span>Rapor No: '+raporNo+'</span><span>Dönem: '+donemStr+'</span><span>'+new Date().toLocaleDateString("tr-TR")+'</span></div>'
+                    + '<div style="display:flex;justify-content:space-between;font-size:7.5px;color:#888;margin-bottom:5px;"><span>Hesap: '+hesapStr+'</span>'+(ibanStr?'<span>IBAN: '+ibanStr+'</span>':'')+'<span>İşlem: '+islemler.length+' adet</span></div>'
+                    + '<div style="display:flex;gap:3px;margin-bottom:5px;">'+kartDivs+'</div>'
+                    + '<hr style="border:none;border-top:1px solid #d0d0d7;margin:0 0 5px 0;">'
                     + '<table style="width:100%;border-collapse:collapse;table-layout:fixed;">'
                     + '<thead><tr style="background:#1a1a2e;color:#fff;">'
-                    + '<th style="text-align:center;padding:1.2mm 1.5mm;font-size:7px;font-weight:700;width:18mm;">TARİH</th>'
-                    + '<th style="text-align:left;padding:1.2mm 1.5mm;font-size:7px;font-weight:700;width:48mm;">AÇIKLAMA</th>'
-                    + '<th style="text-align:left;padding:1.2mm 1.5mm;font-size:7px;font-weight:700;width:62mm;">HESAP HAREKETİ</th>'
-                    + '<th style="text-align:center;padding:1.2mm 1.5mm;font-size:7px;font-weight:700;width:18mm;">TÜR</th>'
-                    + '<th style="text-align:right;padding:1.2mm 1.5mm;font-size:7px;font-weight:700;width:44mm;">TUTAR</th>'
+                    + '<th style="text-align:center;padding:4px 4px;font-size:7.5px;font-weight:700;width:68px;">TARİH</th>'
+                    + '<th style="text-align:left;padding:4px 4px;font-size:7.5px;font-weight:700;width:181px;">AÇIKLAMA</th>'
+                    + '<th style="text-align:left;padding:4px 4px;font-size:7.5px;font-weight:700;width:234px;">HESAP HAREKETİ</th>'
+                    + '<th style="text-align:center;padding:4px 4px;font-size:7.5px;font-weight:700;width:68px;">TÜR</th>'
+                    + '<th style="text-align:right;padding:4px 4px;font-size:7.5px;font-weight:700;width:166px;">TUTAR</th>'
                     + '</tr></thead><tbody>'+tabloGovde+'</tbody></table>'
-                    + '<div style="text-align:center;font-size:6px;color:#aaa;margin-top:1.5mm;">Sayfa '+sayfaNo+' / '+sayfaSayisi+'</div>'
                     + '</div>';
             }
 
             tmNotify("Rapor hazırlanıyor...", "info");
-            var tumSayfalar = [];
-            var sayfaYukle = 0;
+            var el = document.createElement("div");
+            el.style.cssText = "position:fixed;left:-9999px;top:0;";
+            el.innerHTML = sayfaHtml();
+            document.body.appendChild(el);
 
-            function sayfaOlustur(sayfaNo) {
-                var basIdx = (sayfaNo - 1) * maxSatirSayfa;
-                var bitIdx = Math.min(basIdx + maxSatirSayfa, satirSayisi);
-                var html = sayfaHtml(basIdx, bitIdx, sayfaNo);
-                var el = document.createElement("div");
-                el.style.cssText = "position:fixed;left:-9999px;top:0;";
-                el.innerHTML = html;
-                document.body.appendChild(el);
-
-                html2canvas(el, {scale:3,useCORS:true,logging:false,width:793}).then(function(cv){
-                    tumSayfalar[sayfaNo - 1] = cv.toDataURL('image/jpeg',0.93);
-                    document.body.removeChild(el);
-                    sayfaYukle++;
-                    if(sayfaYukle < sayfaSayisi) {
-                        sayfaOlustur(sayfaNo + 1);
-                    } else {
-                        var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
-                        for(var s = 0; s < tumSayfalar.length; s++) {
-                            if(s > 0) doc.addPage();
-                            doc.addImage(tumSayfalar[s], 'JPEG', 0, 0, 210, 297);
-                        }
-                        doc.save("Hesap_Raporu_" + hesapStr.replace(/[^a-zA-Z0-9]/g,"_") + ".pdf");
-                        tmNotify("Rapor PDF olarak kaydedildi.", "success");
-                        htPdfModalKapat();
-                    }
-                }).catch(function(e){
-                    tmNotify("PDF oluşturulurken hata: "+(e.message||e),"error");
-                    try{document.body.removeChild(el);}catch(ex){}
-                    htPdfModalKapat();
-                });
-            }
-
-            sayfaOlustur(1);
+            html2canvas(el, {scale:2.5,useCORS:true,logging:false,width:793}).then(function(cv){
+                document.body.removeChild(el);
+                var olcek = 2.5;
+                var a4w = 793;
+                var a4h = 1122;
+                var cw = cv.width;
+                var ch = cv.height;
+                var slH = a4h * olcek;
+                var sayfaSayisi = Math.ceil(ch / slH);
+                var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
+                var tmpC = document.createElement('canvas');
+                tmpC.width = cw;
+                tmpC.height = slH;
+                for(var s = 0; s < sayfaSayisi; s++) {
+                    if(s > 0) doc.addPage();
+                    var ctx = tmpC.getContext('2d');
+                    ctx.clearRect(0,0,cw,slH);
+                    var sy = s * slH;
+                    var sh = Math.min(slH, ch - sy);
+                    ctx.drawImage(cv, 0, sy, cw, sh, 0, 0, cw, sh);
+                    doc.addImage(tmpC.toDataURL('image/jpeg',0.95), 'JPEG', 0, 0, 210, 297 * sh / slH);
+                }
+                doc.save("Hesap_Raporu_" + hesapStr.replace(/[^a-zA-Z0-9]/g,"_") + ".pdf");
+                tmNotify("Rapor PDF olarak kaydedildi.", "success");
+                htPdfModalKapat();
+            }).catch(function(e){
+                tmNotify("PDF hatası: "+(e.message||e),"error");
+                try{document.body.removeChild(el);}catch(ex){}
+                htPdfModalKapat();
+            });
         }
         /* ================= TM FİYAT LİSTESİ — FİYAT KARTLARI ================= */
         const TMF_KART_KEY = 'tm_kategorili_fiyatlar';
