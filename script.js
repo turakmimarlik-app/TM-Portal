@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.61.0';
+        var APP_VERSION = 'V1.62.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8962,10 +8962,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 h += '<div class="ft-card-head-right"><span class="ft-badge ' + dc + '">' + dt + '</span>' + (f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'') + '<button class="ft-btn-sm ft-btn-edit" onclick="ftGelenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGelenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></div>';
                 h += '</div>';
                 h += '<div class="ft-card-body">';
-                h += '<div class="ft-card-row"><span class="ft-clabel">Tarih:</span><span class="ft-cvalue">' + (f.faturaTarihi?tarihStr(f.faturaTarihi):'-') + '</span><span class="ft-clabel">Vade:</span><span class="ft-cvalue">' + (f.vadeTarihi?tarihStr(f.vadeTarihi):'-') + '</span><span class="ft-clabel">Tutar:</span><span class="ft-cvalue">' + tmTl(f.tutar) + '</span><span class="ft-clabel">KDV:</span><span class="ft-cvalue">' + tmTl(f.kdvTutari) + '</span><span class="ft-clabel">Toplam:</span><span class="ft-cvalue-toplam">' + tmTl(f.toplamTutar) + '</span></div>';
-                h += '<div class="ft-card-row">' + (f.odemeYontemi?'<span class="ft-clabel">Yöntem:</span><span class="ft-cvalue">' + esc(f.odemeYontemi) + '</span>' : '') + (f.odemeTarihi?'<span class="ft-clabel">Ödeme:</span><span class="ft-cvalue">' + tarihStr(f.odemeTarihi) + '</span>' : '') + '</div>';
+                h += '<div class="ft-card-body-left">';
+                h += '<div class="ft-card-row"><span class="ft-clabel">Tarih:</span> ' + (f.faturaTarihi?tarihStr(f.faturaTarihi):'-') + '  <span class="ft-clabel">Vade:</span> ' + (f.vadeTarihi?tarihStr(f.vadeTarihi):'-') + '  <span class="ft-clabel">Tutar:</span> ' + tmTl(f.tutar) + '  <span class="ft-clabel">KDV:</span> ' + tmTl(f.kdvTutari) + '  <span class="ft-clabel">Toplam:</span> <span class="ft-cvalue-toplam">' + tmTl(f.toplamTutar) + '</span></div>';
+                h += '<div class="ft-card-row">' + (f.odemeYontemi?'<span class="ft-clabel">Yöntem:</span> ' + esc(f.odemeYontemi) + '  ' : '') + (f.odemeTarihi?'<span class="ft-clabel">Ödeme:</span> ' + tarihStr(f.odemeTarihi) : '') + '</div>';
+                h += '</div>';
+                h += '<div class="ft-card-body-right' + (f.aciklama?' ft-has-aciklama':'') + '">';
                 if (f.aciklama) h += '<div class="ft-card-aciklama">' + esc(f.aciklama) + '</div>';
-                h += '</div></div>';
+                h += '</div></div></div>';
             });
             h += '</div>';
             konteyner.innerHTML = h;
@@ -9142,10 +9145,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 h += '<div class="ft-card-head-right"><span class="ft-badge ' + dc + '">' + dt + '</span>' + (f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'') + '<button class="ft-btn-sm ft-btn-edit" onclick="ftGidenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGidenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></div>';
                 h += '</div>';
                 h += '<div class="ft-card-body">';
-                h += '<div class="ft-card-row"><span class="ft-clabel">Tarih:</span><span class="ft-cvalue">' + (f.faturaTarihi?tarihStr(f.faturaTarihi):'-') + '</span><span class="ft-clabel">Vade:</span><span class="ft-cvalue">' + (f.vadeTarihi?tarihStr(f.vadeTarihi):'-') + '</span><span class="ft-clabel">Tutar:</span><span class="ft-cvalue">' + tmTl(f.tutar) + '</span><span class="ft-clabel">KDV:</span><span class="ft-cvalue">' + tmTl(f.kdvTutari) + '</span><span class="ft-clabel">Toplam:</span><span class="ft-cvalue-toplam">' + tmTl(f.toplamTutar) + '</span></div>';
-                h += '<div class="ft-card-row">' + (f.tahsilatYontemi?'<span class="ft-clabel">Yöntem:</span><span class="ft-cvalue">' + esc(f.tahsilatYontemi) + '</span>' : '') + (f.tahsilatTarihi?'<span class="ft-clabel">Tahsilat:</span><span class="ft-cvalue">' + tarihStr(f.tahsilatTarihi) + '</span>' : '') + '</div>';
+                h += '<div class="ft-card-body-left">';
+                h += '<div class="ft-card-row"><span class="ft-clabel">Tarih:</span> ' + (f.faturaTarihi?tarihStr(f.faturaTarihi):'-') + '  <span class="ft-clabel">Vade:</span> ' + (f.vadeTarihi?tarihStr(f.vadeTarihi):'-') + '  <span class="ft-clabel">Tutar:</span> ' + tmTl(f.tutar) + '  <span class="ft-clabel">KDV:</span> ' + tmTl(f.kdvTutari) + '  <span class="ft-clabel">Toplam:</span> <span class="ft-cvalue-toplam">' + tmTl(f.toplamTutar) + '</span></div>';
+                h += '<div class="ft-card-row">' + (f.tahsilatYontemi?'<span class="ft-clabel">Yöntem:</span> ' + esc(f.tahsilatYontemi) + '  ' : '') + (f.tahsilatTarihi?'<span class="ft-clabel">Tahsilat:</span> ' + tarihStr(f.tahsilatTarihi) : '') + '</div>';
+                h += '</div>';
+                h += '<div class="ft-card-body-right' + (f.aciklama?' ft-has-aciklama':'') + '">';
                 if (f.aciklama) h += '<div class="ft-card-aciklama">' + esc(f.aciklama) + '</div>';
-                h += '</div></div>';
+                h += '</div></div></div>';
             });
             h += '</div>';
             konteyner.innerHTML = h;
