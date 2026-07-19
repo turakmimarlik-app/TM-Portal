@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.47.0';
+        var APP_VERSION = 'V1.47.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -9275,15 +9275,15 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-calendar"></i>','Henüz vergi etkinliği bulunmamaktadır.','Vergi takvimine yeni bir etkinlik ekleyin.'); return; }
             var simdi = new Date();
             simdi.setHours(0,0,0,0);
-            var h = '<div class="ft-takvim-list">';
-            h += '<div class="ft-takvim-header">' +
-                '<span class="ft-takvim-h-chk"></span>' +
-                '<span class="ft-takvim-h-tarih">Tarih</span>' +
-                '<span class="ft-takvim-h-baslik">Başlık</span>' +
-                '<span class="ft-takvim-h-tur">Tür</span>' +
-                '<span class="ft-takvim-h-kalan">Kalan Süre</span>' +
-                '<span class="ft-takvim-h-aciklama">Açıklama</span>' +
-                '<span class="ft-takvim-h-aksiyon"></span></div>';
+            var h = '<div class="ft-calendar-list">';
+            h += '<div class="ft-cal-header">' +
+                '<span class="ft-cal-h-chk"></span>' +
+                '<span class="ft-cal-h-tarih">Tarih</span>' +
+                '<span class="ft-cal-h-baslik">Başlık</span>' +
+                '<span class="ft-cal-h-tur">Tür</span>' +
+                '<span class="ft-cal-h-kalan">Kalan Süre</span>' +
+                '<span class="ft-cal-h-aciklama">Açıklama</span>' +
+                '<span class="ft-cal-h-aksiyon"></span></div>';
             liste.slice().reverse().forEach(function(e) {
                 var turAd = ftTurAdi(e.tur);
                 var kalanGun = "";
@@ -9293,19 +9293,19 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                         var et = new Date(e.tarih);
                         et.setHours(0,0,0,0);
                         var fark = Math.round((et - simdi) / 86400000);
-                        if (fark > 0) { kalanGun = fark + " gün kaldı"; renk = fark <= 7 ? "color:var(--accent-red);font-weight:700;" : fark <= 30 ? "color:orange;" : "color:var(--text-light);"; }
-                        else if (fark === 0) { kalanGun = "BUGÜN!"; renk = "color:red;font-weight:700;"; }
-                        else { kalanGun = Math.abs(fark) + " gün geçti"; renk = "color:var(--text-light);"; }
+                        if (fark > 0) { kalanGun = fark + " gün kaldı"; renk = fark <= 7 ? "color:var(--ft-red);font-weight:700;" : fark <= 30 ? "color:var(--ft-orange);" : "color:var(--ft-text-light);"; }
+                        else if (fark === 0) { kalanGun = "BUGÜN!"; renk = "color:var(--ft-red);font-weight:700;"; }
+                        else { kalanGun = Math.abs(fark) + " gün geçti"; renk = "color:var(--ft-text-light);"; }
                     } catch(e) { console.error("Fatura takvim tarih hatasi:", e); }
                 }
-                h += '<div class="ft-takvim-item'+(e.tamamlandi?" tamamlandi":"")+'">';
-                h += '<input type="checkbox" '+(e.tamamlandi?"checked":"")+' onchange="ftTakvimTamamla('+e.id+')" style="width:16px;height:16px;cursor:pointer;">';
-                h += '<div class="ft-takvim-tarih">'+(e.tarih?tarihStr(e.tarih):"-")+'</div>';
-                h += '<div class="ft-takvim-baslik">'+esc(e.baslik)+'</div><div class="ft-takvim-tur">'+turAd+'</div>';
-                if (kalanGun) h += '<div class="ft-takvim-kalan" style="'+renk+'">'+kalanGun+'</div>';
-                if (e.aciklama) h += '<div class="ft-takvim-aciklama">'+esc(e.aciklama)+'</div>';
-                h += '<button class="ft-btn-sm ft-btn-edit" onclick="ftTakvimFormAc('+e.id+')"><i class="fa-regular fa-pen-to-square"></i></button>';
-                h += '<button class="ft-btn-sm ft-btn-del" onclick="ftTakvimSil('+e.id+')"><i class="fa-solid fa-trash-can"></i></button></div>';
+                h += '<div class="ft-cal-item'+(e.tamamlandi?" tamamlandi":"")+'">';
+                h += '<input type="checkbox" class="ft-cal-chk" '+(e.tamamlandi?"checked":"")+' onchange="ftTakvimTamamla('+e.id+')">';
+                h += '<div class="ft-cal-tarih">'+(e.tarih?tarihStr(e.tarih):"-")+'</div>';
+                h += '<div class="ft-cal-baslik">'+esc(e.baslik)+'</div><span class="ft-cal-tur">'+turAd+'</span>';
+                if (kalanGun) h += '<div class="ft-cal-kalan" style="'+renk+'">'+kalanGun+'</div>';
+                if (e.aciklama) h += '<div class="ft-cal-aciklama">'+esc(e.aciklama)+'</div>';
+                h += '<button class="ft-btn-xs ft-btn-edit" onclick="ftTakvimFormAc('+e.id+')" style="flex-shrink:0;"><i class="fa-regular fa-pen-to-square"></i></button>';
+                h += '<button class="ft-btn-xs ft-btn-del" onclick="ftTakvimSil('+e.id+')" style="flex-shrink:0;"><i class="fa-solid fa-trash-can"></i></button></div>';
             });
             h += '</div>';
             konteyner.innerHTML = h;
@@ -9429,7 +9429,37 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             h += '</div></div>';
 
             var el = document.createElement("div"); el.innerHTML = h; document.body.appendChild(el);
-            html2canvas(el,{scale:6,useCORS:true}).then(function(c){var doc=new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});var imgW=190;var imgH=c.height*imgW/c.width;if(imgH>277){imgH=277;}doc.addImage(c.toDataURL('image/png'),'PNG',10,10,imgW,imgH);doc.save('Fatura_Takip_Raporu_'+yil+'.pdf');try{document.body.removeChild(el)}catch(ex){}}).catch(function(e){console.error("Fatura PDF hatasi:",e);tmNotify("Fatura PDF oluşturulurken hata","error");try{document.body.removeChild(el)}catch(ex){}});
+            html2canvas(el,{scale:2,useCORS:true,logging:false,width:el.scrollWidth,height:el.scrollHeight}).then(function(c){
+                var A4_W = 210, A4_H = 297, MARGIN = 10;
+                var maxW = A4_W - 2 * MARGIN;
+                var imgW = maxW;
+                var imgH = c.height * imgW / c.width;
+                var pageH = A4_H - 2 * MARGIN;
+                var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
+                if (imgH <= pageH) {
+                    doc.addImage(c.toDataURL('image/png'),'PNG',MARGIN,MARGIN,imgW,imgH);
+                } else {
+                    var totalPages = Math.ceil(imgH / pageH);
+                    for (var p = 0; p < totalPages; p++) {
+                        if (p > 0) doc.addPage();
+                        var srcY = p * pageH * c.width / imgW;
+                        var srcH = Math.min(pageH * c.width / imgW, c.height - srcY);
+                        var canvas2 = document.createElement('canvas');
+                        canvas2.width = c.width;
+                        canvas2.height = srcH * imgW / c.width * (c.width / imgW) || srcH;
+                        var ctx = canvas2.getContext('2d');
+                        ctx.drawImage(c, 0, srcY, c.width, srcH, 0, 0, c.width, srcH);
+                        var pageImg = canvas2.toDataURL('image/png');
+                        doc.addImage(pageImg,'PNG',MARGIN,MARGIN,imgW,pageH);
+                    }
+                }
+                doc.save('Fatura_Takip_Raporu_'+yil+'.pdf');
+                try{document.body.removeChild(el)}catch(ex){}
+            }).catch(function(e){
+                console.error("Fatura PDF hatasi:",e);
+                tmNotify("Fatura PDF oluşturulurken hata","error");
+                try{document.body.removeChild(el)}catch(ex){}
+            });
         }
 
         function ftGenelAra() {
