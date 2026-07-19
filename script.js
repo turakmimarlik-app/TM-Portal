@@ -9326,7 +9326,6 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 h += '<td style="font-size:10px;color:var(--text-light);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+esc(v.aciklama||"")+'">'+esc((v.aciklama||"").substring(0,25))+'</td>';
                 h += '<td><button class="ft-btn-sm ft-btn-edit" onclick="ftOdenenVergiFormAc('+v.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftOdenenVergiSil('+v.id+')"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
             });
-            });
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
         }
