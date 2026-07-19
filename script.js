@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.47.1';
+        var APP_VERSION = 'V1.48.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8527,31 +8527,48 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var db = ftDbYukle();
             var y = String(yil);
             if (!db.yillar[y]) db.yillar[y] = { gelenFaturalar: [], gidenFaturalar: [], vergiEtkinlikleri: [], odenmisVergiler: [] };
-            if (db.yillar[y]._otomatikEklendi) return;
-            var etkinlikler = db.yillar[y].vergiEtkinlikleri || [];
+            var OTO_SURUM = "v2.0";
+            if (db.yillar[y]._otomatikSurum === OTO_SURUM) return;
+            var etkinlikler = (db.yillar[y].vergiEtkinlikleri || []).filter(function(e){ return !e.otomatik; });
             var maxId = 0;
             etkinlikler.forEach(function(e){ if (typeof e.id === "number" && e.id > maxId) maxId = e.id; });
             var yeni = [];
             var aylar = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
-            for (var a = 0; a < 11; a++) {
+            for (var a = 0; a < 12; a++) {
                 maxId++;
-                yeni.push({ id: maxId, baslik: "KDV Beyannamesi (" + aylar[a] + ")", tur: "KDV", tarih: yil + "-" + (a<9?"0":"") + (a+2) + "-26", aciklama: "KDV beyannamesi verilecek", tamamlandi: false, otomatik: true });
+                var bm = a + 2; if (bm > 12) bm = 1;
+                var by = bm === 1 ? yil + 1 : yil;
+                yeni.push({ id: maxId, baslik: "KDV Beyannamesi (" + aylar[a] + ")", tur: "KDV", tarih: by + "-" + (bm<10?"0":"") + bm + "-28", aciklama: aylar[a] + " ayı KDV beyannamesi son günü", tamamlandi: false, otomatik: true });
+            }
+            for (var a = 0; a < 12; a++) {
+                maxId++;
+                var mm = a + 2; if (mm > 12) mm = 1;
+                var my = mm === 1 ? yil + 1 : yil;
+                yeni.push({ id: maxId, baslik: "Muhtasar & SGK Prim (" + aylar[a] + ")", tur: "Stopaj", tarih: my + "-" + (mm<10?"0":"") + mm + "-26", aciklama: aylar[a] + " ayı muhtasar ve prim hizmet beyannamesi son günü", tamamlandi: false, otomatik: true });
             }
             var gv = [
-                { baslik:"Geçici Vergi 1. Dönem (Ocak-Şubat-Mart)", ay:5, gun:14 },
-                { baslik:"Geçici Vergi 2. Dönem (Nisan-Mayıs-Haziran)", ay:8, gun:14 },
-                { baslik:"Geçici Vergi 3. Dönem (Temmuz-Ağustos-Eylül)", ay:11, gun:14 }
+                { baslik:"Geçici Vergi 1. Dönem (Ocak-Şubat-Mart)", ay:5, gun:17 },
+                { baslik:"Geçici Vergi 2. Dönem (Nisan-Mayıs-Haziran)", ay:8, gun:17 },
+                { baslik:"Geçici Vergi 3. Dönem (Temmuz-Ağustos-Eylül)", ay:11, gun:17 },
+                { baslik:"Geçici Vergi 4. Dönem (Ekim-Kasım-Aralık)", ay:2, gun:17, nxt:true }
             ];
             gv.forEach(function(g) {
                 maxId++;
-                yeni.push({ id: maxId, baslik: g.baslik, tur: "Kurumlar Vergisi", tarih: yil + "-" + (g.ay<10?"0":"") + g.ay + "-" + (g.gun<10?"0":"") + g.gun, aciklama: "Geçici vergi beyannamesi verilecek", tamamlandi: false, otomatik: true });
+                var gy = g.nxt ? yil + 1 : yil;
+                yeni.push({ id: maxId, baslik: g.baslik, tur: "Kurumlar Vergisi", tarih: gy + "-" + (g.ay<10?"0":"") + g.ay + "-" + (g.gun<10?"0":"") + g.gun, aciklama: g.baslik + " beyannamesi son günü", tamamlandi: false, otomatik: true });
             });
             maxId++;
-            yeni.push({ id: maxId, baslik: "Yıllık Gelir Vergisi Beyannamesi", tur: "Gelir Vergisi", tarih: yil + "-03-31", aciklama: "Bir önceki yılın gelir vergisi beyannamesi verilecek", tamamlandi: false, otomatik: true });
+            yeni.push({ id: maxId, baslik: "Yıllık Gelir Vergisi (" + (yil-1) + ")", tur: "Gelir Vergisi", tarih: yil + "-03-31", aciklama: (yil-1) + " yılı gelir vergisi beyannamesi (1.taksit) son günü", tamamlandi: false, otomatik: true });
             maxId++;
-            yeni.push({ id: maxId, baslik: "Kurumlar Vergisi Beyannamesi", tur: "Kurumlar Vergisi", tarih: yil + "-04-30", aciklama: "Bir önceki yılın kurumlar vergisi beyannamesi verilecek", tamamlandi: false, otomatik: true });
+            yeni.push({ id: maxId, baslik: "Gelir Vergisi 2.Taksit (" + (yil-1) + ")", tur: "Gelir Vergisi", tarih: yil + "-07-31", aciklama: (yil-1) + " yılı gelir vergisi 2.taksit ödeme son günü", tamamlandi: false, otomatik: true });
+            maxId++;
+            yeni.push({ id: maxId, baslik: "Kurumlar Vergisi (" + (yil-1) + ")", tur: "Kurumlar Vergisi", tarih: yil + "-04-30", aciklama: (yil-1) + " yılı kurumlar vergisi beyannamesi son günü", tamamlandi: false, otomatik: true });
+            maxId++;
+            yeni.push({ id: maxId, baslik: "MTV 1.Taksit", tur: "Diğer", tarih: yil + "-01-31", aciklama: "Motorlu Taşıtlar Vergisi 1.taksit ödeme son günü", tamamlandi: false, otomatik: true });
+            maxId++;
+            yeni.push({ id: maxId, baslik: "MTV 2.Taksit", tur: "Diğer", tarih: yil + "-07-31", aciklama: "Motorlu Taşıtlar Vergisi 2.taksit ödeme son günü", tamamlandi: false, otomatik: true });
             db.yillar[y].vergiEtkinlikleri = etkinlikler.concat(yeni);
-            db.yillar[y]._otomatikEklendi = true;
+            db.yillar[y]._otomatikSurum = OTO_SURUM;
             origSetItem(FT_DB_KEY, JSON.stringify(db));
         }
 
@@ -9275,15 +9292,14 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-calendar"></i>','Henüz vergi etkinliği bulunmamaktadır.','Vergi takvimine yeni bir etkinlik ekleyin.'); return; }
             var simdi = new Date();
             simdi.setHours(0,0,0,0);
-            var h = '<div class="ft-calendar-list">';
-            h += '<div class="ft-cal-header">' +
-                '<span class="ft-cal-h-chk"></span>' +
-                '<span class="ft-cal-h-tarih">Tarih</span>' +
-                '<span class="ft-cal-h-baslik">Başlık</span>' +
-                '<span class="ft-cal-h-tur">Tür</span>' +
-                '<span class="ft-cal-h-kalan">Kalan Süre</span>' +
-                '<span class="ft-cal-h-aciklama">Açıklama</span>' +
-                '<span class="ft-cal-h-aksiyon"></span></div>';
+            var h = '<div class="ft-tbl-wrap"><table class="ft-table ft-tax-cal-table"><thead><tr>' +
+                '<th style="width:32px;"></th>' +
+                '<th style="width:80px;">Tarih</th>' +
+                '<th>Başlık</th>' +
+                '<th style="width:90px;">Tür</th>' +
+                '<th style="width:100px;">Kalan Süre</th>' +
+                '<th style="min-width:120px;">Açıklama</th>' +
+                '<th style="width:60px;"></th></tr></thead><tbody>';
             liste.slice().reverse().forEach(function(e) {
                 var turAd = ftTurAdi(e.tur);
                 var kalanGun = "";
@@ -9293,21 +9309,22 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                         var et = new Date(e.tarih);
                         et.setHours(0,0,0,0);
                         var fark = Math.round((et - simdi) / 86400000);
-                        if (fark > 0) { kalanGun = fark + " gün kaldı"; renk = fark <= 7 ? "color:var(--ft-red);font-weight:700;" : fark <= 30 ? "color:var(--ft-orange);" : "color:var(--ft-text-light);"; }
-                        else if (fark === 0) { kalanGun = "BUGÜN!"; renk = "color:var(--ft-red);font-weight:700;"; }
-                        else { kalanGun = Math.abs(fark) + " gün geçti"; renk = "color:var(--ft-text-light);"; }
+                        if (fark > 0) { kalanGun = fark + " gün kaldı"; renk = fark <= 7 ? "ft-tax-urgent" : fark <= 30 ? "ft-tax-warn" : "ft-tax-normal"; }
+                        else if (fark === 0) { kalanGun = "BUGÜN!"; renk = "ft-tax-urgent"; }
+                        else { kalanGun = Math.abs(fark) + " gün geçti"; renk = "ft-tax-past"; }
                     } catch(e) { console.error("Fatura takvim tarih hatasi:", e); }
                 }
-                h += '<div class="ft-cal-item'+(e.tamamlandi?" tamamlandi":"")+'">';
-                h += '<input type="checkbox" class="ft-cal-chk" '+(e.tamamlandi?"checked":"")+' onchange="ftTakvimTamamla('+e.id+')">';
-                h += '<div class="ft-cal-tarih">'+(e.tarih?tarihStr(e.tarih):"-")+'</div>';
-                h += '<div class="ft-cal-baslik">'+esc(e.baslik)+'</div><span class="ft-cal-tur">'+turAd+'</span>';
-                if (kalanGun) h += '<div class="ft-cal-kalan" style="'+renk+'">'+kalanGun+'</div>';
-                if (e.aciklama) h += '<div class="ft-cal-aciklama">'+esc(e.aciklama)+'</div>';
-                h += '<button class="ft-btn-xs ft-btn-edit" onclick="ftTakvimFormAc('+e.id+')" style="flex-shrink:0;"><i class="fa-regular fa-pen-to-square"></i></button>';
-                h += '<button class="ft-btn-xs ft-btn-del" onclick="ftTakvimSil('+e.id+')" style="flex-shrink:0;"><i class="fa-solid fa-trash-can"></i></button></div>';
+                var cls = e.tamamlandi ? ' ft-tax-done' : '';
+                h += '<tr class="'+cls+'">';
+                h += '<td style="text-align:center;"><input type="checkbox" class="ft-cal-chk" '+(e.tamamlandi?"checked":"")+' onchange="ftTakvimTamamla('+e.id+')"></td>';
+                h += '<td style="font-size:11px;font-weight:600;">'+(e.tarih?tarihStr(e.tarih):"-")+'</td>';
+                h += '<td style="font-weight:600;">'+esc(e.baslik)+'</td>';
+                h += '<td><span class="ft-tax-tur-badge">'+turAd+'</span></td>';
+                if (kalanGun) h += '<td class="'+renk+'" style="font-size:11px;font-weight:600;">'+kalanGun+'</td>'; else h += '<td></td>';
+                h += '<td style="font-size:11px;color:var(--text-light);word-break:break-word;">'+esc(e.aciklama||"")+'</td>';
+                h += '<td style="white-space:nowrap;"><button class="ft-btn-xs ft-btn-edit" onclick="ftTakvimFormAc('+e.id+')" title="Düzenle"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-xs ft-btn-del" onclick="ftTakvimSil('+e.id+')" title="Sil"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
             });
-            h += '</div>';
+            h += '</tbody></table></div>';
             konteyner.innerHTML = h;
         }
 

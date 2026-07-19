@@ -1257,26 +1257,19 @@
         .ft-inline-form input::placeholder { color:var(--ft-text-light); }
 
         /* Calendar List */
-        .ft-calendar-list { display:flex; flex-direction:column; gap:6px; }
-        .ft-cal-item { display:flex; align-items:center; gap:10px; padding:10px 14px; background:rgba(255,255,255,0.02); border-radius:8px; border-left:3px solid var(--ft-accent); transition:0.2s; }
-        .ft-cal-item:hover { background:rgba(255,255,255,0.04); }
-        .ft-cal-item.tamamlandi { opacity:0.5; border-left-color:var(--ft-green); }
-        .ft-cal-item .ft-cal-chk { width:16px; height:16px; cursor:pointer; accent-color:var(--ft-green); }
-        .ft-cal-item .ft-cal-tarih { font-size:11px; font-weight:700; color:var(--ft-text-light); min-width:72px; text-align:center; }
-        .ft-cal-item .ft-cal-baslik { flex:1; font-size:12px; font-weight:600; }
-        .ft-cal-item .ft-cal-tur { font-size:9px; font-weight:700; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.05); white-space:nowrap; }
-        .ft-cal-item .ft-cal-kalan { font-size:10px; font-weight:600; min-width:72px; text-align:center; }
-        .ft-cal-item .ft-cal-aciklama { font-size:10px; color:var(--ft-text-light); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-
-        /* Calendar Header */
-        .ft-cal-header { display:flex; align-items:center; gap:10px; padding:8px 14px; font-size:9px; font-weight:700; color:var(--ft-text-light); text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--ft-border); margin-bottom:4px; }
-        .ft-cal-header .ft-cal-h-chk { width:16px; }
-        .ft-cal-header .ft-cal-h-tarih { min-width:72px; text-align:center; }
-        .ft-cal-header .ft-cal-h-baslik { flex:1; text-align:center; }
-        .ft-cal-header .ft-cal-h-tur { min-width:60px; text-align:center; }
-        .ft-cal-header .ft-cal-h-kalan { min-width:72px; text-align:center; }
-        .ft-cal-header .ft-cal-h-aciklama { max-width:160px; text-align:center; }
-        .ft-cal-header .ft-cal-h-aksiyon { min-width:50px; text-align:center; }
+        .ft-tax-cal-table { font-size:12px; }
+        .ft-tax-cal-table th { font-size:9px; text-transform:uppercase; letter-spacing:0.5px; color:var(--ft-text-light); }
+        .ft-tax-cal-table td { vertical-align:middle; padding:8px 10px; }
+        .ft-tax-cal-table tbody tr { transition:0.15s; }
+        .ft-tax-cal-table tbody tr:hover { background:rgba(255,255,255,0.04); }
+        .ft-tax-cal-table tbody tr.ft-tax-done { opacity:0.5; }
+        .ft-tax-cal-table tbody tr.ft-tax-done td { text-decoration:line-through; }
+        .ft-tax-cal-table .ft-cal-chk { width:16px; height:16px; cursor:pointer; accent-color:var(--ft-green); }
+        .ft-tax-cal-table .ft-tax-urgent { color:var(--accent-red); font-weight:700; }
+        .ft-tax-cal-table .ft-tax-warn { color:var(--ft-orange); font-weight:600; }
+        .ft-tax-cal-table .ft-tax-normal { color:var(--text-light); }
+        .ft-tax-cal-table .ft-tax-past { color:var(--text-light); opacity:0.6; }
+        .ft-tax-tur-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.06); white-space:nowrap; }
         /* İş Takibi Yeni Tasarım */
         .it-btn-yeni-is { display:block; width:100%; padding:16px; margin-bottom:24px; background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #a0b8cc; color:#a0b8cc; border-radius:10px; font-size:17px; font-weight:700; cursor:pointer; transition:0.25s; letter-spacing:0.5px; }
         .it-btn-yeni-is:hover { background:#152d4a; transform:translateY(-1px); }
