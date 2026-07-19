@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.74.2';
+﻿        var APP_VERSION = 'V1.74.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -9653,7 +9653,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             // ── 4. ÖDENEN VERGİLER ──
             h += '<div style="margin-bottom:18px;">';
             h += '<div style="font-size:11px;font-weight:700;color:#1a237e;margin-bottom:8px;padding-bottom:3px;border-bottom:2px solid #e8eaf6;">4. ÖDENEN VERGİLER</div>';
-            if (odennis.length) {
+            if (odenmis.length) {
                 var ovTop = odenmis.reduce(function(s,v){return s+(v.tutar||0);},0);
                 h += '<table style="width:100%;border-collapse:collapse;font-size:9px;">';
                 h += '<thead><tr style="background:#6a1b9a;color:#fff;">';
