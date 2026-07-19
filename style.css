@@ -1179,7 +1179,7 @@
 
         /* Sections */
         .ft-section { background:var(--ft-card); border:1px solid var(--ft-border); border-radius:12px; padding:18px 20px; margin-bottom:18px; transition:0.2s; }
-        .ft-section:hover { border-color:rgba(160,184,204,0.2); }
+        .ft-section:hover { border-color:rgba(160,184,204,0.25); }
         .ft-section-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 14px 0; padding:0 0 12px 0; border-bottom:1px solid var(--ft-border); font-size:14px; font-weight:700; color:var(--ft-text); }
         .ft-section-header i { color:var(--ft-accent); margin-right:6px; }
         .ft-section-sub { font-size:11px; font-weight:400; color:var(--ft-text-light); margin-left:4px; }
@@ -1193,7 +1193,7 @@
         .ft-toolbar { display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
         .ft-toolbar-group { display:flex; gap:4px; }
         .ft-btn { padding:7px 14px; border:1px solid var(--ft-border); border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; background:transparent; color:var(--ft-text); }
-        .ft-btn:hover { transform:translateY(-1px); }
+        .ft-btn:hover { transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.12); }
         .ft-btn-primary { background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid var(--ft-accent); color:var(--ft-accent); }
         .ft-btn-primary:hover { background:#152d4a; }
         .ft-btn-sm { padding:5px 10px; font-size:10px; }
@@ -1211,17 +1211,18 @@
         /* Tables */
         .ft-table-container { overflow-x:auto; }
         .ft-table { width:100%; border-collapse:collapse; margin-top:2px; font-size:12px; }
-        .ft-table thead th { background:rgba(255,255,255,0.04); text-align:center; padding:8px 6px; font-size:10px; color:var(--ft-text-light); border-bottom:2px solid var(--ft-border); font-weight:700; white-space:nowrap; text-transform:uppercase; letter-spacing:0.3px; cursor:pointer; user-select:none; transition:0.15s; }
+        .ft-table thead th { background:rgba(255,255,255,0.04); text-align:center; padding:9px 8px; font-size:10px; color:var(--ft-text-light); border-bottom:2px solid var(--ft-border); font-weight:700; white-space:nowrap; text-transform:uppercase; letter-spacing:0.3px; cursor:pointer; user-select:none; transition:0.15s; }
         .ft-table thead th:hover { color:var(--ft-text); background:rgba(255,255,255,0.07); }
         .ft-table thead th .sort-arrow { font-size:8px; margin-left:2px; color:var(--ft-accent); }
         .ft-table tbody tr { border-bottom:1px solid rgba(255,255,255,0.04); transition:0.15s; }
         .ft-table tbody tr:hover { background:rgba(255,255,255,0.03); }
         .ft-table tbody tr:last-child { border-bottom:none; }
-        .ft-table td { padding:8px 6px; text-align:center; font-size:11px; color:var(--ft-text); vertical-align:middle; }
-        .ft-table td .ft-file-link { color:var(--ft-accent); font-size:13px; cursor:pointer; transition:0.2s; }
-        .ft-table td .ft-file-link:hover { color:#fff; }
+        .ft-table td { padding:9px 8px; text-align:center; font-size:11px; color:var(--ft-text); vertical-align:middle; }
+        .ft-table td .ft-file-link { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:6px; background:rgba(255,255,255,0.06); color:var(--ft-accent); font-size:13px; cursor:pointer; transition:0.2s; text-decoration:none; }
+        .ft-table td .ft-file-link:hover { background:var(--ft-accent); color:#fff; transform:scale(1.1); }
         .ft-table tr.ft-vade-gecmis { background:rgba(231,76,60,0.08); border-left:3px solid var(--ft-red); }
         .ft-table tr.ft-vade-gecmis:hover { background:rgba(231,76,60,0.14); }
+        .ft-table .ft-btn-sm { padding:4px 8px; font-size:10px; margin:0 2px; }
 
         /* Badges */
         .ft-badge { font-weight:700; font-size:9px; padding:2px 8px; border-radius:8px; display:inline-block; white-space:nowrap; letter-spacing:0.3px; }
@@ -1255,6 +1256,13 @@
         .ft-inline-form input, .ft-inline-form select { width:100%; padding:8px 10px; border:1px solid var(--ft-border); border-radius:6px; background:rgba(255,255,255,0.04); color:var(--ft-text); font-size:12px; outline:none; box-sizing:border-box; text-align:center; transition:0.2s; }
         .ft-inline-form input:focus, .ft-inline-form select:focus { border-color:var(--ft-accent); }
         .ft-inline-form input::placeholder { color:var(--ft-text-light); }
+
+        /* File Input */
+        .ft-file-input-wrap { position:relative; display:flex; align-items:center; justify-content:center; }
+        .ft-file-input-wrap input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; z-index:2; }
+        .ft-file-input-wrap .ft-file-input-label { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border:1px dashed var(--ft-border); border-radius:6px; font-size:10px; font-weight:600; color:var(--ft-text-light); cursor:pointer; transition:0.2s; background:rgba(255,255,255,0.03); white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+        .ft-file-input-wrap:hover .ft-file-input-label { border-color:var(--ft-accent); color:var(--ft-accent); background:rgba(255,255,255,0.06); }
+        .ft-file-input-wrap.ft-file-selected .ft-file-input-label { border-style:solid; border-color:var(--ft-green); color:var(--ft-green); background:rgba(46,204,113,0.08); }
 
         /* Calendar List */
         .ft-tax-cal-table { font-size:12px; }
