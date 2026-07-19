@@ -1232,21 +1232,27 @@
         #ftOdenenVergiTablosu .ft-table td:first-child { text-align:left !important; }
 
         /* Kart gorunumu */
-        .ft-card-list { display:flex; flex-direction:column; gap:10px; }
-        .ft-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:14px 16px; transition:0.15s; }
-        .ft-card:hover { border-color:rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); }
-        .ft-card.ft-card-vadegecmis { border-left:3px solid var(--ft-red); background:rgba(231,76,60,0.05); }
-        .ft-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px; }
-        .ft-card-head-left { display:flex; align-items:flex-start; gap:10px; min-width:0; }
-        .ft-card-head-left input[type="checkbox"] { margin-top:3px; flex-shrink:0; }
+        .ft-card-list { display:flex; flex-direction:column; gap:12px; }
+        .ft-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0; transition:0.2s; overflow:hidden; }
+        .ft-card:hover { border-color:rgba(255,255,255,0.18); background:rgba(255,255,255,0.05); box-shadow:0 2px 12px rgba(0,0,0,0.15); }
+        .ft-card.ft-card-vadegecmis { border-left:3px solid var(--ft-red); }
+        .ft-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:14px 16px 10px; background:rgba(255,255,255,0.04); border-bottom:1px solid rgba(255,255,255,0.05); }
+        .ft-card-head-left { display:flex; align-items:flex-start; gap:12px; min-width:0; }
+        .ft-card-head-left input[type="checkbox"] { margin-top:4px; flex-shrink:0; width:16px; height:16px; cursor:pointer; }
         .ft-card-head-left .ft-card-firma { min-width:0; }
-        .ft-card-head-left .ft-card-firma strong { font-size:15px; display:block; }
-        .ft-card-head-left .ft-card-meta { font-size:11px; color:var(--ft-text-light); display:block; margin-top:2px; }
-        .ft-card-head-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
-        .ft-card-body { font-size:13px; line-height:1.8; color:var(--ft-text); }
-        .ft-card-body .ft-card-row { display:flex; flex-wrap:wrap; gap:2px 20px; margin-bottom:1px; }
-        .ft-card-body .ft-card-row .ft-clabel { opacity:0.45; margin-right:2px; }
-        .ft-card-body .ft-card-aciklama { margin-top:6px; padding:6px 10px; background:rgba(255,255,255,0.03); border-radius:6px; border-left:2px solid var(--ft-accent); font-style:italic; font-size:12px; color:var(--ft-text); }
+        .ft-card-head-left .ft-card-firma strong { font-size:15px; display:block; color:var(--ft-text); }
+        .ft-card-head-left .ft-card-meta { font-size:11px; color:var(--ft-text-light); display:block; margin-top:3px; line-height:1.5; }
+        .ft-card-head-left .ft-card-meta .ft-mlabel { color:var(--ft-accent); opacity:0.7; }
+        .ft-card-head-right { display:flex; align-items:center; gap:6px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; }
+        .ft-card-head-right .ft-file-link { width:28px; height:28px; border-radius:6px; background:rgba(255,255,255,0.06); color:var(--ft-accent); font-size:13px; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; transition:0.2s; }
+        .ft-card-head-right .ft-file-link:hover { background:var(--ft-accent); color:#fff; transform:scale(1.1); }
+        .ft-card-body { font-size:13px; line-height:1.9; color:var(--ft-text); padding:10px 16px 14px; }
+        .ft-card-body .ft-card-row { display:flex; flex-wrap:wrap; gap:3px 24px; margin-bottom:2px; }
+        .ft-card-body .ft-card-row .ft-clabel { color:var(--ft-accent); opacity:0.6; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.3px; margin-right:1px; }
+        .ft-card-body .ft-card-row .ft-cvalue { font-weight:600; }
+        .ft-card-body .ft-card-row .ft-cvalue-toplam { font-weight:700; font-size:15px; color:#f39c12; }
+        .ft-card-body .ft-card-aciklama { margin-top:8px; padding:8px 12px; background:rgba(52,152,219,0.08); border-radius:8px; border-left:3px solid var(--ft-accent); font-style:italic; font-size:12px; color:var(--ft-text); line-height:1.6; }
+        .ft-card-body .ft-card-alt-row { display:flex; flex-wrap:wrap; gap:3px 24px; padding:6px 0; margin-top:4px; border-top:1px solid rgba(255,255,255,0.04); }
 
         /* Badges */
         .ft-badge { font-weight:700; font-size:9px; padding:2px 8px; border-radius:8px; display:inline-block; white-space:nowrap; letter-spacing:0.3px; }
