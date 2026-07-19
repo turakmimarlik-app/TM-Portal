@@ -6753,11 +6753,11 @@ function gorevMailGonder(gorev) {
                         }
                     }
 
-                    // 3-4) Doughnut
-                    var c3 = cC(700,700); doughnutOlustur(c3, gelirEtiket, gelirVeri, '');
-                    var c4 = cC(700,700); doughnutOlustur(c4, giderEtiket, giderVeri, '');
+                    // 3-4) Doughnut (yüksek çözünürlük)
+                    var c3 = cC(1200,1200); doughnutOlustur(c3, gelirEtiket, gelirVeri, '');
+                    var c4 = cC(1200,1200); doughnutOlustur(c4, giderEtiket, giderVeri, '');
 
-                    await new Promise(function(r){setTimeout(r,800);});
+                    await new Promise(function(r){setTimeout(r,1200);});
 
                     var resimler = {
                         netDurum: c1.toDataURL('image/png'),
@@ -6786,9 +6786,9 @@ function gorevMailGonder(gorev) {
                     try {
                     var grafikler, logoResim = null;
 
-                    // ₺ sembolü için canvas görüntüsü (jsPDF Helvetica ₺ desteklemez)
-                    var liraImg = (function(){var c=document.createElement('canvas');c.width=24;c.height=24;var x=c.getContext('2d');x.font='20px Segoe UI';x.textBaseline='top';x.fillStyle='#000';x.fillText('\u20BA',2,2);return c.toDataURL('image/png');})();
-                    function pdfTxtL(s,x,y){var i=s.indexOf('\u20BA');if(i<0){doc.text(s,x,y);return;}var b=s.substring(0,i).replace(/ +$/,'');doc.text(b,x,y);var fs=doc.internal.getFontSize();var ih=fs*0.4;doc.addImage(liraImg,'PNG',x+doc.getTextWidth(b)+0.5,y-fs*0.35,ih*0.6,ih);}
+                    // ₺ sembolü için yüksek çözünürlüklü canvas görüntüsü (jsPDF Helvetica ₺ desteklemez)
+                    var liraImg = (function(){var c=document.createElement('canvas');c.width=120;c.height=120;var x=c.getContext('2d');x.font='96px Arial';x.textBaseline='top';x.fillStyle='#000';x.fillText('\u20BA',12,10);return c.toDataURL('image/png');})();
+                    function pdfTxtL(s,x,y){var i=s.indexOf('\u20BA');if(i<0){doc.text(s,x,y);return;}var b=s.substring(0,i).replace(/ +$/,'');doc.text(b,x,y);var fs=doc.internal.getFontSize();var ih=fs*0.38;doc.addImage(liraImg,'PNG',x+doc.getTextWidth(b)+0.5,y-fs*0.38,ih*0.55,ih);}
 
                     SB='grafik'; grafikler = await grafikBase64Uret();
 
