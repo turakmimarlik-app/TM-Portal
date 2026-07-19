@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.58.0';
+        var APP_VERSION = 'V1.59.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8739,7 +8739,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 sec.appendChild(ekle);
             }
             var vtSpan = document.getElementById("ftOdenenVergiTurleri");
-            if (vtSpan) vtSpan.innerText = "(" + SABIT_VERGI_TURLERI.join(", ") + ")";
+            if (vtSpan) vtSpan.innerText = "";
             var tg = document.getElementById("ftTarihGoster");
             if (tg) { var n = new Date(); tg.innerText = n.getDate() + " " + ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"][n.getMonth()] + " " + n.getFullYear(); }
             ftOtomatikEtkinlikleriEkle(parseInt(yv.yil));
@@ -8933,12 +8933,11 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var sayac = document.getElementById("ftGelenSayac");
             if (sayac) sayac.innerText = liste.length + " kayıt";
             if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-inbox"></i>','Henüz gelen fatura bulunmamaktadır.','Yeni bir gelen fatura eklemek için "Fatura Ekle" butonunu kullanın.'); return; }
-            var h = '<div class="ft-tbl-wrap">' +
-                '<div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">' +
+            var h = '<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center;">' +
                 '<button class="ft-btn-sm" onclick="ftGelenTopluIslem(\'odendi\')" style="background:var(--btn-green);color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">✓ Seçiliyi Ödendi</button>' +
                 '<button class="ft-btn-sm ft-btn-del" onclick="ftGelenTopluIslem(\'sil\')" style="padding:4px 10px;font-size:11px;">🗑 Seçiliyi Sil</button>' +
                 '<label style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="ftGelenTumSec" onchange="ftGelenToggleAll(this.checked)"> Tümünü Seç</label></div>' +
-                '<table class="ft-table"><thead><tr><th style="width:30px;"><input type="checkbox" onchange="ftGelenToggleAll(this.checked)"></th><th onclick="ftGelenSort(\'firma\')" style="cursor:pointer;">Firma'+(ftGelenSortCol==='firma'?(ftGelenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th onclick="ftGelenSort(\'no\')" style="cursor:pointer;">Fatura No'+(ftGelenSortCol==='no'?(ftGelenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>Vergi D.</th><th>Vergi No</th><th onclick="ftGelenSort(\'tarih\')" style="cursor:pointer;">Tarih'+(ftGelenSortCol==='tarih'?(ftGelenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>Vade</th><th>Açıklama</th><th onclick="ftGelenSort(\'tutar\')" style="cursor:pointer;">Tutar'+(ftGelenSortCol==='tutar'?(ftGelenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>KDV</th><th>Toplam</th><th>Durum</th><th>Yöntem</th><th>Ödeme T.</th><th></th></tr></thead><tbody>';
+                '<div class="ft-card-list">';
             var simdi = new Date(); simdi.setHours(0,0,0,0);
             var siralist = liste.slice();
             if (ftGelenSortCol) {
@@ -8954,38 +8953,39 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             } else { siralist.reverse(); }
             siralist.forEach(function(f) {
                 var dc = f.odemeDurumu, dt = dc==="odendi"?"Ödendi":dc==="kismi"?"Kısmi":"Ödenmedi";
-                var vadeGecmis = false;
-                if (f.vadeTarihi && f.odemeDurumu !== 'odendi') { var vt = new Date(f.vadeTarihi + 'T00:00:00'); vadeGecmis = vt < simdi; }
-                h += '<tr class="'+(vadeGecmis?'ft-vade-gecmis':'')+'" data-ftgelen="'+(f.firmaAdi||"").toLowerCase()+' '+(f.faturaNo||"").toLowerCase()+'">';
-                h += '<td><input type="checkbox" class="ft-gelen-cb" value="'+f.id+'"></td>';
-                h += '<td style="font-weight:600;">'+esc(f.firmaAdi)+'</td><td>'+esc(f.faturaNo)+'</td>';
-                h += '<td style="font-size:11px;color:var(--text-light);">'+esc(f.vergiDairesi)+'</td><td style="font-size:11px;">'+esc(f.vergiNo)+'</td>';
-                h += '<td style="font-size:11px;">'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td><td style="font-size:11px;">'+(f.vadeTarihi?tarihStr(f.vadeTarihi):"-")+'</td>';
-                h += '<td style="font-size:10px;color:var(--text-light);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+esc(f.aciklama||"")+'">'+esc((f.aciklama||"").substring(0,30))+'</td>';
-                h += '<td style="text-align:right;">'+tmTl(f.tutar)+'</td><td style="text-align:right;">'+tmTl(f.kdvTutari)+'</td><td style="text-align:right;font-weight:700;">'+tmTl(f.toplamTutar)+'</td>';
-                h += '<td><span class="ft-badge '+dc+'">'+dt+'</span></td><td style="font-size:10px;">'+esc(f.odemeYontemi||"-")+'</td><td style="font-size:11px;">'+(f.odemeTarihi?tarihStr(f.odemeTarihi):"-")+'</td>';
-                h += '<td>'+(f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'')+'<button class="ft-btn-sm ft-btn-edit" onclick="ftGelenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGelenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
+                var vg = false;
+                if (f.vadeTarihi && dc !== 'odendi') { var vt = new Date(f.vadeTarihi + 'T00:00:00'); vg = vt < simdi; }
+                var dataVal = (f.firmaAdi||'') + ' ' + (f.faturaNo||'');
+                h += '<div class="ft-card' + (vg?' ft-card-vadegecmis':'') + '" data-ftgelen="' + dataVal.toLowerCase() + '">';
+                h += '<div class="ft-card-head">';
+                h += '<div class="ft-card-head-left"><input type="checkbox" class="ft-gelen-cb" value="' + f.id + '"><div class="ft-card-firma"><strong>' + esc(f.firmaAdi) + '</strong><span class="ft-card-meta">' + esc(f.faturaNo) + ' · ' + esc(f.vergiDairesi||'') + (f.vergiDairesi&&f.vergiNo?' / ':'') + esc(f.vergiNo||'-') + '</span></div></div>';
+                h += '<div class="ft-card-head-right"><span class="ft-badge ' + dc + '">' + dt + '</span>' + (f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'') + '<button class="ft-btn-sm ft-btn-edit" onclick="ftGelenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGelenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></div>';
+                h += '</div>';
+                h += '<div class="ft-card-body">';
+                h += '<div class="ft-card-row"><span class="ft-clabel">Tarih:</span>' + (f.faturaTarihi?tarihStr(f.faturaTarihi):'-') + '<span class="ft-clabel">Vade:</span>' + (f.vadeTarihi?tarihStr(f.vadeTarihi):'-') + '<span class="ft-clabel">Tutar:</span>' + tmTl(f.tutar) + '<span class="ft-clabel">KDV:</span>' + tmTl(f.kdvTutari) + '<span class="ft-clabel" style="font-weight:700;">Toplam:</span><strong>' + tmTl(f.toplamTutar) + '</strong></div>';
+                h += '<div class="ft-card-row">' + (f.odemeYontemi?'<span class="ft-clabel">Yöntem:</span>' + esc(f.odemeYontemi) : '') + (f.odemeTarihi?'<span class="ft-clabel">Ödeme:</span>' + tarihStr(f.odemeTarihi) : '') + '</div>';
+                if (f.aciklama) h += '<div class="ft-card-aciklama">' + esc(f.aciklama) + '</div>';
+                h += '</div></div>';
             });
-            h += '</tbody></table></div>';
+            h += '</div>';
             konteyner.innerHTML = h;
         }
 
         function ftGelenFiltrele() {
             var q = (document.getElementById("ftGelenArama").value || "").toLowerCase().trim();
-            var tbody = document.querySelector("#ftGelenTablosu table tbody");
-            if (!tbody) return;
-            tbody.querySelectorAll("tr").forEach(function(s) {
+            if (!q) { document.querySelectorAll("#ftGelenTablosu .ft-card").forEach(function(s){ s.style.display = ""; }); return; }
+            document.querySelectorAll("#ftGelenTablosu .ft-card").forEach(function(s) {
                 s.style.display = ((s.getAttribute("data-ftgelen")||"").indexOf(q) !== -1) ? "" : "none";
             });
         }
 
         function ftGelenToggleAll(checked) {
-            document.querySelectorAll("#ftGelenTablosu table tbody .ft-gelen-cb").forEach(function(cb){ cb.checked = checked; });
+            document.querySelectorAll("#ftGelenTablosu .ft-gelen-cb").forEach(function(cb){ cb.checked = checked; });
         }
 
         function ftGelenTopluIslem(action) {
             var secili = [];
-            document.querySelectorAll("#ftGelenTablosu table tbody .ft-gelen-cb:checked").forEach(function(cb){ secili.push(parseInt(cb.value)); });
+            document.querySelectorAll("#ftGelenTablosu .ft-gelen-cb:checked").forEach(function(cb){ secili.push(parseInt(cb.value)); });
             if (!secili.length) { tmNotify("Lütfen en az bir fatura seçin!", "error"); return; }
             if (action === 'odendi') {
                 tmConfirm(secili.length + ' faturayı ödendi olarak işaretlemek istediğinize emin misiniz?', function() {
@@ -9113,12 +9113,11 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var sayac = document.getElementById("ftGidenSayac");
             if (sayac) sayac.innerText = liste.length + " kayıt";
             if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-paper-plane"></i>','Henüz giden fatura bulunmamaktadır.','Yeni bir giden fatura eklemek için "Fatura Ekle" butonunu kullanın.'); return; }
-            var h = '<div class="ft-tbl-wrap">' +
-                '<div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">' +
+            var h = '<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center;">' +
                 '<button class="ft-btn-sm" onclick="ftGidenTopluIslem(\'tahsilEdildi\')" style="background:var(--btn-green);color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">✓ Seçiliyi Tahsil Edildi</button>' +
                 '<button class="ft-btn-sm ft-btn-del" onclick="ftGidenTopluIslem(\'sil\')" style="padding:4px 10px;font-size:11px;">🗑 Seçiliyi Sil</button>' +
                 '<label style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="ftGidenTumSec" onchange="ftGidenToggleAll(this.checked)"> Tümünü Seç</label></div>' +
-                '<table class="ft-table"><thead><tr><th style="width:30px;"><input type="checkbox" onchange="ftGidenToggleAll(this.checked)"></th><th onclick="ftGidenSort(\'firma\')" style="cursor:pointer;">Firma'+(ftGidenSortCol==='firma'?(ftGidenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th onclick="ftGidenSort(\'no\')" style="cursor:pointer;">Fatura No'+(ftGidenSortCol==='no'?(ftGidenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>Vergi D.</th><th>Vergi No</th><th onclick="ftGidenSort(\'tarih\')" style="cursor:pointer;">Tarih'+(ftGidenSortCol==='tarih'?(ftGidenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>Vade</th><th>Açıklama</th><th onclick="ftGidenSort(\'tutar\')" style="cursor:pointer;">Tutar'+(ftGidenSortCol==='tutar'?(ftGidenSortDir==='asc'?' ▲':' ▼'):'')+'</th><th>KDV</th><th>Toplam</th><th>Durum</th><th>Yöntem</th><th>Tahsilat T.</th><th></th></tr></thead><tbody>';
+                '<div class="ft-card-list">';
             var simdi = new Date(); simdi.setHours(0,0,0,0);
             var siralist = liste.slice();
             if (ftGidenSortCol) {
@@ -9134,38 +9133,39 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             } else { siralist.reverse(); }
             siralist.forEach(function(f) {
                 var dc = f.tahsilatDurumu, dt = dc==="tahsilEdildi"?"Tah.Edildi":dc==="kismi"?"Kısmi":"Tah.Edilmedi";
-                var vadeGecmis = false;
-                if (f.vadeTarihi && f.tahsilatDurumu !== 'tahsilEdildi') { var vt = new Date(f.vadeTarihi + 'T00:00:00'); vadeGecmis = vt < simdi; }
-                h += '<tr class="'+(vadeGecmis?'ft-vade-gecmis':'')+'" data-ftgiden="'+(f.firmaAdi||"").toLowerCase()+' '+(f.faturaNo||"").toLowerCase()+'">';
-                h += '<td><input type="checkbox" class="ft-giden-cb" value="'+f.id+'"></td>';
-                h += '<td style="font-weight:600;">'+esc(f.firmaAdi)+'</td><td>'+esc(f.faturaNo)+'</td>';
-                h += '<td style="font-size:11px;color:var(--text-light);">'+esc(f.vergiDairesi)+'</td><td style="font-size:11px;">'+esc(f.vergiNo)+'</td>';
-                h += '<td style="font-size:11px;">'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td><td style="font-size:11px;">'+(f.vadeTarihi?tarihStr(f.vadeTarihi):"-")+'</td>';
-                h += '<td style="font-size:10px;color:var(--text-light);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+esc(f.aciklama||"")+'">'+esc((f.aciklama||"").substring(0,30))+'</td>';
-                h += '<td style="text-align:right;">'+tmTl(f.tutar)+'</td><td style="text-align:right;">'+tmTl(f.kdvTutari)+'</td><td style="text-align:right;font-weight:700;">'+tmTl(f.toplamTutar)+'</td>';
-                h += '<td><span class="ft-badge '+dc+'">'+dt+'</span></td><td style="font-size:10px;">'+esc(f.tahsilatYontemi||"-")+'</td><td style="font-size:11px;">'+(f.tahsilatTarihi?tarihStr(f.tahsilatTarihi):"-")+'</td>';
-                h += '<td>'+(f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'')+'<button class="ft-btn-sm ft-btn-edit" onclick="ftGidenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGidenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></td></tr>';
+                var vg = false;
+                if (f.vadeTarihi && dc !== 'tahsilEdildi') { var vt = new Date(f.vadeTarihi + 'T00:00:00'); vg = vt < simdi; }
+                var dataVal = (f.firmaAdi||'') + ' ' + (f.faturaNo||'');
+                h += '<div class="ft-card' + (vg?' ft-card-vadegecmis':'') + '" data-ftgiden="' + dataVal.toLowerCase() + '">';
+                h += '<div class="ft-card-head">';
+                h += '<div class="ft-card-head-left"><input type="checkbox" class="ft-giden-cb" value="' + f.id + '"><div class="ft-card-firma"><strong>' + esc(f.firmaAdi) + '</strong><span class="ft-card-meta">' + esc(f.faturaNo) + ' · ' + esc(f.vergiDairesi||'') + (f.vergiDairesi&&f.vergiNo?' / ':'') + esc(f.vergiNo||'-') + '</span></div></div>';
+                h += '<div class="ft-card-head-right"><span class="ft-badge ' + dc + '">' + dt + '</span>' + (f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'') + '<button class="ft-btn-sm ft-btn-edit" onclick="ftGidenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGidenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></div>';
+                h += '</div>';
+                h += '<div class="ft-card-body">';
+                h += '<div class="ft-card-row"><span class="ft-clabel">Tarih:</span>' + (f.faturaTarihi?tarihStr(f.faturaTarihi):'-') + '<span class="ft-clabel">Vade:</span>' + (f.vadeTarihi?tarihStr(f.vadeTarihi):'-') + '<span class="ft-clabel">Tutar:</span>' + tmTl(f.tutar) + '<span class="ft-clabel">KDV:</span>' + tmTl(f.kdvTutari) + '<span class="ft-clabel" style="font-weight:700;">Toplam:</span><strong>' + tmTl(f.toplamTutar) + '</strong></div>';
+                h += '<div class="ft-card-row">' + (f.tahsilatYontemi?'<span class="ft-clabel">Yöntem:</span>' + esc(f.tahsilatYontemi) : '') + (f.tahsilatTarihi?'<span class="ft-clabel">Tahsilat:</span>' + tarihStr(f.tahsilatTarihi) : '') + '</div>';
+                if (f.aciklama) h += '<div class="ft-card-aciklama">' + esc(f.aciklama) + '</div>';
+                h += '</div></div>';
             });
-            h += '</tbody></table></div>';
+            h += '</div>';
             konteyner.innerHTML = h;
         }
 
         function ftGidenFiltrele() {
             var q = (document.getElementById("ftGidenArama").value || "").toLowerCase().trim();
-            var tbody = document.querySelector("#ftGidenTablosu table tbody");
-            if (!tbody) return;
-            tbody.querySelectorAll("tr").forEach(function(s) {
+            if (!q) { document.querySelectorAll("#ftGidenTablosu .ft-card").forEach(function(s){ s.style.display = ""; }); return; }
+            document.querySelectorAll("#ftGidenTablosu .ft-card").forEach(function(s) {
                 s.style.display = ((s.getAttribute("data-ftgiden")||"").indexOf(q) !== -1) ? "" : "none";
             });
         }
 
         function ftGidenToggleAll(checked) {
-            document.querySelectorAll("#ftGidenTablosu table tbody .ft-giden-cb").forEach(function(cb){ cb.checked = checked; });
+            document.querySelectorAll("#ftGidenTablosu .ft-giden-cb").forEach(function(cb){ cb.checked = checked; });
         }
 
         function ftGidenTopluIslem(action) {
             var secili = [];
-            document.querySelectorAll("#ftGidenTablosu table tbody .ft-giden-cb:checked").forEach(function(cb){ secili.push(parseInt(cb.value)); });
+            document.querySelectorAll("#ftGidenTablosu .ft-giden-cb:checked").forEach(function(cb){ secili.push(parseInt(cb.value)); });
             if (!secili.length) { tmNotify("Lütfen en az bir fatura seçin!", "error"); return; }
             if (action === 'tahsilEdildi') {
                 tmConfirm(secili.length + ' faturayı tahsil edildi olarak işaretlemek istediğinize emin misiniz?', function() {

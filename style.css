@@ -1225,6 +1225,29 @@
         .ft-table .ft-btn-sm { padding:4px 8px; font-size:10px; margin:0 2px; }
         .ft-table tr.ft-vade-gecmis td { border-bottom-color:rgba(231,76,60,0.25); }
 
+        /* Ödenen Vergiler tablo hizalama */
+        #ftOdenenVergiTablosu .ft-table th,
+        #ftOdenenVergiTablosu .ft-table td { text-align:center !important; }
+        #ftOdenenVergiTablosu .ft-table th:first-child,
+        #ftOdenenVergiTablosu .ft-table td:first-child { text-align:left !important; }
+
+        /* Kart gorunumu */
+        .ft-card-list { display:flex; flex-direction:column; gap:10px; }
+        .ft-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:14px 16px; transition:0.15s; }
+        .ft-card:hover { border-color:rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); }
+        .ft-card.ft-card-vadegecmis { border-left:3px solid var(--ft-red); background:rgba(231,76,60,0.05); }
+        .ft-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px; }
+        .ft-card-head-left { display:flex; align-items:flex-start; gap:10px; min-width:0; }
+        .ft-card-head-left input[type="checkbox"] { margin-top:3px; flex-shrink:0; }
+        .ft-card-head-left .ft-card-firma { min-width:0; }
+        .ft-card-head-left .ft-card-firma strong { font-size:15px; display:block; }
+        .ft-card-head-left .ft-card-meta { font-size:11px; color:var(--ft-text-light); display:block; margin-top:2px; }
+        .ft-card-head-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+        .ft-card-body { font-size:13px; line-height:1.8; color:var(--ft-text); }
+        .ft-card-body .ft-card-row { display:flex; flex-wrap:wrap; gap:2px 20px; margin-bottom:1px; }
+        .ft-card-body .ft-card-row .ft-clabel { opacity:0.45; margin-right:2px; }
+        .ft-card-body .ft-card-aciklama { margin-top:6px; padding:6px 10px; background:rgba(255,255,255,0.03); border-radius:6px; border-left:2px solid var(--ft-accent); font-style:italic; font-size:12px; color:var(--ft-text); }
+
         /* Badges */
         .ft-badge { font-weight:700; font-size:9px; padding:2px 8px; border-radius:8px; display:inline-block; white-space:nowrap; letter-spacing:0.3px; }
         .ft-badge.odendi,.ft-badge.tahsilEdildi { background:rgba(46,204,113,0.15); color:var(--ft-green); }
