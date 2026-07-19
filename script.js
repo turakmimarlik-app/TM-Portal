@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.74.7';
+﻿        var APP_VERSION = 'V1.74.8';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -9582,7 +9582,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 if (yontem) det.push('Yöntem: ' + esc(yontem));
                 var detLine1 = det.length ? '<div>' + det.join(' &nbsp;|&nbsp; ') + '</div>' : '';
                 var detLine2 = f.aciklama ? '<div style="margin-top:1px;">Açıklama: ' + esc(f.aciklama) + '</div>' : '';
-                var detailHtml = (detLine1 || detLine2) ? '<tr style="background:'+bg+';"><td colspan="8" style="padding:0 5px 3px 5px;font-size:6.5px;color:#555;line-height:1.5;border-left:2px solid '+accent+';border-right:1px solid '+BORDER+';border-bottom:1px solid '+BORDER+';">' + detLine1 + detLine2 + '</td></tr>' : '';
+                var detailHtml = (detLine1 || detLine2) ? '<tr style="background:'+bg+';"><td colspan="8" style="padding:0 5px 5px 5px;font-size:6.5px;color:#555;line-height:1.5;border-left:2px solid '+accent+';border-right:1px solid '+BORDER+';border-bottom:2px solid #b0b8c0;">' + detLine1 + detLine2 + '</td></tr>' : '';
                 return '<tr style="background:'+bg+';"><td style="padding:3px 4px;border:1px solid '+BORDER+';border-bottom:none;font-size:7.5px;color:#333;">'+esc(f.firmaAdi)+'</td>' +
                     '<td style="padding:3px 4px;border:1px solid '+BORDER+';border-bottom:none;font-size:7.5px;color:#555;">'+esc(f.faturaNo)+'</td>' +
                     '<td style="padding:3px 4px;border:1px solid '+BORDER+';border-bottom:none;font-size:7.5px;color:#555;text-align:center;">'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td>' +
