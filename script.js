@@ -9556,129 +9556,141 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         function faturaPdfIndir() {
             var yv = ftYilVerisi(), yil = yv.yil;
             var gelen = yv.data.gelenFaturalar || [], giden = yv.data.gidenFaturalar || [];
-            var gelenOdenmemis = gelen.filter(function(f){return f.odemeDurumu!="odendi";});
-            var gidenTahsilEdilmemis = giden.filter(function(f){return f.tahsilatDurumu!="tahsilEdildi";});
-            var etk = yv.data.vergiEtkinlikleri || [];
-            var gkT = 0, gk2T = 0, gTT = 0, g2T = 0;
+            var odenmis = yv.data.odenmisVergiler || [];
+            var gkT = 0, gTT = 0, gk2T = 0, g2T = 0;
             gelen.forEach(function(f){ gkT += f.kdvTutari||0; gTT += f.toplamTutar||0; });
             giden.forEach(function(f){ gk2T += f.kdvTutari||0; g2T += f.toplamTutar||0; });
+            var gTutTop = gelen.reduce(function(s,f){return s+(f.tutar||0);},0);
+            var g2TutTop = giden.reduce(function(s,f){return s+(f.tutar||0);},0);
+            var kdvFark = gk2T - gkT;
+            var pMargin = '15mm'; var pW = '180mm';
 
-            function satir(f, tip, renk) {
+            function ftPdfSatir(f, tip, idx) {
                 var d = tip==="gelen" ? (f.odemeDurumu==="odendi"?"Ödendi":f.odemeDurumu==="kismi"?"Kısmi":"Ödenmedi") : (f.tahsilatDurumu==="tahsilEdildi"?"Tah.Edildi":f.tahsilatDurumu==="kismi"?"Kısmi":"Tah.Edilmedi");
-                var t = f.tutar||0, k = f.kdvTutari||0, tp = f.toplamTutar||0;
-                var renkStil = renk ? ' style="background:'+renk+';"' : '';
-                return '<tr'+renkStil+'><td style="padding:6px 8px;border:1px solid #e0e0e0;">'+esc(f.firmaAdi)+'</td><td style="padding:6px 8px;border:1px solid #e0e0e0;">'+esc(f.faturaNo)+'</td><td style="padding:6px 8px;border:1px solid #e0e0e0;">'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td><td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:right;">'+t.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:right;">'+k.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:right;font-weight:700;">'+tp.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">'+d+'</td></tr>';
+                var bg = idx % 2 === 0 ? '#ffffff' : '#f4f6f9';
+                return '<tr style="background:'+bg+';"><td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;color:#333;">'+esc(f.firmaAdi)+'</td>' +
+                    '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;color:#555;">'+esc(f.faturaNo)+'</td>' +
+                    '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;color:#555;text-align:center;">'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td>' +
+                    '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;color:#333;text-align:right;">'+(f.tutar||0).toLocaleString("tr-TR",{minFractionDigits:2})+'</td>' +
+                    '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;color:#333;text-align:right;">'+(f.kdvTutari||0).toLocaleString("tr-TR",{minFractionDigits:2})+'</td>' +
+                    '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;color:#1a237e;text-align:right;font-weight:700;">'+(f.toplamTutar||0).toLocaleString("tr-TR",{minFractionDigits:2})+'</td>' +
+                    '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;color:#555;text-align:center;">'+d+'</td></tr>';
             }
 
-            var h = '<div style="width:210mm;padding:15mm 18mm 12mm;font-family:Helvetica,Arial,sans-serif;font-size:11px;color:#333;line-height:1.4;">';
+            var h = '<div style="width:210mm;padding:'+pMargin+';font-family:Helvetica,Arial,sans-serif;font-size:10px;color:#333;line-height:1.5;box-sizing:border-box;">';
 
-            // Header with logo area and title
-            h += '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #1a3a5c;padding-bottom:14px;margin-bottom:20px;">';
-            h += '<div><h1 style="margin:0;font-size:20px;color:#1a3a5c;letter-spacing:1px;">FATURA TAKiP RAPORU</h1><p style="margin:3px 0 0;font-size:10px;color:#888;letter-spacing:0.5px;">TURAK MiMARLIK — ' + yil + ' YILI</p></div>';
-            h += '<div style="text-align:right;font-size:9px;color:#999;line-height:1.6;"><div>Rapor Tarihi: ' + new Date().toLocaleDateString("tr-TR") + '</div><div>Hazırlayan: ' + (localStorage.getItem("tm_active_user") || "Yetkili") + '</div></div>';
+            // ── HEADER ──
+            h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1a237e;padding-bottom:10px;margin-bottom:18px;">';
+            h += '<div><div style="font-size:11px;font-weight:700;color:#1a237e;letter-spacing:2px;text-transform:uppercase;">TURAK MİMARLIK</div>';
+            h += '<div style="font-size:8px;color:#888;margin-top:2px;">Kırklareli / Demirköy / İğneada</div></div>';
+            h += '<div style="text-align:right;"><div style="font-size:16px;font-weight:800;color:#1a237e;letter-spacing:1px;">FATURA TAKİP RAPORU</div>';
+            h += '<div style="font-size:9px;color:#666;margin-top:2px;">' + yil + ' Yılı · ' + new Date().toLocaleDateString("tr-TR") + '</div>';
+            h += '<div style="font-size:8px;color:#999;">Hazırlayan: ' + (localStorage.getItem("tm_active_user") || "Yetkili") + '</div></div>';
             h += '</div>';
 
-            // Executive Summary Cards
-            h += '<div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:22px;">';
-            var cards = [
-                { label: 'Gelen Fatura', val: gelen.length + ' adet', sub: gTT.toLocaleString("tr-TR",{minFractionDigits:2}) + ' TL', color: '#1565C0' },
-                { label: 'Giden Fatura', val: giden.length + ' adet', sub: g2T.toLocaleString("tr-TR",{minFractionDigits:2}) + ' TL', color: '#1565C0' },
-                { label: 'KDV Ödenecek', val: (gk2T>gkT?(gk2T-gkT).toLocaleString("tr-TR",{minFractionDigits:2}):"0,00") + ' TL', sub: 'Giden KDV - Gelen KDV', color: '#c62828' },
-                { label: 'KDV Alacak', val: (gkT>gk2T?(gkT-gk2T).toLocaleString("tr-TR",{minFractionDigits:2}):"0,00") + ' TL', sub: 'Gelen KDV - Giden KDV', color: '#2e7d32' }
+            // ── 1. KDV TAKİBİ ──
+            h += '<div style="margin-bottom:18px;">';
+            h += '<div style="font-size:11px;font-weight:700;color:#1a237e;margin-bottom:8px;padding-bottom:3px;border-bottom:2px solid #e8eaf6;">1. KDV TAKİBİ</div>';
+
+            // KDV summary cards
+            h += '<div style="display:flex;gap:8px;margin-bottom:12px;">';
+            var kdvCards = [
+                { lbl:'Gelen Fatura', val:gelen.length+' adet', sub:gTT.toLocaleString("tr-TR",{minFractionDigits:2})+' TL', clr:'#1565C0' },
+                { lbl:'Giden Fatura', val:giden.length+' adet', sub:g2T.toLocaleString("tr-TR",{minFractionDigits:2})+' TL', clr:'#1565C0' },
+                { lbl:'KDV Ödenecek', val:(kdvFark>0?kdvFark.toLocaleString("tr-TR",{minFractionDigits:2}):"0,00")+' TL', sub:'Giden KDV fazlası', clr:'#c62828' },
+                { lbl:'KDV Alacak', val:(kdvFark<0?(-kdvFark).toLocaleString("tr-TR",{minFractionDigits:2}):"0,00")+' TL', sub:'Gelen KDV fazlası', clr:'#2e7d32' }
             ];
-            cards.forEach(function(c) {
-                h += '<div style="flex:1;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;text-align:center;border-top:3px solid '+c.color+';">';
-                h += '<div style="font-size:9px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">'+c.label+'</div>';
-                h += '<div style="font-size:16px;font-weight:800;color:'+c.color+';">'+c.val+'</div>';
-                h += '<div style="font-size:9px;color:#aaa;margin-top:2px;">'+c.sub+'</div></div>';
+            kdvCards.forEach(function(c){
+                h += '<div style="flex:1;border:1px solid #dde1e6;border-radius:4px;padding:8px 10px;text-align:center;border-top:3px solid '+c.clr+';">';
+                h += '<div style="font-size:7px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;">'+c.lbl+'</div>';
+                h += '<div style="font-size:14px;font-weight:800;color:'+c.clr+';">'+c.val+'</div>';
+                h += '<div style="font-size:7px;color:#aaa;margin-top:1px;">'+c.sub+'</div></div>';
             });
             h += '</div>';
 
-            // Ödenmemiş özet bilgisi
-            if (gelenOdenmemis.length > 0 || gidenTahsilEdilmemis.length > 0) {
-                h += '<div style="background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:10px 14px;margin-bottom:20px;font-size:10px;color:#795548;">';
-                h += '<strong style="color:#e65100;"><i class="fa-solid fa-triangle-exclamation"></i> ÖDENMEMiŞ / TAHSiL EDiLMEMiŞ FATURALAR:</strong> ';
-                if (gelenOdenmemis.length > 0) h += gelenOdenmemis.length + ' adet ödenmemiş gelen fatura (' + tmTl(gelenOdenmemis.reduce(function(s,f){return s+(f.toplamTutar||0);},0)) + ') ';
-                if (gidenTahsilEdilmemis.length > 0) h += gidenTahsilEdilmemis.length + ' adet tahsil edilmemiş giden fatura (' + tmTl(gidenTahsilEdilmemis.reduce(function(s,f){return s+(f.toplamTutar||0);},0)) + ')';
-                h += '</div>';
-            }
+            // KDV detail table
+            h += '<table style="width:100%;border-collapse:collapse;font-size:9px;">';
+            h += '<thead><tr style="background:#1a237e;color:#fff;"><th style="padding:6px 10px;text-align:left;font-size:8px;font-weight:600;letter-spacing:0.5px;">KALEM</th><th style="padding:6px 10px;text-align:right;font-size:8px;font-weight:600;letter-spacing:0.5px;">MATRAH (KDV Hariç)</th><th style="padding:6px 10px;text-align:right;font-size:8px;font-weight:600;letter-spacing:0.5px;">KDV TUTARI</th><th style="padding:6px 10px;text-align:right;font-size:8px;font-weight:600;letter-spacing:0.5px;">TOPLAM</th></tr></thead><tbody>';
+            h += '<tr style="background:#ffffff;"><td style="padding:5px 10px;border:1px solid #dde1e6;font-weight:600;color:#333;">Gelen Faturalar (Ödenecek)</td><td style="padding:5px 10px;border:1px solid #dde1e6;text-align:right;">'+gTutTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 10px;border:1px solid #dde1e6;text-align:right;">'+gkT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 10px;border:1px solid #dde1e6;text-align:right;font-weight:700;">'+gTT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td></tr>';
+            h += '<tr style="background:#f4f6f9;"><td style="padding:5px 10px;border:1px solid #dde1e6;font-weight:600;color:#333;">Giden Faturalar (Tahsil Edilecek)</td><td style="padding:5px 10px;border:1px solid #dde1e6;text-align:right;">'+g2TutTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 10px;border:1px solid #dde1e6;text-align:right;">'+gk2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 10px;border:1px solid #dde1e6;text-align:right;font-weight:700;">'+g2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td></tr>';
+            h += '<tr style="background:#e8eaf6;font-weight:800;"><td style="padding:6px 10px;border:1px solid #dde1e6;color:#1a237e;">KDV FARKI (Ödenecek / Alacak)</td><td style="padding:6px 10px;border:1px solid #dde1e6;text-align:right;color:#1a237e;">—</td><td style="padding:6px 10px;border:1px solid #dde1e6;text-align:right;color:#1a237e;font-size:11px;">'+(kdvFark>=0?'+':'')+kdvFark.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:6px 10px;border:1px solid #dde1e6;text-align:right;color:#1a237e;font-size:11px;">—</td></tr>';
+            h += '</tbody></table></div>';
 
-            // Gelen Faturalar Tablosu
-            h += '<h3 style="font-size:12px;color:#1a3a5c;margin:0 0 6px 0;padding:0;border:none;text-transform:uppercase;letter-spacing:0.5px;">GELEN FATURALAR</h3>';
+            // ── 2. GELEN FATURALAR ──
+            h += '<div style="margin-bottom:18px;">';
+            h += '<div style="font-size:11px;font-weight:700;color:#1a237e;margin-bottom:8px;padding-bottom:3px;border-bottom:2px solid #e8eaf6;">2. GELEN FATURALAR (Ödenecek)</div>';
             if (gelen.length) {
-                h += '<table style="width:100%;border-collapse:collapse;margin-bottom:22px;font-size:10px;">';
-                h += '<thead><tr style="background:#1a3a5c;color:#fff;">';
+                h += '<table style="width:100%;border-collapse:collapse;font-size:9px;">';
+                h += '<thead><tr style="background:#c62828;color:#fff;">';
                 ['Firma','Fatura No','Tarih','Tutar','KDV','Toplam','Durum'].forEach(function(th){
-                    h += '<th style="padding:7px 8px;text-align:'+(th==='Tutar'||th==='KDV'||th==='Toplam'?'right':'left')+';font-size:9px;font-weight:700;letter-spacing:0.3px;">'+th+'</th>';
+                    var align = (th==='Tutar'||th==='KDV'||th==='Toplam') ? 'right' : (th==='Tarih'||th==='Durum') ? 'center' : 'left';
+                    h += '<th style="padding:6px 6px;text-align:'+align+';font-size:8px;font-weight:600;letter-spacing:0.3px;">'+th+'</th>';
                 });
                 h += '</tr></thead><tbody>';
-                gelen.slice().reverse().forEach(function(f){h+=satir(f,"gelen");});
-                // Alt toplam satırı
-                var gTTop = gelen.reduce(function(s,f){return s+(f.toplamTutar||0);},0);
-                var gKTop = gelen.reduce(function(s,f){return s+(f.kdvTutari||0);},0);
-                var gTutTop = gelen.reduce(function(s,f){return s+(f.tutar||0);},0);
-                h += '<tr style="background:#f5f5f5;font-weight:700;"><td colspan="3" style="padding:7px 8px;border:1px solid #e0e0e0;text-align:right;font-size:10px;">ARA TOPLAM</td><td style="padding:7px 8px;border:1px solid #e0e0e0;text-align:right;font-size:10px;">'+gTutTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:7px 8px;border:1px solid #e0e0e0;text-align:right;font-size:10px;">'+gKTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:7px 8px;border:1px solid #e0e0e0;text-align:right;font-size:10px;color:#c62828;">'+gTTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:7px 8px;border:1px solid #e0e0e0;"></td></tr>';
+                gelen.slice().reverse().forEach(function(f,i){h+=ftPdfSatir(f,"gelen",i);});
+                h += '<tr style="background:#f4f6f9;font-weight:700;"><td colspan="3" style="padding:5px 6px;border:1px solid #dde1e6;text-align:right;font-size:9px;color:#1a237e;">ARA TOPLAM</td><td style="padding:5px 6px;border:1px solid #dde1e6;text-align:right;font-size:9px;">'+gTutTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 6px;border:1px solid #dde1e6;text-align:right;font-size:9px;">'+gkT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 6px;border:1px solid #dde1e6;text-align:right;font-size:9px;color:#c62828;">'+gTT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 6px;border:1px solid #dde1e6;"></td></tr>';
                 h += '</tbody></table>';
-            } else { h += '<div style="padding:12px;text-align:center;color:#999;font-size:11px;border:1px dashed #ddd;border-radius:6px;margin-bottom:18px;">Kayıtlı gelen fatura bulunmamaktadır.</div>'; }
+            } else { h += '<div style="padding:10px;text-align:center;color:#999;font-size:9px;border:1px dashed #dde1e6;border-radius:4px;">Kayıtlı gelen fatura bulunmamaktadır.</div>'; }
+            h += '</div>';
 
-            // Giden Faturalar Tablosu
-            h += '<h3 style="font-size:12px;color:#1a3a5c;margin:0 0 6px 0;padding:0;border:none;text-transform:uppercase;letter-spacing:0.5px;">GiDEN FATURALAR</h3>';
+            // ── 3. GİDEN FATURALAR ──
+            h += '<div style="margin-bottom:18px;">';
+            h += '<div style="font-size:11px;font-weight:700;color:#1a237e;margin-bottom:8px;padding-bottom:3px;border-bottom:2px solid #e8eaf6;">3. GİDEN FATURALAR (Tahsil Edilecek)</div>';
             if (giden.length) {
-                h += '<table style="width:100%;border-collapse:collapse;margin-bottom:22px;font-size:10px;">';
-                h += '<thead><tr style="background:#1a3a5c;color:#fff;">';
+                h += '<table style="width:100%;border-collapse:collapse;font-size:9px;">';
+                h += '<thead><tr style="background:#2e7d32;color:#fff;">';
                 ['Firma','Fatura No','Tarih','Tutar','KDV','Toplam','Durum'].forEach(function(th){
-                    h += '<th style="padding:7px 8px;text-align:'+(th==='Tutar'||th==='KDV'||th==='Toplam'?'right':'left')+';font-size:9px;font-weight:700;letter-spacing:0.3px;">'+th+'</th>';
+                    var align = (th==='Tutar'||th==='KDV'||th==='Toplam') ? 'right' : (th==='Tarih'||th==='Durum') ? 'center' : 'left';
+                    h += '<th style="padding:6px 6px;text-align:'+align+';font-size:8px;font-weight:600;letter-spacing:0.3px;">'+th+'</th>';
                 });
                 h += '</tr></thead><tbody>';
-                giden.slice().reverse().forEach(function(f){h+=satir(f,"giden");});
-                var g2TTop = giden.reduce(function(s,f){return s+(f.toplamTutar||0);},0);
-                var g2KTop = giden.reduce(function(s,f){return s+(f.kdvTutari||0);},0);
-                var g2TutTop = giden.reduce(function(s,f){return s+(f.tutar||0);},0);
-                h += '<tr style="background:#f5f5f5;font-weight:700;"><td colspan="3" style="padding:7px 8px;border:1px solid #e0e0e0;text-align:right;font-size:10px;">ARA TOPLAM</td><td style="padding:7px 8px;border:1px solid #e0e0e0;text-align:right;font-size:10px;">'+g2TutTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:7px 8px;border:1px solid #e0e0e0;text-align:right;font-size:10px;">'+g2KTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:7px 8px;border:1px solid #e0e0e0;text-align:right;font-size:10px;color:#2e7d32;">'+g2TTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:7px 8px;border:1px solid #e0e0e0;"></td></tr>';
+                giden.slice().reverse().forEach(function(f,i){h+=ftPdfSatir(f,"giden",i);});
+                h += '<tr style="background:#f4f6f9;font-weight:700;"><td colspan="3" style="padding:5px 6px;border:1px solid #dde1e6;text-align:right;font-size:9px;color:#1a237e;">ARA TOPLAM</td><td style="padding:5px 6px;border:1px solid #dde1e6;text-align:right;font-size:9px;">'+g2TutTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 6px;border:1px solid #dde1e6;text-align:right;font-size:9px;">'+gk2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 6px;border:1px solid #dde1e6;text-align:right;font-size:9px;color:#2e7d32;">'+g2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 6px;border:1px solid #dde1e6;"></td></tr>';
                 h += '</tbody></table>';
-            } else { h += '<div style="padding:12px;text-align:center;color:#999;font-size:11px;border:1px dashed #ddd;border-radius:6px;margin-bottom:18px;">Kayıtlı giden fatura bulunmamaktadır.</div>'; }
+            } else { h += '<div style="padding:10px;text-align:center;color:#999;font-size:9px;border:1px dashed #dde1e6;border-radius:4px;">Kayıtlı giden fatura bulunmamaktadır.</div>'; }
+            h += '</div>';
 
-            // KDV Özet Tablosu
-            h += '<h3 style="font-size:12px;color:#1a3a5c;margin:0 0 6px 0;padding:0;border:none;text-transform:uppercase;letter-spacing:0.5px;">KDV ÖZETi</h3>';
-            h += '<table style="width:100%;border-collapse:collapse;margin-bottom:22px;font-size:10px;">';
-            h += '<thead><tr style="background:#1a3a5c;color:#fff;"><th style="padding:7px 10px;text-align:left;font-size:9px;">Kalem</th><th style="padding:7px 10px;text-align:right;font-size:9px;">Tutar</th></tr></thead><tbody>';
-            h += '<tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">Toplam Gelen Fatura (KDV Hariç)</td><td style="padding:6px 10px;border:1px solid #e0e0e0;text-align:right;">'+(gelen.reduce(function(s,f){return s+(f.tutar||0);},0)).toLocaleString("tr-TR",{minFractionDigits:2})+'</td></tr>';
-            h += '<tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">Toplam Gelen KDV</td><td style="padding:6px 10px;border:1px solid #e0e0e0;text-align:right;">'+gkT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td></tr>';
-            h += '<tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">Toplam Giden Fatura (KDV Hariç)</td><td style="padding:6px 10px;border:1px solid #e0e0e0;text-align:right;">'+(giden.reduce(function(s,f){return s+(f.tutar||0);},0)).toLocaleString("tr-TR",{minFractionDigits:2})+'</td></tr>';
-            h += '<tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">Toplam Giden KDV</td><td style="padding:6px 10px;border:1px solid #e0e0e0;text-align:right;">'+gk2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td></tr>';
-            var kdvFark = gk2T - gkT;
-            h += '<tr style="background:#f5f5f5;font-weight:700;"><td style="padding:7px 10px;border:1px solid #e0e0e0;">KDV Farkı (Ödenecek/Alacak)</td><td style="padding:7px 10px;border:1px solid #e0e0e0;text-align:right;color:'+(kdvFark>=0?'#c62828':'#2e7d32')+';">'+kdvFark.toLocaleString("tr-TR",{minFractionDigits:2})+'</td></tr>';
-            h += '</tbody></table>';
-
-            // Vergi Takvimi
-            if (etk.length) {
-                h += '<h3 style="font-size:12px;color:#1a3a5c;margin:0 0 6px 0;padding:0;border:none;text-transform:uppercase;letter-spacing:0.5px;">VERGi TAKViMi</h3>';
-                var gelecekEtk = etk.filter(function(e){return !e.tamamlandi;}).sort(function(a,b){return new Date(a.tarih)-new Date(b.tarih);});
-                h += '<table style="width:100%;border-collapse:collapse;margin-bottom:18px;font-size:10px;">';
-                h += '<thead><tr style="background:#1a3a5c;color:#fff;"><th style="padding:7px 10px;text-align:left;font-size:9px;">Tarih</th><th style="padding:7px 10px;text-align:left;font-size:9px;">Başlık</th><th style="padding:7px 10px;text-align:left;font-size:9px;">Tür</th><th style="padding:7px 10px;text-align:left;font-size:9px;">Durum</th></tr></thead><tbody>';
-                etk.slice().reverse().forEach(function(e) {
-                    var ta = e.tur==="kdv"?"KDV":e.tur==="gelirVergisi"?"Gelir Vergisi":e.tur==="kurumlarVergisi"?"Kurumlar Vergisi":e.tur==="stopaj"?"Stopaj":e.tur==="damgaVergisi"?"Damga Vergisi":"Diğer";
-                    h += '<tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">'+(e.tarih?tarihStr(e.tarih):"-")+'</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">'+esc(e.baslik)+'</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">'+ta+'</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">'+(e.tamamlandi?'Tamamlandi':'Bekliyor')+'</td></tr>';
+            // ── 4. ÖDENEN VERGİLER ──
+            h += '<div style="margin-bottom:18px;">';
+            h += '<div style="font-size:11px;font-weight:700;color:#1a237e;margin-bottom:8px;padding-bottom:3px;border-bottom:2px solid #e8eaf6;">4. ÖDENEN VERGİLER</div>';
+            if (odennis.length) {
+                var ovTop = odenmis.reduce(function(s,v){return s+(v.tutar||0);},0);
+                h += '<table style="width:100%;border-collapse:collapse;font-size:9px;">';
+                h += '<thead><tr style="background:#6a1b9a;color:#fff;">';
+                ['Belge No','Vergi Adı','Dönem','Vade Tarihi','Tutar','Ödeme Tarihi'].forEach(function(th){
+                    var align = (th==='Tutar') ? 'right' : (th==='Vade Tarihi'||th==='Ödeme Tarihi') ? 'center' : 'left';
+                    h += '<th style="padding:6px 6px;text-align:'+align+';font-size:8px;font-weight:600;letter-spacing:0.3px;">'+th+'</th>';
                 });
+                h += '</tr></thead><tbody>';
+                odenmis.forEach(function(v,i){
+                    var bg = i % 2 === 0 ? '#ffffff' : '#f4f6f9';
+                    h += '<tr style="background:'+bg+';"><td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;">'+esc(v.belgeNo||'-')+'</td>' +
+                        '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;">'+esc(v.vergiAdi||'-')+'</td>' +
+                        '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;color:#555;">'+esc(v.donem||'-')+'</td>' +
+                        '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;text-align:center;">'+(v.vadeTarihi?tarihStr(v.vadeTarihi):'-')+'</td>' +
+                        '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;text-align:right;font-weight:700;">'+(v.tutar||0).toLocaleString("tr-TR",{minFractionDigits:2})+'</td>' +
+                        '<td style="padding:5px 6px;border:1px solid #dde1e6;font-size:9px;text-align:center;">'+(v.odemeTarihi?tarihStr(v.odemeTarihi):'-')+'</td></tr>';
+                });
+                h += '<tr style="background:#e8eaf6;font-weight:800;"><td colspan="4" style="padding:5px 6px;border:1px solid #dde1e6;text-align:right;font-size:9px;color:#1a237e;">GENEL TOPLAM</td><td style="padding:5px 6px;border:1px solid #dde1e6;text-align:right;font-size:10px;color:#1a237e;">'+ovTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 6px;border:1px solid #dde1e6;"></td></tr>';
                 h += '</tbody></table>';
-            }
+            } else { h += '<div style="padding:10px;text-align:center;color:#999;font-size:9px;border:1px dashed #dde1e6;border-radius:4px;">Kayıtlı ödenmiş vergi bulunmamaktadır.</div>'; }
+            h += '</div>';
 
-            // Footer
-            h += '<div style="margin-top:28px;padding-top:12px;border-top:2px solid #1a3a5c;font-size:8px;color:#999;text-align:center;line-height:1.6;">';
-            h += '<div>Turak Mimarlık Portal — Fatura Takip Raporu</div>';
-            h += '<div>Bu rapor ' + new Date().toLocaleDateString("tr-TR") + ' tarihinde otomatik oluşturulmuştur.</div>';
+            // ── FOOTER ──
+            h += '<div style="margin-top:10px;padding-top:8px;border-top:2px solid #1a237e;font-size:7px;color:#999;text-align:center;line-height:1.6;">';
+            h += '<div>TURAK MİMARLIK · Fatura Takip Raporu · ' + yil + ' Yılı</div>';
+            h += '<div>Bu rapor ' + new Date().toLocaleDateString("tr-TR") + ' tarihinde otomatik oluşturulmuştur. Raporu hazırlayan: ' + (localStorage.getItem("tm_active_user") || "Yetkili") + '</div>';
             h += '</div></div>';
 
             var el = document.createElement("div"); el.innerHTML = h; document.body.appendChild(el);
             html2canvas(el,{scale:2,useCORS:true,logging:false,width:el.scrollWidth,height:el.scrollHeight}).then(function(c){
-                var A4_W = 210, A4_H = 297, MARGIN = 10;
-                var maxW = A4_W - 2 * MARGIN;
-                var imgW = maxW;
-                var imgH = c.height * imgW / c.width;
-                var pageH = A4_H - 2 * MARGIN;
                 var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
+                var A4_W = 210, A4_H = 297;
+                var imgW = A4_W;
+                var imgH = c.height * imgW / c.width;
+                var pageH = A4_H;
                 if (imgH <= pageH) {
-                    doc.addImage(c.toDataURL('image/png'),'PNG',MARGIN,MARGIN,imgW,imgH);
+                    doc.addImage(c.toDataURL('image/png'),'PNG',0,0,imgW,imgH);
                 } else {
                     var totalPages = Math.ceil(imgH / pageH);
                     for (var p = 0; p < totalPages; p++) {
@@ -9687,11 +9699,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                         var srcH = Math.min(pageH * c.width / imgW, c.height - srcY);
                         var canvas2 = document.createElement('canvas');
                         canvas2.width = c.width;
-                        canvas2.height = srcH * imgW / c.width * (c.width / imgW) || srcH;
+                        canvas2.height = srcH;
                         var ctx = canvas2.getContext('2d');
                         ctx.drawImage(c, 0, srcY, c.width, srcH, 0, 0, c.width, srcH);
-                        var pageImg = canvas2.toDataURL('image/png');
-                        doc.addImage(pageImg,'PNG',MARGIN,MARGIN,imgW,pageH);
+                        doc.addImage(canvas2.toDataURL('image/png'),'PNG',0,0,imgW,pageH);
                     }
                 }
                 doc.save('Fatura_Takip_Raporu_'+yil+'.pdf');
