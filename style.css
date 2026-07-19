@@ -1223,22 +1223,25 @@
         .ft-table tr.ft-vade-gecmis { background:rgba(231,76,60,0.08); border-left:3px solid var(--ft-red); }
         .ft-table tr.ft-vade-gecmis:hover { background:rgba(231,76,60,0.14); }
         .ft-table .ft-btn-sm { padding:4px 8px; font-size:10px; margin:0 2px; }
-        .ft-row-1 td { padding:16px 14px 4px; border-bottom:none; font-size:13px; }
-        .ft-row-1 .ft-chk { padding:16px 10px 4px; vertical-align:middle; }
+        .ft-row-1 td { padding:14px 12px 2px; border-bottom:none; }
+        .ft-row-1 .ft-chk { padding:14px 6px 2px; vertical-align:middle; }
         .ft-row-1 .ft-firma { text-align:left; }
-        .ft-row-1 .ft-firma strong { font-size:14px; }
-        .ft-row-1 .ft-firma .ft-meta { font-size:11px; color:var(--ft-text-light); display:block; margin-top:3px; font-weight:400; }
-        .ft-row-1 .ft-tutar { text-align:right; font-weight:700; font-size:15px; }
-        .ft-row-1 .ft-kdv { text-align:right; font-size:12px; color:var(--ft-text-light); }
-        .ft-row-1 .ft-toplam { text-align:right; font-weight:700; font-size:15px; }
-        .ft-row-1 .ft-durum { vertical-align:middle; padding:16px 6px; }
-        .ft-row-1 .ft-actions { vertical-align:middle; padding:16px 6px; }
-        .ft-row-2 td { padding:0 14px 16px; border-bottom:1px solid rgba(255,255,255,0.06); }
-        .ft-row-2 .ft-detay { font-size:11px; color:var(--ft-text-light); line-height:1.8; text-align:left; }
-        .ft-row-2 .ft-detay .ft-detay-grid { display:flex; flex-wrap:wrap; gap:4px 24px; padding:6px 0 4px; }
+        .ft-row-1 .ft-firma strong { font-size:13px; }
+        .ft-row-1 .ft-firma .ft-meta { font-size:10px; color:var(--ft-text-light); display:block; margin-top:2px; font-weight:400; }
+        .ft-row-1 .ft-fatura-no { font-size:12px; font-weight:600; }
+        .ft-row-1 .ft-vergi-stack { font-size:10px; line-height:1.5; color:var(--ft-text-light); }
+        .ft-row-1 .ft-tarih-stack { font-size:10px; line-height:1.5; }
+        .ft-row-1 .ft-tutar { text-align:right; font-weight:700; font-size:14px; }
+        .ft-row-1 .ft-kdv { text-align:right; font-size:11px; color:var(--ft-text-light); }
+        .ft-row-1 .ft-toplam { text-align:right; font-weight:700; font-size:14px; }
+        .ft-row-1 .ft-durum { vertical-align:middle; padding:14px 4px; text-align:center; }
+        .ft-row-1 .ft-actions { vertical-align:middle; padding:14px 4px; text-align:center; }
+        .ft-row-2 td { padding:0 12px 14px; border-bottom:1px solid rgba(255,255,255,0.06); }
+        .ft-row-2 .ft-detay { font-size:12px; color:var(--ft-text-light); line-height:1.7; text-align:left; }
+        .ft-row-2 .ft-detay .ft-detay-wrap { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 20px; padding:4px 0; }
         .ft-row-2 .ft-detay .ft-detay-item { white-space:nowrap; }
-        .ft-row-2 .ft-detay .ft-detay-label { opacity:0.5; margin-right:4px; }
-        .ft-row-2 .ft-detay .ft-detay-aciklama { display:block; margin-top:6px; color:var(--ft-text); font-style:italic; font-size:11px; padding:8px 10px; background:rgba(255,255,255,0.03); border-radius:6px; border-left:2px solid var(--ft-accent); }
+        .ft-row-2 .ft-detay .ft-detay-label { opacity:0.5; margin-right:3px; }
+        .ft-row-2 .ft-detay .ft-aciklama-blk { display:inline-block; color:var(--ft-text); font-style:italic; font-size:12px; padding:4px 8px; background:rgba(255,255,255,0.03); border-radius:4px; }
         .ft-table tr.ft-vade-gecmis td { border-bottom-color:rgba(231,76,60,0.25); }
 
         /* Badges */
