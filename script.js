@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.52.0';
+        var APP_VERSION = 'V1.53.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8801,13 +8801,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var net = fark - odenmisKdv;
                 if (net >= 0) {
                     kdvNet = net;
-                    netKart.className = "ft-ozet-card card-kdv-net kdv-odenecek";
+                    netKart.className = "ft-balance-card card-kdv-net kdv-odenecek";
                     netIco.innerHTML = '<i class="fa-solid fa-circle" style="color:#C0392B"></i>';
                     netLbl.innerText = "KDV Ödenecek";
                     netVal.style.color = "var(--accent-red)";
                 } else {
                     kdvNet = -net;
-                    netKart.className = "ft-ozet-card card-kdv-net kdv-alacak";
+                    netKart.className = "ft-balance-card card-kdv-net kdv-alacak";
                     netIco.innerHTML = '<i class="fa-solid fa-circle" style="color:#2E7D32"></i>';
                     netLbl.innerText = "KDV Alacak (+ fazla ödeme)";
                     netVal.style.color = "var(--btn-green)";
@@ -8816,13 +8816,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var net = -fark - odenmisKdv;
                 if (net >= 0) {
                     kdvNet = net;
-                    netKart.className = "ft-ozet-card card-kdv-net kdv-alacak";
+                    netKart.className = "ft-balance-card card-kdv-net kdv-alacak";
                     netIco.innerHTML = '<i class="fa-solid fa-circle" style="color:#2E7D32"></i>';
                     netLbl.innerText = "KDV Alacak";
                     netVal.style.color = "var(--btn-green)";
                 } else {
                     kdvNet = -net;
-                    netKart.className = "ft-ozet-card card-kdv-net kdv-odenecek";
+                    netKart.className = "ft-balance-card card-kdv-net kdv-odenecek";
                     netIco.innerHTML = '<i class="fa-solid fa-circle" style="color:#C0392B"></i>';
                     netLbl.innerText = "KDV Ödenecek (+ ödenen KDV düşüldü)";
                     netVal.style.color = "var(--accent-red)";
