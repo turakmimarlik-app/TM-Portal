@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.46.0';
+        var APP_VERSION = 'V1.46.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8012,8 +8012,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 return hesapAdiBul(i.hesapId)+" → Harici";
             }
 
-            function sayfaHtml(basIdx, bitIdx, toplamSayfa, sira) {
-                var siraIslemler = islemler.slice(basIdx, bitIdx);
+            function sayfaHtml() {
+                var siraIslemler = islemler;
                 var satirIdx = 0;
 
                 function tabloSatirlar(liste, hid, go) {
@@ -8066,7 +8066,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     govde = tabloSatirlar(siraIslemler, hesapId, ozet);
                 }
 
-                return '<div style="width:'+PAGE_W+'px;height:'+PAGE_H+'px;padding:'+PAD_T+'px '+PAD_R+'px '+PAD_B+'px '+PAD_L+'px;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222;overflow:hidden;">'
+                return '<div style="width:'+PAGE_W+'px;padding:'+PAD_T+'px '+PAD_R+'px '+PAD_B+'px '+PAD_L+'px;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222;">'
                     + '<div style="display:flex;justify-content:space-between;align-items:center;">'
                     + '<div>'+(logoHtml||'')+'</div>'
                     + '<div style="text-align:right;"><div style="font-size:16px;font-weight:800;color:#1a3a5c;">HESAP HAREKET RAPORU</div></div></div>'
@@ -8083,49 +8083,54 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:68px;">TÜR</th>'
                     + '<th style="text-align:right;padding:3px 4px;font-size:7.5px;font-weight:700;width:166px;">TUTAR</th>'
                     + '</tr></thead><tbody>'+govde+'</tbody></table>'
-                    + '<div style="text-align:center;font-size:7px;color:#aaa;margin-top:5px;">Sayfa '+sira+' / '+toplamSayfa+'</div>'
                     + '</div>';
             }
 
-            var MAX_ROW_PER_PAGE = 28;
-            var toplamSayfa = Math.max(1, Math.ceil(islemler.length / MAX_ROW_PER_PAGE));
-            var sayfaResimler = [];
-            var islenenSayfa = 0;
-
-            function siradakiSayfa() {
-                if(islenenSayfa >= toplamSayfa) {
-                    var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
-                    for(var s=0;s<sayfaResimler.length;s++){
-                        if(s>0) doc.addPage();
-                        doc.addImage(sayfaResimler[s], 'JPEG', 0, 0, 210, 297);
-                    }
-                    doc.save("Hesap_Raporu_" + hesapStr.replace(/[^a-zA-Z0-9]/g,"_") + ".pdf");
-                    tmNotify("Rapor PDF olarak kaydedildi.", "success");
-                    htPdfModalKapat();
-                    return;
-                }
-                var bas = islenenSayfa * MAX_ROW_PER_PAGE;
-                var bit = Math.min(bas + MAX_ROW_PER_PAGE, islemler.length);
-                var html = sayfaHtml(bas, bit, toplamSayfa, islenenSayfa+1);
-                var el = document.createElement("div");
-                el.style.cssText = "position:fixed;left:-9999px;top:0;";
-                el.innerHTML = html;
-                document.body.appendChild(el);
-                tmNotify("Sayfa "+(islenenSayfa+1)+"/"+toplamSayfa+" hazırlanıyor...","info");
-                html2canvas(el, {scale:PAGE_S,useCORS:true,logging:false,width:PAGE_W,height:PAGE_H}).then(function(cv){
-                    document.body.removeChild(el);
-                    sayfaResimler.push(cv.toDataURL('image/jpeg',0.95));
-                    islenenSayfa++;
-                    setTimeout(siradakiSayfa, 50);
-                }).catch(function(e){
-                    tmNotify("PDF hatası: "+(e.message||e),"error");
-                    try{document.body.removeChild(el);}catch(ex){}
-                    htPdfModalKapat();
-                });
-            }
-
+            // Tek seferde tum icerigi render et, kanvasi A4 sayfalara bol
             tmNotify("Rapor hazırlanıyor...", "info");
-            siradakiSayfa();
+            var el = document.createElement("div");
+            el.style.cssText = "position:fixed;left:-9999px;top:0;";
+            el.innerHTML = sayfaHtml();
+            document.body.appendChild(el);
+            html2canvas(el, {scale:PAGE_S,useCORS:true,logging:false,width:PAGE_W}).then(function(cv){
+                document.body.removeChild(el);
+                var totalH = cv.height;
+                var pageH = PAGE_H * PAGE_S;
+                var pageW = PAGE_W * PAGE_S;
+                var pageCount = Math.ceil(totalH / pageH);
+                var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
+                var sira = 0;
+                function siradakiSayfa() {
+                    if(sira >= pageCount) {
+                        doc.save("Hesap_Raporu_" + hesapStr.replace(/[^a-zA-Z0-9]/g,"_") + ".pdf");
+                        tmNotify("Rapor PDF olarak kaydedildi.", "success");
+                        htPdfModalKapat();
+                        return;
+                    }
+                    tmNotify("Sayfa "+(sira+1)+"/"+pageCount+" hazırlanıyor...","info");
+                    if(sira > 0) doc.addPage();
+                    var srcY = sira * pageH;
+                    var sliceH = Math.min(pageH, totalH - srcY);
+                    var sc = document.createElement("canvas");
+                    sc.width = pageW;
+                    sc.height = pageH;
+                    var ctx = sc.getContext("2d");
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(0, 0, pageW, pageH);
+                    ctx.drawImage(cv, 0, srcY, pageW, sliceH, 0, 0, pageW, sliceH);
+                    doc.addImage(sc.toDataURL('image/jpeg',0.95), 'JPEG', 0, 0, 210, 297);
+                    doc.setFontSize(7);
+                    doc.setTextColor(170,170,170);
+                    doc.text("Sayfa "+(sira+1)+" / "+pageCount, 105, 292, {align:'center'});
+                    sira++;
+                    setTimeout(siradakiSayfa, 50);
+                }
+                siradakiSayfa();
+            }).catch(function(e){
+                tmNotify("PDF hatası: "+(e.message||e),"error");
+                try{document.body.removeChild(el);}catch(ex){}
+                htPdfModalKapat();
+            });
         }
         /* ================= TM FİYAT LİSTESİ — FİYAT KARTLARI ================= */
         const TMF_KART_KEY = 'tm_kategorili_fiyatlar';
