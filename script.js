@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.71.0';
+        var APP_VERSION = 'V1.72.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8955,8 +8955,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var dc = f.odemeDurumu, dt = dc==="odendi"?"Ödendi":dc==="kismi"?"Kısmi":"Ödenmedi";
                 var vg = false;
                 if (f.vadeTarihi && dc !== 'odendi') { var vt = new Date(f.vadeTarihi + 'T00:00:00'); vg = vt < simdi; }
-                var dataVal = (f.firmaAdi||'') + ' ' + (f.faturaNo||'');
-                h += '<div class="ft-card' + (vg?' ft-card-vadegecmis':'') + '" data-ftgelen="' + dataVal.toLowerCase() + '">';
+                var dataVal = trLower(f.firmaAdi) + ' ' + trLower(f.faturaNo);
+                h += '<div class="ft-card' + (vg?' ft-card-vadegecmis':'') + '" data-ftgelen="' + dataVal + '">';
                 h += '<div class="ft-card-head">';
                 h += '<div class="ft-card-head-left"><input type="checkbox" class="ft-gelen-cb" value="' + f.id + '"><div class="ft-card-head-firma"><strong>' + esc(f.firmaAdi) + '</strong><span class="ft-card-meta"><span class="ft-mlabel">Fatura No:</span> ' + esc(f.faturaNo) + ' · <span class="ft-mlabel">Vergi Dairesi:</span> ' + esc(f.vergiDairesi||'-') + ' · <span class="ft-mlabel">Vergi No:</span> ' + esc(f.vergiNo||'-') + '</span></div></div>';
                 h += '<div class="ft-card-head-right"><span class="ft-badge ' + dc + '">' + dt + '</span>' + (f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'') + '<button class="ft-btn-sm ft-btn-edit" onclick="ftGelenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGelenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></div>';
@@ -8972,7 +8972,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         }
 
         function ftGelenFiltrele() {
-            var q = (document.getElementById("ftGelenArama").value || "").toLowerCase().trim();
+            var q = trLower(document.getElementById("ftGelenArama").value);
             if (!q) { document.querySelectorAll("#ftGelenTablosu .ft-card").forEach(function(s){ s.style.display = ""; }); return; }
             document.querySelectorAll("#ftGelenTablosu .ft-card").forEach(function(s) {
                 s.style.display = ((s.getAttribute("data-ftgelen")||"").indexOf(q) !== -1) ? "" : "none";
@@ -9135,8 +9135,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 var dc = f.tahsilatDurumu, dt = dc==="tahsilEdildi"?"Tah.Edildi":dc==="kismi"?"Kısmi":"Tah.Edilmedi";
                 var vg = false;
                 if (f.vadeTarihi && dc !== 'tahsilEdildi') { var vt = new Date(f.vadeTarihi + 'T00:00:00'); vg = vt < simdi; }
-                var dataVal = (f.firmaAdi||'') + ' ' + (f.faturaNo||'');
-                h += '<div class="ft-card' + (vg?' ft-card-vadegecmis':'') + '" data-ftgiden="' + dataVal.toLowerCase() + '">';
+                var dataVal = trLower(f.firmaAdi) + ' ' + trLower(f.faturaNo);
+                h += '<div class="ft-card' + (vg?' ft-card-vadegecmis':'') + '" data-ftgiden="' + dataVal + '">';
                 h += '<div class="ft-card-head">';
                 h += '<div class="ft-card-head-left"><input type="checkbox" class="ft-giden-cb" value="' + f.id + '"><div class="ft-card-head-firma"><strong>' + esc(f.firmaAdi) + '</strong><span class="ft-card-meta"><span class="ft-mlabel">Fatura No:</span> ' + esc(f.faturaNo) + ' · <span class="ft-mlabel">Vergi Dairesi:</span> ' + esc(f.vergiDairesi||'-') + ' · <span class="ft-mlabel">Vergi No:</span> ' + esc(f.vergiNo||'-') + '</span></div></div>';
                 h += '<div class="ft-card-head-right"><span class="ft-badge ' + dc + '">' + dt + '</span>' + (f.dosyaUrl?'<a href="'+f.dosyaUrl+'" target="_blank" title="Fatura PDF" class="ft-file-link"><i class="fa-solid fa-paperclip"></i></a> ':'') + '<button class="ft-btn-sm ft-btn-edit" onclick="ftGidenFormAc('+f.id+')"><i class="fa-regular fa-pen-to-square"></i></button> <button class="ft-btn-sm ft-btn-del" onclick="ftGidenSil('+f.id+')"><i class="fa-solid fa-trash-can"></i></button></div>';
@@ -9152,7 +9152,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         }
 
         function ftGidenFiltrele() {
-            var q = (document.getElementById("ftGidenArama").value || "").toLowerCase().trim();
+            var q = trLower(document.getElementById("ftGidenArama").value);
             if (!q) { document.querySelectorAll("#ftGidenTablosu .ft-card").forEach(function(s){ s.style.display = ""; }); return; }
             document.querySelectorAll("#ftGidenTablosu .ft-card").forEach(function(s) {
                 s.style.display = ((s.getAttribute("data-ftgiden")||"").indexOf(q) !== -1) ? "" : "none";
@@ -9686,20 +9686,30 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
         }
 
+        function trLower(s) { return (s||'').toLocaleLowerCase('tr'); }
+
+        function ftTemizle(id) {
+            var inp = document.getElementById(id);
+            if (inp) { inp.value = ''; inp.focus(); }
+            if (id === 'ftGenelArama') { ftGenelAra(); }
+            else if (id === 'ftGelenArama') { ftGelenFiltrele(); }
+            else if (id === 'ftGidenArama') { ftGidenFiltrele(); }
+        }
+
         function ftGenelAra() {
-            var q = (document.getElementById('ftGenelArama').value || '').toLowerCase().trim();
+            var q = trLower(document.getElementById('ftGenelArama').value);
             if (!q) { ftGelenGoster(); ftGidenGoster(); return; }
             var db = ftDbYukle();
             var results = [];
             Object.keys(db.yillar).forEach(function(y) {
                 var data = db.yillar[y];
                 (data.gelenFaturalar||[]).forEach(function(f) {
-                    if ((f.firmaAdi||'').toLowerCase().indexOf(q) !== -1 || (f.faturaNo||'').toLowerCase().indexOf(q) !== -1) {
+                    if (trLower(f.firmaAdi).indexOf(q) !== -1 || trLower(f.faturaNo).indexOf(q) !== -1) {
                         results.push({ yil: y, tur: 'Gelen', kayit: f });
                     }
                 });
                 (data.gidenFaturalar||[]).forEach(function(f) {
-                    if ((f.firmaAdi||'').toLowerCase().indexOf(q) !== -1 || (f.faturaNo||'').toLowerCase().indexOf(q) !== -1) {
+                    if (trLower(f.firmaAdi).indexOf(q) !== -1 || trLower(f.faturaNo).indexOf(q) !== -1) {
                         results.push({ yil: y, tur: 'Giden', kayit: f });
                     }
                 });
@@ -9714,14 +9724,18 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if (!div) {
                 div = document.createElement('div');
                 div.id = 'ftGlobalAramaSonuc';
-                div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:9999;max-width:700px;width:90%;';
-                div.innerHTML = '<div style="text-align:right;margin-bottom:8px;"><button onclick="this.parentElement.parentElement.remove()" style="border:none;background:none;font-size:20px;cursor:pointer;">&times;</button></div>';
+                div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:20px;border-radius:10px;box-shadow:0 12px 48px rgba(0,0,0,0.5);z-index:9999;max-width:700px;width:90%;background:var(--ft-card);border:1px solid var(--ft-border);color:var(--ft-text);';
+                div.innerHTML = '<div style="text-align:right;margin-bottom:8px;"><button onclick="ftKapatModal(this)" style="border:none;background:rgba(255,255,255,0.1);color:var(--ft-text-light);font-size:18px;cursor:pointer;width:32px;height:32px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;">&times;</button></div>';
                 document.body.appendChild(div);
             }
             div.style.display = 'block';
             var c = div.querySelector('.ft-sonuc-icerik');
             if (!c) { c = document.createElement('div'); c.className = 'ft-sonuc-icerik'; div.appendChild(c); }
             c.innerHTML = html;
+        }
+
+        function ftKapatModal(el) {
+            (el.closest('#ftGlobalAramaSonuc')||el.parentElement.parentElement).style.display = 'none';
         }
 
         /* ---------- İş Takibi ---------- */

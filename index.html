@@ -644,6 +644,7 @@
                     <div class="ft-global-search">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" id="ftGenelArama" onkeyup="ftGenelAra(event)" placeholder="Tüm yıllarda firma veya fatura no ile ara..." autocomplete="off">
+                        <span class="ft-search-clear" onclick="ftTemizle('ftGenelArama')">&times;</span>
                         <div id="ftGlobalAramaModal" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:var(--ft-card);border:1px solid var(--ft-border);border-radius:8px;margin-top:4px;box-shadow:0 8px 30px rgba(0,0,0,0.4);max-height:350px;overflow-y:auto;"></div>
                     </div>
 
@@ -681,6 +682,7 @@
                             <div class="ft-search-box">
                                 <i class="fa-solid fa-search"></i>
                                 <input type="text" id="ftGelenArama" onkeyup="ftGelenFiltrele()" placeholder="Ara..." autocomplete="off">
+                                <span class="ft-search-clear" onclick="ftTemizle('ftGelenArama')">&times;</span>
                             </div>
                             <span class="ft-count" id="ftGelenSayac">0 kayıt</span>
                         </div>
@@ -703,6 +705,7 @@
                             <div class="ft-search-box">
                                 <i class="fa-solid fa-search"></i>
                                 <input type="text" id="ftGidenArama" onkeyup="ftGidenFiltrele()" placeholder="Ara..." autocomplete="off">
+                                <span class="ft-search-clear" onclick="ftTemizle('ftGidenArama')">&times;</span>
                             </div>
                             <span class="ft-count" id="ftGidenSayac">0 kayıt</span>
                         </div>
