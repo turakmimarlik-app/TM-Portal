@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.74.5';
+﻿        var APP_VERSION = 'V1.74.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -9595,31 +9595,30 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if (logoData && logoData !== 'null' && logoData.length > 100) {
                 logoHtml = '<img src="' + logoData + '" style="height:12mm;width:auto;vertical-align:middle;" alt="Logo">';
             } else {
-                logoHtml = '<div style="font-size:11px;font-weight:700;color:#1a237e;letter-spacing:1.5px;">TURAK MİMARLIK</div><div style="font-size:7px;color:#888;margin-top:1px;">Kırklareli / Demirköy / İğneada</div>';
+                logoHtml = '<div style="font-size:11px;font-weight:700;color:' + BORDO + ';letter-spacing:1.5px;">TURAK MİMARLIK</div><div style="font-size:7px;color:#888;margin-top:1px;">Kırklareli / Demirköy / İğneada</div>';
             }
 
-            var NAVY = '#1a237e', LIGHT_BG = '#f8f9fa', BORDER = '#dde1e6';
-            var A1 = '#1a237e', A2 = '#4a3f5c', A3 = '#2c3e4f', A4 = '#37474f';
+            var NAVY = '#212832', LIGHT_BG = '#f8f9fa', BORDER = '#dde1e6', BORDO = '#9E2A2B', YESIL = '#2E7D32', DARK = '#2d3748';
 
             var h = '<div style="width:'+contentW+'mm;font-family:Helvetica,Arial,sans-serif;font-size:9px;color:#333;line-height:1.4;box-sizing:border-box;">';
 
             // HEADER with logo
             h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid ' + NAVY + ';padding-bottom:8px;margin-bottom:14px;">';
             h += '<div style="max-width:45%;">' + logoHtml + '</div>';
-            h += '<div style="text-align:right;"><div style="font-size:14px;font-weight:800;color:' + NAVY + ';letter-spacing:0.5px;">FATURA TAKİP RAPORU</div>';
+            h += '<div style="text-align:right;"><div style="font-size:14px;font-weight:800;color:' + BORDO + ';letter-spacing:0.5px;">FATURA TAKİP RAPORU</div>';
             h += '<div style="font-size:8px;color:#555;margin-top:1px;">' + yil + ' Yılı · ' + new Date().toLocaleDateString("tr-TR") + '</div>';
             h += '<div style="font-size:7px;color:#999;">Hazırlayan: ' + (localStorage.getItem("tm_active_user") || "Yetkili") + '</div></div>';
             h += '</div>';
 
             // 1. KDV TAKİBİ
             h += '<div style="margin-bottom:14px;">';
-            h += '<div style="font-size:10px;font-weight:700;color:' + NAVY + ';margin-bottom:6px;padding-bottom:2px;border-bottom:1.5px solid #c5cae9;">1. KDV TAKİBİ</div>';
+            h += '<div style="font-size:10px;font-weight:700;color:' + BORDO + ';margin-bottom:6px;padding-bottom:2px;border-bottom:1.5px solid ' + BORDER + ';">1. KDV TAKİBİ</div>';
 
             h += '<table style="width:100%;border-collapse:collapse;font-size:7.5px;margin-bottom:6px;">';
             h += '<thead><tr style="background:' + NAVY + ';color:#fff;"><th style="padding:4px 8px;text-align:left;font-size:7px;font-weight:600;letter-spacing:0.3px;">KALEM</th><th style="padding:4px 8px;text-align:right;font-size:7px;font-weight:600;letter-spacing:0.3px;">ADET</th><th style="padding:4px 8px;text-align:right;font-size:7px;font-weight:600;letter-spacing:0.3px;">MATRAH</th><th style="padding:4px 8px;text-align:right;font-size:7px;font-weight:600;letter-spacing:0.3px;">KDV</th><th style="padding:4px 8px;text-align:right;font-size:7px;font-weight:600;letter-spacing:0.3px;">TOPLAM</th></tr></thead><tbody>';
             h += '<tr style="background:#ffffff;"><td style="padding:4px 8px;border:1px solid ' + BORDER + ';font-weight:600;">Gelen Faturalar</td><td style="padding:4px 8px;border:1px solid ' + BORDER + ';text-align:right;">'+gelen.length+'</td><td style="padding:4px 8px;border:1px solid ' + BORDER + ';text-align:right;">'+gMatrah.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:4px 8px;border:1px solid ' + BORDER + ';text-align:right;">'+gkT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:4px 8px;border:1px solid ' + BORDER + ';text-align:right;font-weight:700;">'+gTT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td></tr>';
             h += '<tr style="background:' + LIGHT_BG + ';"><td style="padding:4px 8px;border:1px solid ' + BORDER + ';font-weight:600;">Giden Faturalar</td><td style="padding:4px 8px;border:1px solid ' + BORDER + ';text-align:right;">'+giden.length+'</td><td style="padding:4px 8px;border:1px solid ' + BORDER + ';text-align:right;">'+g2Matrah.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:4px 8px;border:1px solid ' + BORDER + ';text-align:right;">'+gk2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:4px 8px;border:1px solid ' + BORDER + ';text-align:right;font-weight:700;">'+g2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td></tr>';
-            h += '<tr style="background:#e8eaf6;font-weight:800;"><td style="padding:5px 8px;border:1px solid ' + BORDER + ';color:' + NAVY + ';">KDV FARKI</td><td style="padding:5px 8px;border:1px solid ' + BORDER + ';"></td><td style="padding:5px 8px;border:1px solid ' + BORDER + ';"></td><td style="padding:5px 8px;border:1px solid ' + BORDER + ';text-align:right;color:' + NAVY + ';font-size:9px;">'+(kdvFark>=0?'+':'')+kdvFark.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 8px;border:1px solid ' + BORDER + ';"></td></tr>';
+            h += '<tr style="background:' + LIGHT_BG + ';font-weight:800;"><td style="padding:5px 8px;border:1px solid ' + BORDER + ';color:' + BORDO + ';">KDV FARKI</td><td style="padding:5px 8px;border:1px solid ' + BORDER + ';"></td><td style="padding:5px 8px;border:1px solid ' + BORDER + ';"></td><td style="padding:5px 8px;border:1px solid ' + BORDER + ';text-align:right;color:' + BORDO + ';font-size:9px;">'+(kdvFark>=0?'+':'')+kdvFark.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:5px 8px;border:1px solid ' + BORDER + ';"></td></tr>';
             h += '</tbody></table>';
 
             h += '<div style="display:flex;gap:6px;margin-bottom:4px;">';
@@ -9630,13 +9629,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             kdvDurum.forEach(function(c,i){
                 h += '<div style="flex:1;border:1px solid ' + BORDER + ';padding:4px 8px;text-align:center;">';
                 h += '<div style="font-size:6px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;">'+c.lbl+'</div>';
-                h += '<div style="font-size:11px;font-weight:800;color:' + (i===0?'#9e2a2b':'#1b5e20') + ';">'+c.val+'</div></div>';
+                h += '<div style="font-size:11px;font-weight:800;color:' + (i===0?BORDO:YESIL) + ';">'+c.val+'</div></div>';
             });
             h += '</div></div>';
 
             // 2. GELEN FATURALAR
             h += '<div style="margin-bottom:14px;">';
-            h += '<div style="font-size:10px;font-weight:700;color:#9e2a2b;margin-bottom:6px;padding-bottom:2px;border-bottom:1.5px solid #efd8d8;">2. GELEN FATURALAR (Ödenecek)</div>';
+            h += '<div style="font-size:10px;font-weight:700;color:' + BORDO + ';margin-bottom:6px;padding-bottom:2px;border-bottom:1.5px solid ' + BORDER + ';">2. GELEN FATURALAR (Ödenecek)</div>';
             if (gelen.length) {
                 h += '<table style="width:100%;border-collapse:collapse;font-size:7.5px;">';
                 h += '<thead><tr style="background:' + NAVY + ';color:#fff;">';
@@ -9646,14 +9645,14 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 });
                 h += '</tr></thead><tbody>';
                 gelen.slice().reverse().forEach(function(f,i){h+=ftPdfSatir(f,"gelen",i);});
-                h += '<tr style="background:#fcefef;font-weight:700;"><td colspan="3" style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:#9e2a2b;">ARA TOPLAM</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;">'+gMatrah.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;">'+gkT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:#9e2a2b;font-weight:800;">'+gTT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';"></td></tr>';
+                h += '<tr style="background:' + LIGHT_BG + ';font-weight:700;"><td colspan="3" style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:' + BORDO + ';">ARA TOPLAM</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;">'+gMatrah.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;">'+gkT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:' + BORDO + ';font-weight:800;">'+gTT.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';"></td></tr>';
                 h += '</tbody></table>';
             } else { h += '<div style="padding:8px;text-align:center;color:#999;font-size:8px;border:1px dashed #ddd;border-radius:2px;">Kayıtlı gelen fatura bulunmamaktadır.</div>'; }
             h += '</div>';
 
             // 3. GİDEN FATURALAR
             h += '<div style="margin-bottom:14px;">';
-            h += '<div style="font-size:10px;font-weight:700;color:#1b5e20;margin-bottom:6px;padding-bottom:2px;border-bottom:1.5px solid #d8efd8;">3. GİDEN FATURALAR (Tahsil Edilecek)</div>';
+            h += '<div style="font-size:10px;font-weight:700;color:' + YESIL + ';margin-bottom:6px;padding-bottom:2px;border-bottom:1.5px solid ' + BORDER + ';">3. GİDEN FATURALAR (Tahsil Edilecek)</div>';
             if (giden.length) {
                 h += '<table style="width:100%;border-collapse:collapse;font-size:7.5px;">';
                 h += '<thead><tr style="background:' + NAVY + ';color:#fff;">';
@@ -9663,14 +9662,14 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 });
                 h += '</tr></thead><tbody>';
                 giden.slice().reverse().forEach(function(f,i){h+=ftPdfSatir(f,"giden",i);});
-                h += '<tr style="background:#eff8ef;font-weight:700;"><td colspan="3" style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:#1b5e20;">ARA TOPLAM</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;">'+g2Matrah.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;">'+gk2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:#1b5e20;font-weight:800;">'+g2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';"></td></tr>';
+                h += '<tr style="background:' + LIGHT_BG + ';font-weight:700;"><td colspan="3" style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:' + YESIL + ';">ARA TOPLAM</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;">'+g2Matrah.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;">'+gk2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:' + YESIL + ';font-weight:800;">'+g2T.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';"></td></tr>';
                 h += '</tbody></table>';
             } else { h += '<div style="padding:8px;text-align:center;color:#999;font-size:8px;border:1px dashed #ddd;border-radius:2px;">Kayıtlı giden fatura bulunmamaktadır.</div>'; }
             h += '</div>';
 
             // 4. ÖDENEN VERGİLER
             h += '<div style="margin-bottom:14px;">';
-            h += '<div style="font-size:10px;font-weight:700;color:' + A4 + ';margin-bottom:6px;padding-bottom:2px;border-bottom:1.5px solid #ddd;border-bottom-color:#d5d8db;">4. ÖDENEN VERGİLER</div>';
+            h += '<div style="font-size:10px;font-weight:700;color:' + DARK + ';margin-bottom:6px;padding-bottom:2px;border-bottom:1.5px solid ' + BORDER + ';">4. ÖDENEN VERGİLER</div>';
             if (odenmis.length) {
                 var ovTop = odenmis.reduce(function(s,v){return s+(v.tutar||0);},0);
                 var ovAsil = odenmis.reduce(function(s,v){return s+(v.asilBorç||0);},0);
@@ -9696,7 +9695,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                         '<td style="padding:3px 4px;border:1px solid ' + BORDER + ';font-size:7.5px;text-align:right;font-weight:700;">'+(v.tutar||0).toLocaleString("tr-TR",{minFractionDigits:2})+'</td>' +
                         '<td style="padding:3px 4px;border:1px solid ' + BORDER + ';font-size:7.5px;text-align:center;">'+(v.odemeTarihi?tarihStr(v.odemeTarihi):'-')+'</td></tr>' + detayRow;
                 });
-                h += '<tr style="background:#eef0f2;font-weight:800;"><td colspan="4" style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:' + NAVY + ';">GENEL TOPLAM</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:' + NAVY + ';">'+ovAsil.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:' + NAVY + ';">'+ovGecikme.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:8px;color:' + NAVY + ';">'+ovTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';"></td></tr>';
+                h += '<tr style="background:' + LIGHT_BG + ';font-weight:800;"><td colspan="4" style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:' + DARK + ';">GENEL TOPLAM</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:' + DARK + ';">'+ovAsil.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:7.5px;color:' + DARK + ';">'+ovGecikme.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';text-align:right;font-size:8px;color:' + DARK + ';">'+ovTop.toLocaleString("tr-TR",{minFractionDigits:2})+'</td><td style="padding:3px 4px;border:1px solid ' + BORDER + ';"></td></tr>';
                 h += '</tbody></table>';
             } else { h += '<div style="padding:8px;text-align:center;color:#999;font-size:8px;border:1px dashed #ddd;border-radius:2px;">Kayıtlı ödenmiş vergi bulunmamaktadır.</div>'; }
             h += '</div>';
@@ -9715,7 +9714,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             el.style.width = contentW + 'mm';
             document.body.appendChild(el);
 
-            html2canvas(el,{scale:2,useCORS:true,logging:false,width:el.scrollWidth,height:el.scrollHeight}).then(function(c){
+            html2canvas(el,{scale:3,useCORS:true,logging:false,width:el.scrollWidth,height:el.scrollHeight}).then(function(c){
                 var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
                 var dispW = contentW;
                 var dispH = c.height * dispW / c.width;
