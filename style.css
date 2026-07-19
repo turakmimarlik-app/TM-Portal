@@ -1232,28 +1232,28 @@
         #ftOdenenVergiTablosu .ft-table td:first-child { text-align:left !important; }
 
         /* Kart gorunumu */
-        .ft-card-list { display:flex; flex-direction:column; gap:8px; }
-        .ft-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px 14px; transition:0.15s; }
-        .ft-card:hover { border-color:rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); }
-        .ft-card.ft-card-vadegecmis { border-left:3px solid var(--ft-red); background:rgba(231,76,60,0.04); }
-        .ft-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px; }
-        .ft-card-head-left { display:flex; align-items:flex-start; gap:10px; min-width:0; flex:1; }
-        .ft-card-head-left input[type="checkbox"] { margin-top:3px; flex-shrink:0; cursor:pointer; }
+        .ft-card-list { display:flex; flex-direction:column; gap:5px; }
+        .ft-card { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:5px; padding:5px 7px; font-size:12px; line-height:1.5; }
+        .ft-card:hover { border-color:rgba(255,255,255,0.12); }
+        .ft-card.ft-card-vadegecmis { border-left:2px solid var(--ft-red); background:rgba(231,76,60,0.03); }
+        .ft-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:4px; }
+        .ft-card-head-left { display:flex; align-items:flex-start; gap:5px; flex:1; min-width:0; }
+        .ft-card-head-left input[type="checkbox"] { margin-top:1px; flex-shrink:0; }
         .ft-card-head-left .ft-card-firma { min-width:0; }
-        .ft-card-head-left .ft-card-firma strong { font-size:14px; display:block; }
-        .ft-card-head-left .ft-card-meta { font-size:10px; color:var(--ft-text-light); display:block; margin-top:2px; line-height:1.5; }
-        .ft-card-head-left .ft-card-meta .ft-mlabel { opacity:0.7; }
-        .ft-card-head-right { display:flex; align-items:center; gap:6px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; }
-        .ft-card-head-right .ft-file-link { width:26px; height:26px; border-radius:5px; background:rgba(255,255,255,0.06); color:var(--ft-accent); font-size:12px; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
+        .ft-card-head-left .ft-card-firma strong { font-size:12px; }
+        .ft-card-head-left .ft-card-meta { font-size:9px; color:var(--ft-text-light); margin-top:1px; }
+        .ft-card-head-left .ft-card-meta .ft-mlabel { opacity:0.6; }
+        .ft-card-head-right { display:flex; align-items:center; gap:3px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; }
+        .ft-card-head-right .ft-badge { font-size:8px; padding:1px 6px; }
+        .ft-card-head-right .ft-file-link { width:20px; height:20px; border-radius:3px; background:rgba(255,255,255,0.04); color:var(--ft-accent); font-size:10px; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
         .ft-card-head-right .ft-file-link:hover { background:var(--ft-accent); color:#fff; }
-        .ft-card-body { display:flex; gap:4px; font-size:13px; line-height:1.8; align-items:stretch; }
-        .ft-card-body-left { flex:1; min-width:0; }
-        .ft-card-body-left .ft-card-row { display:flex; flex-wrap:wrap; gap:1px 16px; }
-        .ft-card-body-left .ft-card-row .ft-clabel { opacity:0.5; margin-right:1px; }
-        .ft-card-body-left .ft-card-row .ft-cvalue-toplam { font-weight:700; }
-        .ft-card-body-right { width:180px; flex-shrink:0; display:none; }
-        .ft-card-body-right.ft-has-aciklama { display:flex; flex-direction:column; }
-        .ft-card-body-right .ft-card-aciklama { flex:1; font-size:11px; color:var(--ft-text-light); line-height:1.6; padding:4px 8px; background:rgba(255,255,255,0.03); border-radius:4px; border-left:2px solid var(--ft-accent); }
+        .ft-card-head-right .ft-btn-sm { padding:2px 5px; font-size:9px; }
+        .ft-card-head-right .ft-btn-sm i { font-size:9px; }
+        .ft-card-body { margin-top:1px; }
+        .ft-card-body .ft-card-row { display:flex; flex-wrap:wrap; gap:0 8px; }
+        .ft-card-body .ft-card-row .ft-clabel { opacity:0.45; }
+        .ft-card-body .ft-card-row .ft-cvalue-toplam { font-weight:700; }
+        .ft-card-body .ft-card-aciklama { margin-top:1px; padding:1px 0 0 5px; border-left:2px solid rgba(255,255,255,0.07); font-size:10px; color:var(--ft-text-light); }
 
         /* Badges */
         .ft-badge { font-weight:700; font-size:9px; padding:2px 8px; border-radius:8px; display:inline-block; white-space:nowrap; letter-spacing:0.3px; }
