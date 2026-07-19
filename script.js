@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.46.3';
+        var APP_VERSION = 'V1.46.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8048,6 +8048,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 if(hesapId === 0) {
                     var gMap = {};
                     siraIslemler.forEach(function(i){var a=i.hesapId;if(!gMap[a])gMap[a]=[];gMap[a].push(i);});
+                    db.hesaplar.forEach(function(hs){if(!gMap[hs.id])gMap[hs.id]=[];});
                     var aids = Object.keys(gMap).map(Number);
                     aids.sort(function(a,b){return(hesapAdiBul(a)||"").localeCompare(hesapAdiBul(b)||"");});
                     var ilkG = true;
@@ -8075,13 +8076,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     + '<div style="display:flex;justify-content:space-between;font-size:7.5px;color:#888;margin-bottom:5px;"><span>Hesap: '+hesapStr+'</span>'+(ibanStr?'<span>IBAN: '+ibanStr+'</span>':'')+'<span>İşlem: '+islemler.length+' adet</span></div>'
                     + '<div style="display:flex;gap:2px;margin-bottom:4px;">'+kartHtml+'</div>'
                     + '<hr style="border:none;border-top:1px solid #d0d0d7;margin:0 0 4px 0;">'
-                    + '<table style="width:100%;border-collapse:collapse;table-layout:fixed;">'
+                    + '<table style="width:670px;margin:0 auto;border-collapse:collapse;table-layout:fixed;">'
                     + '<thead><tr style="background:#1a1a2e;color:#fff;">'
-                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:62px;">TARİH</th>'
-                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:172px;">AÇIKLAMA</th>'
-                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:224px;">HESAP HAREKETİ</th>'
-                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:62px;">TÜR</th>'
-                    + '<th style="text-align:right;padding:3px 4px;font-size:7.5px;font-weight:700;width:165px;">TUTAR</th>'
+                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:60px;">TARİH</th>'
+                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:170px;">AÇIKLAMA</th>'
+                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:220px;">HESAP HAREKETİ</th>'
+                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:60px;">TÜR</th>'
+                    + '<th style="text-align:right;padding:3px 4px;font-size:7.5px;font-weight:700;width:160px;">TUTAR</th>'
                     + '</tr></thead><tbody>'+govde+'</tbody></table>'
                     + '</div></div>';
             }
