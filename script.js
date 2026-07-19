@@ -9587,7 +9587,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     '<td style="padding:3px 4px;border:1px solid #dde1e6;font-size:7.5px;color:#555;text-align:center;">'+(f.faturaTarihi?tarihStr(f.faturaTarihi):"-")+'</td>' +
                     '<td style="padding:3px 4px;border:1px solid #dde1e6;font-size:7.5px;color:#333;text-align:right;">'+(f.tutar||0).toLocaleString("tr-TR",{minFractionDigits:2})+'</td>' +
                     '<td style="padding:3px 4px;border:1px solid #dde1e6;font-size:7.5px;color:#333;text-align:right;">'+(f.kdvTutari||0).toLocaleString("tr-TR",{minFractionDigits:2})+'</td>' +
-                    '<td style="padding:3px 4px;border:1px solid #dde1e6;font-size:7.5px;color:#1a237e;text-align:right;font-weight:700;">'+(f.toplamTutar||0).toLocaleString("tr-TR",{minFractionDigits:2})+'</td>' +
+                    '<td style="padding:3px 4px;border:1px solid ' + BORDER + ';font-size:7.5px;color:' + NAVY + ';text-align:right;font-weight:700;">'+(f.toplamTutar||0).toLocaleString("tr-TR",{minFractionDigits:2})+'</td>' +
                     '<td style="padding:3px 4px;border:1px solid #dde1e6;font-size:7.5px;color:#555;text-align:center;">'+d+'</td></tr>' + detailHtml;
             }
 
