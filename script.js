@@ -8077,11 +8077,11 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                     + '<hr style="border:none;border-top:1px solid #d0d0d7;margin:0 0 4px 0;">'
                     + '<table style="width:100%;border-collapse:collapse;table-layout:fixed;">'
                     + '<thead><tr style="background:#1a1a2e;color:#fff;">'
-                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:68px;">TARİH</th>'
-                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:181px;">AÇIKLAMA</th>'
-                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:234px;">HESAP HAREKETİ</th>'
-                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:68px;">TÜR</th>'
-                    + '<th style="text-align:right;padding:3px 4px;font-size:7.5px;font-weight:700;width:166px;">TUTAR</th>'
+                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:66px;">TARİH</th>'
+                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:178px;">AÇIKLAMA</th>'
+                    + '<th style="text-align:left;padding:3px 4px;font-size:7.5px;font-weight:700;width:230px;">HESAP HAREKETİ</th>'
+                    + '<th style="text-align:center;padding:3px 4px;font-size:7.5px;font-weight:700;width:66px;">TÜR</th>'
+                    + '<th style="text-align:right;padding:3px 4px;font-size:7.5px;font-weight:700;width:169px;">TUTAR</th>'
                     + '</tr></thead><tbody>'+govde+'</tbody></table>'
                     + '</div>';
             }
