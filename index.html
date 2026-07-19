@@ -643,8 +643,8 @@
                     <!-- Genel Arama -->
                     <div class="ft-global-search">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="ftGenelArama" onkeyup="ftGenelAra(event)" placeholder="Tüm yıllarda firma veya fatura no ile ara..." autocomplete="off">
                         <span class="ft-search-clear" onclick="ftTemizle('ftGenelArama')">&times;</span>
+                        <input type="text" id="ftGenelArama" onkeyup="ftGenelAra(event)" oninput="ftXAraGoster(this)" placeholder="Tüm yıllarda firma veya fatura no ile ara..." autocomplete="off">
                         <div id="ftGlobalAramaModal" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:var(--ft-card);border:1px solid var(--ft-border);border-radius:8px;margin-top:4px;box-shadow:0 8px 30px rgba(0,0,0,0.4);max-height:350px;overflow-y:auto;"></div>
                     </div>
 
@@ -674,15 +674,14 @@
                         </div>
                         <div id="ftGelenForm" class="ft-inline-form"></div>
                         <div class="ft-toolbar">
-                            <button class="ft-btn ft-btn-primary" onclick="ftGelenFormAc()"><i class="fa-solid fa-plus"></i> Gelen Fatura Ekle</button>
-                            <div class="ft-toolbar-group">
-                                <button class="ft-btn ft-btn-batch" onclick="ftGelenTopluIslem('odendi')" title="Seçili faturaları ödendi işaretle"><i class="fa-solid fa-check"></i> Ödendi</button>
-                                <button class="ft-btn ft-btn-batch-del" onclick="ftGelenTopluIslem('sil')" title="Seçili faturaları sil"><i class="fa-solid fa-trash-can"></i></button>
-                            </div>
+                            <button class="ft-btn ft-btn-primary" onclick="ftGelenFormAc()"><i class="fa-solid fa-plus"></i> Fatura Ekle</button>
+                            <button class="ft-btn ft-btn-batch" onclick="ftGelenTopluIslem('odendi')"><i class="fa-solid fa-check"></i> Ödendi</button>
+                            <button class="ft-btn ft-btn-batch-del" onclick="ftGelenTopluIslem('sil')"><i class="fa-solid fa-trash-can"></i> Sil</button>
+                            <button class="ft-btn ft-btn-select" onclick="ftGelenToggleAll()"><i class="fa-regular fa-square-check"></i> Tümünü Seç</button>
                             <div class="ft-search-box">
                                 <i class="fa-solid fa-search"></i>
-                                <input type="text" id="ftGelenArama" onkeyup="ftGelenFiltrele()" placeholder="Ara..." autocomplete="off">
                                 <span class="ft-search-clear" onclick="ftTemizle('ftGelenArama')">&times;</span>
+                                <input type="text" id="ftGelenArama" onkeyup="ftGelenFiltrele()" oninput="ftXAraGoster(this)" placeholder="Firma adı veya fatura no ile ara..." autocomplete="off">
                             </div>
                             <span class="ft-count" id="ftGelenSayac">0 kayıt</span>
                         </div>
@@ -697,15 +696,14 @@
                         </div>
                         <div id="ftGidenForm" class="ft-inline-form"></div>
                         <div class="ft-toolbar">
-                            <button class="ft-btn ft-btn-primary" onclick="ftGidenFormAc()"><i class="fa-solid fa-plus"></i> Giden Fatura Ekle</button>
-                            <div class="ft-toolbar-group">
-                                <button class="ft-btn ft-btn-batch" onclick="ftGidenTopluIslem('tahsilEdildi')" title="Seçili faturaları tahsil edildi işaretle"><i class="fa-solid fa-check"></i> Tahsil</button>
-                                <button class="ft-btn ft-btn-batch-del" onclick="ftGidenTopluIslem('sil')" title="Seçili faturaları sil"><i class="fa-solid fa-trash-can"></i></button>
-                            </div>
+                            <button class="ft-btn ft-btn-primary" onclick="ftGidenFormAc()"><i class="fa-solid fa-plus"></i> Fatura Ekle</button>
+                            <button class="ft-btn ft-btn-batch" onclick="ftGidenTopluIslem('tahsilEdildi')"><i class="fa-solid fa-check"></i> Tahsil</button>
+                            <button class="ft-btn ft-btn-batch-del" onclick="ftGidenTopluIslem('sil')"><i class="fa-solid fa-trash-can"></i> Sil</button>
+                            <button class="ft-btn ft-btn-select" onclick="ftGidenToggleAll()"><i class="fa-regular fa-square-check"></i> Tümünü Seç</button>
                             <div class="ft-search-box">
                                 <i class="fa-solid fa-search"></i>
-                                <input type="text" id="ftGidenArama" onkeyup="ftGidenFiltrele()" placeholder="Ara..." autocomplete="off">
                                 <span class="ft-search-clear" onclick="ftTemizle('ftGidenArama')">&times;</span>
+                                <input type="text" id="ftGidenArama" onkeyup="ftGidenFiltrele()" oninput="ftXAraGoster(this)" placeholder="Firma adı veya fatura no ile ara..." autocomplete="off">
                             </div>
                             <span class="ft-count" id="ftGidenSayac">0 kayıt</span>
                         </div>

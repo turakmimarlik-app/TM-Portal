@@ -1,4 +1,4 @@
-        var APP_VERSION = 'V1.73.0';
+        var APP_VERSION = 'V1.74.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -8849,7 +8849,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             form.style.display = "flex";
             form.innerHTML = '<div style="width:100%;">' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
-                '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Firma Adı</label><input type="text" id="ftGelenFirma" value="'+(f?f.firmaAdi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
+                '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Firma Adı</label><input type="text" id="ftGelenFirma" value="'+(f?f.firmaAdi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.replace(/i/g,'İ').toUpperCase()"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Fatura No</label><input type="text" id="ftGelenFaturaNo" value="'+(f?f.faturaNo:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Fatura Tarihi</label><input type="date" id="ftGelenTarih" value="'+(f?f.faturaTarihi:anlikTarihGetir())+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vade</label><input type="date" id="ftGelenVade" value="'+(f?f.vadeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
@@ -8859,7 +8859,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 '<div style="flex:0 0 130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">KDV %</label><div style="display:flex;gap:4px;"><select id="ftGelenKdvOran" class="ft-kdv-select" style="flex:1;padding:10px;box-sizing:border-box;text-align:center;">'+kdvOpts+'</select>' +
                 '<button class="btn btn-save-green" title="KDV Oranı Ekle" onclick="ftKdvEkle()" style="min-width:32px;height:42px;font-size:16px;line-height:1;"><i class="fa-solid fa-plus"></i></button>' +
                 '<button class="ft-btn-xs ft-btn-del" title="KDV Oranı Sil" onclick="ftKdvSil()" style="min-width:32px;"><i class="fa-solid fa-minus"></i></button></div></div>' +
-                '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi D.</label><input type="text" id="ftGelenVergiD" value="'+(f?f.vergiDairesi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
+                '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi D.</label><input type="text" id="ftGelenVergiD" value="'+(f?f.vergiDairesi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.replace(/i/g,'İ').toUpperCase()"></div>' +
                 '<div style="flex:1;min-width:100px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi No</label><input type="text" id="ftGelenVergiNo" value="'+(f?f.vergiNo:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:110px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Durum</label><select id="ftGelenDurum" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"><option value="odenmedi"'+(f&&f.odemeDurumu=="odenmedi"?" selected":"")+'>Ödenmedi</option><option value="kismi"'+(f&&f.odemeDurumu=="kismi"?" selected":"")+'>Kısmi</option><option value="odendi"'+(f&&f.odemeDurumu=="odendi"?" selected":"")+'>Ödendi</option></select></div>' +
                 '<div style="flex:1;min-width:110px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Ödeme T.</label><input type="date" id="ftGelenOdemeTarih" value="'+(f?f.odemeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
@@ -8933,11 +8933,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var sayac = document.getElementById("ftGelenSayac");
             if (sayac) sayac.innerText = liste.length + " kayıt";
             if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-inbox"></i>','Henüz gelen fatura bulunmamaktadır.','Yeni bir gelen fatura eklemek için "Fatura Ekle" butonunu kullanın.'); return; }
-            var h = '<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center;">' +
-                '<button class="ft-btn-sm" onclick="ftGelenTopluIslem(\'odendi\')" style="background:var(--btn-green);color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">✓ Seçiliyi Ödendi</button>' +
-                '<button class="ft-btn-sm ft-btn-del" onclick="ftGelenTopluIslem(\'sil\')" style="padding:4px 10px;font-size:11px;">🗑 Seçiliyi Sil</button>' +
-                '<label style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="ftGelenTumSec" onchange="ftGelenToggleAll(this.checked)"> Tümünü Seç</label></div>' +
-                '<div class="ft-card-list">';
+            var h = '<div class="ft-card-list">';
             var simdi = new Date(); simdi.setHours(0,0,0,0);
             var siralist = liste.slice();
             if (ftGelenSortCol) {
@@ -8976,8 +8972,17 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             konteyner.addEventListener('change', function(e) {
                 if (e.target.matches('.ft-gelen-cb, .ft-giden-cb')) {
                     var card = e.target.closest('.ft-card');
-                    if (card) card.style.borderColor = e.target.checked ? 'var(--ft-accent)' : '';
-                    if (card) card.style.background = e.target.checked ? 'rgba(122,165,194,0.08)' : '';
+                    if (card) {
+                        if (e.target.checked) {
+                            card.style.borderColor = '#4fc3f7';
+                            card.style.background = 'rgba(79,195,247,0.12)';
+                            card.style.boxShadow = 'inset 0 0 0 1px rgba(79,195,247,0.3)';
+                        } else {
+                            card.style.borderColor = '';
+                            card.style.background = '';
+                            card.style.boxShadow = '';
+                        }
+                    }
                 }
             });
         }
@@ -8990,8 +8995,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
         }
 
-        function ftGelenToggleAll(checked) {
-            document.querySelectorAll("#ftGelenTablosu .ft-gelen-cb").forEach(function(cb){ cb.checked = checked; cb.dispatchEvent(new Event('change')); });
+        function ftGelenToggleAll() {
+            var cbs = document.querySelectorAll("#ftGelenTablosu .ft-gelen-cb");
+            var allChecked = cbs.length > 0 && Array.from(cbs).every(function(cb){ return cb.checked; });
+            cbs.forEach(function(cb){ cb.checked = !allChecked; cb.dispatchEvent(new Event('change')); });
         }
 
         function ftGelenTopluIslem(action) {
@@ -9040,7 +9047,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             form.style.display = "flex";
             form.innerHTML = '<div style="width:100%;">' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
-                '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Firma Adı</label><input type="text" id="ftGidenFirma" value="'+(f?f.firmaAdi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
+                '<div style="flex:2;min-width:180px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Firma Adı</label><input type="text" id="ftGidenFirma" value="'+(f?f.firmaAdi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.replace(/i/g,'İ').toUpperCase()"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Fatura No</label><input type="text" id="ftGidenFaturaNo" value="'+(f?f.faturaNo:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Fatura Tarihi</label><input type="date" id="ftGidenTarih" value="'+(f?f.faturaTarihi:anlikTarihGetir())+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vade</label><input type="date" id="ftGidenVade" value="'+(f?f.vadeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
@@ -9050,7 +9057,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 '<div style="flex:0 0 130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">KDV %</label><div style="display:flex;gap:4px;"><select id="ftGidenKdvOran" class="ft-kdv-select" style="flex:1;padding:10px;box-sizing:border-box;text-align:center;">'+kdvOpts+'</select>' +
                 '<button class="btn btn-save-green" title="KDV Oranı Ekle" onclick="ftKdvEkle()" style="min-width:32px;height:42px;font-size:16px;line-height:1;"><i class="fa-solid fa-plus"></i></button>' +
                 '<button class="ft-btn-xs ft-btn-del" title="KDV Oranı Sil" onclick="ftKdvSil()" style="min-width:32px;"><i class="fa-solid fa-minus"></i></button></div></div>' +
-                '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi D.</label><input type="text" id="ftGidenVergiD" value="'+(f?f.vergiDairesi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>' +
+                '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi D.</label><input type="text" id="ftGidenVergiD" value="'+(f?f.vergiDairesi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;text-transform:uppercase;" oninput="this.value=this.value.replace(/i/g,'İ').toUpperCase()"></div>' +
                 '<div style="flex:1;min-width:100px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vergi No</label><input type="text" id="ftGidenVergiNo" value="'+(f?f.vergiNo:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Durum</label><select id="ftGidenDurum" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"><option value="tahsilEdilmedi"'+(f&&f.tahsilatDurumu=="tahsilEdilmedi"?" selected":"")+'>Tahsil Edilmedi</option><option value="kismi"'+(f&&f.tahsilatDurumu=="kismi"?" selected":"")+'>Kısmi</option><option value="tahsilEdildi"'+(f&&f.tahsilatDurumu=="tahsilEdildi"?" selected":"")+'>Tahsil Edildi</option></select></div>' +
                 '<div style="flex:1;min-width:110px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Tahsilat T.</label><input type="date" id="ftGidenTahsilatTarih" value="'+(f?f.tahsilatTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
@@ -9124,11 +9131,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var sayac = document.getElementById("ftGidenSayac");
             if (sayac) sayac.innerText = liste.length + " kayıt";
             if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-paper-plane"></i>','Henüz giden fatura bulunmamaktadır.','Yeni bir giden fatura eklemek için "Fatura Ekle" butonunu kullanın.'); return; }
-            var h = '<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center;">' +
-                '<button class="ft-btn-sm" onclick="ftGidenTopluIslem(\'tahsilEdildi\')" style="background:var(--btn-green);color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">✓ Seçiliyi Tahsil Edildi</button>' +
-                '<button class="ft-btn-sm ft-btn-del" onclick="ftGidenTopluIslem(\'sil\')" style="padding:4px 10px;font-size:11px;">🗑 Seçiliyi Sil</button>' +
-                '<label style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="ftGidenTumSec" onchange="ftGidenToggleAll(this.checked)"> Tümünü Seç</label></div>' +
-                '<div class="ft-card-list">';
+            var h = '<div class="ft-card-list">';
             var simdi = new Date(); simdi.setHours(0,0,0,0);
             var siralist = liste.slice();
             if (ftGidenSortCol) {
@@ -9171,8 +9174,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             });
         }
 
-        function ftGidenToggleAll(checked) {
-            document.querySelectorAll("#ftGidenTablosu .ft-giden-cb").forEach(function(cb){ cb.checked = checked; cb.dispatchEvent(new Event('change')); });
+        function ftGidenToggleAll() {
+            var cbs = document.querySelectorAll("#ftGidenTablosu .ft-giden-cb");
+            var allChecked = cbs.length > 0 && Array.from(cbs).every(function(cb){ return cb.checked; });
+            cbs.forEach(function(cb){ cb.checked = !allChecked; cb.dispatchEvent(new Event('change')); });
         }
 
         function ftGidenTopluIslem(action) {
@@ -9703,9 +9708,20 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
         function ftTemizle(id) {
             var inp = document.getElementById(id);
             if (inp) { inp.value = ''; inp.focus(); }
+            var parent = inp ? inp.closest('.ft-search-box, .ft-global-search') : null;
+            if (parent) { var x = parent.querySelector('.ft-search-clear'); if (x) x.classList.remove('ft-x-visible'); }
             if (id === 'ftGenelArama') { ftGenelAra(); }
             else if (id === 'ftGelenArama') { ftGelenFiltrele(); }
             else if (id === 'ftGidenArama') { ftGidenFiltrele(); }
+        }
+
+        function ftXAraGoster(inp) {
+            var parent = inp.closest('.ft-search-box, .ft-global-search');
+            if (!parent) return;
+            var x = parent.querySelector('.ft-search-clear');
+            if (!x) return;
+            if (inp.value) { x.classList.add('ft-x-visible'); }
+            else { x.classList.remove('ft-x-visible'); }
         }
 
         function ftGenelAra() {
