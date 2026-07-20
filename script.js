@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.74.10';
+﻿        var APP_VERSION = 'V1.75.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
