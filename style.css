@@ -1630,7 +1630,7 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .yb-month-card { background:var(--yb-card); border:1px solid var(--yb-border); border-radius:8px; cursor:pointer; transition:all 0.2s; position:relative; display:flex; flex-direction:column; }
         .yb-month-card:hover { border-color:var(--yb-accent); transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,0.35); }
         .yb-month-card.active { border-color:var(--yb-accent); box-shadow:0 0 0 2px rgba(201,168,76,0.25); }
-        .yb-month-card .mc-hdr { padding:7px 10px 5px; font-size:10px; font-weight:700; color:var(--yb-text-light); text-transform:uppercase; letter-spacing:0.8px; border-bottom:1px solid var(--yb-border); text-align:left; user-select:none; }
+        .yb-month-card .mc-hdr { padding:7px 10px 5px; font-size:12px; font-weight:800; color:var(--yb-text-light); text-transform:uppercase; letter-spacing:0.8px; border-bottom:1px solid var(--yb-border); text-align:left; user-select:none; }
         .yb-month-card .mc-body { padding:6px 10px 8px; display:flex; flex-direction:column; gap:3px; flex:1; justify-content:center; }
         .yb-month-card .mc-row, .yb-month-card .mc-fark-row { display:flex; align-items:center; justify-content:space-between; gap:4px; }
         .yb-month-card .mc-lbl { font-size:9px; font-weight:600; color:var(--yb-text-light); text-transform:uppercase; letter-spacing:0.3px; flex-shrink:0; }
