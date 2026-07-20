@@ -1654,27 +1654,30 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .yb-acc-header { display:flex; align-items:center; padding:11px 14px; cursor:pointer; transition:background 0.15s; user-select:none; gap:8px; }
         .yb-acc-header:hover { background:var(--yb-card-hover); }
         .yb-acc-header .acc-kat { font-size:13px; font-weight:700; color:var(--yb-text); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; }
-        .yb-acc-header .acc-tutar { font-size:14px; font-weight:700; color:var(--yb-text); white-space:nowrap; width:130px; text-align:right; flex-shrink:0; margin-left:auto; }
+        .yb-acc-section.acc-gelir-section .acc-tutar { color:var(--yb-gelir); }
+        .yb-acc-section.acc-gider-section .acc-tutar { color:var(--yb-gider); }
+        .yb-acc-header .acc-tutar { font-size:14px; font-weight:700; white-space:nowrap; width:130px; text-align:right; flex-shrink:0; margin-left:auto; }
         .yb-acc-header .acc-ok { font-size:10px; color:var(--yb-text-light); transition:transform 0.25s; flex-shrink:0; display:flex; align-items:center; justify-content:center; width:18px; height:18px; }
         .yb-acc-header.open .acc-ok { transform:rotate(180deg); }
         .yb-acc-body { display:none; padding:6px 14px 10px 14px; border-top:1px solid var(--yb-border); background:rgba(0,0,0,0.08); border-radius:0 0 8px 8px; }
         .yb-acc-body.open { display:block; }
-        .yb-acc-body .acc-items { display:flex; flex-direction:column; gap:4px; margin-top:6px; }
-        .yb-acc-body .acc-item-row { display:flex; align-items:center; gap:8px; padding:8px 10px; background:var(--yb-card); border:1px solid var(--yb-border); border-radius:6px; transition:all 0.15s; }
-        .yb-acc-body .acc-item-row:hover { border-color:rgba(255,255,255,0.12); box-shadow:0 1px 6px rgba(0,0,0,0.15); }
-        .yb-acc-body .acc-item-cell { display:flex; align-items:center; }
-        .yb-acc-body .acc-item-aciklama { flex:1; min-width:0; }
-        .yb-acc-body .acc-item-tutar { width:150px; flex-shrink:0; }
-        .yb-acc-body .acc-item-sil { width:32px; flex-shrink:0; justify-content:center; }
-        .yb-acc-body .acc-input { width:100%; padding:6px 10px; border:1px solid var(--yb-border); border-radius:5px; background:rgba(255,255,255,0.05); color:var(--yb-text); font-size:12px; box-sizing:border-box; outline:none; transition:border 0.2s; }
-        .yb-acc-body .acc-input:focus { border-color:var(--yb-accent); }
-        .yb-acc-body .acc-tutar-wrap { display:flex; align-items:center; gap:4px; }
-        .yb-acc-body .acc-tutar-wrap .acc-tutar-input { width:100%; padding:6px 10px; border:1px solid var(--yb-border); border-radius:5px; background:rgba(255,255,255,0.05); color:var(--yb-text); font-size:12px; text-align:right; font-weight:600; box-sizing:border-box; outline:none; transition:border 0.2s; }
-        .yb-acc-body .acc-tutar-wrap .acc-tutar-input:focus { border-color:var(--yb-accent); }
-        .yb-acc-body .acc-tutar-wrap .acc-tl-simge { font-size:11px; color:var(--yb-text-light); flex-shrink:0; line-height:30px; margin-left:2px; }
-        .yb-acc-body .acc-btn-sil { background:transparent; border:none; color:var(--yb-text-light); cursor:pointer; font-size:12px; padding:4px 6px; border-radius:4px; transition:0.2s; opacity:0.5; }
-        .yb-acc-body .acc-item-row:hover .acc-btn-sil { opacity:1; }
-        .yb-acc-body .acc-btn-sil:hover { background:rgba(231,76,60,0.15); color:var(--yb-gider); }
+        .yb-acc-body table { width:100%; font-size:12px; border-collapse:collapse; margin-top:4px; }
+        .yb-acc-body table th { padding:6px 8px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:var(--yb-text-light); border-bottom:1px solid var(--yb-border); text-align:left; }
+        .yb-acc-body .acc-th-aciklama { width:auto; }
+        .yb-acc-body .acc-th-tutar { width:140px; text-align:right; }
+        .yb-acc-body .acc-th-islem { width:75px; text-align:center; }
+        .yb-acc-body table td { padding:7px 8px; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
+        .yb-acc-body table tr:last-child td { border-bottom:none; }
+        .yb-acc-body table tr:hover td { background:rgba(255,255,255,0.02); }
+        .yb-acc-body .acc-td-aciklama { font-size:12px; color:var(--yb-text); font-weight:500; }
+        .yb-acc-body .acc-td-tutar { font-size:13px; font-weight:700; text-align:right; white-space:nowrap; }
+        .yb-acc-body .acc-td-islem { text-align:center; white-space:nowrap; width:75px; }
+        .yb-acc-body .acc-btn-duzenle { background:transparent; border:none; color:var(--yb-text-light); cursor:pointer; font-size:11px; padding:4px 5px; border-radius:4px; transition:0.2s; opacity:0.4; }
+        .yb-acc-body table tr:hover .acc-btn-duzenle { opacity:0.8; }
+        .yb-acc-body .acc-btn-duzenle:hover { background:rgba(255,255,255,0.08); color:var(--yb-accent); opacity:1; }
+        .yb-acc-body .acc-btn-sil { background:transparent; border:none; color:var(--yb-text-light); cursor:pointer; font-size:11px; padding:4px 5px; border-radius:4px; transition:0.2s; opacity:0.3; }
+        .yb-acc-body table tr:hover .acc-btn-sil { opacity:0.7; }
+        .yb-acc-body .acc-btn-sil:hover { background:rgba(231,76,60,0.15); color:var(--yb-gider); opacity:1; }
         .yb-acc-body .acc-btn-ekle { display:inline-flex; align-items:center; gap:5px; padding:6px 14px; margin-top:8px; border:1px dashed var(--yb-border); border-radius:8px; background:transparent; color:var(--yb-text-light); font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; }
         .yb-acc-body .acc-btn-ekle:hover { border-color:#a0b8cc; color:#1a3a5c; background:rgba(26,58,92,0.04); transform:translateY(-1px); }
         .yb-acc-body .acc-btn-yonet { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; margin-top:8px; margin-left:6px; border:1px solid var(--yb-border); border-radius:8px; background:transparent; color:var(--yb-text-light); font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; }
