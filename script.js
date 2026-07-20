@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.81.1';
+﻿        var APP_VERSION = 'V1.81.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6905,8 +6905,8 @@ function gorevMailGonder(gorev) {
                     var grafikler, logoResim = null;
 
                     // ₺ sembolü için yüksek çözünürlüklü canvas görüntüsü (jsPDF Helvetica ₺ desteklemez)
-                    var liraCache = {};
-                    function pdfTxtL(s,x,y,clr){var i=s.indexOf('\u20BA');if(i<0){doc.text(s,x,y);return;}var b=s.substring(0,i).replace(/ +$/,'');doc.text(b,x,y);var fs=doc.internal.getFontSize();var ih=fs*0.38;var ck=clr?clr.join(','):'0,0,0';if(!liraCache[ck]){var cv=document.createElement('canvas');cv.width=160;cv.height=160;var cx=cv.getContext('2d');cx.font='128px Arial';cx.textBaseline='top';cx.fillStyle=clr?'rgb('+clr[0]+','+clr[1]+','+clr[2]+')':'#000';cx.fillText('\u20BA',16,14);liraCache[ck]=cv.toDataURL('image/png');}doc.addImage(liraCache[ck],'PNG',x+doc.getTextWidth(b)+0.8,y-fs*0.42,ih*0.58,ih);}
+                    if(!window._ybLiraImg){var cv=document.createElement('canvas');cv.width=60;cv.height=80;var cx=cv.getContext('2d');cx.fillStyle='#000';cx.font='80px Arial';cx.textBaseline='bottom';cx.fillText('\u20BA',0,80);window._ybLiraImg=cv.toDataURL('image/png');}
+                    function pdfTxtL(s,x,y){var i=s.indexOf('\u20BA');if(i<0){doc.text(s,x,y);return;}var b=s.substring(0,i).replace(/ +$/,'');doc.text(b,x,y);var fs=doc.internal.getFontSize();var ih=fs*0.38;doc.addImage(window._ybLiraImg,'PNG',x+doc.getTextWidth(b)+0.5,y-ih,ih*0.48,ih);}
 
                     SB='grafik'; grafikler = await grafikBase64Uret();
 
@@ -6970,7 +6970,7 @@ function gorevMailGonder(gorev) {
                         doc.text(v.l, kx+5, y+8);
                         doc.setFontSize(10);
                         doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        pdfTxtL((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', kx+5, y+19, v.c);
+                        pdfTxtL((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', kx+5, y+19);
                     }
                     y += kY + 10;
 
@@ -7007,7 +7007,7 @@ function gorevMailGonder(gorev) {
                             doc.setTextColor(GRI_METIN[0],GRI_METIN[1],GRI_METIN[2]);
                             doc.text((vd[i]/tp*100).toFixed(1)+'%',x+38,yl+1.5);
                             doc.setTextColor(SEKME_RENGI[0],SEKME_RENGI[1],SEKME_RENGI[2]);
-                            pdfTxtL(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+' ₺',x+56,yl+1.5, SEKME_RENGI);
+                            pdfTxtL(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+' ₺',x+56,yl+1.5);
                             yl+=3;
                         } return yl;
                     }
@@ -7078,7 +7078,7 @@ function gorevMailGonder(gorev) {
                             doc.text(oItems[oi].l, oiX+5, y+6);
                             doc.setFontSize(9);
                             doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                            pdfTxtL(oItems[oi].v.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', oiX+5, y+14, oItems[oi].c);
+                            pdfTxtL(oItems[oi].v.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', oiX+5, y+14);
                         }
                         y += oKartY + 8;
 
@@ -7130,7 +7130,7 @@ function gorevMailGonder(gorev) {
                         doc.rect(M, y, 3, 10, 'F');
                         doc.setFont(FN, "bold"); doc.setFontSize(10);
                         doc.setTextColor(farkRenk[0], farkRenk[1], farkRenk[2]);
-                        pdfTxtL(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', M+8, y+7, farkRenk);
+                        pdfTxtL(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', M+8, y+7);
                         y += 16;
 
                         // --- Alt Bilgi ---
