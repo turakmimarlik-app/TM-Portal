@@ -6071,6 +6071,7 @@ function gorevMailGonder(gorev) {
             }
             h += '</div>';
             icerik.innerHTML = h;
+            ybAyKopyalaGizle();
             setTimeout(() => ybGrafikleriCiz(kayit, aylikGelir, aylikGider, toplamGelir, toplamGider), 50);
         }
 
@@ -6136,15 +6137,6 @@ function gorevMailGonder(gorev) {
                 '<div class="yb-sum-card sc-fark"><div class="sc-label">Fark</div><div class="sc-value">'+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div></div>';
 
             // Kopyalama
-            var hedefAyOptions = '';
-            for(var hi=0;hi<12;hi++) {
-                if(hi===ayIdx) continue;
-                hedefAyOptions += '<option value="'+hi+'">'+YB_AY_ADI[hi]+'</option>';
-            }
-            h += '<div class="yb-kopyala-row"><span class="yb-kopyala-label"><i class="fa-regular fa-copy"></i> Bu ayı kopyala:</span>'+
-                '<select class="yb-kopyala-select" id="ybKopyalaHedef">'+hedefAyOptions+'</select>'+
-                '<button class="yb-kopyala-btn" onclick="ybAyKopyala('+ayIdx+')">Kopyala</button></div>';
-
             // Gelir accordion
             h += '<div class="yb-acc-section"><h4 class="acc-gelir"><i class="fa-solid fa-chart-line"></i> Gelirler</h4>';
             kayit.gelirKategorileri.forEach(function(ktg){
@@ -6206,6 +6198,25 @@ function gorevMailGonder(gorev) {
             h += '<button class="acc-btn-yonet" onclick="ybKategoriYonet(\'gider\')"><i class="fa-regular fa-folder-open"></i> Kategorileri Yönet</button></div>';
 
             icerik.innerHTML = h;
+
+            // Kopyalama row'u doldur
+            var kr = document.getElementById("ybKopyalaRow");
+            if(kr) {
+                var hedefAyOptions = '';
+                for(var hi=0;hi<12;hi++) {
+                    if(hi===ayIdx) continue;
+                    hedefAyOptions += '<option value="'+hi+'">'+YB_AY_ADI[hi]+'</option>';
+                }
+                kr.innerHTML = '<span class="yb-kopyala-label"><i class="fa-regular fa-copy"></i> Bu ayı kopyala:</span>'+
+                    '<select class="yb-kopyala-select" id="ybKopyalaHedef">'+hedefAyOptions+'</select>'+
+                    '<button class="yb-kopyala-btn" onclick="ybAyKopyala('+ayIdx+')">Kopyala</button>';
+                kr.style.display = 'flex';
+            }
+        }
+
+        function ybAyKopyalaGizle() {
+            var kr = document.getElementById("ybKopyalaRow");
+            if(kr) kr.style.display = 'none';
         }
 
         function ybRaporGoster() {
@@ -6267,6 +6278,7 @@ function gorevMailGonder(gorev) {
             for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:center;">'+aylikGider[i].toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td>';
             h+='<td style="padding:4px;text-align:center;font-weight:800;font-size:12px;color:var(--yb-gider);">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</td></tr></tbody></table>';
             icerik.innerHTML = h;
+            ybAyKopyalaGizle();
             setTimeout(function(){ybGrafikleriCiz(kayit, aylikGelir, aylikGider, toplamGelir, toplamGider);}, 50);
         }
 
@@ -6283,7 +6295,7 @@ function gorevMailGonder(gorev) {
 
             if(!seciliYil) {
                 h += '<p style="color:var(--yb-text-light);">Karşılaştırma yapmak için tamamlanmış bir yıl bulunmuyor.</p>';
-                icerik.innerHTML = h; return;
+                icerik.innerHTML = h; ybAyKopyalaGizle(); return;
             }
 
             const seciliKayit = gecmis.find(function(y){return y.yil===seciliYil;});
@@ -6316,6 +6328,7 @@ function gorevMailGonder(gorev) {
             h += '<div class="yb-kars-graph"><canvas id="ybChartKarsilastirma"></canvas></div>';
 
             icerik.innerHTML = h;
+            ybAyKopyalaGizle();
             setTimeout(function(){ybKarsilastirmaGrafikCiz(cariYil, seciliYil, cGelir, cGider, sGelir, sGider);}, 50);
         }
 
