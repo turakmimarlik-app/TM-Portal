@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.85.1';
+﻿        var APP_VERSION = 'V1.85.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -5877,7 +5877,7 @@ function gorevMailGonder(gorev) {
             if(!db || !db.aktifYil) {
                 db = { aktifYil: simdi, yillar: {}, tamamlananYillar: [] };
                 db.yillar[simdi] = { baslangicBakiye:0, gelirKategorileri:[...YB_GELIR_VARSAYILAN], giderKategorileri:[...YB_GIDER_VARSAYILAN], aylar:{} };
-                origSetItem("tm_yillik_butce_db", JSON.stringify(db));
+                localStorage.setItem("tm_yillik_butce_db", JSON.stringify(db));
             } else if(db.aktifYil !== simdi) {
                 const eskiYil = db.yillar[db.aktifYil];
                 if(eskiYil) {
