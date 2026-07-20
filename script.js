@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.82.0';
+﻿        var APP_VERSION = 'V1.82.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6889,181 +6889,268 @@ function gorevMailGonder(gorev) {
                     return resimler;
                 }
 
+                function buf2str(buf) {
+                    var s = '', b = new Uint8Array(buf);
+                    for(var fi=0;fi<b.length;fi++) s += String.fromCharCode(b[fi]);
+                    return s;
+                }
+
+                var FN = 'Helvetica';
+
+                function t(s) { return trAscii ? trAscii(s||'') : (s||''); }
+
                 async function pdfOlustur() {
+                    var SB = 'baslangic';
                     try {
-                    var grafikler;
+                    var grafikler, logoResim = null;
+
+                    // ₺ sembolü için yüksek çözünürlüklü canvas görüntüsü (jsPDF Helvetica ₺ desteklemez)
+                    var liraImg = (function(){var c=document.createElement('canvas');c.width=120;c.height=120;var x=c.getContext('2d');x.font='96px Arial';x.textBaseline='top';x.fillStyle='#000';x.fillText('\u20BA',12,10);return c.toDataURL('image/png');})();
+                    function pdfTxtL(s,x,y){var i=s.indexOf('\u20BA');if(i<0){doc.text(s,x,y);return;}var b=s.substring(0,i).replace(/ +$/,'');doc.text(b,x,y);var fs=doc.internal.getFontSize();var ih=fs*0.38;doc.addImage(liraImg,'PNG',x+doc.getTextWidth(b)+0.5,y-fs*0.38,ih*0.55,ih);}
 
                     SB='grafik'; grafikler = await grafikBase64Uret();
 
+                    SB='logo';
+                    if(logoData && logoData.length > 100) {
+                        try {
+                            logoResim = await new Promise(function(res) {
+                                var img = new Image();
+                                img.onload = function(){res(img);};
+                                img.onerror=function(){res(null);};
+                                img.src=logoData;
+                            });
+                        } catch(e){}
+                    }
+
+                    SB='tarih';
                     var bugun = new Date();
                     var tarihStr = bugun.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});
+                    var sayfaSayisi = 1;
 
-                    function fm(v) { return (v||0).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+' ₺'; }
-                    function fm0(v) { return (v||0).toLocaleString('tr-TR',{minimumFractionDigits:0,maximumFractionDigits:0})+' ₺'; }
+                    SB='sayfa1';
+                    // ======== SAYFA 1 (OZET) ========
+                    var y = 12;
 
-                    var logoHtml = '';
-                    if(logoData&&logoData.length>100) {
-                        logoHtml = '<img src="'+logoData+'" style="height:10mm;vertical-align:middle;" alt="Logo">';
-                    } else {
-                        logoHtml = '<div style="font-size:10px;font-weight:700;color:#1b2a4a;">TURAK MİMARLIK</div>';
+                    SB='ustbar';
+                    // --- Ust Bar (ince renk cizgisi + logo + baslik) ---
+                    doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                    doc.rect(0, 0, 210, 3, 'F');
+                    if(logoResim) {
+                        var lMaxH = 13, lMaxW = 38;
+                        var lw = logoResim.naturalWidth * (lMaxH / logoResim.naturalHeight);
+                        var lh = lMaxH;
+                        if(lw > lMaxW) { lw = lMaxW; lh = lw * logoResim.naturalHeight / logoResim.naturalWidth; }
+                        doc.addImage(logoData, 'PNG', M, 6, lw, lh);
                     }
+                    doc.setFont(FN, "bold"); doc.setFontSize(15);
+                    doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                    doc.text(t(yil+" YILI BUTCE RAPORU"), O, 13, {align:"center"});
+                    doc.setFont(FN, "normal"); doc.setFontSize(6);
+                    doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
+                    doc.text(t("Rapor: ")+tarihStr, M+W, 13, {align:"right"});
+                    y = 24;
 
-                    var STY = '<style>'
-                        + 'body{margin:0;padding:0;font-family:Helvetica,Arial,sans-serif;color:#2d3748;font-size:9px;line-height:1.4;}'
-                        + '.pg{width:182mm;padding:0;box-sizing:border-box;}'
-                        + '.hdr{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #1b2a4a;padding-bottom:6px;margin-bottom:10px;}'
-                        + '.hdr-r{text-align:right;}'
-                        + '.hdr-r h1{font-size:16px;font-weight:800;color:#1b2a4a;margin:0;letter-spacing:0.5px;}'
-                        + '.hdr-r span{font-size:7px;color:#888;}'
-                        + '.kart{flex:1;border:1px solid #e2e8f0;border-radius:4px;padding:5px 8px;position:relative;overflow:hidden;}'
-                        + '.kart-bar{position:absolute;left:0;top:3px;bottom:3px;width:3px;border-radius:0 2px 2px 0;}'
-                        + '.kart-l{font-size:5.5px;color:#8892a0;font-weight:700;letter-spacing:0.3px;margin-bottom:1px;}'
-                        + '.kart-v{font-size:12px;font-weight:800;color:#1b2a4a;}'
-                        + '.sec{border-bottom:1.5px solid #e2e8f0;padding-bottom:2px;margin-bottom:5px;font-size:8px;font-weight:700;color:#1b2a4a;}'
-                        + '.c-bor{border:1px solid #e2e8f0;border-radius:3px;padding:2px;margin-bottom:6px;}'
-                        + '.c-bor img{width:100%;height:auto;display:block;}'
-                        + '.dc{display:flex;gap:8px;margin-bottom:6px;}'
-                        + '.dc>div{flex:1;border:1px solid #e2e8f0;border-radius:3px;padding:2px;}'
-                        + '.dc>div img{width:100%;height:auto;display:block;}'
-                        + '.kl{font-size:6.5px;}'
-                        + '.kl-row{display:flex;align-items:center;gap:3px;padding:1px 0;}'
-                        + '.kl-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}'
-                        + '.kl-n{flex:1;color:#444;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}'
-                        + '.kl-y{color:#8892a0;font-size:5.5px;}'
-                        + '.kl-t{font-weight:700;color:#1b2a4a;text-align:right;min-width:38px;}'
-                        + '.ftr{font-size:6px;color:#aaa;text-align:center;border-top:1px solid #e2e8f0;padding-top:3px;margin-top:8px;}'
-                        + 'table{width:100%;border-collapse:collapse;font-size:7px;}'
-                        + 'th{padding:3px 5px;background:#1b2a4a;color:#fff;font-size:6.5px;font-weight:700;text-align:left;}'
-                        + 'td{padding:2px 5px;border:1px solid #e2e8f0;}'
-                        + '.bg-g{background:#f0fdf4;}'
-                        + '.bg-r{background:#fef2f2;}'
-                        + '.ay-h{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1b2a4a;padding-bottom:3px;margin-bottom:6px;}'
-                        + '.ay-h-l{display:flex;align-items:center;gap:5px;}'
-                        + '.ay-bar{width:4px;height:16px;background:#1b2a4a;border-radius:2px;}'
-                        + '.ay-h h2{font-size:13px;font-weight:800;color:#1b2a4a;margin:0;}'
-                        + '.oz{display:flex;gap:4px;margin-bottom:6px;}'
-                        + '.oz-i{flex:1;border:1px solid #e2e8f0;border-radius:3px;padding:3px 6px;position:relative;}'
-                        + '.oz-l{font-size:5px;color:#8892a0;font-weight:700;letter-spacing:0.2px;}'
-                        + '.oz-v{font-size:9px;font-weight:800;}'
-                        + '.net{border-left:3px solid;padding:3px 8px;font-size:8px;font-weight:800;margin-top:5px;}'
-                        + '.tr-h{font-size:7px;font-weight:700;margin-bottom:2px;}'
-                        + '</style>';
-
-                    function katHTM(et,vd){
-                        var tp=vd.reduce(function(a,b){return a+b;},0);if(tp<=0)return'';
-                        var h='<div class="kl">';
-                        for(var i=0;i<et.length;i++){if(vd[i]<=0)continue;
-                            h+='<div class="kl-row"><div class="kl-dot" style="background:'+renkPalet[i%renkPalet.length]+';"></div>'
-                            +'<div class="kl-n">'+(et[i]||'').slice(0,20)+'</div>'
-                            +'<div class="kl-y">'+(vd[i]/tp*100).toFixed(1)+'%</div>'
-                            +'<div class="kl-t">'+fm0(vd[i])+'</div></div>';
-                        }return h+'</div>';
-                    }
-
-                    function tabloHT(baslik,rows,bc,rc){
-                        if(!rows||!rows.length)return'';
-                        var h='<div style="margin-bottom:5px;"><div class="tr-h" style="color:'+bc+';">'+baslik+'</div>'
-                        +'<table><thead><tr><th style="width:28%;">KATEGORİ</th><th>AÇIKLAMA</th><th style="width:20%;text-align:right;">TUTAR</th></tr></thead><tbody>';
-                        rows.forEach(function(r){h+='<tr class="'+(rc||'')+'"><td style="font-weight:600;">'+r[0]+'</td><td>'+r[1]+'</td><td style="text-align:right;font-weight:700;">'+r[2]+'</td></tr>';});
-                        return h+'</tbody></table></div>';
-                    }
-
-                    var sayfalar = [], sayfaNo=0;
-
-                    // ===== SAYFA 1: ÖZET =====
-                    sayfaNo++;
-                    var p1 = '<div class="pg">'+STY
-                        +'<div class="hdr"><div>'+logoHtml+'</div>'
-                        +'<div class="hdr-r"><h1>'+yil+' YILI BÜTÇE RAPORU</h1><span>'+tarihStr+'</span></div></div>';
-
-                    var kartlar=[
-                        {l:'BAŞLANGIÇ BAKİYESİ',v:kayit.baslangicBakiye||0,c:'#505a6a'},
-                        {l:'TOPLAM GELİR',v:tG,c:'#2E7D32'},
-                        {l:'TOPLAM GİDER',v:tGi,c:'#C62828'},
-                        {l:'NET BAKİYE',v:net,c:net>=0?'#2E7D32':'#C62828'}
+                    // --- OZET KARTLARI (dashboard karti, sol renk cubugu) ---
+                    var kartV = [
+                        {l:t("BASLANGIC BAKIYESI"), v:kayit.baslangicBakiye||0, c:[80,90,105]},
+                        {l:t("TOPLAM GELIR"), v:tG, c:[39,120,60]},
+                        {l:t("TOPLAM GIDER"), v:tGi, c:[192,57,43]},
+                        {l:t("NET BAKIYE"), v:net, c:net>=0?[39,120,60]:[192,57,43]}
                     ];
-                    p1+='<div style="display:flex;gap:5px;margin-bottom:10px;">';
-                    kartlar.forEach(function(k){p1+='<div class="kart"><div class="kart-bar" style="background:'+k.c+';"></div><div class="kart-l">'+k.l+'</div><div class="kart-v">'+fm(k.v)+'</div></div>';});
-                    p1+='</div>';
-
-                    p1+='<div class="sec">NET DURUM TRENDİ</div><div class="c-bor"><img src="'+grafikler.netDurum+'"></div>'
-                        +'<div class="sec">AYLIK GELİR / GİDER KARŞILAŞTIRMASI</div><div class="c-bor"><img src="'+grafikler.aylikBar+'"></div>'
-                        +'<div class="sec">GELİR / GİDER DAĞILIMI</div>'
-                        +'<div class="dc"><div><img src="'+grafikler.gelirDoughnut+'"></div><div><img src="'+grafikler.giderDoughnut+'"></div></div>'
-                        +'<div class="dc"><div>'+katHTM(gelirEtiket,gelirVeri)+'</div><div>'+katHTM(giderEtiket,giderVeri)+'</div></div>';
-
-                    p1+='<div class="ftr">'+yil+' Yılı Bütçe Raporu | '+tarihStr+' | Sayfa '+sayfaNo+'</div></div>';
-                    sayfalar.push(p1);
-
-                    // ===== AYLIK SAYFALAR =====
-                    for(var ai=0;ai<12;ai++){
-                        var ayd=kayit.aylar[ai];
-                        if(!ayd)continue;
-                        var aG=aylikGelir[ai],aGi=aylikGider[ai];
-                        if(aG===0&&aGi===0)continue;
-                        sayfaNo++;
-                        var fark=aG-aGi;
-
-                        var pm='<div class="pg">'+STY
-                            +'<div class="ay-h"><div class="ay-h-l"><div class="ay-bar"></div><h2>'+(YB_AY_ADI[ai]).toUpperCase()+' '+yil+'</h2></div>'
-                            +'<div style="font-size:6px;color:#888;">'+tarihStr+'</div></div>';
-
-                        var oItems=[
-                            {l:'GELİR',v:aG,c:'#2E7D32'},
-                            {l:'GİDER',v:aGi,c:'#C62828'},
-                            {l:'NET',v:fark,c:fark>=0?'#2E7D32':'#C62828'}
-                        ];
-                        pm+='<div class="oz">';
-                        oItems.forEach(function(o){pm+='<div class="oz-i"><div class="kart-bar" style="background:'+o.c+';"></div><div class="oz-l">'+o.l+'</div><div class="oz-v" style="color:'+o.c+';">'+fm(o.v)+'</div></div>';});
-                        pm+='</div>';
-
-                        var gRows=[];
-                        Object.entries(ayd.gelirler||{}).forEach(function(e){e[1].forEach(function(x){gRows.push([(e[0]||'').toUpperCase(),x.aciklama||'',fm(x.tutar)]);});});
-                        pm+=tabloHT('GELİRLER',gRows,'#2E7D32','bg-g');
-
-                        var gdRows=[];
-                        Object.entries(ayd.giderler||{}).forEach(function(e){e[1].forEach(function(x){gdRows.push([(e[0]||'').toUpperCase(),x.aciklama||'',fm(x.tutar)]);});});
-                        pm+=tabloHT('GİDERLER',gdRows,'#C62828','bg-r');
-
-                        var fC=fark>=0?'#2E7D32':'#C62828';
-                        pm+='<div class="net" style="border-color:'+fC+';color:'+fC+';">AYLIK NET: '+fm(fark)+'</div>';
-
-                        pm+='<div class="ftr">'+yil+' Yılı Bütçe Raporu | '+tarihStr+' | Sayfa '+sayfaNo+'</div></div>';
-                        sayfalar.push(pm);
+                    var kG = (W-12)/4, kY = 24;
+                    for(var k=0;k<4;k++) {
+                        var v = kartV[k], kx = M + k*(kG+4);
+                        doc.setDrawColor(215, 218, 225);
+                        doc.setFillColor(255, 255, 255);
+                        doc.roundedRect(kx, y, kG, kY, 3, 3, 'FD');
+                        doc.setFillColor(v.c[0], v.c[1], v.c[2]);
+                        doc.rect(kx, y+3, 2.5, kY-6, 'F');
+                        doc.setFont(FN, "bold"); doc.setFontSize(5.5);
+                        doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
+                        doc.text(v.l, kx+5, y+8);
+                        doc.setFontSize(10);
+                        doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        pdfTxtL((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', kx+5, y+19);
                     }
+                    y += kY + 10;
 
-                    // ===== PDF OLUŞTUR =====
-                    var doc = new jspdf.jsPDF({format:'a4',orientation:'portrait',unit:'mm'});
-                    var MM=14, PW=182;
+                    SB='grafik1';
+                    // --- GRAFIK 1: Net Durum Trendi ---
+                    doc.setDrawColor(220, 222, 227);
+                    doc.setLineWidth(0.3);
+                    doc.roundedRect(M-2, y-2, W+4, 60, 2, 2, 'S');
+                    doc.addImage(grafikler.netDurum, 'PNG', M, y, W, 56);
+                    y += 64;
 
-                    for(var pi=0;pi<sayfalar.length;pi++){
-                        if(pi>0)doc.addPage();
-                        var el=document.createElement('div');
-                        el.innerHTML=sayfalar[pi];
-                        el.style.cssText='position:fixed;left:-9999px;top:0;z-index:99999;background:#fff;';
-                        document.body.appendChild(el);
-                        try{
-                            var cv=await html2canvas(el,{scale:3,useCORS:true,logging:false,width:el.scrollWidth,height:el.scrollHeight});
-                            var iw=PW, ih=cv.height*iw/cv.width, ph=272;
-                            if(ih<=ph){doc.addImage(cv.toDataURL('image/png'),'PNG',MM,MM,iw,ih);}
-                            else{
-                                var tp=Math.ceil(ih/ph);
-                                for(var pp=0;pp<tp;pp++){
-                                    if(pp>0)doc.addPage();
-                                    var sy=pp*ph*cv.width/iw, sh=Math.min(ph*cv.width/iw,cv.height-sy);
-                                    var tc=document.createElement('canvas');tc.width=cv.width;tc.height=sh;
-                                    tc.getContext('2d').drawImage(cv,0,sy,cv.width,sh,0,0,cv.width,sh);
-                                    doc.addImage(tc.toDataURL('image/png'),'PNG',MM,MM,iw,ph);
+                    SB='grafik2';
+                    // --- GRAFIK 2: Gelir/Gider Bar ---
+                    doc.setDrawColor(220, 222, 227);
+                    doc.setLineWidth(0.3);
+                    doc.roundedRect(M-2, y-2, W+4, 58, 2, 2, 'S');
+                    doc.addImage(grafikler.aylikBar, 'PNG', M, y, W, 54);
+                    y += 62;
+
+                    SB='grafik34';
+                    // --- GRAFIK 3-4: Doughnut + altinda veri listesi ---
+                    var dw = (W - 14) / 2, dgy = y;
+                    doc.addImage(grafikler.gelirDoughnut, 'PNG', M, dgy, dw, dw);
+                    doc.addImage(grafikler.giderDoughnut, 'PNG', M+dw+12, dgy, dw, dw);
+                    function hr(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+                    function vc(x,yl,et,vd){
+                        var tp=vd.reduce(function(a,b){return a+b;},0); if(tp<=0)return yl;
+                        doc.setFont(FN,"normal");doc.setFontSize(5);
+                        for(var i=0;i<et.length;i++){
+                            if(vd[i]<=0||yl>285)continue;
+                            var c=hr(renkPalet[i%renkPalet.length]);
+                            doc.setFillColor(c[0],c[1],c[2]);doc.rect(x,yl,2,2,'F');
+                            doc.setTextColor(50,50,50);doc.text(t(et[i]).slice(0,16),x+3,yl+1.5);
+                            doc.setTextColor(GRI_METIN[0],GRI_METIN[1],GRI_METIN[2]);
+                            doc.text((vd[i]/tp*100).toFixed(1)+'%',x+38,yl+1.5);
+                            doc.setTextColor(SEKME_RENGI[0],SEKME_RENGI[1],SEKME_RENGI[2]);
+                            pdfTxtL(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+' ₺',x+56,yl+1.5);
+                            yl+=3;
+                        } return yl;
+                    }
+                    var y1=vc(M, dgy+dw+3, gelirEtiket, gelirVeri);
+                    var y2=vc(M+dw+12, dgy+dw+3, giderEtiket, giderVeri);
+                    y = Math.max(y1, y2) + 4;
+
+                    SB='altbilgi1';
+                    // --- Alt Bilgi ---
+                    y = Math.max(y, 280);
+                    doc.setDrawColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                    doc.line(M, y, M+W, y);
+                    doc.setFont(FN, "normal"); doc.setFontSize(6);
+                    doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
+                    doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, M, y+4);
+                    doc.text(t("Sayfa ")+sayfaSayisi, M+W, y+4, {align:"right"});
+
+                    SB='ayliklar';
+                    // ======== AYLIK DOKUM SAYFALARI ========
+                    for(var ai=0;ai<12;ai++) {
+                        var ayd = kayit.aylar[ai];
+                        if(!ayd) continue;
+                        var aG = aylikGelir[ai], aGi = aylikGider[ai];
+                        if(aG===0 && aGi===0) continue;
+                        sayfaSayisi++;
+                        doc.addPage();
+
+                        // --- Ust Bar (ince cizgili, Sayfa 2+) ---
+                        doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        doc.rect(0, 0, 210, 2, 'F');
+                        if(logoResim) {
+                            var sMaxH = 10, sMaxW = 22;
+                            var slw = logoResim.naturalWidth * (sMaxH / logoResim.naturalHeight);
+                            var slh = sMaxH;
+                            if(slw > sMaxW) { slw = sMaxW; slh = slw * logoResim.naturalHeight / logoResim.naturalWidth; }
+                            doc.addImage(logoData, 'PNG', M, 5, slw, slh);
+                        }
+                        doc.setFont(FN, "bold"); doc.setFontSize(7);
+                        doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        doc.text(t(yil+" YILI BUTCE RAPORU"), M+W, 10, {align:"right"});
+                        y = 20;
+
+                        // --- Ay Basligi (kalın sol cubuk) ---
+                        doc.setFillColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        doc.rect(M, y, 3, 14, 'F');
+                        doc.setFont(FN, "bold"); doc.setFontSize(14);
+                        doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        doc.text(t(YB_AY_ADI[ai].toUpperCase()+" "+yil), M+8, y+10);
+                        y += 20;
+
+                        // --- Ozet Kartciklari (Gelir/Gider/Net) ---
+                        var fark = aG - aGi;
+                        var oKartG = (W-8)/3, oKartY = 16;
+                        var oItems = [
+                            {l:t("GELIR"), v:aG, c:POZITIF},
+                            {l:t("GIDER"), v:aGi, c:NEGATIF},
+                            {l:t("NET"), v:fark, c:fark>=0?POZITIF:NEGATIF}
+                        ];
+                        for(var oi=0;oi<3;oi++) {
+                            var oiX = M + oi*(oKartG+4);
+                            doc.setDrawColor(215, 218, 225);
+                            doc.setFillColor(255, 255, 255);
+                            doc.roundedRect(oiX, y, oKartG, oKartY, 3, 3, 'FD');
+                            doc.setFillColor(oItems[oi].c[0], oItems[oi].c[1], oItems[oi].c[2]);
+                            doc.rect(oiX, y+2, 2, oKartY-4, 'F');
+                            doc.setFont(FN, "bold"); doc.setFontSize(7);
+                            doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
+                            doc.text(oItems[oi].l, oiX+5, y+6);
+                            doc.setFontSize(9);
+                            doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                            pdfTxtL(oItems[oi].v.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', oiX+5, y+14);
+                        }
+                        y += oKartY + 8;
+
+                        function _ct(baslik, rows, etiketRenk, hucreRenk) {
+                            if(!rows||rows.length===0) return;
+                            if(isNaN(y)||y>277){doc.addPage();y=18;}
+                            doc.setFont(FN,"bold");doc.setFontSize(9);
+                            doc.setTextColor(etiketRenk[0],etiketRenk[1],etiketRenk[2]);
+                            doc.text(t(baslik),M,y);y+=6;
+                            var tw=[35,Math.max(W-63,10),28], rh=6;
+                            doc.setFont(FN,"bold");doc.setFontSize(6.5);
+                            doc.setFillColor(SEKME_RENGI[0],SEKME_RENGI[1],SEKME_RENGI[2]);
+                            for(var ci=0;ci<3;ci++){var cx=M+(ci===0?0:tw[0]+(ci===1?0:tw[1]));doc.rect(cx,y,tw[ci],rh,'F');doc.setTextColor(255,255,255);doc.text(t(['KATEGORI','ACIKLAMA','TUTAR'][ci]),cx+tw[ci]/2,y+4.5,{align:'center'});}
+                            y+=rh;
+                            doc.setFont(FN,"normal");doc.setFontSize(6.5);
+                            for(var ri=0;ri<rows.length;ri++){
+                                if(y>277){doc.addPage();y=18;}
+                                for(var ci=0;ci<3;ci++){
+                                    var cx=M+(ci===0?0:tw[0]+(ci===1?0:tw[1]));
+                                    doc.setFillColor(hucreRenk[0],hucreRenk[1],hucreRenk[2]);doc.rect(cx,y,tw[ci],rh,'F');
+                                    doc.setDrawColor(220,222,227);doc.rect(cx,y,tw[ci],rh,'S');
+                                    doc.setTextColor(50,50,50);
+                                    if(ci===2) doc.text(rows[ri][ci],cx+tw[ci]-2,y+4.5,{align:'right'});
+                                    else doc.text(rows[ri][ci],cx+2,y+4.5);
                                 }
+                                y+=rh;
                             }
-                        }finally{try{document.body.removeChild(el)}catch(e){}}
+                            doc.setDrawColor(210,212,217);doc.line(M,y,M+W,y);y+=4;
+                        }
+
+                        // --- GELIR TABLOSU ---
+                        var gRows = [];
+                        Object.entries(ayd.gelirler||{}).forEach(function(e) {
+                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL']); });
+                        });
+                        _ct("GELIRLER", gRows, POZITIF, [245,252,245]);
+
+                        // --- GIDER TABLOSU ---
+                        var gdRows = [];
+                        Object.entries(ayd.giderler||{}).forEach(function(e) {
+                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL']); });
+                        });
+                        _ct("GIDERLER", gdRows, NEGATIF, [252,245,245]);
+
+                        // --- Ay Net Bilgisi (sol renk cubugu) ---
+                        if(y > 277) { doc.addPage(); sayfaSayisi++; y = 18; }
+                        var farkRenk = fark>=0 ? POZITIF : NEGATIF;
+                        doc.setFillColor(farkRenk[0], farkRenk[1], farkRenk[2]);
+                        doc.rect(M, y, 3, 10, 'F');
+                        doc.setFont(FN, "bold"); doc.setFontSize(10);
+                        doc.setTextColor(farkRenk[0], farkRenk[1], farkRenk[2]);
+                        pdfTxtL(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺', M+8, y+7);
+                        y += 16;
+
+                        // --- Alt Bilgi ---
+                        doc.setDrawColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
+                        doc.line(M, y, M+W, y);
+                        doc.setFont(FN, "normal"); doc.setFontSize(5.5);
+                        doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
+                        doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, M, y+4);
+                        doc.text(t("Sayfa ")+sayfaSayisi, M+W, y+4, {align:"right"});
                     }
 
                     doc.save('Butce_Raporu_'+yil+'.pdf');
-                    tmNotify("Bütçe PDF oluşturuldu.","success");
-                    } catch(e){ console.error("PDF hatasi:",e,e&&e.stack); try{var ta=document.createElement('textarea');ta.style.cssText='position:fixed;top:10px;left:10px;width:90%;height:80%;z-index:99999;font-size:12px';ta.value="PDF hatasi: "+e.message+"\n\nStack:\n"+(e&&e.stack||'yok');document.body.appendChild(ta);setTimeout(function(){ta.select();},100);}catch(ex){} tmNotify("PDF hatasi: "+e.message+" | Konsola bak (F12)","error"); }
+                    tmNotify(t("Butce PDF olusturuldu."),"success");
+                    } catch(e) { e.message = SB+": "+e.message; throw e; }
                 }
-                pdfOlustur();
+
+                async function giris() {
+                    try { await pdfOlustur(); } catch(e) { console.error("PDF hatasi:", e, e&&e.stack); try { var ta=document.createElement('textarea');ta.style.cssText='position:fixed;top:10px;left:10px;width:90%;height:80%;z-index:99999;font-size:12px';ta.value="PDF hatasi: "+e.message+"\n\nStack:\n"+(e&&e.stack||'yok');document.body.appendChild(ta);setTimeout(function(){ta.select();},100); } catch(ex){} tmNotify("PDF hatasi: "+e.message+" | Konsola bak (F12)","error"); }
+                }
+                giris();
 
             } catch(e) {
                 console.error("Butce PDF hatasi:", e);
