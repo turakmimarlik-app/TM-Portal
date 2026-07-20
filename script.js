@@ -6008,13 +6008,11 @@ function gorevMailGonder(gorev) {
                 const farkClass = fark >= 0 ? 'mc-fark-poz' : 'mc-fark-neg';
                 const farkSgn = fark >= 0 ? '+' : '';
                 h += '<div class="yb-month-card" data-ay="'+i+'" onclick="ybSekmeGoster(\''+i+'\')">'+
-                    '<div class="mc-ay-side">'+YB_AY_ADI[i]+'</div>'+
-                    '<div class="mc-data">'+
+                    '<div class="mc-ay">'+YB_AY_ADI[i]+'</div>'+
                     (gelir>0 ? '<div class="mc-gelir">Gelir: +'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>' : '')+
                     (gider>0 ? '<div class="mc-gider">Gider: -'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>' : '')+
                     (gelir>0||gider>0 ? '<div class="mc-fark '+farkClass+'">Fark: '+farkSgn+fark.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>' : '')+
                     (gelir===0&&gider===0 ? '<div class="mc-bos">—</div>' : '')+
-                    '</div>'+
                 '</div>';
             }
             grid.innerHTML = h;
@@ -6482,16 +6480,14 @@ function gorevMailGonder(gorev) {
             var kayit = ybYilVerisi();
             var gelir = ybAylikToplam(kayit,"gelir",ayIdx);
             var gider = ybAylikToplam(kayit,"gider",ayIdx);
-            var mcData = card.querySelector('.mc-data');
-            if(!mcData) return;
-            mcData.querySelectorAll('.mc-gelir, .mc-gider, .mc-fark, .mc-bos').forEach(function(el){el.remove();});
+            card.querySelectorAll('.mc-gelir, .mc-gider, .mc-fark, .mc-bos').forEach(function(el){el.remove();});
             var fark = gelir - gider;
             var farkClass = fark >= 0 ? 'mc-fark-poz' : 'mc-fark-neg';
             var farkSgn = fark >= 0 ? '+' : '';
-            if(gelir > 0) mcData.insertAdjacentHTML('beforeend', '<div class="mc-gelir">Gelir: +'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
-            if(gider > 0) mcData.insertAdjacentHTML('beforeend', '<div class="mc-gider">Gider: -'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
-            if(gelir>0||gider>0) mcData.insertAdjacentHTML('beforeend', '<div class="mc-fark '+farkClass+'">Fark: '+farkSgn+fark.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
-            if(gelir===0 && gider===0) mcData.insertAdjacentHTML('beforeend', '<div class="mc-bos">—</div>');
+            if(gelir > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gelir">Gelir: +'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
+            if(gider > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gider">Gider: -'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
+            if(gelir>0||gider>0) card.insertAdjacentHTML('beforeend', '<div class="mc-fark '+farkClass+'">Fark: '+farkSgn+fark.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
+            if(gelir===0 && gider===0) card.insertAdjacentHTML('beforeend', '<div class="mc-bos">—</div>');
         }
 
         function ybAyKopyala(kaynakAy) {
