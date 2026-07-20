@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.75.0';
+﻿        var APP_VERSION = 'V1.76.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -5872,7 +5872,7 @@ function gorevMailGonder(gorev) {
 
         function ybVeriYukle() {
             var db;
-            try { db = JSON.parse(localStorage.getItem("tm_yillik_butce_db")); } catch(e) { db = null; console.error("Yillik butce yukleme hatasi:", e); }
+            try { db = JSON.parse(localStorage.getItem("tm_yillik_butce_db")); } catch(e) { db = null; }
             const simdi = new Date().getFullYear();
             if(!db || !db.aktifYil) {
                 db = { aktifYil: simdi, yillar: {}, tamamlananYillar: [] };
@@ -5882,13 +5882,13 @@ function gorevMailGonder(gorev) {
                 const eskiYil = db.yillar[db.aktifYil];
                 if(eskiYil) {
                     if(!db.tamamlananYillar) db.tamamlananYillar=[];
-                    if(!db.tamamlananYillar.some(y=>y.yil===db.aktifYil)) db.tamamlananYillar.push({yil:db.aktifYil,...eskiYil});
+                    if(!db.tamamlananYillar.some(y=>y.yil===db.aktifYil)) db.tamamlananYillar.push({yil:db.aktifYil, baslangicBakiye:eskiYil.baslangicBakiye||0, gelirKategorileri:eskiYil.gelirKategorileri||[], giderKategorileri:eskiYil.giderKategorileri||[], aylar:eskiYil.aylar||{}});
                     delete db.yillar[db.aktifYil];
                 }
                 db.aktifYil = simdi;
                 const kalan = eskiYil ? Math.max(0, (eskiYil.baslangicBakiye||0) + ybYilToplam(eskiYil,"gelir") - ybYilToplam(eskiYil,"gider")) : 0;
                 if(!db.yillar[simdi]) db.yillar[simdi] = { baslangicBakiye:kalan, gelirKategorileri:[...YB_GELIR_VARSAYILAN], giderKategorileri:[...YB_GIDER_VARSAYILAN], aylar:{} };
-                origSetItem("tm_yillik_butce_db", JSON.stringify(db));
+                ybVeriKaydet(db);
             }
             return db;
         }
@@ -5930,8 +5930,34 @@ function gorevMailGonder(gorev) {
             return t;
         }
 
+        var ybFirestoreYukleniyor = false;
         function ybSayfayiYukle() {
             ybGosterilenYil = null;
+            // Lokalde veri yoksa ve Firestore henüz yüklenmediyse, Firestore'dan almayı dene
+            var lokaldeVar = localStorage.getItem("tm_yillik_butce_db") !== null;
+            if(!lokaldeVar && fdb && !fsReady && !ybFirestoreYukleniyor) {
+                ybFirestoreYukleniyor = true;
+                fdb.collection(FS_COLLECTION).doc("tm_yillik_butce_db").get({source:'server'}).then(function(snap) {
+                    ybFirestoreYukleniyor = false;
+                    if(snap && snap.exists) {
+                        var fsData = snap.data().data;
+                        if(fsData && fsData.aktifYil) {
+                            origSetItem("tm_yillik_butce_db", JSON.stringify(fsData));
+                            ybSayfayiGoster();
+                            return;
+                        }
+                    }
+                    ybSayfayiGoster();
+                }).catch(function() {
+                    ybFirestoreYukleniyor = false;
+                    ybSayfayiGoster();
+                });
+                return;
+            }
+            ybSayfayiGoster();
+        }
+
+        function ybSayfayiGoster() {
             const db = ybVeriYukle();
             if(!db.tamamlananYillar || db.tamamlananYillar.length===0) {
                 const ornek = {
