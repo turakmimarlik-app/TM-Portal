@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.84.2';
+﻿        var APP_VERSION = 'V1.85.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -5959,35 +5959,7 @@ function gorevMailGonder(gorev) {
 
         function ybSayfayiGoster() {
             const db = ybVeriYukle();
-            if(!db.tamamlananYillar || db.tamamlananYillar.length===0) {
-                const ornek = {
-                    yil: 2025, baslangicBakiye: 50000,
-                    gelirKategorileri: [...YB_GELIR_VARSAYILAN],
-                    giderKategorileri: [...YB_GIDER_VARSAYILAN], aylar: {}
-                };
-                [0,1,2,3,4,5,6,7,8,9,10,11].forEach(a => {
-                    ornek.aylar[a] = {
-                        gelirler: {
-                            projeler: [{id:Date.now()+a*10+1, aciklama:"Proje "+(a+1)+" danışmanlık", tutar:85000+Math.round(Math.random()*30000)},{id:Date.now()+a*10+2, aciklama:"Proje "+(a+1)+" uygulama", tutar:40000+Math.round(Math.random()*20000)}],
-                            komisyonlar: [{id:Date.now()+a*10+3, aciklama:"Referans komisyonu", tutar:Math.round(Math.random()*8000)}],
-                            faizler: [{id:Date.now()+a*10+4, aciklama:"Vadeli mevduat faizi", tutar:Math.round(1500+Math.random()*2000)}],
-                            kiralar: [{id:Date.now()+a*10+5, aciklama:"Ofis alt kiracı", tutar:5000}],
-                            satışlar: a%3===0 ? [{id:Date.now()+a*10+6, aciklama:"Proje satışı", tutar:20000+Math.round(Math.random()*40000)}] : []
-                        },
-                        giderler: {
-                            projeler: [{id:Date.now()+a*10+20, aciklama:"Proje maliyeti", tutar:35000+Math.round(Math.random()*15000)}],
-                            faturalar: [{id:Date.now()+a*10+21, aciklama:"Elektrik+Su+İnternet", tutar:Math.round(4000+Math.random()*3000)},{id:Date.now()+a*10+22, aciklama:"Kırtasiye", tutar:Math.round(500+Math.random()*1500)}],
-                            vergi: [{id:Date.now()+a*10+23, aciklama:"KDV+Stopaj", tutar:15000+Math.round(Math.random()*10000)}],
-                            komisyon: [{id:Date.now()+a*10+24, aciklama:"Acenta komisyonu", tutar:Math.round(3000+Math.random()*4000)}],
-                            maaş: [{id:Date.now()+a*10+25, aciklama:"Personel maaşları", tutar:42000+Math.round(Math.random()*5000)}],
-                            sigorta: [{id:Date.now()+a*10+26, aciklama:"SGK+Bağkur", tutar:9500+Math.round(Math.random()*2000)}]
-                        }
-                    };
-                });
-                db.tamamlananYillar = db.tamamlananYillar || [];
-                db.tamamlananYillar.push(ornek);
-                ybVeriKaydet(db);
-            }
+            if(db.tamamlananYillar) db.tamamlananYillar = db.tamamlananYillar.filter(function(y){return y.yil!==2025;});
             document.getElementById("ybAktifYilLabel").textContent = String(db.aktifYil);
             ybMonthGridRender();
             ybTamamlananlariGoster();
