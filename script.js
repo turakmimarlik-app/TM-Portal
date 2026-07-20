@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.85.0';
+﻿        var APP_VERSION = 'V1.85.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -5959,7 +5959,7 @@ function gorevMailGonder(gorev) {
 
         function ybSayfayiGoster() {
             const db = ybVeriYukle();
-            if(db.tamamlananYillar) db.tamamlananYillar = db.tamamlananYillar.filter(function(y){return y.yil!==2025;});
+            if(db.tamamlananYillar) { db.tamamlananYillar = db.tamamlananYillar.filter(function(y){return y.yil!==2025;}); ybVeriKaydet(db); }
             document.getElementById("ybAktifYilLabel").textContent = String(db.aktifYil);
             ybMonthGridRender();
             ybTamamlananlariGoster();
