@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.77.0';
+﻿        var APP_VERSION = 'V1.76.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6135,9 +6135,6 @@ function gorevMailGonder(gorev) {
                 '<div class="yb-sum-card sc-gider"><div class="sc-label">Aylık Gider</div><div class="sc-value">'+aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div>'+
                 '<div class="yb-sum-card sc-fark"><div class="sc-label">Fark</div><div class="sc-value">'+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div></div>';
 
-            // Arama kutusu
-            h += '<div class="yb-ay-arama"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="ybAyArama" oninput="ybAyFiltrele(this.value)" placeholder="Kalem ara..." autocomplete="off"></div>';
-
             // Gelir accordion
             h += '<div class="yb-acc-section"><h4 class="acc-gelir"><i class="fa-solid fa-chart-line"></i> Gelirler</h4>';
             kayit.gelirKategorileri.forEach(function(ktg){
@@ -6153,7 +6150,7 @@ function gorevMailGonder(gorev) {
                 if(items.length>0) {
                     h += '<table><tbody>';
                     items.forEach(function(k){
-                        h += '<tr data-id="'+k.id+'" data-arama="'+(k.aciklama||'').toLowerCase()+'">'+
+                        h += '<tr data-id="'+k.id+'">'+
                             '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
                             '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
@@ -6183,7 +6180,7 @@ function gorevMailGonder(gorev) {
                 if(items.length>0) {
                     h += '<table><tbody>';
                     items.forEach(function(k){
-                        h += '<tr data-id="'+k.id+'" data-arama="'+(k.aciklama||'').toLowerCase()+'">'+
+                        h += '<tr data-id="'+k.id+'">'+
                             '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
                             '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
@@ -6199,8 +6196,6 @@ function gorevMailGonder(gorev) {
             h += '<button class="acc-btn-yonet" onclick="ybKategoriYonet(\'gider\')"><i class="fa-regular fa-folder-open"></i> Kategorileri Yönet</button></div>';
 
             icerik.innerHTML = h;
-            var aramaInput = document.getElementById("ybAyArama");
-            if(aramaInput) aramaInput.value = "";
         }
 
         function ybRaporGoster() {
@@ -6430,7 +6425,7 @@ function gorevMailGonder(gorev) {
         /* Kalem ekleme now uses modal - ybModalKalemAc/Kaydet/Kapat */
 
         function ybDomSatirOlustur(item, ayIdx) {
-            return '<tr data-id="'+item.id+'" data-arama="'+(item.aciklama||'').toLowerCase()+'">'+
+            return '<tr data-id="'+item.id+'">'+
                 '<td style="width:45%;"><input class="acc-input" type="text" value="'+item.aciklama+'" onchange="ybKalemGuncelle('+item.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
                 '<td style="width:40%;"><div class="acc-tutar-wrap">'+
                     '<input class="acc-tutar-input" type="text" value="'+(item.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+item.id+',\'tutar\',this.value)">'+
@@ -6476,19 +6471,6 @@ function gorevMailGonder(gorev) {
             if(gelir > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>');
             if(gider > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>');
             if(gelir===0 && gider===0) card.insertAdjacentHTML('beforeend', '<div class="mc-bos">—</div>');
-        }
-
-        function ybAyFiltrele(term) {
-            term = term.toLowerCase().trim();
-            var rows = document.querySelectorAll('#ybSekmeIcerik tr[data-arama]');
-            rows.forEach(function(row) {
-                var match = !term || row.getAttribute('data-arama').indexOf(term) > -1;
-                row.style.display = match ? '' : 'none';
-                if(match) {
-                    var body = row.closest('.yb-acc-body');
-                    if(body) { body.classList.add('open'); body.parentElement.querySelector('.yb-acc-header').classList.add('open'); }
-                }
-            });
         }
 
         function ybKalemSil(id, ayIdx) {

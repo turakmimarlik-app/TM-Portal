@@ -83,8 +83,6 @@
             #ybSekmeIcerik .yb-graph-grid .yb-graph-box { height:220px; }
             #ybSekmeIcerik .yb-kars-grid { grid-template-columns:1fr; gap:8px; }
             #ybSekmeIcerik .yb-dagilim-tablo { font-size:10px; }
-            .yb-ay-arama { padding:6px 10px; }
-            .yb-ay-arama input { font-size:12px; }
             .yb-yil-tablo { font-size:11px; }
             .yb-yil-tablo th, .yb-yil-tablo td { padding:6px 6px; }
             .yb-yil-tablo .t-islem button { padding:3px 8px; font-size:9px; }

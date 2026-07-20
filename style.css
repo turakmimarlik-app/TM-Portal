@@ -1676,11 +1676,6 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .yb-acc-body .acc-btn-ekle:hover { border-color:#a0b8cc; color:#1a3a5c; background:rgba(26,58,92,0.04); transform:translateY(-1px); }
         .yb-acc-body .acc-btn-yonet { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; margin-top:8px; margin-left:6px; border:1px solid var(--yb-border); border-radius:8px; background:transparent; color:var(--yb-text-light); font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; }
         .yb-acc-body .acc-btn-yonet:hover { border-color:var(--text-light); color:var(--text-dark); transform:translateY(-1px); }
-        /* Arama kutusu */
-        .yb-ay-arama { display:flex; align-items:center; gap:8px; margin-bottom:16px; padding:8px 14px; background:var(--yb-card); border:1px solid var(--yb-border); border-radius:8px; }
-        .yb-ay-arama i { font-size:13px; color:var(--yb-text-light); flex-shrink:0; }
-        .yb-ay-arama input { flex:1; border:none; background:transparent; color:var(--yb-text); font-size:13px; outline:none; }
-        .yb-ay-arama input::placeholder { color:var(--yb-text-light); opacity:0.6; }
         /* Timeline */
         .yb-tamamlanan-section { margin-top:24px; padding-top:16px; border-top:1px solid var(--yb-border); }
         .yb-yil-tablo { width:100%; border-collapse:collapse; font-size:12px; margin-top:6px; }
