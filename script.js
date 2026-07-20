@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.84.0';
+﻿        var APP_VERSION = 'V1.84.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6734,8 +6734,6 @@ function gorevMailGonder(gorev) {
         }
 
         // ===== PDF Yardımcı =====
-        function trAscii(s) { var m={'İ':'I','ı':'i','Ğ':'G','ğ':'g','Ş':'S','ş':'s'}; return (s||'').replace(/[İıĞğŞş]/g,function(c){return m[c]||c;}); }
-
         function ybPdfIndir(yil) {
             const db = ybVeriYukle();
             const kayit = db.tamamlananYillar.find(function(y){return y.yil===yil;}) || (yil===db.aktifYil ? db.yillar[yil] : null);
@@ -6918,7 +6916,7 @@ function gorevMailGonder(gorev) {
                 }
                 var FN = 'Helvetica';
 
-                function t(s) { return trAscii ? trAscii(s||'') : (s||''); }
+                function t(s) { return s||''; }
 
                 async function pdfOlustur() {
                     var SB = 'baslangic';
