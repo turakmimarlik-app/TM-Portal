@@ -5935,7 +5935,7 @@ function gorevMailGonder(gorev) {
             ybGosterilenYil = null;
             // Lokalde veri yoksa ve Firestore henüz yüklenmediyse, Firestore'dan almayı dene
             var lokaldeVar = localStorage.getItem("tm_yillik_butce_db") !== null;
-            if(!lokaldeVar && fdb && !fsReady && !ybFirestoreYukleniyor) {
+            if(!lokaldeVar && fdb && !ybFirestoreYukleniyor) {
                 ybFirestoreYukleniyor = true;
                 fdb.collection(FS_COLLECTION).doc("tm_yillik_butce_db").get({source:'server'}).then(function(snap) {
                     ybFirestoreYukleniyor = false;
