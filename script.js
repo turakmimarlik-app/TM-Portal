@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.82.2';
+﻿        var APP_VERSION = 'V1.83.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6895,6 +6895,26 @@ function gorevMailGonder(gorev) {
                     return s;
                 }
 
+                async function pdfFontlariYukle() {
+                    try {
+                        var fontList = [
+                            {ad:'normal',url:'https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me5WZLCzYlKw.ttf'},
+                            {ad:'bold',url:'https://fonts.gstatic.com/s/roboto/v32/KFOlCnqEu92Fr1MmWUlvAx05IsDqlA.ttf'}
+                        ];
+                        var sonuc = {};
+                        for(var fi=0;fi<fontList.length;fi++) {
+                            try {
+                                var r = await fetch(fontList[fi].url);
+                                if(!r.ok) continue;
+                                var buf = await r.arrayBuffer();
+                                var s='',u=new Uint8Array(buf);
+                                for(var bi=0;bi<u.length;bi++) s+=String.fromCharCode(u[bi]);
+                                sonuc[fontList[fi].ad] = btoa(s);
+                            } catch(e){}
+                        }
+                        return sonuc;
+                    } catch(e){return {};}
+                }
                 var FN = 'Helvetica';
 
                 function t(s) { return trAscii ? trAscii(s||'') : (s||''); }
@@ -6903,10 +6923,20 @@ function gorevMailGonder(gorev) {
                     var SB = 'baslangic';
                     try {
                     var grafikler, logoResim = null;
+                    function pdfTxtL(s,x,y){doc.text(s,x,y);}
 
-                    // ₺ sembolü için yüksek çözünürlüklü canvas görüntüsü (jsPDF Helvetica ₺ desteklemez)
-                    var liraImg = (function(){var c=document.createElement('canvas');c.width=120;c.height=120;var x=c.getContext('2d');x.font='96px Arial';x.textBaseline='alphabetic';x.fillStyle='#000';x.fillText('\u20BA',12,98);return c.toDataURL('image/png');})();
-                    function pdfTxtL(s,x,y){var i=s.indexOf('\u20BA');if(i<0){doc.text(s,x,y);return;}var b=s.substring(0,i).replace(/ +$/,'');doc.text(b,x,y);var fs=doc.internal.getFontSize();var ih=fs*0.38;doc.addImage(liraImg,'PNG',x+doc.getTextWidth(b)+0.5,y-(98/120)*ih,ih*0.55,ih);}
+                    try {
+                        var fb = await pdfFontlariYukle();
+                        if(fb.normal) {
+                            doc.addFileToVFS('Roboto.ttf', fb.normal);
+                            doc.addFont('Roboto.ttf', 'Roboto', 'normal');
+                            if(fb.bold) {
+                                doc.addFileToVFS('Roboto-Bold.ttf', fb.bold);
+                                doc.addFont('Roboto-Bold.ttf', 'Roboto', 'bold');
+                            }
+                            FN = 'Roboto';
+                        }
+                    } catch(e){}
 
                     SB='grafik'; grafikler = await grafikBase64Uret();
 
