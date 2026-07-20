@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.76.1';
+﻿        var APP_VERSION = 'V1.77.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6135,6 +6135,16 @@ function gorevMailGonder(gorev) {
                 '<div class="yb-sum-card sc-gider"><div class="sc-label">Aylık Gider</div><div class="sc-value">'+aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div>'+
                 '<div class="yb-sum-card sc-fark"><div class="sc-label">Fark</div><div class="sc-value">'+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div></div>';
 
+            // Kopyalama
+            var hedefAyOptions = '';
+            for(var hi=0;hi<12;hi++) {
+                if(hi===ayIdx) continue;
+                hedefAyOptions += '<option value="'+hi+'">'+YB_AY_ADI[hi]+'</option>';
+            }
+            h += '<div class="yb-kopyala-row"><span class="yb-kopyala-label"><i class="fa-regular fa-copy"></i> Bu ayı kopyala:</span>'+
+                '<select class="yb-kopyala-select" id="ybKopyalaHedef">'+hedefAyOptions+'</select>'+
+                '<button class="yb-kopyala-btn" onclick="ybAyKopyala('+ayIdx+')">Kopyala</button></div>';
+
             // Gelir accordion
             h += '<div class="yb-acc-section"><h4 class="acc-gelir"><i class="fa-solid fa-chart-line"></i> Gelirler</h4>';
             kayit.gelirKategorileri.forEach(function(ktg){
@@ -6471,6 +6481,33 @@ function gorevMailGonder(gorev) {
             if(gelir > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>');
             if(gider > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>');
             if(gelir===0 && gider===0) card.insertAdjacentHTML('beforeend', '<div class="mc-bos">—</div>');
+        }
+
+        function ybAyKopyala(kaynakAy) {
+            var hedef = document.getElementById("ybKopyalaHedef");
+            if(!hedef) return;
+            var hedefAy = parseInt(hedef.value);
+            if(hedefAy === kaynakAy) { tmNotify("Kaynak ve hedef ay aynı olamaz!","error"); return; }
+            tmConfirm(YB_AY_ADI[kaynakAy]+" ayındaki tüm kalemler "+YB_AY_ADI[hedefAy]+" ayına kopyalansın mı?", function() {
+                const kayit = ybYilVerisi();
+                var hedefAyVerisi = ybAyVerisi(hedefAy, kayit);
+                const kaynakAyVerisi = (kayit.aylar[kaynakAy] || { gelirler: {}, giderler: {} });
+                Object.keys(kaynakAyVerisi.gelirler||{}).forEach(function(ktg) {
+                    kaynakAyVerisi.gelirler[ktg].forEach(function(item) {
+                        if(!hedefAyVerisi.gelirler[ktg]) hedefAyVerisi.gelirler[ktg] = [];
+                        hedefAyVerisi.gelirler[ktg].push({ id:Date.now()+Math.floor(Math.random()*999), aciklama:item.aciklama, tutar:item.tutar });
+                    });
+                });
+                Object.keys(kaynakAyVerisi.giderler||{}).forEach(function(ktg) {
+                    kaynakAyVerisi.giderler[ktg].forEach(function(item) {
+                        if(!hedefAyVerisi.giderler[ktg]) hedefAyVerisi.giderler[ktg] = [];
+                        hedefAyVerisi.giderler[ktg].push({ id:Date.now()+Math.floor(Math.random()*999), aciklama:item.aciklama, tutar:item.tutar });
+                    });
+                });
+                const db = ybVeriYukle(); db.yillar[db.aktifYil] = kayit; ybVeriKaydet(db);
+                tmNotify(YB_AY_ADI[kaynakAy]+" → "+YB_AY_ADI[hedefAy]+" kopyalandı.","success");
+                ybSekmeGoster(String(hedefAy));
+            });
         }
 
         function ybKalemSil(id, ayIdx) {

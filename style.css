@@ -1676,6 +1676,14 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .yb-acc-body .acc-btn-ekle:hover { border-color:#a0b8cc; color:#1a3a5c; background:rgba(26,58,92,0.04); transform:translateY(-1px); }
         .yb-acc-body .acc-btn-yonet { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; margin-top:8px; margin-left:6px; border:1px solid var(--yb-border); border-radius:8px; background:transparent; color:var(--yb-text-light); font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; }
         .yb-acc-body .acc-btn-yonet:hover { border-color:var(--text-light); color:var(--text-dark); transform:translateY(-1px); }
+        /* Kopyalama */
+        .yb-kopyala-row { display:flex; align-items:center; gap:8px; margin-bottom:16px; padding:10px 14px; background:var(--yb-card); border:1px solid var(--yb-border); border-radius:8px; flex-wrap:wrap; }
+        .yb-kopyala-label { font-size:12px; font-weight:700; color:var(--yb-text); white-space:nowrap; }
+        .yb-kopyala-select { padding:6px 10px; border:1px solid var(--yb-border); border-radius:6px; background:rgba(255,255,255,0.06); color:var(--yb-text); font-size:12px; font-weight:600; outline:none; cursor:pointer; }
+        .yb-kopyala-select:focus { border-color:var(--yb-accent); }
+        .yb-kopyala-select option { background:var(--yb-card); color:var(--yb-text); }
+        .yb-kopyala-btn { padding:6px 16px; border:1px solid var(--yb-accent); border-radius:6px; background:transparent; color:var(--yb-accent); font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:5px; }
+        .yb-kopyala-btn:hover { background:var(--yb-accent); color:#0c1520; transform:translateY(-1px); }
         /* Timeline */
         .yb-tamamlanan-section { margin-top:24px; padding-top:16px; border-top:1px solid var(--yb-border); }
         .yb-yil-tablo { width:100%; border-collapse:collapse; font-size:12px; margin-top:6px; }
