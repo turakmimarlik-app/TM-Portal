@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.81.2';
+﻿        var APP_VERSION = 'V1.81.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6904,9 +6904,9 @@ function gorevMailGonder(gorev) {
                     try {
                     var grafikler, logoResim = null;
 
-                    // ₺ sembolü için yüksek çözünürlüklü canvas görüntüsü (jsPDF Helvetica ₺ desteklemez)
-                    if(!window._ybLiraImg){var cv=document.createElement('canvas');cv.width=60;cv.height=80;var cx=cv.getContext('2d');cx.fillStyle='#000';cx.font='80px Arial';cx.textBaseline='bottom';cx.fillText('\u20BA',0,80);window._ybLiraImg=cv.toDataURL('image/png');}
-                    function pdfTxtL(s,x,y){var i=s.indexOf('\u20BA');if(i<0){doc.text(s,x,y);return;}var b=s.substring(0,i).replace(/ +$/,'');doc.text(b,x,y);var fs=doc.internal.getFontSize();var ih=fs*0.38;doc.addImage(window._ybLiraImg,'PNG',x+doc.getTextWidth(b)+0.5,y-ih,ih*0.48,ih);}
+                    // ₺ sembolü için canvas görüntüsü - jsPDF Helvetica ₺ desteklemez
+                    if(!window._ybpL){var c=document.createElement('canvas');c.width=70;c.height=80;var x=c.getContext('2d');x.fillStyle='#000';x.font=Math.round(80/0.68)+'px Arial';x.textBaseline='bottom';x.fillText('\u20BA',0,80);window._ybpL=c.toDataURL('image/png');}
+                    function pdfTxtL(s,x,y){var i=s.indexOf('\u20BA');if(i<0){doc.text(s,x,y);return;}var b=s.substring(0,i).replace(/ +$/,'');doc.text(b,x,y);var fs=doc.internal.getFontSize();var cap=fs*0.3528*0.68;doc.addImage(window._ybpL,'PNG',x+doc.getTextWidth(b)+0.3,y-cap,cap*0.88,cap);}
 
                     SB='grafik'; grafikler = await grafikBase64Uret();
 
