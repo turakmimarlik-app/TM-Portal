@@ -1631,8 +1631,11 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .yb-month-card:hover { border-color:var(--yb-accent); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,0.3); }
         .yb-month-card.active { border-color:var(--yb-accent); box-shadow:0 0 0 2px rgba(201,168,76,0.25); }
         .yb-month-card .mc-ay { font-size:13px; font-weight:700; color:var(--yb-text); margin-bottom:4px; }
-        .yb-month-card .mc-gelir { font-size:10px; color:var(--yb-gelir); font-weight:600; line-height:1.4; }
-        .yb-month-card .mc-gider { font-size:10px; color:var(--yb-gider); font-weight:600; line-height:1.4; }
+        .yb-month-card .mc-gelir { font-size:10px; color:var(--yb-gelir); font-weight:600; line-height:1.5; }
+        .yb-month-card .mc-gider { font-size:10px; color:var(--yb-gider); font-weight:600; line-height:1.5; }
+        .yb-month-card .mc-fark { font-size:10px; font-weight:700; line-height:1.5; margin-top:2px; padding-top:2px; border-top:1px solid rgba(255,255,255,0.06); }
+        .yb-month-card .mc-fark-poz { color:var(--yb-gelir); }
+        .yb-month-card .mc-fark-neg { color:var(--yb-gider); }
         .yb-month-card .mc-bos { font-size:10px; color:var(--yb-text-light); font-style:italic; line-height:1.4; }
         .yb-content-area { padding:20px; background:var(--yb-bg); }
         /* 3 summary cards */
@@ -1643,8 +1646,6 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .yb-sum-card .sc-value { font-size:24px; font-weight:900; }
         .yb-sum-card.sc-gelir .sc-value { color:var(--yb-gelir); }
         .yb-sum-card.sc-gider .sc-value { color:var(--yb-gider); }
-        .yb-sum-card.sc-fark .sc-value { color:var(--yb-accent); }
-        .yb-sum-card.sc-fark .sc-label { color:var(--yb-accent); }
         /* Accordion */
         .yb-acc-section { margin-bottom:20px; }
         .yb-acc-section > h4 { font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; margin:0 0 10px 0; padding-bottom:6px; border-bottom:2px solid var(--yb-border); }

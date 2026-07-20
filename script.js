@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.79.0';
+﻿        var APP_VERSION = 'V1.80.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6004,10 +6004,14 @@ function gorevMailGonder(gorev) {
             for(let i=0;i<12;i++) {
                 const gelir = ybAylikToplam(kayit,"gelir",i);
                 const gider = ybAylikToplam(kayit,"gider",i);
+                const fark = gelir - gider;
+                const farkClass = fark >= 0 ? 'mc-fark-poz' : 'mc-fark-neg';
+                const farkSgn = fark >= 0 ? '+' : '';
                 h += '<div class="yb-month-card" data-ay="'+i+'" onclick="ybSekmeGoster(\''+i+'\')">'+
                     '<div class="mc-ay">'+YB_AY_ADI[i]+'</div>'+
-                    (gelir>0 ? '<div class="mc-gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>' : '')+
-                    (gider>0 ? '<div class="mc-gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>' : '')+
+                    (gelir>0 ? '<div class="mc-gelir">Gelir: +'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>' : '')+
+                    (gider>0 ? '<div class="mc-gider">Gider: -'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>' : '')+
+                    (gelir>0||gider>0 ? '<div class="mc-fark '+farkClass+'">Fark: '+farkSgn+fark.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>' : '')+
                     (gelir===0&&gider===0 ? '<div class="mc-bos">—</div>' : '')+
                 '</div>';
             }
@@ -6134,7 +6138,7 @@ function gorevMailGonder(gorev) {
             h += '<div class="yb-sum-row">'+
                 '<div class="yb-sum-card sc-gelir"><div class="sc-label">Aylık Gelir</div><div class="sc-value">'+aylikGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div>'+
                 '<div class="yb-sum-card sc-gider"><div class="sc-label">Aylık Gider</div><div class="sc-value">'+aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div>'+
-                '<div class="yb-sum-card sc-fark"><div class="sc-label">Fark</div><div class="sc-value">'+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div></div>';
+                '<div class="yb-sum-card sc-fark"><div class="sc-label">Fark</div><div class="sc-value" style="color:'+(fark>=0?'var(--yb-gelir)':'var(--yb-gider)')+';">'+(fark>=0?'+':'')+fark.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</div></div></div>';
 
             // Kopyalama
             // Gelir accordion
@@ -6476,9 +6480,13 @@ function gorevMailGonder(gorev) {
             var kayit = ybYilVerisi();
             var gelir = ybAylikToplam(kayit,"gelir",ayIdx);
             var gider = ybAylikToplam(kayit,"gider",ayIdx);
-            card.querySelectorAll('.mc-gelir, .mc-gider, .mc-bos').forEach(function(el){el.remove();});
-            if(gelir > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
-            if(gider > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
+            card.querySelectorAll('.mc-gelir, .mc-gider, .mc-fark, .mc-bos').forEach(function(el){el.remove();});
+            var fark = gelir - gider;
+            var farkClass = fark >= 0 ? 'mc-fark-poz' : 'mc-fark-neg';
+            var farkSgn = fark >= 0 ? '+' : '';
+            if(gelir > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gelir">Gelir: +'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
+            if(gider > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gider">Gider: -'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
+            if(gelir>0||gider>0) card.insertAdjacentHTML('beforeend', '<div class="mc-fark '+farkClass+'">Fark: '+farkSgn+fark.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
             if(gelir===0 && gider===0) card.insertAdjacentHTML('beforeend', '<div class="mc-bos">—</div>');
         }
 
