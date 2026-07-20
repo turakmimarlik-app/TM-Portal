@@ -1655,23 +1655,26 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .yb-acc-header:hover { background:var(--yb-card-hover); }
         .yb-acc-header .acc-kat { font-size:13px; font-weight:700; color:var(--yb-text); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; }
         .yb-acc-header .acc-tutar { font-size:14px; font-weight:700; color:var(--yb-text); white-space:nowrap; width:130px; text-align:right; flex-shrink:0; margin-left:auto; }
-        .yb-acc-header .acc-ok { font-size:9px; color:var(--yb-text-light); transition:transform 0.2s; flex-shrink:0; }
+        .yb-acc-header .acc-ok { font-size:10px; color:var(--yb-text-light); transition:transform 0.25s; flex-shrink:0; display:flex; align-items:center; justify-content:center; width:18px; height:18px; }
         .yb-acc-header.open .acc-ok { transform:rotate(180deg); }
-        .yb-acc-body { display:none; padding:0 14px 10px 14px; border-top:1px solid var(--yb-border); }
+        .yb-acc-body { display:none; padding:6px 14px 10px 14px; border-top:1px solid var(--yb-border); background:rgba(0,0,0,0.08); border-radius:0 0 8px 8px; }
         .yb-acc-body.open { display:block; }
-        .yb-acc-body table { width:100%; font-size:12px; border-collapse:collapse; margin-top:6px; }
-        .yb-acc-body table td { padding:5px 4px; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
-        .yb-acc-body table td:last-child { text-align:center; width:50px; }
-        .yb-acc-body table tr { display:table-row; }
-        .yb-acc-body table td .acc-input, .yb-acc-body table td .acc-tutar-input { height:30px; line-height:18px; }
-        .yb-acc-body .acc-input { width:100%; padding:5px 8px; border:1px solid var(--yb-border); border-radius:4px; background:rgba(255,255,255,0.06); color:var(--yb-text); font-size:12px; box-sizing:border-box; outline:none; transition:border 0.2s; }
+        .yb-acc-body .acc-items { display:flex; flex-direction:column; gap:4px; margin-top:6px; }
+        .yb-acc-body .acc-item-row { display:flex; align-items:center; gap:8px; padding:8px 10px; background:var(--yb-card); border:1px solid var(--yb-border); border-radius:6px; transition:all 0.15s; }
+        .yb-acc-body .acc-item-row:hover { border-color:rgba(255,255,255,0.12); box-shadow:0 1px 6px rgba(0,0,0,0.15); }
+        .yb-acc-body .acc-item-cell { display:flex; align-items:center; }
+        .yb-acc-body .acc-item-aciklama { flex:1; min-width:0; }
+        .yb-acc-body .acc-item-tutar { width:150px; flex-shrink:0; }
+        .yb-acc-body .acc-item-sil { width:32px; flex-shrink:0; justify-content:center; }
+        .yb-acc-body .acc-input { width:100%; padding:6px 10px; border:1px solid var(--yb-border); border-radius:5px; background:rgba(255,255,255,0.05); color:var(--yb-text); font-size:12px; box-sizing:border-box; outline:none; transition:border 0.2s; }
         .yb-acc-body .acc-input:focus { border-color:var(--yb-accent); }
         .yb-acc-body .acc-tutar-wrap { display:flex; align-items:center; gap:4px; }
-        .yb-acc-body .acc-tutar-wrap .acc-tutar-input { flex:1; min-width:0; padding:5px 8px; border:1px solid var(--yb-border); border-radius:4px; background:rgba(255,255,255,0.06); color:var(--yb-text); font-size:12px; text-align:right; font-weight:600; box-sizing:border-box; outline:none; transition:border 0.2s; }
+        .yb-acc-body .acc-tutar-wrap .acc-tutar-input { width:100%; padding:6px 10px; border:1px solid var(--yb-border); border-radius:5px; background:rgba(255,255,255,0.05); color:var(--yb-text); font-size:12px; text-align:right; font-weight:600; box-sizing:border-box; outline:none; transition:border 0.2s; }
         .yb-acc-body .acc-tutar-wrap .acc-tutar-input:focus { border-color:var(--yb-accent); }
-        .yb-acc-body .acc-tutar-wrap .acc-tl-simge { font-size:11px; color:var(--yb-text-light); flex-shrink:0; line-height:30px; }
-        .yb-acc-body .acc-btn-sil { background:transparent; border:none; color:var(--yb-gider); cursor:pointer; font-size:13px; padding:2px 4px; border-radius:4px; transition:0.2s; }
-        .yb-acc-body .acc-btn-sil:hover { background:rgba(231,76,60,0.15); }
+        .yb-acc-body .acc-tutar-wrap .acc-tl-simge { font-size:11px; color:var(--yb-text-light); flex-shrink:0; line-height:30px; margin-left:2px; }
+        .yb-acc-body .acc-btn-sil { background:transparent; border:none; color:var(--yb-text-light); cursor:pointer; font-size:12px; padding:4px 6px; border-radius:4px; transition:0.2s; opacity:0.5; }
+        .yb-acc-body .acc-item-row:hover .acc-btn-sil { opacity:1; }
+        .yb-acc-body .acc-btn-sil:hover { background:rgba(231,76,60,0.15); color:var(--yb-gider); }
         .yb-acc-body .acc-btn-ekle { display:inline-flex; align-items:center; gap:5px; padding:6px 14px; margin-top:8px; border:1px dashed var(--yb-border); border-radius:8px; background:transparent; color:var(--yb-text-light); font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; }
         .yb-acc-body .acc-btn-ekle:hover { border-color:#a0b8cc; color:#1a3a5c; background:rgba(26,58,92,0.04); transform:translateY(-1px); }
         .yb-acc-body .acc-btn-yonet { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; margin-top:8px; margin-left:6px; border:1px solid var(--yb-border); border-radius:8px; background:transparent; color:var(--yb-text-light); font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; }

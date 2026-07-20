@@ -6006,8 +6006,8 @@ function gorevMailGonder(gorev) {
                 const gider = ybAylikToplam(kayit,"gider",i);
                 h += '<div class="yb-month-card" data-ay="'+i+'" onclick="ybSekmeGoster(\''+i+'\')">'+
                     '<div class="mc-ay">'+YB_AY_ADI[i]+'</div>'+
-                    (gelir>0 ? '<div class="mc-gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>' : '')+
-                    (gider>0 ? '<div class="mc-gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>' : '')+
+                    (gelir>0 ? '<div class="mc-gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>' : '')+
+                    (gider>0 ? '<div class="mc-gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>' : '')+
                     (gelir===0&&gider===0 ? '<div class="mc-bos">—</div>' : '')+
                 '</div>';
             }
@@ -6045,10 +6045,10 @@ function gorevMailGonder(gorev) {
                 '<div class="yb-graph-box full"><canvas id="ybChartAylikKarsilastirma"></canvas></div></div>';
 
             h += '<div class="yb-ozet-row">'+
-                '<div class="yb-ozet-card"><span class="oz-label">Başlangıç Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gelir</span><span class="oz-val green">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gider</span><span class="oz-val red">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Net Bakiye</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+' ?</span></div></div>';
+                '<div class="yb-ozet-card"><span class="oz-label">Başlangıç Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gelir</span><span class="oz-val green">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gider</span><span class="oz-val red">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Net Bakiye</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span></div></div>';
 
             for(let i=0;i<12;i++) {
                 const ay = kayit.aylar[i];
@@ -6138,7 +6138,7 @@ function gorevMailGonder(gorev) {
 
             // Kopyalama
             // Gelir accordion
-            h += '<div class="yb-acc-section"><h4 class="acc-gelir"><i class="fa-solid fa-chart-line"></i> Gelirler</h4>';
+            h += '<div class="yb-acc-section"><h4 class="acc-gelir"><i class="fa-solid fa-chart-line" style="color:var(--yb-gelir);"></i> Gelirler</h4>';
             kayit.gelirKategorileri.forEach(function(ktg){
                 const items = ay.gelirler[ktg]||[];
                 const ara = items.reduce(function(s,i){return s+(i.tutar||0);},0);
@@ -6147,20 +6147,20 @@ function gorevMailGonder(gorev) {
                     '<div class="yb-acc-header" onclick="document.getElementById(\''+itemId+'\').classList.toggle(\'open\');this.classList.toggle(\'open\');">'+
                     '<span class="acc-kat">'+ybTrUpper(ktg)+'</span>'+
                     '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span>'+
-                    '<span class="acc-ok">¡</span></div>'+
+                    '<span class="acc-ok"><i class="fa-solid fa-chevron-down"></i></span></div>'+
                     '<div class="yb-acc-body" id="'+itemId+'">';
                 if(items.length>0) {
-                    h += '<table><tbody>';
+                    h += '<div class="acc-items">';
                     items.forEach(function(k){
-                        h += '<tr data-id="'+k.id+'">'+
-                            '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
-                            '<td style="width:40%;"><div class="acc-tutar-wrap">'+
+                        h += '<div class="acc-item-row" data-id="'+k.id+'">'+
+                            '<div class="acc-item-cell acc-item-aciklama"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></div>'+
+                            '<div class="acc-item-cell acc-item-tutar"><div class="acc-tutar-wrap">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
-                                ' <span class="acc-tl-simge">₺</span></div></td>'+
-                            '<td style="width:15%;"><button class="acc-btn-sil" onclick="ybKalemSil('+k.id+','+ayIdx+')" title="Sil"><i class="fa-solid fa-xmark"></i></button></td>'+
-                        '</tr>';
+                                '<span class="acc-tl-simge">₺</span></div></div>'+
+                            '<div class="acc-item-cell acc-item-sil"><button class="acc-btn-sil" onclick="ybKalemSil('+k.id+','+ayIdx+')" title="Sil"><i class="fa-solid fa-xmark"></i></button></div>'+
+                        '</div>';
                     });
-                    h += '</tbody></table>';
+                    h += '</div>';
                 }
                 h += '<button class="acc-btn-ekle" onclick="ybModalKalemAc(\'gelir\',\''+ktg+'\','+ayIdx+')"><i class="fa-solid fa-plus"></i> Kalem Ekle</button>'+
                     '</div></div>';
@@ -6177,20 +6177,20 @@ function gorevMailGonder(gorev) {
                     '<div class="yb-acc-header" onclick="document.getElementById(\''+itemId+'\').classList.toggle(\'open\');this.classList.toggle(\'open\');">'+
                     '<span class="acc-kat">'+ybTrUpper(ktg)+'</span>'+
                     '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+' ₺</span>'+
-                    '<span class="acc-ok">¡</span></div>'+
+                    '<span class="acc-ok"><i class="fa-solid fa-chevron-down"></i></span></div>'+
                     '<div class="yb-acc-body" id="'+itemId+'">';
                 if(items.length>0) {
-                    h += '<table><tbody>';
+                    h += '<div class="acc-items">';
                     items.forEach(function(k){
-                        h += '<tr data-id="'+k.id+'">'+
-                            '<td style="width:45%;"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></td>'+
-                            '<td style="width:40%;"><div class="acc-tutar-wrap">'+
+                        h += '<div class="acc-item-row" data-id="'+k.id+'">'+
+                            '<div class="acc-item-cell acc-item-aciklama"><input class="acc-input" type="text" value="'+k.aciklama+'" onchange="ybKalemGuncelle('+k.id+',\'aciklama\',this.value)" placeholder="Açıklama"></div>'+
+                            '<div class="acc-item-cell acc-item-tutar"><div class="acc-tutar-wrap">'+
                                 '<input class="acc-tutar-input" type="text" value="'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this);ybKalemGuncelle('+k.id+',\'tutar\',this.value)">'+
-                                ' <span class="acc-tl-simge">₺</span></div></td>'+
-                            '<td style="width:15%;"><button class="acc-btn-sil" onclick="ybKalemSil('+k.id+','+ayIdx+')" title="Sil"><i class="fa-solid fa-xmark"></i></button></td>'+
-                        '</tr>';
+                                '<span class="acc-tl-simge">₺</span></div></div>'+
+                            '<div class="acc-item-cell acc-item-sil"><button class="acc-btn-sil" onclick="ybKalemSil('+k.id+','+ayIdx+')" title="Sil"><i class="fa-solid fa-xmark"></i></button></div>'+
+                        '</div>';
                     });
-                    h += '</tbody></table>';
+                    h += '</div>';
                 }
                 h += '<button class="acc-btn-ekle" onclick="ybModalKalemAc(\'gider\',\''+ktg+'\','+ayIdx+')"><i class="fa-solid fa-plus"></i> Kalem Ekle</button>'+
                     '</div></div>';
@@ -6459,11 +6459,9 @@ function gorevMailGonder(gorev) {
         function ybDomKategoriTotalGuncelle(accBodyId) {
             var body = document.getElementById(accBodyId);
             if(!body) return;
-            var table = body.querySelector('table');
             var total = 0;
-            if(table) table.querySelectorAll('tr[data-id]').forEach(function(tr){
-                var inp = tr.querySelector('.acc-tutar-input');
-                if(inp) total += tmTutarCoz(inp.value||'0');
+            body.querySelectorAll('.acc-item-row .acc-tutar-input').forEach(function(inp){
+                total += tmTutarCoz(inp.value||'0');
             });
             var hdr = body.parentElement.querySelector('.yb-acc-header');
             if(hdr) hdr.querySelector('.acc-tutar').textContent = total.toLocaleString('tr-TR',{minFractionDigits:2});
@@ -6491,8 +6489,8 @@ function gorevMailGonder(gorev) {
             var gelir = ybAylikToplam(kayit,"gelir",ayIdx);
             var gider = ybAylikToplam(kayit,"gider",ayIdx);
             card.querySelectorAll('.mc-gelir, .mc-gider, .mc-bos').forEach(function(el){el.remove();});
-            if(gelir > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>');
-            if(gider > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ?</div>');
+            if(gelir > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
+            if(gider > 0) card.insertAdjacentHTML('beforeend', '<div class="mc-gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺</div>');
             if(gelir===0 && gider===0) card.insertAdjacentHTML('beforeend', '<div class="mc-bos">—</div>');
         }
 
@@ -6538,14 +6536,11 @@ function gorevMailGonder(gorev) {
                 }
                 if(bulunanKtg) {
                     const db=ybVeriYukle(); db.yillar[db.aktifYil]=kayit; ybVeriKaydet(db);
-                    var tr = document.querySelector('#ybSekmeIcerik tr[data-id="'+id+'"]');
-                    if(tr) {
-                        var tbody = tr.parentElement;
-                        tr.remove();
-                        if(tbody && tbody.querySelectorAll('tr[data-id]').length===0) {
-                            var table = tbody.parentElement;
-                            if(table && table.tagName==='TABLE') table.remove();
-                        }
+                    var row = document.querySelector('#ybSekmeIcerik .acc-item-row[data-id="'+id+'"]');
+                    if(row) {
+                        var container = row.closest('.acc-items');
+                        row.remove();
+                        if(container && container.querySelectorAll('.acc-item-row').length===0) container.remove();
                     }
                     var tipPrefix = bulunanTip==='gelirler' ? 'accG' : 'accD';
                     ybDomKategoriTotalGuncelle(tipPrefix+'_'+bulunanKtg.replace(/[^a-z0-9]/gi,'_')+'_'+ayIdx);
