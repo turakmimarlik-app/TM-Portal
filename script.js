@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.83.0';
+﻿        var APP_VERSION = 'V1.84.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -6224,7 +6224,8 @@ function gorevMailGonder(gorev) {
             const toplamGider = aylikGider.reduce((s,v)=>s+v,0);
             const bakiye = (kayit.baslangicBakiye||0) + toplamGelir - toplamGider;
 
-            let h = '<h3 style="border:none;padding:0;margin:0 0 16px 0;"><i class="fa-solid fa-list"></i> Yıllık Bütçe Raporu - '+yil+'</h3>';
+            let h = '<div style="display:flex;align-items:center;gap:12px;margin:0 0 16px 0;"><h3 style="border:none;padding:0;margin:0;"><i class="fa-solid fa-list"></i> Yıllık Bütçe Raporu - '+yil+'</h3>'+
+                '<button class="yb-pdf-btn" onclick="ybPdfIndir('+yil+')"><i class="fa-regular fa-file-lines"></i> PDF İndir</button></div>';
 
             h += '<div class="yb-graph-grid">'+
                 '<div class="yb-graph-box full"><canvas id="ybChartNetDurum"></canvas></div>'+
@@ -6737,7 +6738,7 @@ function gorevMailGonder(gorev) {
 
         function ybPdfIndir(yil) {
             const db = ybVeriYukle();
-            const kayit = db.tamamlananYillar.find(function(y){return y.yil===yil;});
+            const kayit = db.tamamlananYillar.find(function(y){return y.yil===yil;}) || (yil===db.aktifYil ? db.yillar[yil] : null);
             if(!kayit) { tmNotify("Veri bulunamadı!","error"); return; }
             const tG = ybYilToplam(kayit,"gelir"), tGi = ybYilToplam(kayit,"gider");
             const net = (kayit.baslangicBakiye||0)+tG-tGi;
@@ -7142,14 +7143,14 @@ function gorevMailGonder(gorev) {
                         // --- GELIR TABLOSU ---
                         var gRows = [];
                         Object.entries(ayd.gelirler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL']); });
+                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺']); });
                         });
                         _ct("GELIRLER", gRows, POZITIF, [245,252,245]);
 
                         // --- GIDER TABLOSU ---
                         var gdRows = [];
                         Object.entries(ayd.giderler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' TL']); });
+                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺']); });
                         });
                         _ct("GIDERLER", gdRows, NEGATIF, [252,245,245]);
 
