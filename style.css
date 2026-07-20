@@ -1627,13 +1627,14 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         .yb-view-pill:hover { color:var(--yb-text); border-color:var(--border-color); background:var(--bg-main); transform:translateY(-1px); }
         .yb-view-pill.yb-view-aktif { background:linear-gradient(135deg,#1a3a5c,#0d1b2a); border:1px solid #a0b8cc; color:#a0b8cc; font-weight:700; }
         .yb-month-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
-        .yb-month-card { background:var(--yb-card); border:1px solid var(--yb-border); border-radius:8px; padding:10px 6px; cursor:pointer; text-align:center; transition:all 0.2s; position:relative; overflow:hidden; }
+        .yb-month-card { background:var(--yb-card); border:1px solid var(--yb-border); border-radius:8px; cursor:pointer; transition:all 0.2s; position:relative; overflow:hidden; display:flex; flex-direction:row; min-height:72px; }
         .yb-month-card:hover { border-color:var(--yb-accent); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,0.3); }
         .yb-month-card.active { border-color:var(--yb-accent); box-shadow:0 0 0 2px rgba(201,168,76,0.25); }
-        .yb-month-card .mc-ay { font-size:13px; font-weight:700; color:var(--yb-text); margin-bottom:4px; }
+        .yb-month-card .mc-ay-side { writing-mode:vertical-lr; text-orientation:upright; font-size:12px; font-weight:800; color:var(--yb-accent); padding:8px 4px; background:rgba(255,255,255,0.03); border-right:1px solid var(--yb-border); letter-spacing:-1px; flex-shrink:0; display:flex; align-items:center; justify-content:center; text-transform:uppercase; user-select:none; }
+        .yb-month-card .mc-data { flex:1; padding:7px 8px; display:flex; flex-direction:column; justify-content:center; gap:1px; min-width:0; }
         .yb-month-card .mc-gelir { font-size:10px; color:var(--yb-gelir); font-weight:600; line-height:1.5; }
         .yb-month-card .mc-gider { font-size:10px; color:var(--yb-gider); font-weight:600; line-height:1.5; }
-        .yb-month-card .mc-fark { font-size:10px; font-weight:700; line-height:1.5; margin-top:2px; padding-top:2px; border-top:1px solid rgba(255,255,255,0.06); }
+        .yb-month-card .mc-fark { font-size:10px; font-weight:700; line-height:1.5; margin-top:1px; padding-top:1px; border-top:1px solid rgba(255,255,255,0.06); }
         .yb-month-card .mc-fark-poz { color:var(--yb-gelir); }
         .yb-month-card .mc-fark-neg { color:var(--yb-gider); }
         .yb-month-card .mc-bos { font-size:10px; color:var(--yb-text-light); font-style:italic; line-height:1.4; }
