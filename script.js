@@ -6806,10 +6806,10 @@ function gorevMailGonder(gorev) {
                         data:{ labels:YB_AY_KISA, datasets:[
                             { label:'Gelir', data:aylikGelir, borderColor:'#2E7D32', fill:false, tension:0.3, pointRadius:6, pointHoverRadius:8 },
                             { label:'Gider', data:aylikGider, borderColor:'#9E2A2B', fill:false, tension:0.3, pointRadius:6, pointHoverRadius:8 },
-                            { label:'Sirket Bakiyesi', data:bakiyeAylik, borderColor:'#F57C00', fill:true, tension:0.3, borderWidth:4, pointRadius:6, pointHoverRadius:8 }
+                            { label:'Şirket Bakiyesi', data:bakiyeAylik, borderColor:'#F57C00', fill:true, tension:0.3, borderWidth:4, pointRadius:6, pointHoverRadius:8 }
                         ]},
                         options:{ responsive:false, maintainAspectRatio:false,
-                            plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:yil+' Yili Net Durum Trendi',font:{size:28,weight:'bold'}} },
+                            plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:yil+' Yılı Net Durum Trendi',font:{size:28,weight:'bold'}} },
                             scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
                         }
                     });
@@ -6822,7 +6822,7 @@ function gorevMailGonder(gorev) {
                             { label:'Gider', data:aylikGider, backgroundColor:'#9E2A2B', borderRadius:4 }
                         ]},
                         options:{ responsive:false, maintainAspectRatio:false,
-                            plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:'Aylik Gelir / Gider Karsilastirmasi',font:{size:28,weight:'bold'}} },
+                            plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:'Aylık Gelir / Gider Karşılaştırması',font:{size:28,weight:'bold'}} },
                             scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+' ₺';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
                         },
                         plugins: [{
@@ -6973,7 +6973,7 @@ function gorevMailGonder(gorev) {
                     }
                     doc.setFont(FN, "bold"); doc.setFontSize(15);
                     doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                    doc.text(t(yil+" YILI BUTCE RAPORU"), O, 13, {align:"center"});
+                    doc.text(t(yil+" YILI BÜTÇE RAPORU"), O, 13, {align:"center"});
                     doc.setFont(FN, "normal"); doc.setFontSize(6);
                     doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
                     doc.text(t("Rapor: ")+tarihStr, M+W, 13, {align:"right"});
@@ -6981,10 +6981,10 @@ function gorevMailGonder(gorev) {
 
                     // --- OZET KARTLARI (dashboard karti, sol renk cubugu) ---
                     var kartV = [
-                        {l:t("BASLANGIC BAKIYESI"), v:kayit.baslangicBakiye||0, c:[80,90,105]},
-                        {l:t("TOPLAM GELIR"), v:tG, c:[39,120,60]},
-                        {l:t("TOPLAM GIDER"), v:tGi, c:[192,57,43]},
-                        {l:t("NET BAKIYE"), v:net, c:net>=0?[39,120,60]:[192,57,43]}
+                        {l:t("BAŞLANGIÇ BAKİYESİ"), v:kayit.baslangicBakiye||0, c:[80,90,105]},
+                        {l:t("TOPLAM GELİR"), v:tG, c:[39,120,60]},
+                        {l:t("TOPLAM GİDER"), v:tGi, c:[192,57,43]},
+                        {l:t("NET BAKİYE"), v:net, c:net>=0?[39,120,60]:[192,57,43]}
                     ];
                     var kG = (W-12)/4, kY = 24;
                     for(var k=0;k<4;k++) {
@@ -7051,7 +7051,7 @@ function gorevMailGonder(gorev) {
                     doc.line(M, y, M+W, y);
                     doc.setFont(FN, "normal"); doc.setFontSize(6);
                     doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
-                    doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, M, y+4);
+                    doc.text(t(yil+" Yılı Bütçe Raporu | ")+tarihStr, M, y+4);
                     doc.text(t("Sayfa ")+sayfaSayisi, M+W, y+4, {align:"right"});
 
                     SB='ayliklar';
@@ -7076,7 +7076,7 @@ function gorevMailGonder(gorev) {
                         }
                         doc.setFont(FN, "bold"); doc.setFontSize(7);
                         doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        doc.text(t(yil+" YILI BUTCE RAPORU"), M+W, 10, {align:"right"});
+                        doc.text(t(yil+" YILI BÜTÇE RAPORU"), M+W, 10, {align:"right"});
                         y = 20;
 
                         // --- Ay Basligi (kalın sol cubuk) ---
@@ -7091,8 +7091,8 @@ function gorevMailGonder(gorev) {
                         var fark = aG - aGi;
                         var oKartG = (W-8)/3, oKartY = 16;
                         var oItems = [
-                            {l:t("GELIR"), v:aG, c:POZITIF},
-                            {l:t("GIDER"), v:aGi, c:NEGATIF},
+                            {l:t("GELİR"), v:aG, c:POZITIF},
+                            {l:t("GİDER"), v:aGi, c:NEGATIF},
                             {l:t("NET"), v:fark, c:fark>=0?POZITIF:NEGATIF}
                         ];
                         for(var oi=0;oi<3;oi++) {
@@ -7120,7 +7120,7 @@ function gorevMailGonder(gorev) {
                             var tw=[35,Math.max(W-63,10),28], rh=6;
                             doc.setFont(FN,"bold");doc.setFontSize(6.5);
                             doc.setFillColor(SEKME_RENGI[0],SEKME_RENGI[1],SEKME_RENGI[2]);
-                            for(var ci=0;ci<3;ci++){var cx=M+(ci===0?0:tw[0]+(ci===1?0:tw[1]));doc.rect(cx,y,tw[ci],rh,'F');doc.setTextColor(255,255,255);doc.text(t(['KATEGORI','ACIKLAMA','TUTAR'][ci]),cx+tw[ci]/2,y+4.5,{align:'center'});}
+                            for(var ci=0;ci<3;ci++){var cx=M+(ci===0?0:tw[0]+(ci===1?0:tw[1]));doc.rect(cx,y,tw[ci],rh,'F');doc.setTextColor(255,255,255);doc.text(t(['KATEGORİ','AÇIKLAMA','TUTAR'][ci]),cx+tw[ci]/2,y+4.5,{align:'center'});}
                             y+=rh;
                             doc.setFont(FN,"normal");doc.setFontSize(6.5);
                             for(var ri=0;ri<rows.length;ri++){
@@ -7143,14 +7143,14 @@ function gorevMailGonder(gorev) {
                         Object.entries(ayd.gelirler||{}).forEach(function(e) {
                             e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺']); });
                         });
-                        _ct("GELIRLER", gRows, POZITIF, [245,252,245]);
+                        _ct("GELİRLER", gRows, POZITIF, [245,252,245]);
 
                         // --- GIDER TABLOSU ---
                         var gdRows = [];
                         Object.entries(ayd.giderler||{}).forEach(function(e) {
                             e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+' ₺']); });
                         });
-                        _ct("GIDERLER", gdRows, NEGATIF, [252,245,245]);
+                        _ct("GİDERLER", gdRows, NEGATIF, [252,245,245]);
 
                         // --- Ay Net Bilgisi (sol renk cubugu) ---
                         if(y > 277) { doc.addPage(); sayfaSayisi++; y = 18; }
@@ -7167,12 +7167,12 @@ function gorevMailGonder(gorev) {
                         doc.line(M, y, M+W, y);
                         doc.setFont(FN, "normal"); doc.setFontSize(5.5);
                         doc.setTextColor(GRI_METIN[0], GRI_METIN[1], GRI_METIN[2]);
-                        doc.text(t(yil+" Yili Butce Raporu | ")+tarihStr, M, y+4);
+                        doc.text(t(yil+" Yılı Bütçe Raporu | ")+tarihStr, M, y+4);
                         doc.text(t("Sayfa ")+sayfaSayisi, M+W, y+4, {align:"right"});
                     }
 
-                    doc.save('Butce_Raporu_'+yil+'.pdf');
-                    tmNotify(t("Butce PDF olusturuldu."),"success");
+                    doc.save('Bütçe_Raporu_'+yil+'.pdf');
+                    tmNotify(t("Bütçe PDF oluşturuldu."),"success");
                     } catch(e) { e.message = SB+": "+e.message; throw e; }
                 }
 
@@ -7182,8 +7182,8 @@ function gorevMailGonder(gorev) {
                 giris();
 
             } catch(e) {
-                console.error("Butce PDF hatasi:", e);
-                tmNotify("Butce PDF hatasi: "+e.message,"error");
+                console.error("Bütçe PDF hatası:", e);
+                tmNotify("Bütçe PDF hatası: "+e.message,"error");
             }
         }
 
