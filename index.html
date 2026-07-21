@@ -125,7 +125,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.86.4</div>
+                <div class="version-tag">V1.86.3</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1942,7 +1942,7 @@
     </div>
 
     <script src="script.js?v=1.74.11"></script>
-<script>function tmAcInputKoru(el){if(!el||el.tmAcKorundu)return;if(el.tagName==='INPUT'||el.tagName==='TEXTAREA'){el.setAttribute('autocomplete',el.type==='password'?'new-password':'nope');el.tmAcKorundu=true}}document.addEventListener('focus',function(e){tmAcInputKoru(e.target)},true);function tmAcYenileriTara(){document.querySelectorAll('input:not([type="hidden"],[type="checkbox"],[type="radio"],[type="file"]),textarea').forEach(tmAcInputKoru)}var tmAcGozlem=new MutationObserver(tmAcYenileriTara);tmAcGozlem.observe(document.body,{childList:true,subtree:true});tmAcYenileriTara();</script>
+<script>function tmAutoCompleteKapat(){var q=document.querySelectorAll('input:not([type="hidden"],[type="checkbox"],[type="radio"],[type="file"]),textarea');q.forEach(function(i){if(!i.hasAttribute('data-tm-ac')){i.setAttribute('autocomplete','nope');if(i.type==='password')i.setAttribute('autocomplete','new-password');i.setAttribute('data-tm-ac','1')}})}var tmAcGozlem=new MutationObserver(function(){tmAutoCompleteKapat()});tmAcGozlem.observe(document.body,{childList:true,subtree:true});tmAutoCompleteKapat();</script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
