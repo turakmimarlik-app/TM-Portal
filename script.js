@@ -5900,7 +5900,7 @@ function gorevMailGonder(gorev) {
             }
             return db;
         }
-        function ybVeriKaydet(db) { try { origSetItem("tm_yillik_butce_db", JSON.stringify(db)); } catch(e) { console.error("Yillik butce kaydetme hatasi:", e); } }
+        function ybVeriKaydet(db) { try { localStorage.setItem("tm_yillik_butce_db", JSON.stringify(db)); } catch(e) { console.error("Yillik butce kaydetme hatasi:", e); } }
 
         function ybAktifYil() { return ybVeriYukle().aktifYil; }
 
