@@ -1764,6 +1764,7 @@ function gorevMailGonder(gorev) {
                             }
                             gelirAylik.push(g); giderAylik.push(gd);
                         }
+                        Chart.defaults.font.family = "'Segoe UI','Segoe UI Symbol',Arial,sans-serif";
                         window._dashChart = new Chart(ctx, {
                             type: 'bar',
                             data: {
@@ -1776,7 +1777,7 @@ function gorevMailGonder(gorev) {
                             options: {
                                 responsive: true, maintainAspectRatio: true,
                                 plugins: { legend: { labels: { font: {size:11} } }, datalabels: { display: false } },
-                                scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' ₺'; } } } }
+                                scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' ₺'; }, font: { family: "'Segoe UI Symbol','Segoe UI',Arial,sans-serif" } } } }
                             }
                         });
                     }
