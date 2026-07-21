@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.91.0';
+﻿        var APP_VERSION = 'V1.92.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -1556,7 +1556,7 @@ function gorevMailGonder(gorev) {
                     sirketBakiye += htDb.nakit || 0;
                 }
                 setText("dashFinBakiye", tmTl(sirketBakiye));
-            } catch(e) { setText("dashFinBakiye", "0,00 ₺"); }
+            } catch(e) { setText("dashFinBakiye", "0,00 \u20BA"); }
 
             // YILLIK BÜTÇE VERİSİ (gelir/gider)
             try {
@@ -1584,7 +1584,7 @@ function gorevMailGonder(gorev) {
                 });
                 setText("dashFinKalanTahsilat", tmTl(imHacim - imTahsilat));
                 setText("dashFinKalanOdeme", tmTl(imVerecek - imOdenen));
-            } catch(e) { setText("dashFinKalanTahsilat", "0,00 ₺"); setText("dashFinKalanOdeme", "0,00 ₺"); }
+            } catch(e) { setText("dashFinKalanTahsilat", "0,00 \u20BA"); setText("dashFinKalanOdeme", "0,00 \u20BA"); }
 
             // SON TEKLİFLER TABLOSU
             const offerBody = document.getElementById("dashRecentOfferBody");
@@ -1765,6 +1765,7 @@ function gorevMailGonder(gorev) {
                             gelirAylik.push(g); giderAylik.push(gd);
                         }
                         Chart.defaults.font.family = "'Segoe UI','Segoe UI Symbol',Arial,sans-serif";
+                        if (window._dashChart) window._dashChart.destroy();
                         window._dashChart = new Chart(ctx, {
                             type: 'bar',
                             data: {
@@ -1781,6 +1782,8 @@ function gorevMailGonder(gorev) {
                             }
                         });
                     }
+                } else {
+                    setTimeout(function(){ dashboardVerileriniGuncelle(); }, 500);
                 }
             } catch(e) { console.warn('Dashboard grafik hatasi:', e); }
 
