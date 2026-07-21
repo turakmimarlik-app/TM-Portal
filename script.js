@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.92.2';
+﻿        var APP_VERSION = 'V1.93.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -5885,7 +5885,7 @@ function gorevMailGonder(gorev) {
             if(!db || !db.aktifYil) {
                 db = { aktifYil: simdi, yillar: {}, tamamlananYillar: [] };
                 db.yillar[simdi] = { baslangicBakiye:0, gelirKategorileri:[...YB_GELIR_VARSAYILAN], giderKategorileri:[...YB_GIDER_VARSAYILAN], aylar:{} };
-                localStorage.setItem("tm_yillik_butce_db", JSON.stringify(db));
+                origSetItem("tm_yillik_butce_db", JSON.stringify(db));
             } else if(db.aktifYil !== simdi) {
                 const eskiYil = db.yillar[db.aktifYil];
                 if(eskiYil) {
@@ -5900,7 +5900,7 @@ function gorevMailGonder(gorev) {
             }
             return db;
         }
-        function ybVeriKaydet(db) { try { localStorage.setItem("tm_yillik_butce_db", JSON.stringify(db)); } catch(e) { console.error("Yillik butce kaydetme hatasi:", e); } }
+        function ybVeriKaydet(db) { try { origSetItem("tm_yillik_butce_db", JSON.stringify(db)); } catch(e) { console.error("Yillik butce kaydetme hatasi:", e); } }
 
         function ybAktifYil() { return ybVeriYukle().aktifYil; }
 
