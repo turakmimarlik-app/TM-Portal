@@ -28,7 +28,7 @@
             .checkbox-group { grid-template-columns:1fr; }
             .app-table, .dash-table-widget, .ft-table, .it-tablo { display:block; overflow-x:auto; white-space:nowrap; }
             .portfolio-grid { grid-template-columns:1fr; }
-            .dash-stat-row { grid-template-columns:repeat(3,1fr); gap:8px; }
+            .dash-stat-row { gap:6px; }
             .dash-stat-box { padding:12px 8px; }
             .dash-stat-box .num { font-size:18px; }
             .dash-stat-box .icon { font-size:16px; }
@@ -102,7 +102,12 @@
             .yb-yil-tablo .t-islem button { padding:3px 6px; font-size:8px; margin-left:0; }
         }
         @media (max-width:480px) {
-            .dash-stat-row { grid-template-columns:repeat(2,1fr); }
+            .dash-stat-row { gap:5px; }
+            .dash-stat-box { padding:10px 6px; }
+            .dash-stat-box .num { font-size:16px; }
+            .dash-stat-box .lbl { font-size:7px; }
+            .dash-stat-box .icon { font-size:14px; }
+            .dash-stat-box .icon i { font-size:14px; }
             .dash-shortcuts { grid-template-columns:repeat(2,1fr); }
             .page { padding:10px; }
             .main-content { padding:10px; }
@@ -154,7 +159,7 @@
             .page { padding:6px; }
             .main-content { padding:6px; }
             .btn { padding:8px 12px; font-size:12px; }
-            .dash-stat-row { grid-template-columns:1fr 1fr; gap:4px; }
+            .dash-stat-row { gap:3px; }
             .dash-stat-box { padding:8px 4px; }
             .dash-stat-box .num { font-size:15px; }
             h2 { font-size:15px !important; }
