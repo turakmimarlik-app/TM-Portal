@@ -1778,7 +1778,7 @@ function gorevMailGonder(gorev) {
                             options: {
                                 responsive: true, maintainAspectRatio: true,
                                 plugins: { legend: { labels: { font: {size:11} } }, datalabels: { display: false } },
-                                scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' TL'; } } } }
+                                scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' ₺'; } } } }
                             }
                         });
                     }
@@ -4079,9 +4079,9 @@ function gorevMailGonder(gorev) {
                 const t = m * f;
                 araToplam += t; kdvToplam += (t * (k / 100));
             });
-            document.getElementById("liveAra").innerText = araToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  TL";
-            document.getElementById("liveKdv").innerText = kdvToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  TL";
-            document.getElementById("liveGenel").innerText = (araToplam + kdvToplam).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  TL";
+            document.getElementById("liveAra").innerText = araToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  ₺";
+            document.getElementById("liveKdv").innerText = kdvToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  ₺";
+            document.getElementById("liveGenel").innerText = (araToplam + kdvToplam).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  ₺";
         }
 
         function teklifFormuTemizle() {
@@ -4136,7 +4136,7 @@ function gorevMailGonder(gorev) {
             return { 
                 id: yeniId, musteriAd, firma, isAdi, hazirlayan, telefon, sTarih, kalemler,
                 araTutar: araToplam, kdvTutar: kdvToplam,
-                genelTutar: (araToplam + kdvToplam).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  TL" 
+                genelTutar: (araToplam + kdvToplam).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  ₺" 
             };
         }
 
@@ -4190,11 +4190,11 @@ function gorevMailGonder(gorev) {
             const pBody = document.getElementById("pOutTableBody"); pBody.innerHTML = "";
             veri.kalemler.forEach(k => {
                 const t = k.miktar * k.fiyat;
-                pBody.innerHTML += `<tr><td class="pdf-cell-hizmet">${k.servis}</td><td style="text-align:center;">${k.miktar}</td><td style="text-align:center;">${k.birim||''}</td><td style="text-align:right;">${k.fiyat.toLocaleString('tr-TR')}  TL</td><td style="text-align:center;">%${k.kdv}</td><td style="text-align:right;">${t.toLocaleString('tr-TR')}  TL</td></tr>`;
+                pBody.innerHTML += `<tr><td class="pdf-cell-hizmet">${k.servis}</td><td style="text-align:center;">${k.miktar}</td><td style="text-align:center;">${k.birim||''}</td><td style="text-align:right;">${k.fiyat.toLocaleString('tr-TR')}  ₺</td><td style="text-align:center;">%${k.kdv}</td><td style="text-align:right;">${t.toLocaleString('tr-TR')}  ₺</td></tr>`;
             });
 
-            document.getElementById("pOutAra").innerText = (veri.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  TL";
-            document.getElementById("pOutKdv").innerText = (veri.kdvTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  TL";
+            document.getElementById("pOutAra").innerText = (veri.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  ₺";
+            document.getElementById("pOutKdv").innerText = (veri.kdvTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + "  ₺";
             document.getElementById("pOutGenel").innerText = veri.genelTutar;
 
             const template = document.getElementById("pdf-export-template");
@@ -4449,7 +4449,7 @@ function gorevMailGonder(gorev) {
                     const item = eleman.veri;
                     const globalIdx = eleman.globalIndex;
                     const formatliTarih = item.tarih ? new Date(item.tarih).toLocaleDateString("tr-TR") : "-";
-                    const formatliFiyat = item.fiyat.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "  TL";
+                    const formatliFiyat = item.fiyat.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "  ₺";
 
                     tabloHTML += `
                         <tr>
@@ -4646,16 +4646,16 @@ function gorevMailGonder(gorev) {
                             <div style="padding:0 20px;"><small style="font-size:11px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">AKTİF İŞLER</small><span style="font-weight:900; color:var(--accent-red); font-size:28px;">${db.length}</span></div>
                         </div>
                         <div style="display:flex; justify-content:space-around; text-align:center; gap:8px;">
-                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL İŞ HACMİ</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelHacim.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR</small><span style="font-weight:900; color:${karRenk}; font-size:22px;">${genelKar.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL İŞ HACMİ</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelHacim.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR</small><span style="font-weight:900; color:${karRenk}; font-size:22px;">${genelKar.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                             <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR %</small><span style="font-weight:900; color:${karYuzdeRenk}; font-size:22px;">%${genelKarYuzde}</span></div>
-                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL TAHSİLAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                            <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL ÖDENEN</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL TAHSİLAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                            <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL ÖDENEN</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                         </div>
                         <div style="display:flex; justify-content:space-around; text-align:center; gap:8px; padding-top:10px; border-top:1px solid var(--border-color);">
-                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KALAN ÖDEME</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelKalan.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">KALAN TAHSİLAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelKalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                            <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">NET</small><span style="font-weight:900; color:${netRenk}; font-size:22px;">${genelNet.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KALAN ÖDEME</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelKalan.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                            <div style="flex:1; border-right:1px solid var(--border-color); padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">KALAN TAHSİLAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelKalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                            <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--text-light); font-weight:600; display:block; letter-spacing:0.5px;">NET</small><span style="font-weight:900; color:${netRenk}; font-size:22px;">${genelNet.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                         </div>
                     </div>
                 `;
@@ -4696,7 +4696,7 @@ function gorevMailGonder(gorev) {
                 alacakKalemler.forEach(k => {
                     alacakHTML += `<tr>
                         <td style="padding:8px 6px; font-size:13px;">${k.aciklama || "-"}</td>
-                        <td style="padding:8px 6px; font-size:13px; text-align:right; font-weight:700; color:var(--btn-green);">${(k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</td>
+                        <td style="padding:8px 6px; font-size:13px; text-align:right; font-weight:700; color:var(--btn-green);">${(k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</td>
                         <td style="padding:8px 6px; font-size:12px;">${k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-"}</td>
                         <td style="padding:8px 6px; text-align:center;"><button class="btn-danger" onclick="isMuhasebeKalemSil(${kayit.id}, ${k.kalemId})" style="padding:4px 10px; font-size:11px;">X</button></td>
                     </tr>`;
@@ -4718,9 +4718,9 @@ function gorevMailGonder(gorev) {
                     verecekHTML += `<tr>
                         <td style="padding:8px 6px; font-size:13px;">${k.dal || k.aciklama || "-"}</td>
                         <td style="padding:8px 6px; font-size:11px; color:var(--text-light);">${k.kisi || "-"}</td>
-                        <td style="padding:8px 6px; font-size:13px; text-align:right; font-weight:700;">${(k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</td>
-                        <td style="padding:8px 6px; font-size:13px; text-align:right; font-weight:600; color:var(--btn-green);">${odenen.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</td>
-                        <td style="padding:8px 6px; font-size:13px; text-align:right; font-weight:600; color:var(--accent-red);">${kalan.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</td>
+                        <td style="padding:8px 6px; font-size:13px; text-align:right; font-weight:700;">${(k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</td>
+                        <td style="padding:8px 6px; font-size:13px; text-align:right; font-weight:600; color:var(--btn-green);">${odenen.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</td>
+                        <td style="padding:8px 6px; font-size:13px; text-align:right; font-weight:600; color:var(--accent-red);">${kalan.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</td>
                         <td style="padding:8px 6px; font-size:12px;">${k.odemeTarihi ? new Date(k.odemeTarihi).toLocaleDateString("tr-TR") : "-"}</td>
                         <td style="padding:8px 6px; text-align:center;"><span style="font-size:11px; font-weight:700; padding:3px 8px; border-radius:4px; color:white; background:${durumRenk};">${durumText}</span></td>
                         <td style="padding:8px 6px; text-align:center; white-space:nowrap;">
@@ -4731,7 +4731,7 @@ function gorevMailGonder(gorev) {
                     <tr id="odemeYapFormRow_${kayit.id}_${k.kalemId}" style="display:none;">
                         <td colspan="8" style="padding:0;">
                             <div id="odemeYapForm_${kayit.id}_${k.kalemId}" class="inline-form" style="display:none; margin:4px 8px;">
-                                <label>ÖDEME TUTARI ( TL)<br><input type="text" id="odemeYapTutar_${kayit.id}_${k.kalemId}" placeholder="0.000,00" style="text-transform:none; text-align:right; flex:1; min-width:80px;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>
+                                <label>ÖDEME TUTARI ( ₺)<br><input type="text" id="odemeYapTutar_${kayit.id}_${k.kalemId}" placeholder="0.000,00" style="text-transform:none; text-align:right; flex:1; min-width:80px;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>
                                 <label>TARİH<br><input type="date" id="odemeYapTarih_${kayit.id}_${k.kalemId}" value="${anlikTarihGetir()}" style="flex:1; min-width:120px;"></label>
                                 <div style="display:flex; gap:4px; align-self:flex-end;">
                                     <button class="btn-form btn-form-save" onclick="isMuhasebeOdemeYapKaydet(${kayit.id}, ${k.kalemId})">KAYDET</button>
@@ -4751,12 +4751,12 @@ function gorevMailGonder(gorev) {
                         kayitlar.forEach((od, odIdx) => {
                             const odemeTarih = od.tarih ? new Date(od.tarih).toLocaleDateString("tr-TR") : "-";
                             gecmisHTML += '<div style="display:flex; align-items:center; gap:8px; margin:3px 0; flex-wrap:wrap;">';
-                            gecmisHTML += '<span style="font-size:12px;">• ' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL <span style="color:var(--text-light);">(' + odemeTarih + ')</span></span>';
+                            gecmisHTML += '<span style="font-size:12px;">• ' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺ <span style="color:var(--text-light);">(' + odemeTarih + ')</span></span>';
                             gecmisHTML += '<button class="btn-warning" onclick="isMuhasebeOdemeGecmisiGosterEdit(' + kayit.id + ',' + k.kalemId + ',' + odIdx + ')" style="padding:2px 8px; font-size:10px;">Düzenle</button>';
                             gecmisHTML += '<button class="btn-danger" onclick="isMuhasebeOdemeGecmisiSil(' + kayit.id + ',' + k.kalemId + ',' + odIdx + ')" style="padding:2px 8px; font-size:10px;">Sil</button>';
                             gecmisHTML += '</div>';
                             gecmisHTML += '<div id="odemeGecmisiEdit_' + kayit.id + '_' + k.kalemId + '_' + odIdx + '" class="inline-form" style="display:none; margin:2px 0 6px 0; padding:6px 8px;">';
-                            gecmisHTML += '<label>TUTAR ( TL)<br><input type="text" id="odemeGecEditTutar_' + kayit.id + '_' + k.kalemId + '_' + odIdx + '" value="' + od.tutar.toFixed(2) + '" style="text-transform:none; text-align:right; flex:1; min-width:80px;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>';
+                            gecmisHTML += '<label>TUTAR ( ₺)<br><input type="text" id="odemeGecEditTutar_' + kayit.id + '_' + k.kalemId + '_' + odIdx + '" value="' + od.tutar.toFixed(2) + '" style="text-transform:none; text-align:right; flex:1; min-width:80px;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>';
                             gecmisHTML += '<label>TARİH<br><input type="date" id="odemeGecEditTarih_' + kayit.id + '_' + k.kalemId + '_' + odIdx + '" value="' + (od.tarih || '') + '" style="flex:1; min-width:120px;"></label>';
                             gecmisHTML += '<div style="display:flex; gap:4px; align-self:flex-end;">';
                             gecmisHTML += '<button class="btn-form btn-form-save" onclick="isMuhasebeOdemeGecmisiKaydet(' + kayit.id + ',' + k.kalemId + ',' + odIdx + ')" style="padding:4px 10px; font-size:10px;">KAYDET</button>';
@@ -4800,18 +4800,18 @@ function gorevMailGonder(gorev) {
 
                         <div style="display:flex; flex-direction:column; gap:3px; background:var(--bg-main); padding:8px 20px; border-radius:8px; margin:5px 0 10px 0; border:1px solid var(--border-color);">
                             <div style="display:flex; justify-content:space-between; text-align:center; gap:2px;">
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAŞMA ÜCRETİ</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM KAR</small><span style="font-weight:800; color:${karRenk}; font-size:15px; line-height:1.3;">${toplamKar.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAŞMA ÜCRETİ</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM KAR</small><span style="font-weight:800; color:${karRenk}; font-size:15px; line-height:1.3;">${toplamKar.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                                 <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KAR %</small><span style="font-weight:800; color:${karYuzdeRenkKart}; font-size:15px; line-height:1.3;">%${karYuzde}</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM GİDER</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM GİDER</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                                 <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAŞMA TARİHİ</small><span style="font-weight:700; color:var(--text-dark); font-size:15px; line-height:1.3;">${kayit.anlasmaTarihi ? new Date(kayit.anlasmaTarihi).toLocaleDateString("tr-TR") : "-"}</span></div>
                             </div>
                             <div style="display:flex; justify-content:space-between; text-align:center; gap:2px; padding-top:4px; border-top:1px solid var(--border-color);">
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TAHSİLAT</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN TAHSİLAT</small><span style="font-weight:800; color:${kalanTahsilatRenk}; font-size:15px; line-height:1.3;">${kalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ÖDENEN</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN ÖDEME</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                                <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">NET</small><span style="font-weight:800; color:${netRenkKart}; font-size:15px; line-height:1.3;">${netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TAHSİLAT</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN TAHSİLAT</small><span style="font-weight:800; color:${kalanTahsilatRenk}; font-size:15px; line-height:1.3;">${kalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ÖDENEN</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                                <div style="flex:1; border-right:1px solid var(--border-color); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN ÖDEME</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                                <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">NET</small><span style="font-weight:800; color:${netRenkKart}; font-size:15px; line-height:1.3;">${netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                             </div>
                         </div>
 
@@ -4822,7 +4822,7 @@ function gorevMailGonder(gorev) {
                             </div>
                             <div id="tahsilatForm_${kayit.id}" class="inline-form" style="display:none;">
                                 <label>AÇIKLAMA<input type="text" id="tahsilatAciklama_${kayit.id}" placeholder="AÇIKLAMA" value="TAHSİLAT ${alacakKalemler.length + 1}"></label>
-                                <label>TUTAR ( TL)<input type="text" id="tahsilatTutar_${kayit.id}" placeholder="0.000,00" style="text-transform:none; text-align:right;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>
+                                <label>TUTAR ( ₺)<input type="text" id="tahsilatTutar_${kayit.id}" placeholder="0.000,00" style="text-transform:none; text-align:right;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>
                                 <label>TARİH<input type="date" id="tahsilatTarih_${kayit.id}" value="${anlikTarihGetir()}"></label>
                                 <div style="display:flex; gap:4px; align-self:flex-end;">
                                     <button class="btn-form btn-form-save" onclick="isMuhasebeTahsilatKaydet(${kayit.id})">KAYDET</button>
@@ -4852,8 +4852,8 @@ function gorevMailGonder(gorev) {
                             <div id="odemeForm_${kayit.id}" class="inline-form" style="display:none;">
                                 <label>PROJE / HİZMET DALI<select id="odemeDal_${kayit.id}" style="flex:1; min-width:120px;"><option value="">SEÇİNİZ</option>${SABIT_DALLAR.map(d => '<option value="' + d + '">' + d + '</option>').join('')}</select></label>
                                 <label>KİŞİ / FİRMA<select id="odemeKisi_${kayit.id}" style="flex:1; min-width:120px;"><option value="">SEÇİNİZ</option>${partnerOptions}</select></label>
-                                <label>TOPLAM TUTAR ( TL)<input type="text" id="odemeTutar_${kayit.id}" placeholder="0.000,00" style="text-transform:none; text-align:right;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>
-                                <label>ÖDENEN ( TL)<input type="text" id="odemeOdenen_${kayit.id}" placeholder="0.000,00" style="text-transform:none; text-align:right;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)" value="0"></label>
+                                <label>TOPLAM TUTAR ( ₺)<input type="text" id="odemeTutar_${kayit.id}" placeholder="0.000,00" style="text-transform:none; text-align:right;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></label>
+                                <label>ÖDENEN ( ₺)<input type="text" id="odemeOdenen_${kayit.id}" placeholder="0.000,00" style="text-transform:none; text-align:right;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)" value="0"></label>
                                 <label>TARİH<input type="date" id="odemeTarih_${kayit.id}" value="${anlikTarihGetir()}"></label>
                                 <div style="display:flex; gap:4px; align-self:flex-end;">
                                     <button class="btn-form btn-form-save" onclick="isMuhasebeOdemeKaydet(${kayit.id})">KAYDET</button>
@@ -5216,14 +5216,14 @@ function gorevMailGonder(gorev) {
                         <div style="padding:0 20px;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">TAMAMLANAN İŞ SAYISI</small><span style="font-weight:900; color:var(--accent-red); font-size:28px;">${db.length}</span></div>
                     </div>
                     <div style="display:flex; justify-content:space-around; text-align:center; gap:8px;">
-                        <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">TAMAMLANAN İŞ HACMİ</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelHacim.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                        <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL TAHSİLAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                        <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR</small><span style="font-weight:900; color:${gKarRenk}; font-size:22px;">${genelKar.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                        <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">TAMAMLANAN İŞ HACMİ</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelHacim.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                        <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL TAHSİLAT</small><span style="font-weight:900; color:var(--btn-green); font-size:22px;">${genelTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                        <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR</small><span style="font-weight:900; color:${gKarRenk}; font-size:22px;">${genelKar.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                         <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL KAR %</small><span style="font-weight:900; color:${gKarYuzdeRenk}; font-size:22px;">%${genelKarYuzde}</span></div>
-                        <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL ÖDEME</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelOdeme.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                        <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">GENEL ÖDEME</small><span style="font-weight:900; color:var(--accent-red); font-size:22px;">${genelOdeme.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                     </div>
                     <div style="display:flex; justify-content:space-around; text-align:center; gap:8px; padding-top:8px; border-top:1px solid var(--ht-border);">
-                        <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">NET</small><span style="font-weight:900; color:${gNetRenk}; font-size:22px;">${genelNet.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                        <div style="flex:1; padding:0 10px;"><small style="font-size:12px; color:var(--ht-text-light); font-weight:600; display:block; letter-spacing:0.5px;">NET</small><span style="font-weight:900; color:${gNetRenk}; font-size:22px;">${genelNet.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                     </div>
                 </div>
             `;
@@ -5278,17 +5278,17 @@ function gorevMailGonder(gorev) {
 
                         <div style="display:flex; flex-direction:column; gap:3px; background:#0d1b2a; padding:8px 20px; border-radius:8px; margin:5px 0 10px 0; border:1px solid var(--ht-border);">
                             <div style="display:flex; justify-content:space-between; text-align:center; gap:2px;">
-                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAŞMA ÜCRETİ</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM KAR</small><span style="font-weight:800; color:${karRenk}; font-size:15px; line-height:1.3;">${toplamKar.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAŞMA ÜCRETİ</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${(kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM KAR</small><span style="font-weight:800; color:${karRenk}; font-size:15px; line-height:1.3;">${toplamKar.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                                 <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KAR %</small><span style="font-weight:800; color:${karYuzdeRenkKart}; font-size:15px; line-height:1.3;">%${karYuzde}</span></div>
-                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM GİDER</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TOPLAM GİDER</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                                 <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ANLAŞMA TARİHİ</small><span style="font-weight:700; color:var(--ht-text); font-size:15px; line-height:1.3;">${basTarih ? new Date(basTarih).toLocaleDateString("tr-TR") : "-"}</span></div>
                             </div>
                             <div style="display:flex; justify-content:space-between; text-align:center; gap:2px; padding-top:4px; border-top:1px solid var(--ht-border);">
-                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TAHSİLAT</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ÖDENEN</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN ÖDEME</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
-                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">NET</small><span style="font-weight:800; color:${netRenk}; font-size:15px; line-height:1.3;">${netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2})}  TL</span></div>
+                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">TAHSİLAT</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">ÖDENEN</small><span style="font-weight:800; color:var(--btn-green); font-size:15px; line-height:1.3;">${toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">KALAN ÖDEME</small><span style="font-weight:800; color:var(--accent-red); font-size:15px; line-height:1.3;">${kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
+                                <div style="flex:1; border-right:1px solid var(--ht-border); padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">NET</small><span style="font-weight:800; color:${netRenk}; font-size:15px; line-height:1.3;">${netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2})}  ₺</span></div>
                                 <div style="flex:1; padding:0 4px; display:flex; flex-direction:column; gap:2px; align-items:center;"><small style="font-size:11px; color:var(--ht-text-light); font-weight:600; letter-spacing:0.3px; line-height:1.3;">BİTİŞ ONAY</small><span style="font-weight:700; color:var(--btn-green); font-size:15px; line-height:1.3;">${kayit.bitisTarihi ? new Date(kayit.bitisTarihi).toLocaleDateString("tr-TR") : "-"}</span></div>
                             </div>
                         </div>
@@ -5302,7 +5302,7 @@ function gorevMailGonder(gorev) {
                                 if(alacakKalemler.length === 0) return '<p style="font-size:12px; color:var(--ht-text-light); font-style:italic; padding:4px 20px;">Henüz tahsilat kalemi bulunmuyor.</p>';
                                 let tbl = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr style="background:#0d1b2a;"><th style="padding:7px 10px; text-align:left; font-size:9px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.5px;">Açıklama</th><th style="padding:7px 10px; text-align:right; font-size:9px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.5px;">Tutar</th><th style="padding:7px 10px; text-align:left; font-size:9px; font-weight:700; color:var(--ht-text-light); text-transform:uppercase; letter-spacing:0.5px;">Tarih</th></tr></thead><tbody>';
                                 alacakKalemler.forEach(k => {
-                                    tbl += '<tr><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text);">' + (k.aciklama || "-") + '</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text); text-align:right; font-weight:700; color:var(--btn-green);">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text);">' + (k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-") + '</td></tr>';
+                                    tbl += '<tr><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text);">' + (k.aciklama || "-") + '</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text); text-align:right; font-weight:700; color:var(--btn-green);">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text);">' + (k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-") + '</td></tr>';
                                 });
                                 tbl += '</tbody></table>';
                                 return tbl;
@@ -5321,7 +5321,7 @@ function gorevMailGonder(gorev) {
                                     const odenen = k.odenenTutar || 0;
                                     const kalan = k.tutar - odenen;
                                     const girisTarih = k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-";
-                                    tbl += '<tr><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text);">' + (k.dal || k.aciklama || "-") + '</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text-light);">' + (k.kisi || "-") + '</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text); text-align:right; font-weight:700;">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text); text-align:right; font-weight:600; color:var(--btn-green);">' + odenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text); text-align:right; font-weight:600; color:var(--accent-red);">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text);">' + girisTarih + '</td></tr>';
+                                    tbl += '<tr><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text);">' + (k.dal || k.aciklama || "-") + '</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text-light);">' + (k.kisi || "-") + '</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text); text-align:right; font-weight:700;">' + (k.tutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text); text-align:right; font-weight:600; color:var(--btn-green);">' + odenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text); text-align:right; font-weight:600; color:var(--accent-red);">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td><td style="padding:7px 10px; border-bottom:1px solid var(--ht-border); font-size:11px; color:var(--ht-text);">' + girisTarih + '</td></tr>';
                                     const kayitlar = k.odemeKayitlari || [];
                                     if(kayitlar.length > 0) {
                                         tbl += '<tr><td colspan="6" style="padding:2px 8px 8px 8px;"><div style="font-size:11px; background:rgba(255,255,255,0.03); border-radius:6px; padding:6px 10px; border:1px solid var(--ht-border);">';
@@ -5329,7 +5329,7 @@ function gorevMailGonder(gorev) {
                                         kayitlar.forEach(od => {
                                             const odemeTarih = od.tarih ? new Date(od.tarih).toLocaleDateString("tr-TR") : "-";
                                             tbl += '<div style="display:flex; align-items:center; gap:6px; margin:2px 0; flex-wrap:wrap;">';
-                                            tbl += '<span style="font-size:12px;">• ' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL <span style="color:var(--ht-text-light);">(' + odemeTarih + ')</span></span>';
+                                            tbl += '<span style="font-size:12px;">• ' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺ <span style="color:var(--ht-text-light);">(' + odemeTarih + ')</span></span>';
                                             tbl += '</div>';
                                         });
                                         tbl += '</div></td></tr>';
@@ -5433,23 +5433,23 @@ function gorevMailGonder(gorev) {
                 const kisiFirma = k.kisi || "-";
                 if(k.tip === "alacak") {
                     const tarih = k.tarih ? new Date(k.tarih).toLocaleDateString("tr-TR") : "-";
-                    kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">' + tarih + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:600;color:#2E7D32;">0  TL</td></tr>';
+                    kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">' + tarih + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:600;color:#2E7D32;">0  ₺</td></tr>';
                 } else {
                     const kayitlar = k.odemeKayitlari || [];
                     if(kayitlar.length > 0) {
                         kayitlar.forEach(function(od) {
                             const odemeTarih = od.tarih ? new Date(od.tarih).toLocaleDateString("tr-TR") : "-";
-                            kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">' + odemeTarih + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#9E2A2B;">' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:600;color:#666;">-</td></tr>';
+                            kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">' + odemeTarih + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#9E2A2B;">' + od.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:600;color:#666;">-</td></tr>';
                         });
                         const kalan = Math.max(0, k.tutar - (k.odenenTutar || 0));
                         if(kalan > 0) {
-                            kalemSatirlari += '<tr style="background:#fafafa;"><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;font-weight:700;">' + aciklama + ' (KALAN)</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;"></td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">-</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">KALAN</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:800;color:#9E2A2B;">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td></tr>';
+                            kalemSatirlari += '<tr style="background:#fafafa;"><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;font-weight:700;">' + aciklama + ' (KALAN)</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;"></td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">-</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">KALAN</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:800;color:#9E2A2B;">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td></tr>';
                         }
                     } else {
                         const odenen = k.odenenTutar || 0;
                         const kalan = Math.max(0, k.tutar - odenen);
                         const tarih = (k.odemeTarihi || k.tarih) ? new Date(k.odemeTarihi || k.tarih).toLocaleDateString("tr-TR") : "-";
-                        kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">' + tarih + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:800;color:' + (kalan > 0 ? '#9E2A2B' : '#2E7D32') + ';">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td></tr>';
+                        kalemSatirlari += '<tr><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#1a1a2e;">' + aciklama + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;color:#666;">' + kisiFirma + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:#444;">' + tarih + '</td><td style="padding:4px 6px;font-size:9px;border-bottom:1px solid #eee;text-align:center;color:' + tipRenk + ';font-weight:700;">' + tipText + '</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:700;color:#1a1a2e;">' + k.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td><td style="padding:4px 6px;font-size:10px;border-bottom:1px solid #eee;text-align:right;font-weight:800;color:' + (kalan > 0 ? '#9E2A2B' : '#2E7D32') + ';">' + kalan.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td></tr>';
                     }
                 }
             });
@@ -5469,14 +5469,14 @@ function gorevMailGonder(gorev) {
                 + '</table></div>'
                 + '<div style="flex:1;border:1.5px solid #e0e0e0;border-radius:3px;padding:2.5mm 3.5mm;background:#fafafa;"><div style="font-size:8px;font-weight:800;color:#1a1a2e;letter-spacing:1.5px;margin-bottom:2mm;">FİNANSAL ÖZET</div>'
                 + '<table style="width:100%;border-collapse:collapse;font-size:10px;">'
-                + '<tr><td style="padding:1.5px 3px;color:#999;">ANLAŞMA ÜCRETİ</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#1a1a2e;">' + (kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;color:#2E7D32;font-weight:600;">TOPLAM TAHSİLAT</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#2E7D32;">' + toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;color:#9E2A2B;font-weight:600;">TOPLAM GİDER</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#9E2A2B;">' + toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;color:#999;">TOP. ÖDENEN</td><td style="padding:1.5px 3px;text-align:right;font-weight:700;color:#2E7D32;">' + toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">ANLAŞMA ÜCRETİ</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#1a1a2e;">' + (kayit.anlasmaUcreti || 0).toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#2E7D32;font-weight:600;">TOPLAM TAHSİLAT</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#2E7D32;">' + toplamAlacak.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#9E2A2B;font-weight:600;">TOPLAM GİDER</td><td style="padding:1.5px 3px;text-align:right;font-weight:800;color:#9E2A2B;">' + toplamVerecek.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;color:#999;">TOP. ÖDENEN</td><td style="padding:1.5px 3px;text-align:right;font-weight:700;color:#2E7D32;">' + toplamOdenen.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td></tr>'
                 + '<tr><td style="padding:2.5px 3px;border-top:1.5px solid #ddd;"></td><td style="padding:2.5px 3px;border-top:1.5px solid #ddd;"></td></tr>'
-                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">KALAN ÖDEME</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:#9E2A2B;font-size:11px;">' + kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">KALAN TAHSİLAT</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:' + (kalanTahsilat > 0 ? '#9E2A2B' : '#2E7D32') + ';font-size:11px;">' + kalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td></tr>'
-                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">NET DURUM</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:' + (netDurum >= 0 ? '#2E7D32' : '#9E2A2B') + ';font-size:11px;">' + netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  TL</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">KALAN ÖDEME</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:#9E2A2B;font-size:11px;">' + kalanToplam.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">KALAN TAHSİLAT</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:' + (kalanTahsilat > 0 ? '#9E2A2B' : '#2E7D32') + ';font-size:11px;">' + kalanTahsilat.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td></tr>'
+                + '<tr><td style="padding:1.5px 3px;font-weight:800;color:#1a1a2e;font-size:11px;">NET DURUM</td><td style="padding:1.5px 3px;text-align:right;font-weight:900;color:' + (netDurum >= 0 ? '#2E7D32' : '#9E2A2B') + ';font-size:11px;">' + netDurum.toLocaleString('tr-TR', {minimumFractionDigits:2}) + '  ₺</td></tr>'
                 + '</table></div></div>'
                 + '<div style="border:1.5px solid #e0e0e0;border-radius:3px;overflow:hidden;margin-bottom:3mm;">'
                 + '<table style="width:100%;border-collapse:collapse;font-size:10px;">'
@@ -5523,7 +5523,7 @@ function gorevMailGonder(gorev) {
         }
 
         function tutarYaziyla(tutar) {
-            if (tutar === 0) return "SIFIR  TL";
+            if (tutar === 0) return "SIFIR  ₺";
             const birler = ["","BİR","İKİ","ÜÇ","DÖRT","BEŞ","ALTI","YEDİ","SEKİZ","DOKUZ"];
             const onlar = ["","ON","YİRMİ","OTUZ","KIRK","ELLİ","ALTMIŞ","YETMİŞ","SEKSEN","DOKSAN"];
             const basamaklar = ["","BİN","MİLYON","MİLYAR","TRİLYON"];
@@ -5556,7 +5556,7 @@ function gorevMailGonder(gorev) {
                 tl = Math.floor(tl / 1000);
                 idx++;
             }
-            result += " TL";
+            result += " ₺";
             if (kurus > 0) {
                 result += " " + ucBasamakOku(kurus) + "KURUŞ";
             }
@@ -5565,7 +5565,7 @@ function gorevMailGonder(gorev) {
 
         function nakitDekontPdfOlustur(d) {
             const formatliId = String(d.id).padStart(5, '0');
-            const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + "  TL";
+            const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + "  ₺";
             const yaziyla = tutarYaziyla(d.tutar);
             const tarihKisa = d.tarih ? new Date(d.tarih).toLocaleDateString("tr-TR") : "-";
             const tarihSayi = d.tarih ? new Date(d.tarih).toLocaleDateString("tr-TR", {day:'2-digit',month:'2-digit',year:'numeric'}) : "-";
@@ -5639,7 +5639,7 @@ function gorevMailGonder(gorev) {
                             <thead>
                                 <tr style="background:#1a1a2e;color:#fff;">
                                     <th style="padding:2mm 4mm;text-align:left;font-size:8px;letter-spacing:1px;">AÇIKLAMA</th>
-                                    <th style="padding:2mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:35%;">TUTAR ( TL)</th>
+                                    <th style="padding:2mm 4mm;text-align:right;font-size:8px;letter-spacing:1px;width:35%;">TUTAR ( ₺)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -5801,7 +5801,7 @@ function gorevMailGonder(gorev) {
             db.forEach(d => {
                 const formatliId = "#" + String(d.id).padStart(5, '0');
                 const tipRenk = d.islemTuru === "Gelen Nakit Ödeme" ? "var(--btn-green)" : "var(--accent-red)";
-                const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "  TL";
+                const formatliTutar = d.tutar.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "  ₺";
 
                 html += `
                     <tr class="nd-row" data-search="${d.musteriAd} ${d.firma} ${d.islemTuru} ${formatliId}">
@@ -6004,9 +6004,9 @@ function gorevMailGonder(gorev) {
                 h += '<div class="yb-month-card" data-ay="'+i+'" onclick="ybSekmeGoster(\''+i+'\')">'+
                     '<div class="mc-hdr">'+YB_AY_ADI[i]+'</div>'+
                     '<div class="mc-body">'+
-                    (gelir>0 ? '<div class="mc-row"><span class="mc-lbl">Gelir</span><span class="mc-val gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL</span></div>' : '')+
-                    (gider>0 ? '<div class="mc-row"><span class="mc-lbl">Gider</span><span class="mc-val gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL</span></div>' : '')+
-                    (gelir>0||gider>0 ? '<div class="mc-fark-row '+farkClass+'"><span class="mc-lbl">Fark</span><span class="mc-val">'+farkSgn+fark.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL</span></div>' : '')+
+                    (gelir>0 ? '<div class="mc-row"><span class="mc-lbl">Gelir</span><span class="mc-val gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺</span></div>' : '')+
+                    (gider>0 ? '<div class="mc-row"><span class="mc-lbl">Gider</span><span class="mc-val gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺</span></div>' : '')+
+                    (gelir>0||gider>0 ? '<div class="mc-fark-row '+farkClass+'"><span class="mc-lbl">Fark</span><span class="mc-val">'+farkSgn+fark.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺</span></div>' : '')+
                     (gelir===0&&gider===0 ? '<div class="mc-bos">—</div>' : '')+
                     '</div>'+
                 '</div>';
@@ -6045,10 +6045,10 @@ function gorevMailGonder(gorev) {
                 '<div class="yb-graph-box full"><canvas id="ybChartAylikKarsilastirma"></canvas></div></div>';
 
             h += '<div class="yb-ozet-row">'+
-                '<div class="yb-ozet-card"><span class="oz-label">Başlangıç Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gelir</span><span class="oz-val green">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gider</span><span class="oz-val red">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Net Bakiye</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div></div>';
+                '<div class="yb-ozet-card"><span class="oz-label">Başlangıç Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gelir</span><span class="oz-val green">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gider</span><span class="oz-val red">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Net Bakiye</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div></div>';
 
             for(let i=0;i<12;i++) {
                 const ay = kayit.aylar[i];
@@ -6059,14 +6059,14 @@ function gorevMailGonder(gorev) {
                 h += '<h4 style="margin:15px 0 6px 0;font-size:13px;color:var(--yb-text);border-left:4px solid var(--yb-accent);padding-left:10px;">'+ybTrUpper(YB_AY_ADI[i])+'</h4>'+
                     '<table class="yb-dagilim-tablo"><thead><tr><th>Kategori</th><th>Tür</th><th>Açıklama</th><th style="text-align:right;">Tutar</th></tr></thead><tbody>';
                 Object.entries(ay.gelirler||{}).forEach(([ktg,items]) => items.forEach(k => {
-                    h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gelir);font-weight:600;">GELİR</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td></tr>';
+                    h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gelir);font-weight:600;">GELİR</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td></tr>';
                 }));
-                if(aG>0) h += '<tr style="background:rgba(46,204,113,0.08);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-gelir);">Gelir Toplamı</td><td style="text-align:right;color:var(--yb-gelir);">+'+aG.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td></tr>';
+                if(aG>0) h += '<tr style="background:rgba(46,204,113,0.08);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-gelir);">Gelir Toplamı</td><td style="text-align:right;color:var(--yb-gelir);">+'+aG.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td></tr>';
                 Object.entries(ay.giderler||{}).forEach(([ktg,items]) => items.forEach(k => {
-                    h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gider);font-weight:600;">GİDER</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td></tr>';
+                    h += '<tr><td style="font-weight:600;">'+ybTrUpper(ktg)+'</td><td style="color:var(--yb-gider);font-weight:600;">GİDER</td><td>'+(k.aciklama||'')+'</td><td style="text-align:right;font-weight:600;">'+(k.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td></tr>';
                 }));
-                if(aGi>0) h += '<tr style="background:rgba(231,76,60,0.08);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-gider);">Gider Toplamı</td><td style="text-align:right;color:var(--yb-gider);">-'+aGi.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td></tr>';
-                h += '<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-text-light);">Net Toplam</td><td style="text-align:right;color:'+((aG-aGi)>=0?'var(--yb-gelir)':'var(--yb-gider)')+';">'+(aG-aGi).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td></tr>';
+                if(aGi>0) h += '<tr style="background:rgba(231,76,60,0.08);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-gider);">Gider Toplamı</td><td style="text-align:right;color:var(--yb-gider);">-'+aGi.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td></tr>';
+                h += '<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td colspan="3" style="text-align:right;color:var(--yb-text-light);">Net Toplam</td><td style="text-align:right;color:'+((aG-aGi)>=0?'var(--yb-gelir)':'var(--yb-gider)')+';">'+(aG-aGi).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td></tr>';
                 h += '</tbody></table>';
             }
             h += '</div>';
@@ -6090,10 +6090,10 @@ function gorevMailGonder(gorev) {
                 const net = (y.baslangicBakiye||0)+tG-tGi;
                 h += '<tr>'+
                     '<td class="t-yil">'+y.yil+'</td>'+
-                    '<td class="t-sayi">'+(y.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td>'+
-                    '<td class="t-sayi t-gelir">+'+tG.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td>'+
-                    '<td class="t-sayi t-gider">-'+tGi.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td>'+
-                    '<td class="t-sayi '+(net>=0?'t-gelir':'t-gider')+'">'+(net>=0?'+':'')+net.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td>'+
+                    '<td class="t-sayi">'+(y.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td>'+
+                    '<td class="t-sayi t-gelir">+'+tG.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td>'+
+                    '<td class="t-sayi t-gider">-'+tGi.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td>'+
+                    '<td class="t-sayi '+(net>=0?'t-gelir':'t-gider')+'">'+(net>=0?'+':'')+net.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td>'+
                     '<td class="t-islem">'+
                         '<button class="t-goruntule" onclick="ybGecmisYilGoster('+y.yil+')"><i class="fa-regular fa-folder-open"></i> Görüntüle</button>'+
                         '<button class="t-pdf" onclick="ybPdfIndir('+y.yil+')"><i class="fa-regular fa-file-lines"></i> PDF</button></td>'+
@@ -6132,9 +6132,9 @@ function gorevMailGonder(gorev) {
 
             // 3 separate summary cards
             h += '<div class="yb-sum-row">'+
-                '<div class="yb-sum-card sc-gelir"><div class="sc-label">Aylık Gelir</div><div class="sc-value">'+aylikGelir.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</div></div>'+
-                '<div class="yb-sum-card sc-gider"><div class="sc-label">Aylık Gider</div><div class="sc-value">'+aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</div></div>'+
-                '<div class="yb-sum-card sc-fark"><div class="sc-label">Fark</div><div class="sc-value" style="color:'+(fark>=0?'var(--yb-gelir)':'var(--yb-gider)')+';">'+(fark>=0?'+':'')+fark.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</div></div></div>';
+                '<div class="yb-sum-card sc-gelir"><div class="sc-label">Aylık Gelir</div><div class="sc-value">'+aylikGelir.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</div></div>'+
+                '<div class="yb-sum-card sc-gider"><div class="sc-label">Aylık Gider</div><div class="sc-value">'+aylikGider.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</div></div>'+
+                '<div class="yb-sum-card sc-fark"><div class="sc-label">Fark</div><div class="sc-value" style="color:'+(fark>=0?'var(--yb-gelir)':'var(--yb-gider)')+';">'+(fark>=0?'+':'')+fark.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</div></div></div>';
 
             // Kopyalama
             // Gelir accordion
@@ -6146,7 +6146,7 @@ function gorevMailGonder(gorev) {
                 h += '<div class="yb-acc-item">'+
                     '<div class="yb-acc-header" onclick="document.getElementById(\''+itemId+'\').classList.toggle(\'open\');this.classList.toggle(\'open\');">'+
                     '<span class="acc-kat">'+ybTrUpper(ktg)+'</span>'+
-                    '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span>'+
+                    '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span>'+
                     '<span class="acc-ok"><i class="fa-solid fa-chevron-down"></i></span></div>'+
                     '<div class="yb-acc-body" id="'+itemId+'">';
                 if(items.length>0) {
@@ -6170,7 +6170,7 @@ function gorevMailGonder(gorev) {
                 h += '<div class="yb-acc-item">'+
                     '<div class="yb-acc-header" onclick="document.getElementById(\''+itemId+'\').classList.toggle(\'open\');this.classList.toggle(\'open\');">'+
                     '<span class="acc-kat">'+ybTrUpper(ktg)+'</span>'+
-                    '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span>'+
+                    '<span class="acc-tutar">'+ara.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span>'+
                     '<span class="acc-ok"><i class="fa-solid fa-chevron-down"></i></span></div>'+
                     '<div class="yb-acc-body" id="'+itemId+'">';
                 if(items.length>0) {
@@ -6228,10 +6228,10 @@ function gorevMailGonder(gorev) {
                 '<div class="yb-graph-box full"><canvas id="ybChartAylikKarsilastirma"></canvas></div></div>';
 
             h += '<div class="yb-ozet-row">'+
-                '<div class="yb-ozet-card"><span class="oz-label">Başlangıç Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gelir</span><span class="oz-val green">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gider</span><span class="oz-val red">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
-                '<div class="yb-ozet-card"><span class="oz-label">Şirket Bakiyesi</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div></div>';
+                '<div class="yb-ozet-card"><span class="oz-label">Başlangıç Bakiyesi</span><span class="oz-val" style="color:var(--yb-text);">'+(kayit.baslangicBakiye||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gelir</span><span class="oz-val green">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Toplam Gider</span><span class="oz-val red">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
+                '<div class="yb-ozet-card"><span class="oz-label">Şirket Bakiyesi</span><span class="oz-val '+(bakiye>=0?'gold':'red')+'">'+bakiye.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div></div>';
 
             h += '<h4 style="color:var(--yb-gelir);margin:0 0 6px 0;"><i class="fa-solid fa-chart-line"></i> Gelir Dağılımı</h4>'+
                 '<table class="yb-dagilim-tablo"><thead><tr><th style="padding:6px 4px;text-align:left;">Kategori</th>';
@@ -6242,13 +6242,13 @@ function gorevMailGonder(gorev) {
                 for(let i=0;i<12;i++) {
                     const ay = kayit.aylar[i];
                     const val = ay ? (ay.gelirler[ktg]||[]).reduce(function(s,k){return s+(k.tutar||0);},0) : 0;
-                    katTop+=val; h+='<td style="padding:4px;text-align:center;">'+val.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td>';
+                    katTop+=val; h+='<td style="padding:4px;text-align:center;">'+val.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td>';
                 }
-                h+='<td style="padding:4px;text-align:center;font-weight:700;color:var(--yb-gelir);">'+katTop.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td></tr>';
+                h+='<td style="padding:4px;text-align:center;font-weight:700;color:var(--yb-gelir);">'+katTop.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td></tr>';
             });
             h+='<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td style="padding:4px;color:var(--yb-text);text-align:left;">TOPLAM GELİR</td>';
-            for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:center;">'+aylikGelir[i].toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td>';
-            h+='<td style="padding:4px;text-align:center;font-weight:800;font-size:12px;color:var(--yb-gelir);">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td></tr></tbody></table>';
+            for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:center;">'+aylikGelir[i].toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td>';
+            h+='<td style="padding:4px;text-align:center;font-weight:800;font-size:12px;color:var(--yb-gelir);">'+toplamGelir.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td></tr></tbody></table>';
 
             h += '<h4 style="color:var(--yb-gider);margin:0 0 6px 0;"><i class="fa-solid fa-chart-line fa-rotate-180"></i> Gider Dağılımı</h4>'+
                 '<table class="yb-dagilim-tablo"><thead><tr><th style="padding:6px 4px;text-align:left;">Kategori</th>';
@@ -6259,13 +6259,13 @@ function gorevMailGonder(gorev) {
                 for(let i=0;i<12;i++) {
                     const ay = kayit.aylar[i];
                     const val = ay ? (ay.giderler[ktg]||[]).reduce(function(s,k){return s+(k.tutar||0);},0) : 0;
-                    katTop+=val; h+='<td style="padding:4px;text-align:center;">'+val.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td>';
+                    katTop+=val; h+='<td style="padding:4px;text-align:center;">'+val.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td>';
                 }
-                h+='<td style="padding:4px;text-align:center;font-weight:700;color:var(--yb-gider);">'+katTop.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td></tr>';
+                h+='<td style="padding:4px;text-align:center;font-weight:700;color:var(--yb-gider);">'+katTop.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td></tr>';
             });
             h+='<tr style="background:rgba(255,255,255,0.03);font-weight:700;"><td style="padding:4px;color:var(--yb-text);text-align:left;">TOPLAM GİDER</td>';
-            for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:center;">'+aylikGider[i].toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td>';
-            h+='<td style="padding:4px;text-align:center;font-weight:800;font-size:12px;color:var(--yb-gider);">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td></tr></tbody></table>';
+            for(let i=0;i<12;i++) h+='<td style="padding:4px;text-align:center;">'+aylikGider[i].toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td>';
+            h+='<td style="padding:4px;text-align:center;font-weight:800;font-size:12px;color:var(--yb-gider);">'+toplamGider.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td></tr></tbody></table>';
             icerik.innerHTML = h;
             ybAyKopyalaGizle();
             setTimeout(function(){ybGrafikleriCiz(kayit, aylikGelir, aylikGider, toplamGelir, toplamGider);}, 50);
@@ -6303,15 +6303,15 @@ function gorevMailGonder(gorev) {
                 '</select></div>';
 
             h += '<div class="yb-kars-grid">'+
-                '<div class="yb-kars-card"><span class="kc-label">'+cariYil+' Gelir</span><span class="kc-value green">'+cTopG.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
-                '<div class="yb-kars-card"><span class="kc-label">'+seciliYil+' Gelir</span><span class="kc-value green">'+sTopG.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
-                '<div class="yb-kars-card"><span class="kc-label">Fark ('+cariYil+' - '+seciliYil+')</span><span class="kc-value '+(cTopG-sTopG>=0?'green':'red')+'">'+(cTopG-sTopG).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">'+cariYil+' Gelir</span><span class="kc-value green">'+cTopG.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">'+seciliYil+' Gelir</span><span class="kc-value green">'+sTopG.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">Fark ('+cariYil+' - '+seciliYil+')</span><span class="kc-value '+(cTopG-sTopG>=0?'green':'red')+'">'+(cTopG-sTopG).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
                 '</div>';
 
             h += '<div class="yb-kars-grid">'+
-                '<div class="yb-kars-card"><span class="kc-label">'+cariYil+' Gider</span><span class="kc-value red">'+cTopGi.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
-                '<div class="yb-kars-card"><span class="kc-label">'+seciliYil+' Gider</span><span class="kc-value red">'+sTopGi.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
-                '<div class="yb-kars-card"><span class="kc-label">Fark ('+cariYil+' - '+seciliYil+')</span><span class="kc-value '+(cTopGi-sTopGi>=0?'red':'green')+'">'+(cTopGi-sTopGi).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">'+cariYil+' Gider</span><span class="kc-value red">'+cTopGi.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">'+seciliYil+' Gider</span><span class="kc-value red">'+sTopGi.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
+                '<div class="yb-kars-card"><span class="kc-label">Fark ('+cariYil+' - '+seciliYil+')</span><span class="kc-value '+(cTopGi-sTopGi>=0?'red':'green')+'">'+(cTopGi-sTopGi).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</span></div>'+
                 '</div>';
 
             h += '<div class="yb-kars-graph"><canvas id="ybChartKarsilastirma"></canvas></div>';
@@ -6340,7 +6340,7 @@ function gorevMailGonder(gorev) {
                     options: {
                         responsive:true, maintainAspectRatio:false,
                         plugins: { legend:{position:'top',labels:{font:{size:10,weight:'bold'}}}, datalabels:{display:false} },
-                        scales: { y:{ beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL'} } }
+                        scales: { y:{ beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺'} } }
                     }
                 });
             } catch(e) { console.warn("Karşılaştırma grafiği çizilemedi:", e); }
@@ -6374,7 +6374,7 @@ function gorevMailGonder(gorev) {
                                 formatter:(v,ctx) => { const total = ctx.dataset.label==='Gelir' ? toplamYillikGelir : toplamYillikGider; return total>0 ? (v/total*100).toFixed(1)+'%' : ''; }
                             }
                         },
-                        scales: { y: { beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL'} } }
+                        scales: { y: { beginAtZero:true, ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺'} } }
                     }
                 });
             }
@@ -6427,7 +6427,7 @@ function gorevMailGonder(gorev) {
                     },
                     options: { responsive:true, maintainAspectRatio:false,
                         plugins: { legend:{position:'top',labels:{font:{weight:'bold'}}}, datalabels:{display:false} },
-                        scales: { y: { ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL'} } }
+                        scales: { y: { ticks:{callback:v=>v.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺'} } }
                     }
                 });
             }
@@ -6440,7 +6440,7 @@ function gorevMailGonder(gorev) {
             var renk = tip === 'gelir' ? 'var(--yb-gelir)' : 'var(--yb-gider)';
             return '<tr data-id="'+item.id+'">'+
                 '<td class="acc-td-aciklama">'+item.aciklama+'</td>'+
-                '<td class="acc-td-tutar" style="color:'+renk+';">'+(item.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL</td>'+
+                '<td class="acc-td-tutar" style="color:'+renk+';">'+(item.tutar||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺</td>'+
                 '<td class="acc-td-islem"><button class="acc-btn-duzenle" onclick="ybModalKalemDuzenle('+item.id+',\''+tip+'\','+ayIdx+')" title="Düzenle"><i class="fa-regular fa-pen-to-square"></i></button>'+
                 '<button class="acc-btn-sil" onclick="ybKalemSil('+item.id+','+ayIdx+')" title="Sil"><i class="fa-solid fa-xmark"></i></button></td>'+
             '</tr>';
@@ -6483,9 +6483,9 @@ function gorevMailGonder(gorev) {
             var fark = gelir - gider;
             var farkClass = fark >= 0 ? 'mc-fark-poz' : 'mc-fark-neg';
             var farkSgn = fark >= 0 ? '+' : '';
-            if(gelir > 0) body.insertAdjacentHTML('beforeend', '<div class="mc-row"><span class="mc-lbl">Gelir</span><span class="mc-val gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL</span></div>');
-            if(gider > 0) body.insertAdjacentHTML('beforeend', '<div class="mc-row"><span class="mc-lbl">Gider</span><span class="mc-val gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL</span></div>');
-            if(gelir>0||gider>0) body.insertAdjacentHTML('beforeend', '<div class="mc-fark-row '+farkClass+'"><span class="mc-lbl">Fark</span><span class="mc-val">'+farkSgn+fark.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL</span></div>');
+            if(gelir > 0) body.insertAdjacentHTML('beforeend', '<div class="mc-row"><span class="mc-lbl">Gelir</span><span class="mc-val gelir">+'+gelir.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺</span></div>');
+            if(gider > 0) body.insertAdjacentHTML('beforeend', '<div class="mc-row"><span class="mc-lbl">Gider</span><span class="mc-val gider">-'+gider.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺</span></div>');
+            if(gelir>0||gider>0) body.insertAdjacentHTML('beforeend', '<div class="mc-fark-row '+farkClass+'"><span class="mc-lbl">Fark</span><span class="mc-val">'+farkSgn+fark.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺</span></div>');
             if(gelir===0 && gider===0) body.insertAdjacentHTML('beforeend', '<div class="mc-bos">—</div>');
         }
 
@@ -6804,7 +6804,7 @@ function gorevMailGonder(gorev) {
                         ]},
                         options:{ responsive:false, maintainAspectRatio:false,
                             plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:yil+' Yılı Net Durum Trendi',font:{size:28,weight:'bold'}} },
-                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
+                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
                         }
                     });
 
@@ -6817,7 +6817,7 @@ function gorevMailGonder(gorev) {
                         ]},
                         options:{ responsive:false, maintainAspectRatio:false,
                             plugins:{ legend:{position:'top',labels:{font:{size:24}}}, title:{display:true,text:'Aylık Gelir / Gider Karşılaştırması',font:{size:28,weight:'bold'}} },
-                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
+                            scales:{ y:{ beginAtZero:true, ticks:{callback:function(v){return v.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺';},font:{size:18}} }, x:{ticks:{font:{size:18}}} }
                         },
                         plugins: [{
                             id:'barEtiket',
@@ -6830,7 +6830,7 @@ function gorevMailGonder(gorev) {
                                     [{v:gVal,p:meta0.data[i]},{v:gdVal,p:meta1.data[i]}].forEach(function(d){
                                         if(d.v<=0)return;
                                         var pp=d.p.getProps(['x','y','base','width'],true), bw=pp.width, bh=pp.base-pp.y;
-                                        var amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+'  TL';
+                                        var amt=d.v.toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺';
                                         var fs=Math.min(Math.floor(bw*0.55),24);
                                         fs=Math.max(14,fs);
                                         ctx.font='bold '+fs+'px Helvetica';
@@ -6993,7 +6993,7 @@ function gorevMailGonder(gorev) {
                         doc.text(v.l, kx+5, y+8);
                         doc.setFontSize(10);
                         doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                        pdfTxtL((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL', kx+5, y+19);
+                        pdfTxtL((v.v||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺', kx+5, y+19);
                     }
                     y += kY + 10;
 
@@ -7030,7 +7030,7 @@ function gorevMailGonder(gorev) {
                             doc.setTextColor(GRI_METIN[0],GRI_METIN[1],GRI_METIN[2]);
                             doc.text((vd[i]/tp*100).toFixed(1)+'%',x+38,yl+1.5);
                             doc.setTextColor(SEKME_RENGI[0],SEKME_RENGI[1],SEKME_RENGI[2]);
-                            pdfTxtL(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+'  TL',x+56,yl+1.5);
+                            pdfTxtL(vd[i].toLocaleString('tr-TR',{minFractionDigits:0})+'  ₺',x+56,yl+1.5);
                             yl+=3;
                         } return yl;
                     }
@@ -7101,7 +7101,7 @@ function gorevMailGonder(gorev) {
                             doc.text(oItems[oi].l, oiX+5, y+6);
                             doc.setFontSize(9);
                             doc.setTextColor(SEKME_RENGI[0], SEKME_RENGI[1], SEKME_RENGI[2]);
-                            pdfTxtL(oItems[oi].v.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL', oiX+5, y+14);
+                            pdfTxtL(oItems[oi].v.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺', oiX+5, y+14);
                         }
                         y += oKartY + 8;
 
@@ -7135,14 +7135,14 @@ function gorevMailGonder(gorev) {
                         // --- GELIR TABLOSU ---
                         var gRows = [];
                         Object.entries(ayd.gelirler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL']); });
+                            e[1].forEach(function(x) { gRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺']); });
                         });
                         _ct("GELİRLER", gRows, POZITIF, [245,252,245]);
 
                         // --- GIDER TABLOSU ---
                         var gdRows = [];
                         Object.entries(ayd.giderler||{}).forEach(function(e) {
-                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  TL']); });
+                            e[1].forEach(function(x) { gdRows.push([t(e[0].toUpperCase()), t(x.aciklama||''), (Number(x.tutar)||0).toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺']); });
                         });
                         _ct("GİDERLER", gdRows, NEGATIF, [252,245,245]);
 
@@ -7153,7 +7153,7 @@ function gorevMailGonder(gorev) {
                         doc.rect(M, y, 3, 10, 'F');
                         doc.setFont(FN, "bold"); doc.setFontSize(10);
                         doc.setTextColor(farkRenk[0], farkRenk[1], farkRenk[2]);
-                        pdfTxtL(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+'  TL', M+8, y+7);
+                        pdfTxtL(t("AYLIK NET: ")+fark.toLocaleString('tr-TR',{minFractionDigits:2})+'  ₺', M+8, y+7);
                         y += 16;
 
                         // --- Alt Bilgi ---
@@ -7190,7 +7190,7 @@ function gorevMailGonder(gorev) {
         var HT_AKTIF_DETAY_HESAP = null;
 
 function htTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " \u20BA"; }
-function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " TL"; }
+function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " ₺"; }
         function htIbanGoster(iban) {
             if(!iban) return "-";
             var s = iban.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
@@ -8231,7 +8231,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             var PAD_T = 38, PAD_R = 42, PAD_B = 19, PAD_L = 42;
             var CONT_W = PAGE_W - PAD_L - PAD_R;
 
-            function tl(v) { return (v||0).toLocaleString('tr-TR',{minimumFractionDigits:2})+'  TL'; }
+            function tl(v) { return (v||0).toLocaleString('tr-TR',{minimumFractionDigits:2})+'  ₺'; }
 
             function karti(e, d, r, bg) {
                 return '<div style="flex:1;margin:0 2px;border:1px solid #d0d0dc;border-radius:4px;padding:6px 0;background:'+bg+';text-align:center;">'
@@ -8510,7 +8510,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             if (miktar <= 0) {
                 const sEl = document.getElementById("tmfHesapSonuc_" + id);
                 const iEl = document.getElementById("tmfHesapIslem_" + id);
-                if (sEl) sEl.textContent = "0,00  TL";
+                if (sEl) sEl.textContent = "0,00  ₺";
                 if (iEl) iEl.textContent = "";
                 return;
             }
@@ -9000,7 +9000,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vade</label><input type="date" id="ftGelenVade" value="'+(f?f.vadeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
-                '<div style="flex:1;min-width:140px;text-align:center;"><label style="display:block;text-align:center;width:100%;">TUTAR ( TL)</label><input type="text" id="ftGelenTutar" value="'+tutarVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></div>' +
+                '<div style="flex:1;min-width:140px;text-align:center;"><label style="display:block;text-align:center;width:100%;">TUTAR ( ₺)</label><input type="text" id="ftGelenTutar" value="'+tutarVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></div>' +
                 '<div style="flex:0 0 130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">KDV %</label><div style="display:flex;gap:4px;"><select id="ftGelenKdvOran" class="ft-kdv-select" style="flex:1;padding:10px;box-sizing:border-box;text-align:center;">'+kdvOpts+'</select>' +
                 '<button class="btn btn-save-green" title="KDV Oranı Ekle" onclick="ftKdvEkle()" style="min-width:32px;height:42px;font-size:16px;line-height:1;"><i class="fa-solid fa-plus"></i></button>' +
                 '<button class="ft-btn-xs ft-btn-del" title="KDV Oranı Sil" onclick="ftKdvSil()" style="min-width:32px;"><i class="fa-solid fa-minus"></i></button></div></div>' +
@@ -9198,7 +9198,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vade</label><input type="date" id="ftGidenVade" value="'+(f?f.vadeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
-                '<div style="flex:1;min-width:140px;text-align:center;"><label style="display:block;text-align:center;width:100%;">TUTAR ( TL)</label><input type="text" id="ftGidenTutar" value="'+tutarVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></div>' +
+                '<div style="flex:1;min-width:140px;text-align:center;"><label style="display:block;text-align:center;width:100%;">TUTAR ( ₺)</label><input type="text" id="ftGidenTutar" value="'+tutarVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></div>' +
                 '<div style="flex:0 0 130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">KDV %</label><div style="display:flex;gap:4px;"><select id="ftGidenKdvOran" class="ft-kdv-select" style="flex:1;padding:10px;box-sizing:border-box;text-align:center;">'+kdvOpts+'</select>' +
                 '<button class="btn btn-save-green" title="KDV Oranı Ekle" onclick="ftKdvEkle()" style="min-width:32px;height:42px;font-size:16px;line-height:1;"><i class="fa-solid fa-plus"></i></button>' +
                 '<button class="ft-btn-xs ft-btn-del" title="KDV Oranı Sil" onclick="ftKdvSil()" style="min-width:32px;"><i class="fa-solid fa-minus"></i></button></div></div>' +
@@ -9401,9 +9401,9 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Vade Tarihi</label><input type="date" id="ftOVVadeTarih" value="'+(v?v.vadeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
-                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Asıl Borç ( TL)</label><input type="text" id="ftOVAsilBorc" value="'+asilVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="ftOVInputIsle(this)" onblur="tmTutarBlur(this);ftOVToplamHesapla()"></div>' +
-                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Gecikme Zammı ( TL)</label><input type="text" id="ftOVGecikme" value="'+gecikmeVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="ftOVInputIsle(this)" onblur="tmTutarBlur(this);ftOVToplamHesapla()"></div>' +
-                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Toplam Borç ( TL)</label><input type="text" id="ftOVToplam" value="'+toplamVal+'" readonly style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;background:rgba(255,255,255,0.05);"></div>' +
+                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Asıl Borç ( ₺)</label><input type="text" id="ftOVAsilBorc" value="'+asilVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="ftOVInputIsle(this)" onblur="tmTutarBlur(this);ftOVToplamHesapla()"></div>' +
+                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Gecikme Zammı ( ₺)</label><input type="text" id="ftOVGecikme" value="'+gecikmeVal+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;" onfocus="tmTutarFocus(this)" oninput="ftOVInputIsle(this)" onblur="tmTutarBlur(this);ftOVToplamHesapla()"></div>' +
+                '<div style="flex:1;min-width:130px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Toplam Borç ( ₺)</label><input type="text" id="ftOVToplam" value="'+toplamVal+'" readonly style="width:100%;padding:10px;box-sizing:border-box;text-align:center;font-weight:700;background:rgba(255,255,255,0.05);"></div>' +
                 '<div style="flex:1;min-width:120px;text-align:center;"><label style="display:block;text-align:center;width:100%;">Ödeme Tarihi</label><input type="date" id="ftOVOdemeTarih" value="'+(v?v.odemeTarihi:'')+'" style="width:100%;padding:10px;box-sizing:border-box;text-align:center;"></div>' +
                 '</div>' +
                 '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
@@ -9770,8 +9770,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
 
             h += '<div style="display:flex;gap:6px;margin-bottom:4px;">';
             var kdvDurum = [
-                { lbl:'Ödenecek KDV', val:(kdvFark>0?kdvFark.toLocaleString("tr-TR",{minFractionDigits:2}):"0,00")+' TL' },
-                { lbl:'Devreden KDV', val:(kdvFark<0?(-kdvFark).toLocaleString("tr-TR",{minFractionDigits:2}):"0,00")+' TL' }
+                { lbl:'Ödenecek KDV', val:(kdvFark>0?kdvFark.toLocaleString("tr-TR",{minFractionDigits:2}):"0,00")+' ₺' },
+                { lbl:'Devreden KDV', val:(kdvFark<0?(-kdvFark).toLocaleString("tr-TR",{minFractionDigits:2}):"0,00")+' ₺' }
             ];
             kdvDurum.forEach(function(c,i){
                 h += '<div style="flex:1;border:1px solid ' + BORDER + ';padding:4px 8px;text-align:center;">';
