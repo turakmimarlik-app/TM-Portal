@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.92.1';
+﻿        var APP_VERSION = 'V1.92.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -490,7 +490,6 @@ function gorevMailGonder(gorev) {
             document.addEventListener('drop', dashDrop);
             document.addEventListener('dragend', dashDragEnd);
             birimListesiniYenile();
-            dashOfficeNotesYukle();
             dashboardVerileriniGuncelle();
             musteriKartlariniYenile();
             isOrtaklariKartlariniYenile();
@@ -1628,7 +1627,7 @@ function gorevMailGonder(gorev) {
                         jobsBody.innerHTML += '<div class="dash-mini-job">' +
                             '<div class="job-info"><div class="name">' + esc(j.isAdi || 'İSİMSİZ') + '</div>' +
                             '<div class="meta">' + (j.firma && j.firma !== '-' ? esc(j.firma) + ' • ' : '') + '#' + String(j.id).padStart(4,'0') + '</div></div>' +
-                            '<div class="job-amount"><span class="val" style="color:' + (kalan>0?'var(--accent-red)':'var(--btn-green)') + ';">' + (kalan || 0).toLocaleString('tr-TR',{minFractionDigits:2}) + ' ?</span>' +
+                            '<div class="job-amount"><span class="val" style="color:' + (kalan>0?'var(--accent-red)':'var(--btn-green)') + ';">' + tmTl(kalan) + '</span>' +
                             '<span class="label">Kalan Ödeme</span></div></div>';
                     });
                 }
@@ -1791,20 +1790,6 @@ function gorevMailGonder(gorev) {
                 const el = document.getElementById(id);
                 if(el) el.innerText = val;
             }
-        }
-
-        var _dashNotTimer = null;
-        function dashOfficeNotesYukle() {
-            const kaydedilenNot = localStorage.getItem("tm_dashboard_notes") || "";
-            const textarea = document.getElementById("dashOfficeNotes");
-            if (textarea) textarea.value = kaydedilenNot;
-        }
-
-        function dashNotlariKaydet(deger) {
-            if(_dashNotTimer) clearTimeout(_dashNotTimer);
-            _dashNotTimer = setTimeout(function(){
-                localStorage.setItem("tm_dashboard_notes", deger);
-            }, 300);
         }
 
         /* ================= YENİ DASHBOARD FONKSİYONLARI ================= */
