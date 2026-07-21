@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.85.3';
+﻿        var APP_VERSION = 'V1.86.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -4766,7 +4766,7 @@ function gorevMailGonder(gorev) {
                                 </div>
                             </div>
                             <div style="display:flex; align-items:center; gap:30px;">
-                                <div style="display:flex; flex-direction:column; gap:5px; min-width:440px;">
+                                <div style="display:flex; flex-direction:column; gap:5px; min-width:100%;">
                                     <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:13px; color:var(--btn-green); font-weight:700; min-width:54px;">Tahsilat</span><div style="flex:1; height:15px; background:var(--bg-main); border-radius:6px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,0.15);"><div style="height:100%; width:${tahsilatYuzde}%; background:linear-gradient(90deg, var(--btn-green), #4caf50); border-radius:6px; transition:width 0.4s;"></div></div><span style="font-size:13px; color:var(--text-light); font-weight:700; min-width:40px; text-align:right;">%${tahsilatYuzde}</span></div>
                                     <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:13px; color:var(--accent-red); font-weight:700; min-width:54px;">Ödeme</span><div style="flex:1; height:15px; background:var(--bg-main); border-radius:6px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,0.15);"><div style="height:100%; width:${odemeYuzde}%; background:linear-gradient(90deg, var(--accent-red), #ff5722); border-radius:6px; transition:width 0.4s;"></div></div><span style="font-size:13px; color:var(--text-light); font-weight:700; min-width:40px; text-align:right;">%${odemeYuzde}</span></div>
                                 </div>
