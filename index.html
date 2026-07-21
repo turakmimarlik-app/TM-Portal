@@ -18,9 +18,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.92.0">
-    <link rel="stylesheet" href="pdf.css?v=1.92.0">
-    <link rel="stylesheet" href="responsive.css?v=1.92.0">
+    <link rel="stylesheet" href="style.css?v=1.92.1">
+    <link rel="stylesheet" href="pdf.css?v=1.92.1">
+    <link rel="stylesheet" href="responsive.css?v=1.92.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -161,15 +161,15 @@
                 <div class="dash-stat-box" onclick="menudenSayfaAc('notlar','notlar-page',document.getElementById('menu-notlar'))" style="cursor:pointer;"><div class="icon"><i class="fa-regular fa-note-sticky"></i></div><div class="num" id="dashStatNotlar">0</div><div class="lbl">NOTLAR</div></div>
             </div>
             <div id="dashFinSection" class="dash-fin-row" data-perm='["hesap-takip","yillik-butce"]'>
-                <div class="dash-fin-card dfc-bakiye"><div class="dash-fin-label">ŞİRKET BAKİYESİ</div><div class="dash-fin-val green" id="dashFinBakiye">0,00 ₺</div></div>
-                <div class="dash-fin-card dfc-gelir"><div class="dash-fin-label">YILLIK GELİR</div><div class="dash-fin-val orange" id="dashFinGelir">0,00 ₺</div></div>
-                <div class="dash-fin-card dfc-gider"><div class="dash-fin-label">YILLIK GİDER</div><div class="dash-fin-val red" id="dashFinGider">0,00 ₺</div></div>
+                <div class="dash-fin-card dfc-bakiye"><div class="dash-fin-label">ŞİRKET BAKİYESİ</div><div class="dash-fin-val green" id="dashFinBakiye">0,00 TL</div></div>
+                <div class="dash-fin-card dfc-gelir"><div class="dash-fin-label">YILLIK GELİR</div><div class="dash-fin-val orange" id="dashFinGelir">0,00 TL</div></div>
+                <div class="dash-fin-card dfc-gider"><div class="dash-fin-label">YILLIK GİDER</div><div class="dash-fin-val red" id="dashFinGider">0,00 TL</div></div>
             </div>
             <div id="dashKalanSection" class="dash-kalan-row" data-perm="is-muhasebe">
                 <div class="dash-section-label">TAHSİLAT / ÖDEME DURUMU</div>
                 <div class="dash-kalan-cards">
-                    <div class="dash-fin-card dfc-kalan"><div class="dash-fin-label">KALAN TAHSİLAT</div><div class="dash-fin-val green" id="dashFinKalanTahsilat">0,00 ₺</div></div>
-                    <div class="dash-fin-card dfc-kalan"><div class="dash-fin-label">KALAN ÖDEME</div><div class="dash-fin-val red" id="dashFinKalanOdeme">0,00 ₺</div></div>
+                    <div class="dash-fin-card dfc-kalan"><div class="dash-fin-label">KALAN TAHSİLAT</div><div class="dash-fin-val green" id="dashFinKalanTahsilat">0,00 TL</div></div>
+                    <div class="dash-fin-card dfc-kalan"><div class="dash-fin-label">KALAN ÖDEME</div><div class="dash-fin-val red" id="dashFinKalanOdeme">0,00 TL</div></div>
                 </div>
             </div>
             <div id="dashChartSection" class="dash-modern-card" data-perm='["yillik-butce","hesap-takip"]' data-widget="chart" draggable="true">
@@ -435,10 +435,10 @@
                     </div>
                     <div class="row" style="align-items:flex-end;">
                         <div class="col" style="max-width:350px;">
-                            <label>İşlem Tutarı (₺):</label>
+                            <label>İşlem Tutarı (TL):</label>
                             <div class="input-group-tl">
                                 <input type="text" id="ndTutar" placeholder="0.000,00" style="text-transform:none; text-align:right; font-weight:700; font-size:16px;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)">
-                                <span class="input-tl-addon">₺</span>
+                                <span class="input-tl-addon">TL</span>
                             </div>
                         </div>
                     </div>
@@ -494,7 +494,7 @@
                     <h4><i class="fa-solid fa-coins"></i> Anlaşma Detayı</h4>
                     <div class="row">
                         <div class="col" style="max-width:300px;">
-                            <label>Anlaşma Ücreti (₺):</label>
+                            <label>Anlaşma Ücreti (TL):</label>
                             <input type="text" id="isMuhAnlasmaUcreti" placeholder="0.000,00" style="text-transform:none; text-align:right; font-weight:700;" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)">
                         </div>
                         <div class="col" style="max-width:300px;">
@@ -528,30 +528,30 @@
                 <div id="htAnaSayfa">
                     <div class="ht-bakiye-kart">
                         <div class="ht-bakiye-label">Şirket Bakiyesi</div>
-                        <div class="ht-bakiye-deger" id="htSirketBakiye">0,00 ₺</div>
+                        <div class="ht-bakiye-deger" id="htSirketBakiye">0,00 TL</div>
                     </div>
                     <div class="ht-ozet-row">
                         <div class="ht-ozet-kart">
                             <div class="oz-label">Toplam Hesap Bakiye</div>
-                            <div class="oz-deger" id="htToplamHesapBakiye">0,00 ₺</div>
+                            <div class="oz-deger" id="htToplamHesapBakiye">0,00 TL</div>
                         </div>
                         <div class="ht-ozet-kart">
                             <div class="oz-label">Toplam Nakit Bakiye</div>
-                            <div class="oz-deger nakit" id="htToplamNakitBakiye">0,00 ₺</div>
+                            <div class="oz-deger nakit" id="htToplamNakitBakiye">0,00 TL</div>
                         </div>
                     </div>
                     <div class="ht-ozet-row" style="margin-bottom:18px;">
                         <div class="ht-ozet-kart" style="flex:1;background:rgba(46,204,113,0.06);border-color:rgba(46,204,113,0.2);">
                             <div class="oz-label">Bu Ay Gelen</div>
-                            <div class="oz-deger" style="color:var(--ht-gelir);font-size:18px;" id="htBuAyGelen">0,00 ₺</div>
+                            <div class="oz-deger" style="color:var(--ht-gelir);font-size:18px;" id="htBuAyGelen">0,00 TL</div>
                         </div>
                         <div class="ht-ozet-kart" style="flex:1;background:rgba(231,76,60,0.06);border-color:rgba(231,76,60,0.2);">
                             <div class="oz-label">Bu Ay Giden</div>
-                            <div class="oz-deger" style="color:var(--ht-gider);font-size:18px;" id="htBuAyGiden">0,00 ₺</div>
+                            <div class="oz-deger" style="color:var(--ht-gider);font-size:18px;" id="htBuAyGiden">0,00 TL</div>
                         </div>
                         <div class="ht-ozet-kart" style="flex:1;background:rgba(160,184,204,0.06);border-color:rgba(160,184,204,0.2);">
                             <div class="oz-label">Bu Ay Net</div>
-                            <div class="oz-deger" style="color:var(--ht-accent);font-size:18px;" id="htBuAyNet">0,00 ₺</div>
+                            <div class="oz-deger" style="color:var(--ht-accent);font-size:18px;" id="htBuAyNet">0,00 TL</div>
                         </div>
                     </div>
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
@@ -640,7 +640,7 @@
                             <span class="ft-balance-icon" id="ftKdvNetIco"><i class="fa-solid fa-coins"></i></span>
                             <span class="ft-balance-label" id="ftKdvNetLbl">KDV Net Durum</span>
                         </div>
-                        <div class="ft-balance-value" id="ftKdvNet">0,00 ₺</div>
+                        <div class="ft-balance-value" id="ftKdvNet">0,00 TL</div>
                         <div class="ft-balance-sub">Yıl sonu KDV pozisyonu</div>
                     </div>
 
@@ -656,9 +656,9 @@
                     <div class="ft-summary-row">
                         <div class="ft-summary-card card-gelen"><div class="ft-sc-icon"><i class="fa-solid fa-inbox"></i></div><div class="ft-sc-lbl">Gelen Fatura</div><div class="ft-sc-val blue" id="ftGelenAdet">0</div></div>
                         <div class="ft-summary-card card-giden"><div class="ft-sc-icon"><i class="fa-solid fa-paper-plane"></i></div><div class="ft-sc-lbl">Giden Fatura</div><div class="ft-sc-val blue" id="ftGidenAdet">0</div></div>
-                        <div class="ft-summary-card card-gelen-kdv"><div class="ft-sc-icon"><i class="fa-solid fa-download"></i></div><div class="ft-sc-lbl">Gelen KDV</div><div class="ft-sc-val red" id="ftGelenKdv">0,00 ₺</div></div>
-                        <div class="ft-summary-card card-giden-kdv"><div class="ft-sc-icon"><i class="fa-solid fa-upload"></i></div><div class="ft-sc-lbl">Giden KDV</div><div class="ft-sc-val green" id="ftGidenKdv">0,00 ₺</div></div>
-                        <div class="ft-summary-card card-odenenv"><div class="ft-sc-icon"><i class="fa-solid fa-receipt"></i></div><div class="ft-sc-lbl">Ödenen Vergi</div><div class="ft-sc-val orange" id="ftOdenenVergiToplam">0,00 ₺</div></div>
+                        <div class="ft-summary-card card-gelen-kdv"><div class="ft-sc-icon"><i class="fa-solid fa-download"></i></div><div class="ft-sc-lbl">Gelen KDV</div><div class="ft-sc-val red" id="ftGelenKdv">0,00 TL</div></div>
+                        <div class="ft-summary-card card-giden-kdv"><div class="ft-sc-icon"><i class="fa-solid fa-upload"></i></div><div class="ft-sc-lbl">Giden KDV</div><div class="ft-sc-val green" id="ftGidenKdv">0,00 TL</div></div>
+                        <div class="ft-summary-card card-odenenv"><div class="ft-sc-icon"><i class="fa-solid fa-receipt"></i></div><div class="ft-sc-lbl">Ödenen Vergi</div><div class="ft-sc-val orange" id="ftOdenenVergiToplam">0,00 TL</div></div>
                     </div>
 
                     <!-- KDV Takibi -->
@@ -814,7 +814,7 @@
                             <th style="width: 50%; text-align:left;">Hizmet / İş Açıklaması</th>
                             <th style="width: 10%; text-align:center; white-space:nowrap;">Miktar</th>
                             <th style="width: 8%; text-align:center;">Birim</th>
-                            <th style="width: 12%; text-align:center;">Birim Fiyat (₺)</th>
+                            <th style="width: 12%; text-align:center;">Birim Fiyat (TL)</th>
                             <th style="width: 12%; text-align:center;">KDV Oranı</th>
                             <th style="width: 4%; text-align:center;">İşlem</th>
                         </tr>
@@ -840,9 +840,9 @@
                 <button class="btn-add-item" onclick="teklifFormSatirEkle()">[+] Yeni Kalem Ekle</button>
 
                 <div class="live-summary-card">
-                    <div class="live-summary-row"><span>Ara Toplam:</span><span id="liveAra">0,00 ₺</span></div>
-                    <div class="live-summary-row"><span>Toplam K.D.V:</span><span id="liveKdv">0,00 ₺</span></div>
-                    <div class="live-summary-row" style="border-top:1px solid var(--border-color); padding-top:8px; color:var(--accent-red); font-weight: bold;"><span>Genel Toplam:</span><span id="liveGenel">0,00 ₺</span></div>
+                    <div class="live-summary-row"><span>Ara Toplam:</span><span id="liveAra">0,00 TL</span></div>
+                    <div class="live-summary-row"><span>Toplam K.D.V:</span><span id="liveKdv">0,00 TL</span></div>
+                    <div class="live-summary-row" style="border-top:1px solid var(--border-color); padding-top:8px; color:var(--accent-red); font-weight: bold;"><span>Genel Toplam:</span><span id="liveGenel">0,00 TL</span></div>
                 </div>
                 
                 <div style="margin-top: 25px; display: flex; gap: 15px;">
@@ -942,7 +942,7 @@
                             <label>Teklif Tutarı / Fiyatı:</label>
                             <div class="input-group-tl">
                                 <input type="text" id="pYonetimBirimFiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)">
-                                <span class="input-tl-addon">₺</span>
+                                <span class="input-tl-addon">TL</span>
                             </div>
                         </div>
                     </div>
@@ -1667,7 +1667,7 @@
                         <div id="mkKatSatir"><select id="mkKategori"></select></div>
                         <label>Açıklama</label>
                         <input type="text" id="mkAciklama" placeholder="Kalem açıklaması giriniz">
-                        <label>Tutar (₺)</label>
+                        <label>Tutar (TL)</label>
                         <input type="text" id="mkTutar" value="" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)" placeholder="0,00">
                     </div>
                     <div class="modal-actions">
@@ -1691,7 +1691,7 @@
                         <input type="text" id="htModalKart" oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase;">
                         <label>Net Şifre</label>
                         <input type="text" id="htModalNet" oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase;">
-                        <label>Bakiye (₺)</label>
+                        <label>Bakiye (TL)</label>
                         <input type="text" id="htModalBakiye" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)">
                         <input type="hidden" id="htModalId" value="">
                     </div>
@@ -1728,7 +1728,7 @@
                         </div>
                         <div class="ht-ikili">
                             <div><label>Tarih</label><input type="date" id="htModalTarih"></div>
-                            <div><label>Tutar (₺)</label><input type="text" id="htModalTutar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></div>
+                            <div><label>Tutar (TL)</label><input type="text" id="htModalTutar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this)" onblur="tmTutarBlur(this)"></div>
                         </div>
                         <input type="hidden" id="htModalIslemId" value="">
                     </div>
@@ -1909,15 +1909,15 @@
                     <table class="pdf-total-table">
                         <tr>
                             <td>ARA TOPLAM</td>
-                            <td id="pOutAra">0,00 ₺</td>
+                            <td id="pOutAra">0,00 TL</td>
                         </tr>
                         <tr>
                             <td>TOPLAM K.D.V</td>
-                            <td id="pOutKdv">0,00 ₺</td>
+                            <td id="pOutKdv">0,00 TL</td>
                         </tr>
                         <tr class="grand-total">
                             <td>GENEL TOPLAM</td>
-                            <td id="pOutGenel">0,00 ₺</td>
+                            <td id="pOutGenel">0,00 TL</td>
                         </tr>
                     </table>
                 </div>
@@ -1945,7 +1945,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.92.0"></script>
+    <script src="script.js?v=1.92.1"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
