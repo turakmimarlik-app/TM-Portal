@@ -1777,7 +1777,7 @@ function gorevMailGonder(gorev) {
                             options: {
                                 responsive: true, maintainAspectRatio: true,
                                 plugins: { legend: { labels: { font: {size:11} } }, datalabels: { display: false } },
-                                scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' ₺'; }, font: { family: "'Segoe UI Symbol','Segoe UI',Arial,sans-serif" } } } }
+                                scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' \u20BA'; }, font: { family: "'Segoe UI Symbol','Segoe UI',Arial,sans-serif" } } } }
                             }
                         });
                     }
@@ -7186,8 +7186,8 @@ function gorevMailGonder(gorev) {
         ];
         var HT_AKTIF_DETAY_HESAP = null;
 
-function htTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " ₺"; }
-function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " ₺"; }
+function htTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " \u20BA"; }
+function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + " \u20BA"; }
         function htIbanGoster(iban) {
             if(!iban) return "-";
             var s = iban.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
