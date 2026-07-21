@@ -49,7 +49,7 @@
         [data-theme="dark"] .it-not-card textarea { background:var(--input-bg); }
         [data-theme="dark"] .it-form-card input, [data-theme="dark"] .it-form-card select, [data-theme="dark"] .it-form-card textarea { background:var(--input-bg); }
 
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-main); margin: 0; padding: 0; color: var(--text-dark); transition: background 0.3s, color 0.3s; }
+        body { font-family: 'Segoe UI', 'Segoe UI Symbol', Arial, sans-serif; background-color: var(--bg-main); margin: 0; padding: 0; color: var(--text-dark); transition: background 0.3s, color 0.3s; }
         
         /* GİRİŞ EKRANI */
         .login-wrapper { display: none; height: 100vh; width: 100vw; justify-content: center; align-items: center; background-color: var(--sidebar-bg); position: fixed; top: 0; left: 0; z-index: 9999; }
@@ -208,7 +208,7 @@
         .col { flex: 1; display: flex; flex-direction: column; position: relative; }
         
         label { font-weight: 600; margin-bottom: 8px; font-size: 13px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
-        input, select, textarea { font-family: 'Segoe UI', Arial, sans-serif; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--input-bg); color: var(--text-dark); font-size: 14px; box-sizing:border-box; }
+        input, select, textarea { font-family: 'Segoe UI', 'Segoe UI Symbol', Arial, sans-serif; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--input-bg); color: var(--text-dark); font-size: 14px; box-sizing:border-box; }
         
         .uppercase-form input[type="text"], .uppercase-form textarea, .force-uppercase { text-transform: uppercase; }
         .checkbox-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; background: var(--bg-main); padding: 15px; border-radius: 6px; border: 1px solid var(--border-color); margin-top: 5px; }
@@ -786,7 +786,7 @@
         .mini-badge { background: var(--bg-main); padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; color: var(--accent-red); }
         
         /* ================= YENİ DASHBOARD STİLLERİ ================= */
-        .dash-stat-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 25px; }
+        .dash-stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
         .dash-stat-box { background: var(--panel-bg); padding: 16px 12px; border-radius: 10px; border: 1px solid var(--border-color); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01); transition: 0.2s; }
         .dash-stat-box:hover { border-color: var(--accent-red); transform: translateY(-2px); }
         .dash-stat-box .num { font-size: 22px; font-weight: 800; }
@@ -1874,12 +1874,15 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
         #muhasebe-submenu .submenu-item i { color:#26A69A; }
         .dash-stat-box .icon i { font-size:22px; }
         /* ===== DASHBOARD STAT BOX ICON COLORS ===== */
-        #dashStatsSection .dash-stat-box:nth-child(1) .icon i { color:#5C6BC0; }
-        #dashStatsSection .dash-stat-box:nth-child(2) .icon i { color:#26A69A; }
-        #dashStatsSection .dash-stat-box:nth-child(3) .icon i { color:#FF7043; }
-        #dashStatsSection .dash-stat-box:nth-child(4) .icon i { color:#42A5F5; }
-        #dashStatsSection .dash-stat-box:nth-child(5) .icon i { color:#66BB6A; }
-        #dashStatsSection .dash-stat-box:nth-child(6) .icon i { color:#EC407A; }
+#dashStatsSection .dash-stat-box:nth-child(1) .icon i { color:#FB8C00; }
+#dashStatsSection .dash-stat-box:nth-child(2) .icon i { color:#5C6BC0; }
+#dashStatsSection .dash-stat-box:nth-child(3) .icon i { color:#42A5F5; }
+#dashStatsSection .dash-stat-box:nth-child(4) .icon i { color:#66BB6A; }
+#dashStatsSection .dash-stat-box:nth-child(5) .icon i { color:#26A69A; }
+#dashStatsSection .dash-stat-box:nth-child(6) .icon i { color:#FF7043; }
+#dashStatsSection .dash-stat-box:nth-child(7) .icon i { color:#EC407A; }
+#dashStatsSection .dash-stat-box:nth-child(8) .icon i { color:#AB47BC; }
+#dashStatsSection .dash-stat-box:nth-child(9) .icon i { color:#78909C; }
         .gt-card-icon i { font-size:20px; }
         .as-event-dot i { margin-right:2px; }
         .dash-widget-title i { margin-right:4px; color:var(--accent-red); }

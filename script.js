@@ -1521,12 +1521,31 @@ function gorevMailGonder(gorev) {
             const dekontDb = JSON.parse(localStorage.getItem("tm_nakit_dekont_db")) || [];
 
             // ÜST İSTATİSTİKLER
+            try {
+                var gorevDb = JSON.parse(localStorage.getItem("tm_gorevler")) || [];
+                var aktifUser = localStorage.getItem("tm_active_user") || "";
+                var benimAktifGorev = gorevDb.filter(function(g) {
+                    var atananlar = Array.isArray(g.atanan) ? g.atanan : (g.atanan ? [g.atanan] : []);
+                    return atananlar.indexOf(aktifUser) >= 0 && g.durum !== "tamamlandi";
+                });
+                setText("dashStatGorev", benimAktifGorev.length);
+            } catch(e) { setText("dashStatGorev", "0"); }
             setText("dashStatTeklif", teklifDb.length);
+            try {
+                var itDb = JSON.parse(localStorage.getItem("tm_is_takibi_v2")) || [];
+                var itAktif = itDb.filter(function(x){return !x.tamamlandi;}).length;
+                var itTamam = itDb.filter(function(x){return x.tamamlandi;}).length;
+                setText("dashStatAktifIs", itAktif);
+                setText("dashStatTamamlananIs", itTamam);
+            } catch(e) { setText("dashStatAktifIs","0"); setText("dashStatTamamlananIs","0"); }
             setText("dashStatMusteri", musteriDb.length);
             setText("dashStatPartner", partnerDb.length);
-            setText("dashStatAktifIs", isMuhDb.length);
-            setText("dashStatTamamlanan", tamIsMuhDb.length);
-            setText("dashStatDekont", dekontDb.length);
+            setText("dashStatAktifIsMuh", isMuhDb.length);
+            setText("dashStatTamamlananMuh", tamIsMuhDb.length);
+            try {
+                var notDb = JSON.parse(localStorage.getItem("tm_notlar_notes_db")) || [];
+                setText("dashStatNotlar", notDb.length);
+            } catch(e) { setText("dashStatNotlar", "0"); }
 
             // FİNANSAL ÖZET
             try {
