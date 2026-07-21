@@ -14,6 +14,7 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){var e=document.querySelectorAll('input:not([type="hidden"])');e.forEach(function(i){if(!i.getAttribute('autocomplete'))i.setAttribute('autocomplete','nope');if(i.type==='password')i.setAttribute('autocomplete','new-password')});var t=document.querySelectorAll('textarea');t.forEach(function(i){if(!i.getAttribute('autocomplete'))i.setAttribute('autocomplete','nope')})})</script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -125,7 +126,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag">V1.37.0</div>
+                <div class="version-tag">V1.86.1</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -397,7 +398,7 @@
                             <h3 style="margin-top:0;">👤 Müşteri Bilgileri</h3>
                             <div class="col" style="margin-bottom:12px;">
                                 <label>Adı Soyadı:</label>
-                                <input type="text" id="ndMusteriAd" style="text-transform:uppercase;" oninput="tmAkilliTahminMotoru(this, 'MUSTERI')">
+                                <input type="text" id="ndMusteriAd" autocomplete="off" style="text-transform:uppercase;" oninput="tmAkilliTahminMotoru(this, 'MUSTERI')">
                                 <div id="ndMusteriAd-tahmin" class="tm-autocomplete-box"></div>
                             </div>
                             <div class="col" style="margin-bottom:12px;">

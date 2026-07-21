@@ -135,8 +135,7 @@
             .modal-overlay .modal-box { overflow-x:auto; }
             /* İş muhasebesi */
             .is-muh-card [style*="min-width:440px"] { min-width:100% !important; }
-            .is-muh-card .card-main-header > div[style*="display:flex"][style*="gap:30px"] { flex-direction:column; gap:8px !important; }
-            .is-muh-card .card-main-header > div[style*="display:flex"][style*="gap:15px"] { flex-wrap:wrap; }
+.is-muh-card .card-main-header > div[style*="display:flex"][style*="gap:12px"] { flex-wrap:wrap; gap:8px !important; }
             #is-muhasebe-page table, #tamamlanan-is-muhasebeleri-page table { display:block; overflow-x:auto; white-space:nowrap; }
             /* Banka satırı */
             .bank-input-row .bank-adi { min-width:100% !important; }
