@@ -2062,9 +2062,10 @@ function gorevMailGonder(gorev) {
         function musteriTipiChipGuncelle() {
             const chipsContainer = document.getElementById("musteriTipiFilterChips");
             if(!chipsContainer) return;
+            var etiketler = Array.isArray(SABIT_ETIKETLER) ? SABIT_ETIKETLER : [];
             var seciliTip = localStorage.getItem("tm_musteri_tipi_filter") || "";
             var html = '<span class="filter-chip filter-chip-all' + (!seciliTip ? ' active' : '') + '" data-tip="" onclick="musteriTipiFilterSec(this)">Tümü</span>';
-            SABIT_ETIKETLER.forEach(function(tip) {
+            etiketler.forEach(function(tip) {
                 var aktif = trToUpper(seciliTip) === trToUpper(tip) ? ' active' : '';
                 html += '<span class="filter-chip' + aktif + '" data-tip="' + tip.replace(/"/g, '&quot;').replace(/'/g, '&#39;') + '" onclick="musteriTipiFilterSec(this)">' + tip + '</span>';
             });
@@ -2131,14 +2132,14 @@ function gorevMailGonder(gorev) {
                 const isSayisi = tamamlananDb.filter(t => trToUpper(t.musteriAd || t.firma || "") === trToUpper(m.ad) || trToUpper(t.firma || "") === trToUpper(m.sirket)).length;
 
                 konteyner.innerHTML += `
-                    <div class="portfolio-card m-card-item">
+                    <div class="portfolio-card m-card-item" data-tip="${(m.tipi||'').replace(/"/g,'&quot;')}">
                         <div class="partner-card-top">
                             <div class="partner-card-avatar">
                                 <i class="fa-regular fa-user"></i>
                             </div>
                             <div class="partner-card-header">
                                 <h4 class="m-search-ad">${m.ad}</h4>
-                                <div class="partner-card-brans m-search-tipi"><i class="fa-solid fa-tag"></i> ${m.tipi}</div>
+                                <div class="partner-card-brans m-search-tipi"><i class="fa-solid fa-tag"></i> ${m.tipi||''}</div>
                             </div>
                             <div class="partner-card-jobcount">
                                 <span class="partner-jobcount-num">${isSayisi}</span>
@@ -2198,6 +2199,7 @@ function gorevMailGonder(gorev) {
                 `;
             });
             musteriTipiChipGuncelle();
+            musterileriFiltrele();
         }
 
         function musterileriFiltrele() {
@@ -2205,8 +2207,8 @@ function gorevMailGonder(gorev) {
             const seciliTip = localStorage.getItem("tm_musteri_tipi_filter") || "";
             document.querySelectorAll("#musteriKartlariKonteyner .m-card-item").forEach((kart) => {
                 const ad = trToUpper(kart.querySelector(".m-search-ad").innerText);
-                var tipHam = kart.querySelector(".m-search-tipi").innerText;
-                const tipi = trToUpper(tipHam);
+                var kartTip = kart.getAttribute('data-tip') || '';
+                const tipi = trToUpper(kartTip);
                 const sirket = trToUpper(kart.querySelector(".m-search-sirket").innerText);
                 const unvan = trToUpper(kart.querySelector(".m-search-unvan").innerText);
                 const kimlik = trToUpper(kart.querySelector(".m-search-kimlik").innerText);
