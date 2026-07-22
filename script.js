@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.93.6';
+﻿        var APP_VERSION = 'V1.93.7';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -2072,14 +2072,7 @@ function gorevMailGonder(gorev) {
         }
 
         function musteriTipiFilterSec(el) {
-            var tip = el.getAttribute('data-tip') || '';
-            if(tip) { localStorage.setItem("tm_musteri_tipi_filter", tip); }
-            else { localStorage.removeItem("tm_musteri_tipi_filter"); }
-            musteriTipiChipGuncelle();
-            musterileriFiltrele();
-        }
-
-        function musteriTipiFilterSec(tip) {
+            var tip = (typeof el === 'string') ? el : (el.getAttribute('data-tip') || '');
             if(tip) { localStorage.setItem("tm_musteri_tipi_filter", tip); }
             else { localStorage.removeItem("tm_musteri_tipi_filter"); }
             musteriTipiChipGuncelle();
