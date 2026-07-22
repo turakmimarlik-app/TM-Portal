@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.25.1';
+﻿        var APP_VERSION = 'V1.26.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -422,7 +422,7 @@ function gorevMailGonder(gorev) {
                 document.getElementById("loginSection").style.display = "flex";
                 overlayGizle();
             }
-            function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(e){e.stopPropagation();s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eşleşme bulunamadı)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');d.classList.remove('cs-fixed');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');var wr=w.getBoundingClientRect();var cl=false,cp=w.parentElement;while(cp){if(cp.classList&&(cp.classList.contains('it-tablo-wrapper')||cp.classList.contains('it-tablo'))){cl=true;break}cp=cp.parentElement}if(cl){d.style.position='fixed';d.style.top=wr.bottom+'px';d.style.left=wr.left+'px';d.style.width=wr.width+'px';d.style.bottom='auto';d.style.marginTop='0';d.style.marginBottom='0';d.style.zIndex=999999;d.classList.add('cs-fixed');}else{d.style.position='absolute';d.style.left='0';d.style.width='100%';d.style.top='100%';d.style.bottom='auto';d.style.marginTop='-1px';d.style.marginBottom='0';d.classList.remove('cs-fixed')}d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;var cf=d.querySelector('.cs-birim-footer');if(cf)cf.remove();if(s.classList.contains('row-birim')){var cft=document.createElement('div');cft.className='cs-birim-footer';cft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';cft.innerHTML='<button onclick="event.stopPropagation();birimEklePrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">+ YENİ</button><button onclick="event.stopPropagation();birimSilPrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">- SİL</button>';d.appendChild(cft);}var kf=d.querySelector('.cs-kdv-footer');if(kf)kf.remove();if(s.classList.contains('row-kdv')){var kft=document.createElement('div');kft.className='cs-kdv-footer';kft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';kft.innerHTML='<button onclick="event.stopPropagation();kdvEklePrompt();kdvDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">+ EKLE</button><button onclick="event.stopPropagation();kdvSilPrompt();kdvDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">- SİL</button>';d.appendChild(kft);}};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.classList.remove('cs-fixed');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});var csfn=function(e){var t=e&&e.target;if(t){var ins=false,cp=t;while(cp){if(cp.classList&&cp.classList.contains('cs-dropdown')){ins=true;break}cp=cp.parentElement}if(ins)return}document.querySelectorAll('.cs-dropdown.cs-fixed.open').forEach(function(x){x.classList.remove('open');x.classList.remove('cs-fixed');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});};document.addEventListener('scroll',csfn,true);window.addEventListener('scroll',csfn);
+            function csInit(){document.querySelectorAll('select:not(.cs-done)').forEach(function(s){if(s.options.length>0){s.classList.add('cs-done');s.style.display='none';var w=document.createElement('div');w.className='cs-wrapper';var t=document.createElement('div');t.className='cs-trigger';var d=document.createElement('div');d.className='cs-dropdown';var inp=document.createElement('input');inp.className='cs-search';inp.type='text';inp.placeholder='Ara...';inp.autocomplete='off';function csBuild(f){var opts=d.querySelectorAll('.cs-option');for(var j=opts.length-1;j>=0;j--){opts[j].remove();}var fv=f?f.toLowerCase():'';var found=false;for(var i=0;i<s.options.length;i++){var txt=s.options[i].text;if(fv&&txt.toLowerCase().indexOf(fv)===-1)continue;var o=document.createElement('div');o.className='cs-option'+(s.selectedIndex===i?' sel':'');o.textContent=txt;o.dataset.index=i;(function(idx){o.onclick=function(e){e.stopPropagation();s.selectedIndex=idx;t.textContent=s.options[idx].text;d.classList.remove('open');t.classList.remove('open');inp.value='';d.querySelectorAll('.cs-option').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');s.dispatchEvent(new Event('change',{bubbles:true}));};})(i);d.appendChild(o);found=true;}if(!found&&fv){var no=document.createElement('div');no.className='cs-option';no.textContent='(eşleşme bulunamadı)';no.style.cursor='default';no.style.color='var(--text-light)';d.appendChild(no);}t.textContent=s.options[s.selectedIndex]?s.options[s.selectedIndex].text:'';}d.appendChild(inp);inp.oninput=function(){csBuild(this.value);};inp.onclick=function(e){e.stopPropagation();};inp.onkeydown=function(e){if(e.key==='Escape'){d.classList.remove('open');t.classList.remove('open');inp.value='';}};csBuild('');t.onclick=function(e){e.stopPropagation();if(d.classList.contains('open')){d.classList.remove('open');d.classList.remove('cs-fixed');t.classList.remove('open');inp.value='';return;}document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.previousElementSibling.classList.remove('open');});csBuild('');var wr=w.getBoundingClientRect();var cl=false,cp=w.parentElement;while(cp){if(cp.classList&&(cp.classList.contains('it-tablo-wrapper')||cp.classList.contains('it-tablo')||cp.classList.contains('app-table'))){cl=true;break}cp=cp.parentElement}if(cl){d.style.position='fixed';d.style.top=wr.bottom+'px';d.style.left=wr.left+'px';d.style.width=wr.width+'px';d.style.bottom='auto';d.style.marginTop='0';d.style.marginBottom='0';d.style.zIndex=999999;d.classList.add('cs-fixed');}else{d.style.position='absolute';d.style.left='0';d.style.width='100%';d.style.top='100%';d.style.bottom='auto';d.style.marginTop='-1px';d.style.marginBottom='0';d.classList.remove('cs-fixed')}d.classList.add('open');t.classList.add('open');inp.focus();d.scrollTop=0;var cf=d.querySelector('.cs-birim-footer');if(cf)cf.remove();if(s.classList.contains('row-birim')){var cft=document.createElement('div');cft.className='cs-birim-footer';cft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';cft.innerHTML='<button onclick="event.stopPropagation();birimEklePrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">+ YENİ</button><button onclick="event.stopPropagation();birimSilPrompt();birimDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">- SİL</button>';d.appendChild(cft);}var kf=d.querySelector('.cs-kdv-footer');if(kf)kf.remove();if(s.classList.contains('row-kdv')){var kft=document.createElement('div');kft.className='cs-kdv-footer';kft.style.cssText='border-top:1px solid var(--border-color);padding:6px;display:flex;gap:6px;';kft.innerHTML='<button onclick="event.stopPropagation();kdvEklePrompt();kdvDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:var(--accent-red);color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">+ EKLE</button><button onclick="event.stopPropagation();kdvSilPrompt();kdvDropdownKapat(this);" style="flex:1;padding:3px 6px;font-size:10px;cursor:pointer;background:#555;color:#fff;border:none;border-radius:3px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;line-height:1;">- SİL</button>';d.appendChild(kft);}};w.appendChild(t);w.appendChild(d);s.parentNode.insertBefore(w,s);if(s.style.flex){w.style.flex=s.style.flex;w.style.width='';}else if(s.style.width)w.style.width=s.style.width;}});}document.addEventListener('click',function(){document.querySelectorAll('.cs-dropdown.open').forEach(function(x){x.classList.remove('open');x.classList.remove('cs-fixed');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});});var csfn=function(e){var t=e&&e.target;if(t){var ins=false,cp=t;while(cp){if(cp.classList&&cp.classList.contains('cs-dropdown')){ins=true;break}cp=cp.parentElement}if(ins)return}document.querySelectorAll('.cs-dropdown.cs-fixed.open').forEach(function(x){x.classList.remove('open');x.classList.remove('cs-fixed');var ps=x.previousElementSibling;if(ps)ps.classList.remove('open');var si=x.querySelector('.cs-search');if(si)si.value='';});};document.addEventListener('scroll',csfn,true);window.addEventListener('scroll',csfn);
 
             const loginSection = document.getElementById("loginSection");
             if (loginSection) {
@@ -11314,11 +11314,28 @@ function itDurumMetni(o) {
 
         function dlkDbYukle() {
             var db;
-            try { db = JSON.parse(localStorage.getItem(DLK_DB_KEY)); } catch(e) { db = null; console.error("Dilekce db yukleme hatasi:", e); }
-            if (!db || !Array.isArray(db)) db = [];
+            try {
+                var raw = localStorage.getItem(DLK_DB_KEY);
+                if(raw === null) return [];
+                db = JSON.parse(raw);
+            } catch(e) { db = null; console.error("Dilekce db yukleme hatasi:", e); }
+            if (!db || !Array.isArray(db)) { console.warn("Dilekce db bozuk, sifirlaniyor:", db); return []; }
             return db;
         }
-        function dlkDbKaydet(db) { try { localStorage.setItem(DLK_DB_KEY, JSON.stringify(db)); } catch(e) { console.error("Dilekce db kaydetme hatasi:", e); tmNotify("Dilekçe kaydedilirken hata oluştu!", "error"); } }
+        function dlkDbKaydet(db) {
+            try {
+                var test = JSON.stringify(db);
+                if(test.length > 4000000) { tmNotify("Uyarı: Dilekçe verisi çok büyük (" + Math.round(test.length/1024) + "KB), bazı kayıtlar kaybolabilir!", "warning"); }
+                localStorage.setItem(DLK_DB_KEY, test);
+                var kontrol = localStorage.getItem(DLK_DB_KEY);
+                if(!kontrol || kontrol !== test) { tmNotify("Dilekçe kaydedildi ancak doğrulama başarısız! Veri kaybı riski var.", "error"); }
+            } catch(e) {
+                console.error("Dilekce db kaydetme hatasi:", e);
+                var mesaj = "Dilekçe kaydedilirken hata oluştu!";
+                if(e.name === "QuotaExceededError" || e.code === 22 || e.code === 1014) { mesaj += " (Depolama alanı dolu)"; }
+                tmNotify(mesaj, "error");
+            }
+        }
 
         function dlkYeniId() {
             var db = dlkDbYukle();
@@ -11358,19 +11375,26 @@ function itDurumMetni(o) {
         }
 
         function dlkKaydet() {
-            var v = dlkFormdakiVeri();
-            if (!v.konu || !v.metin || !v.gonderilecekYer) {
-                tmNotify("Lütfen en az Konu, Metin ve Gönderilecek Yer alanlarını doldurun.", "error");
-                return;
+            try {
+                var v = dlkFormdakiVeri();
+                if (!v.konu || !v.metin || !v.gonderilecekYer) {
+                    tmNotify("Lütfen en az Konu, Metin ve Gönderilecek Yer alanlarını doldurun.", "error");
+                    return;
+                }
+                var db = dlkDbYukle();
+                var id = dlkYeniId();
+                db.push({ id: id, gonderilecekYer: v.gonderilecekYer, ilgi: v.ilgi, konu: v.konu, metin: v.metin, tarih: anlikTarihGetir() });
+                dlkDbKaydet(db);
+                var dogrulama = dlkDbYukle();
+                if(dogrulama.length !== db.length) { tmNotify("Dilekçe kaydedildi ancak veri sayısı uyuşmuyor!", "warning"); }
+                dlkListele();
+                dlkFormTemizle();
+                tmNotify("Dilekçe " + dlkIdStr(id, anlikTarihGetir()) + " kaydedildi.", "success");
+                aktiviteEkle("Dilekçe kaydedildi: " + dlkIdStr(id, anlikTarihGetir()) + " - " + (v.konu || ""), "Dilekçe");
+            } catch(e) {
+                console.error("Dilekce kaydetme hatasi:", e);
+                tmNotify("Dilekçe kaydedilirken beklenmeyen hata: " + e.message, "error");
             }
-            var db = dlkDbYukle();
-            var id = dlkYeniId();
-            db.push({ id: id, ...v, tarih: anlikTarihGetir() });
-            dlkDbKaydet(db);
-            dlkListele();
-            dlkFormTemizle();
-            tmNotify("Dilekçe " + dlkIdStr(id, anlikTarihGetir()) + " kaydedildi.", "success");
-            aktiviteEkle("Dilekçe kaydedildi: " + dlkIdStr(id, anlikTarihGetir()) + " - " + (v.konu || ""), "Dilekçe");
         }
 
         function dlkPdfGoster(mod, id) {
@@ -11609,7 +11633,7 @@ function itDurumMetni(o) {
             });
 
             if (filtrelenmis.length === 0) {
-                konteyner.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);background:var(--bg-main);border-radius:8px;border:1px dashed var(--border-color);">' + (arama ? 'Aramanızla eşleşen dilekçe bulunamadı.' : 'Henüz kaydedilmiş dilekçe bulunmuyor.') + '</div>';
+                konteyner.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);background:var(--bg-main);border-radius:8px;border:1px dashed var(--border-color);font-size:13px;">' + (arama ? 'Aramanızla eşleşen dilekçe bulunamadı. <span style="display:block;margin-top:8px;color:var(--text-light);font-size:11px;">Toplam ' + db.length + ' kayıt var.</span>' : 'Henüz kaydedilmiş dilekçe bulunmuyor.') + '</div>';
                 return;
             }
 
@@ -11617,7 +11641,8 @@ function itDurumMetni(o) {
                 return dlkSortColumn === column ? (dlkSortDir === "asc" ? " ^" : " ¡") : "";
             }
 
-            var h = '<table class="app-table"><thead><tr>' +
+            var h = '<div style="font-size:12px;color:var(--text-light);margin-bottom:10px;"><i class="fa-regular fa-circle-check"></i> Toplam ' + db.length + ' kayıt, gösterilen ' + filtrelenmis.length + '</div>';
+            h += '<table class="app-table"><thead><tr>' +
                 '<th onclick="dlkSortTikla(\'id\')" style="cursor:pointer;user-select:none;">Dilekçe No' + sortOk('id') + '</th>' +
                 '<th onclick="dlkSortTikla(\'konu\')" style="cursor:pointer;user-select:none;">Konu' + sortOk('konu') + '</th>' +
                 '<th onclick="dlkSortTikla(\'yer\')" style="cursor:pointer;user-select:none;">Gönderilen Yer' + sortOk('gonderilecekYer') + '</th>' +
