@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.30.0';
+﻿        var APP_VERSION = 'V1.30.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -1480,6 +1480,7 @@ function gorevMailGonder(gorev) {
         }
         multiLogolariFirebaseCek();
         loginLogoyuGoster();
+        tmFaviconGuncelle();
         tmOnlinePullBaslat();
         window.addEventListener("beforeunload", function() {
             var u = localStorage.getItem("tm_active_user");
@@ -2798,6 +2799,7 @@ function gorevMailGonder(gorev) {
                     localStorage.setItem("tm_multi_logo_" + num, data);
                     document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
             if (num === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
+            if (num === 2) { tmFaviconGuncelle(); }
                     if (fdb) {
                         fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
                             tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
@@ -2814,6 +2816,21 @@ function gorevMailGonder(gorev) {
             localStorage.removeItem("tm_multi_logo_" + num);
             document.getElementById("mlPreview" + num).innerHTML = '<div class="logo-placeholder">Logo #' + num + ' yüklemek için tıklayın</div>';
             if (num === 3) sidebardaLogoyuGoster();
+            if (num === 2) tmFaviconGuncelle();
+        }
+        function tmFaviconGuncelle() {
+            var logoData = localStorage.getItem("tm_multi_logo_2");
+            var mevcutLink = document.querySelector('link[rel="icon"]:not([href*="tm-favicon"])');
+            if (logoData && logoData !== "null" && logoData.length > 100) {
+                if (mevcutLink && mevcutLink.href === logoData) return;
+                var link = document.createElement('link');
+                link.rel = 'icon';
+                link.type = 'image/png';
+                link.href = logoData;
+                document.head.appendChild(link);
+            } else {
+                if (mevcutLink) mevcutLink.remove();
+            }
         }
         function multiLogolariFirebaseCek() {
             if (!fdb) return;
@@ -2829,6 +2846,7 @@ function gorevMailGonder(gorev) {
                                 var preview = document.getElementById("mlPreview" + idx);
                                 if (preview) preview.innerHTML = '<img src="' + raw + '" alt="Logo ' + idx + '">';
                                 if (idx === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
+                                if (idx === 2) { tmFaviconGuncelle(); }
                             }
                         }
                     }).catch(function(e){ console.error("multiLogolariFirebaseCek", idx, e); });

@@ -10,7 +10,7 @@
     <style>html,body{background:#212832!important;margin:0;}</style>
     <script>document.write('<div id="tmLoadingOverlay" style="display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:#212832;z-index:99999;align-items:center;justify-content:center;flex-direction:column;color:white;font-family:Montserrat,sans-serif;"><div style="border:4px solid rgba(255,255,255,0.1);border-top:4px solid #E53935;border-radius:50%;width:44px;height:44px;animation:tmSpin 1s linear infinite;margin-bottom:22px;"></div><div style="font-size:20px;font-weight:800;letter-spacing:2px;">TM-PORTAL</div><div style="font-size:13px;color:#a0aec0;margin-top:10px;font-weight:400;">Sayfa yükleniyor...</div><style>@keyframes tmSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style></div>');</script>
     <link rel="icon" href="tm-favicon.svg">
-    <script>!function(){var c=document.createElement('canvas');c.width=32;c.height=32;var x=c.getContext('2d');x.fillStyle='#000';x.beginPath();x.arc(16,16,16,0,Math.PI*2);x.fill();x.fillStyle='#E53935';x.font='bold 22px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText('TM',16,16);var l=document.createElement('link');l.rel='icon';l.type='image/png';l.href=c.toDataURL('image/png');document.head.appendChild(l)}();</script>
+    <script>!function(){var d=localStorage.getItem("tm_multi_logo_2");if(d&&d!=="null"&&d.length>100){var l=document.createElement('link');l.rel='icon';l.type='image/png';l.href=d;document.head.appendChild(l);}else{var c=document.createElement('canvas');c.width=32;c.height=32;var x=c.getContext('2d');x.fillStyle='#000';x.beginPath();x.arc(16,16,16,0,Math.PI*2);x.fill();x.fillStyle='#E53935';x.font='bold 22px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText('TM',16,16);var l=document.createElement('link');l.rel='icon';l.type='image/png';l.href=c.toDataURL('image/png');document.head.appendChild(l);}}();</script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -20,12 +20,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.30.0">
-    <link rel="stylesheet" href="pdf.css?v=1.30.0">
-    <link rel="stylesheet" href="responsive.css?v=1.30.0">
+    <link rel="stylesheet" href="style.css?v=1.30.1">
+    <link rel="stylesheet" href="pdf.css?v=1.30.1">
+    <link rel="stylesheet" href="responsive.css?v=1.30.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="version.js?v=1.30.0"></script>
-    <script>console.log("TM-Portal V1.30.0");(function(){var v="V1.30.0";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
+    <script src="version.js?v=1.30.1"></script>
+    <script>console.log("TM-Portal V1.30.1");(function(){var v="V1.30.1";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
 </head>
 <body>
     <div id="loginSection" class="login-wrapper">
@@ -130,7 +130,7 @@
                 <button class="btn-logout" onclick="sistemdenCikisYap()"><i class="fa-solid fa-right-from-bracket"></i> Güvenli Çıkış</button>
             </div>
 <div class="sidebar-copyright-area">
-                <div class="version-tag" id="versionTag">V1.30.0</div>
+                <div class="version-tag" id="versionTag">V1.30.1</div>
                 <div>Powered by Turak Mimarlık</div>
                 <div>All Rights Reserved</div>
             </div>
@@ -1938,7 +1938,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.30.0"></script>
+    <script src="script.js?v=1.30.1"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
