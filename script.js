@@ -2799,7 +2799,7 @@ function gorevMailGonder(gorev) {
                     localStorage.setItem("tm_multi_logo_" + num, data);
                     document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
             if (num === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
-            if (num === 2) { tmFaviconGuncelle(); }
+            if (num === 5) { tmFaviconGuncelle(); }
                     if (fdb) {
                         fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
                             tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
@@ -2816,10 +2816,10 @@ function gorevMailGonder(gorev) {
             localStorage.removeItem("tm_multi_logo_" + num);
             document.getElementById("mlPreview" + num).innerHTML = '<div class="logo-placeholder">Logo #' + num + ' yüklemek için tıklayın</div>';
             if (num === 3) sidebardaLogoyuGoster();
-            if (num === 2) tmFaviconGuncelle();
+            if (num === 5) tmFaviconGuncelle();
         }
         function tmFaviconGuncelle() {
-            var logoData = localStorage.getItem("tm_multi_logo_2");
+            var logoData = localStorage.getItem("tm_multi_logo_5");
             var mevcutLink = document.querySelector('link[rel="icon"]:not([href*="tm-favicon"])');
             if (logoData && logoData !== "null" && logoData.length > 100) {
                 if (mevcutLink && mevcutLink.href === logoData) return;
@@ -2846,7 +2846,7 @@ function gorevMailGonder(gorev) {
                                 var preview = document.getElementById("mlPreview" + idx);
                                 if (preview) preview.innerHTML = '<img src="' + raw + '" alt="Logo ' + idx + '">';
                                 if (idx === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
-                                if (idx === 2) { tmFaviconGuncelle(); }
+                                if (idx === 5) { tmFaviconGuncelle(); }
                             }
                         }
                     }).catch(function(e){ console.error("multiLogolariFirebaseCek", idx, e); });
