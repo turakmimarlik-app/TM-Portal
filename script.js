@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.93.4';
+﻿        var APP_VERSION = 'V1.93.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -2061,13 +2061,22 @@ function gorevMailGonder(gorev) {
             const chipsContainer = document.getElementById("musteriTipiFilterChips");
             if(!chipsContainer) return;
             const db = JSON.parse(localStorage.getItem("tm_musteriler_db")) || [];
-            var mevcutTipler = [...new Set(db.map(m => m.tipi).filter(t => t && t.trim()))];
+            var mevcutTipler = [...new Set(db.map(function(m){ return m.tipi; }).filter(function(t){ return t && t.trim(); }))];
             var seciliTip = localStorage.getItem("tm_musteri_tipi_filter") || "";
-            var html = '<span class="filter-chip filter-chip-all' + (!seciliTip ? ' active' : '') + '" onclick="musteriTipiFilterSec(\'\')">Tümü</span>';
+            var html = '<span class="filter-chip filter-chip-all' + (!seciliTip ? ' active' : '') + '" data-tip="" onclick="musteriTipiFilterSec(this)">Tümü</span>';
             mevcutTipler.forEach(function(tip) {
-                html += '<span class="filter-chip' + (seciliTip === tip ? ' active' : '') + '" onclick="musteriTipiFilterSec(\'' + tip.replace(/'/g, "\\'") + '\')">' + tip + '</span>';
+                var aktif = trToUpper(seciliTip) === trToUpper(tip) ? ' active' : '';
+                html += '<span class="filter-chip' + aktif + '" data-tip="' + tip.replace(/"/g, '&quot;').replace(/'/g, '&#39;') + '" onclick="musteriTipiFilterSec(this)">' + tip + '</span>';
             });
             chipsContainer.innerHTML = html;
+        }
+
+        function musteriTipiFilterSec(el) {
+            var tip = el.getAttribute('data-tip') || '';
+            if(tip) { localStorage.setItem("tm_musteri_tipi_filter", tip); }
+            else { localStorage.removeItem("tm_musteri_tipi_filter"); }
+            musteriTipiChipGuncelle();
+            musterileriFiltrele();
         }
 
         function musteriTipiFilterSec(tip) {
@@ -2203,7 +2212,8 @@ function gorevMailGonder(gorev) {
             const seciliTip = localStorage.getItem("tm_musteri_tipi_filter") || "";
             document.querySelectorAll("#musteriKartlariKonteyner .m-card-item").forEach((kart) => {
                 const ad = trToUpper(kart.querySelector(".m-search-ad").innerText);
-                const tipi = trToUpper(kart.querySelector(".m-search-tipi").innerText);
+                var tipHam = kart.querySelector(".m-search-tipi").innerText;
+                const tipi = trToUpper(tipHam);
                 const sirket = trToUpper(kart.querySelector(".m-search-sirket").innerText);
                 const unvan = trToUpper(kart.querySelector(".m-search-unvan").innerText);
                 const kimlik = trToUpper(kart.querySelector(".m-search-kimlik").innerText);
@@ -2363,16 +2373,18 @@ function gorevMailGonder(gorev) {
             const chipsContainer = document.getElementById("partnerStatusFilterChips");
             if(!chipsContainer) return;
             const db = JSON.parse(localStorage.getItem("tm_isortaklari_db")) || [];
-            var mevcutStatusler = [...new Set(db.map(p => p.status).filter(s => s && s.trim()))];
+            var mevcutStatusler = [...new Set(db.map(function(p){ return p.status; }).filter(function(s){ return s && s.trim(); }))];
             var seciliStatus = localStorage.getItem("tm_partner_status_filter") || "";
-            var html = '<span class="filter-chip filter-chip-all' + (!seciliStatus ? ' active' : '') + '" onclick="partnerStatusFilterSec(\'\')">Tümü</span>';
+            var html = '<span class="filter-chip filter-chip-all' + (!seciliStatus ? ' active' : '') + '" data-status="" onclick="partnerStatusFilterSec(this)">Tümü</span>';
             mevcutStatusler.forEach(function(st) {
-                html += '<span class="filter-chip' + (seciliStatus === st ? ' active' : '') + '" onclick="partnerStatusFilterSec(\'' + st.replace(/'/g, "\\'") + '\')">' + st + '</span>';
+                var aktif = trToUpper(seciliStatus) === trToUpper(st) ? ' active' : '';
+                html += '<span class="filter-chip' + aktif + '" data-status="' + st.replace(/"/g, '&quot;').replace(/'/g, '&#39;') + '" onclick="partnerStatusFilterSec(this)">' + st + '</span>';
             });
             chipsContainer.innerHTML = html;
         }
 
-        function partnerStatusFilterSec(status) {
+        function partnerStatusFilterSec(el) {
+            var status = el.getAttribute('data-status') || '';
             if(status) { localStorage.setItem("tm_partner_status_filter", status); }
             else { localStorage.removeItem("tm_partner_status_filter"); }
             partnerStatusChipGuncelle();
@@ -2434,7 +2446,7 @@ function gorevMailGonder(gorev) {
                 const surekliClass = io.status === 'Sürekli Partner' ? ' partner-card-surekli' : '';
 
                 konteyner.innerHTML += `
-                    <div class="portfolio-card partner-card-item${surekliClass}">
+                    <div class="portfolio-card partner-card-item${surekliClass}" data-status="${(io.status||'').replace(/"/g,'&quot;')}">
                         <div class="partner-card-top">
                             <div class="partner-card-avatar">
                                 <i class="fa-solid fa-user-tie"></i>
@@ -2516,9 +2528,7 @@ function gorevMailGonder(gorev) {
                 const sirket = trToUpper(kart.querySelector(".p-search-sirket").innerText);
                 const kimlik = trToUpper(kart.querySelector(".p-search-kimlik").innerText);
                 const adres = trToUpper(kart.querySelector(".p-search-adres").innerText);
-                // Statü bilgisi: karttaki statü badge metnini al
-                var statusEl = kart.querySelector(".partner-info-val .partner-badge");
-                var kartStatus = statusEl ? statusEl.innerText.trim() : "";
+                var kartStatus = kart.getAttribute('data-status') || '';
                 
                 var statusUygun = !seciliStatus || trToUpper(kartStatus) === trToUpper(seciliStatus);
                 var aramaUygun = !kelime || ad.includes(kelime) || brans.includes(kelime) || sirket.includes(kelime) || kimlik.includes(kelime) || adres.includes(kelime);
