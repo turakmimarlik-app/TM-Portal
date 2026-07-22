@@ -12,6 +12,7 @@
             --input-bg: #f1f5f9;
             --sidebar-width: 270px;
         }
+        *, *::before, *::after { box-sizing: border-box; }
 
         [data-theme="dark"] {
             --bg-main: #14181f;

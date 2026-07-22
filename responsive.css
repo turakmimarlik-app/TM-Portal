@@ -151,6 +151,21 @@
             #teklif-liste-page .tl-card .tl-tutar { font-size:18px; }
             .fm-header { flex-wrap:wrap; gap:8px; }
             .fm-header h2 { font-size:18px; }
+
+            /* ===== INLINE STYLE OVERRIDES (mobil) ===== */
+            .ft-modal-ust { flex-wrap:wrap; gap:8px; }
+            .ft-modal-ust > div { min-width:100% !important; }
+            #ftGelenForm [style*="display:flex"]:not(.ft-modal-ust),
+            #ftGidenForm [style*="display:flex"]:not(.ft-modal-ust) { flex-wrap:wrap; }
+            #ftGelenForm [style*="min-width:"],
+            #ftGidenForm [style*="min-width:"] { min-width:100% !important; }
+            #ftOVForm [style*="min-width:"] { min-width:100% !important; }
+            #ftTakvimForm [style*="min-width:"] { min-width:100% !important; }
+            div[style*="display:flex"][style*="gap"]:not(.filter-chips):not(.cs-wrapper):not(.partner-card-actions) { flex-wrap:wrap; gap:8px; }
+            .bank-input-row .bank-adi { min-width:100% !important; }
+            .is-muh-card [style*="min-width:440px"] { min-width:100% !important; }
+            [style*="min-width:440px"] { min-width:100% !important; }
+            .ht-ay-picker { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); min-width:200px; max-width:90vw; z-index:10002; }
         }
         @media (max-width:600px) {
             .yb-yil-tablo th, .yb-yil-tablo td { padding:5px 4px; font-size:10px; }
