@@ -1,1 +1,1 @@
-var TM_VERSION = "V1.24.0";
+var TM_VERSION = "V1.25.0";
