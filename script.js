@@ -2081,6 +2081,7 @@ function gorevMailGonder(gorev) {
         }
 
         function musteriKartlariniYenile() {
+            localStorage.removeItem("tm_musteri_tipi_filter");
             const konteyner = document.getElementById("musteriKartlariKonteyner");
             if(!konteyner) return; konteyner.innerHTML = "";
             const db = JSON.parse(localStorage.getItem("tm_musteriler_db")) || [];
@@ -2391,6 +2392,7 @@ function gorevMailGonder(gorev) {
         }
 
         function isOrtaklariKartlariniYenile() {
+            localStorage.removeItem("tm_partner_status_filter");
             const konteyner = document.getElementById("isOrtaklariKartlariKonteyner");
             if(!konteyner) return; konteyner.innerHTML = "";
             const db = JSON.parse(localStorage.getItem("tm_isortaklari_db")) || [];
