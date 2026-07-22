@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.25.0';
+﻿        var APP_VERSION = 'V1.25.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -828,6 +828,7 @@ function gorevMailGonder(gorev) {
             var sabitler = {
                 'Müteahhit': {bg:'#E53935',text:'#fff'},
                 'Vatandaş': {bg:'#FDD835',text:'#333'},
+                'Kurum': {bg:'#43A047',text:'#fff'},
             };
             if(sabitler[etiket]) return sabitler[etiket];
             var renkPaleti = ['#1E88E5','#43A047','#8E24AA','#FB8C00','#00ACC1','#3949AB','#7CB342','#F4511E','#C0CA33','#5E35B1','#00BCD4','#FFB300','#6D4C41','#78909C','#D81B60','#1B5E20','#0D47A1','#4A148C','#E65100','#00897B','#F06292','#546E7A','#A1887F','#F9A825'];
