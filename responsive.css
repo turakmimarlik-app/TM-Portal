@@ -535,3 +535,99 @@
         .mobile-view h2 { font-size:18px !important; }
         .mobile-view h3 { font-size:15px !important; }
         .mobile-view .app-table td .cs-wrapper, .mobile-view .app-table td select { min-width:50px; }
+
+        /* ========== MOBILE !IMPORTANT OVERRIDES ==========
+           Inline style'lari ezmek icin yuksek specificity + !important
+           Sadece html body.mobile-view aktifken gecerli */
+        html body.mobile-view .login-wrapper { flex-direction:column !important; padding:20px 16px !important; gap:15px !important; overflow-y:auto !important; }
+        html body.mobile-view .login-logo-left { position:static !important; transform:none !important; text-align:center !important; margin:10px 0 !important; }
+        html body.mobile-view .login-card { max-width:100% !important; width:100% !important; padding:20px 16px !important; }
+        html body.mobile-view .sidebar { transform:translateX(-100%) !important; left:0 !important; z-index:11 !important; }
+        html body.mobile-view .sidebar.mobile-open { transform:translateX(0) !important; }
+        html body.mobile-view .hamburger-btn { display:flex !important; }
+        html body.mobile-view .sidebar-overlay.active { display:block !important; }
+        html body.mobile-view .sidebar-mobile-close { display:flex !important; }
+        html body.mobile-view .main-content { margin-left:0 !important; width:100% !important; padding:12px !important; overflow-x:hidden !important; }
+        html body.mobile-view .page { padding:12px !important; overflow-x:hidden !important; width:100% !important; box-sizing:border-box !important; }
+        html body.mobile-view .row { flex-direction:column !important; gap:10px !important; }
+        html body.mobile-view .col { width:100% !important; flex:0 0 100% !important; max-width:100% !important; }
+        html body.mobile-view .app-table { display:block !important; overflow-x:auto !important; white-space:nowrap !important; width:100% !important; }
+        html body.mobile-view .app-table td, html body.mobile-view .app-table th { padding:8px 6px !important; font-size:12px !important; }
+        html body.mobile-view table { max-width:100% !important; }
+        html body.mobile-view .ft-table, html body.mobile-view .it-tablo { display:block !important; overflow-x:auto !important; white-space:nowrap !important; }
+        html body.mobile-view .dash-table-widget { overflow-x:auto !important; }
+        html body.mobile-view .portfolio-grid { grid-template-columns:1fr !important; }
+        html body.mobile-view .dash-fin-row { grid-template-columns:1fr !important; gap:8px !important; }
+        html body.mobile-view .dash-dynamic-grid { grid-template-columns:1fr !important; gap:10px !important; }
+        html body.mobile-view .dash-shortcuts { grid-template-columns:repeat(3,1fr) !important; }
+        html body.mobile-view .checkbox-group { grid-template-columns:1fr !important; }
+        html body.mobile-view .form-row-3 { grid-template-columns:1fr !important; }
+        html body.mobile-view .search-box { max-width:100% !important; width:100% !important; }
+        html body.mobile-view .bank-input-row { flex-direction:column !important; gap:6px !important; }
+        html body.mobile-view .modal-overlay .modal-box { width:95% !important; max-width:95% !important; padding:20px 16px !important; margin:0 auto !important; }
+        html body.mobile-view .modal-overlay .modal-body { max-height:65vh !important; overflow-y:auto !important; }
+        html body.mobile-view .filter-chips { display:flex !important; flex-wrap:wrap !important; gap:8px !important; }
+        html body.mobile-view .filter-chip { padding:10px 16px !important; font-size:13px !important; }
+        html body.mobile-view .cs-wrapper { width:100% !important; min-width:0 !important; }
+        html body.mobile-view .cs-trigger { min-height:44px !important; font-size:14px !important; }
+        html body.mobile-view .cs-dropdown { max-height:180px !important; }
+        html body.mobile-view .cs-dropdown .cs-option { padding:12px 14px !important; font-size:14px !important; }
+        html body.mobile-view input, html body.mobile-view select, html body.mobile-view textarea { min-height:44px !important; font-size:14px !important; padding:10px !important; }
+        html body.mobile-view .btn, html body.mobile-view button:not(.sidebar-mobile-close):not(.hamburger-btn):not(.cs-option):not(.note-tb-btn) { min-height:44px !important; padding:10px 18px !important; font-size:14px !important; }
+        html body.mobile-view .btn-sm { min-height:36px !important; padding:6px 12px !important; font-size:12px !important; }
+        html body.mobile-view .partner-card-actions { flex-direction:column !important; gap:8px !important; }
+        html body.mobile-view .partner-card-actions-right { width:100% !important; flex-direction:column !important; }
+        html body.mobile-view .partner-card-actions-right .partner-btn { width:100% !important; text-align:center !important; }
+        html body.mobile-view .portfolio-card .partner-card-top { flex-wrap:wrap !important; gap:8px !important; }
+        html body.mobile-view #dilekce-page .dilekce-header, html body.mobile-view #dilekce-page .dilekce-saved-header { flex-direction:column !important; align-items:flex-start !important; gap:8px !important; }
+        html body.mobile-view #dilekce-page .dilekce-form-row { flex-direction:column !important; gap:10px !important; }
+        html body.mobile-view #dilekce-page .dilekce-actions { flex-direction:column !important; gap:8px !important; }
+        html body.mobile-view #dilekce-page .dilekce-actions .btn { width:100% !important; }
+        html body.mobile-view #dilekce-page .dilekce-saved-header input { max-width:100% !important; width:100% !important; }
+        html body.mobile-view .it-gantt-wrap { overflow-x:auto !important; }
+        html body.mobile-view .it-gantt-wrap table { min-width:500px !important; }
+        html body.mobile-view #itAktifSekmeBar, html body.mobile-view #itTamamlananSekmeBar { flex-wrap:wrap !important; gap:4px !important; }
+        html body.mobile-view .is-muh-card .card-main-header { flex-wrap:wrap !important; gap:8px !important; }
+        html body.mobile-view .ht-account-list { grid-template-columns:1fr !important; }
+        html body.mobile-view .ht-ay-picker { position:fixed !important; top:50% !important; left:50% !important; transform:translate(-50%,-50%) !important; min-width:200px !important; max-width:90vw !important; z-index:10002 !important; }
+        html body.mobile-view #notlar-page .not-folder-grid { grid-template-columns:1fr 1fr !important; }
+        html body.mobile-view #notlar-page .not-header { flex-wrap:wrap !important; gap:8px !important; }
+        html body.mobile-view #notlar-page .note-editor-toolbar { flex-wrap:wrap !important; }
+        html body.mobile-view #teklif-olustur-page .teklif-btn-grp { flex-wrap:wrap !important; gap:8px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table-wrap { overflow-x:auto !important; }
+        html body.mobile-view #is-muhasebe-page table, html body.mobile-view #tamamlanan-is-muhasebeleri-page table { display:block !important; overflow-x:auto !important; white-space:nowrap !important; }
+        html body.mobile-view .yb-month-grid { grid-template-columns:repeat(4,1fr) !important; gap:4px !important; }
+        html body.mobile-view .yb-sum-row { grid-template-columns:1fr !important; gap:6px !important; }
+        html body.mobile-view .yb-header-row { flex-direction:column !important; align-items:flex-start !important; gap:4px !important; }
+        html body.mobile-view .yb-view-pills { margin-left:0 !important; }
+        html body.mobile-view .fm-header { flex-wrap:wrap !important; gap:8px !important; }
+        html body.mobile-view .portal-user-list table th, html body.mobile-view .portal-user-list table td { font-size:11px !important; padding:6px 4px !important; }
+        html body.mobile-view .lock-popup .lock-popup-content { width:95% !important; max-width:95% !important; padding:20px !important; }
+        html body.mobile-view .dash-stat-row { gap:6px !important; flex-wrap:wrap !important; }
+        html body.mobile-view .dash-stat-box { flex:1 1 30% !important; min-width:80px !important; }
+        html body.mobile-view .dash-header { flex-direction:column !important; align-items:flex-start !important; gap:6px !important; }
+        html body.mobile-view .live-summary-card { width:100% !important; margin-left:0 !important; }
+        html body.mobile-view .as-grid { flex-direction:column !important; }
+        html body.mobile-view .as-col-main, html body.mobile-view .as-col-side { min-width:0 !important; width:100% !important; }
+        html body.mobile-view .nakit-actions { flex-wrap:wrap !important; gap:8px !important; }
+        html body.mobile-view .nakit-actions .btn { flex:1 !important; text-align:center !important; }
+        html body.mobile-view .ft-summary-row { grid-template-columns:repeat(2,1fr) !important; gap:6px !important; }
+        html body.mobile-view #ftGelenForm [style*="display:flex"]:not(.ft-modal-ust), html body.mobile-view #ftGidenForm [style*="display:flex"]:not(.ft-modal-ust) { flex-wrap:wrap !important; }
+        html body.mobile-view .dash-fin-card { padding:12px !important; }
+        html body.mobile-view [style*="min-width:440px"] { min-width:100% !important; }
+        html body.mobile-view .ci-form { grid-template-columns:1fr !important; }
+        html body.mobile-view .it-tablo td, html body.mobile-view .it-tablo th { padding:6px 4px !important; font-size:11px !important; }
+        html body.mobile-view h2 { font-size:18px !important; }
+        html body.mobile-view h3 { font-size:15px !important; }
+        @media (max-width:480px) {
+            html body.mobile-view .dash-shortcuts { grid-template-columns:repeat(2,1fr) !important; }
+            html body.mobile-view .yb-month-grid { grid-template-columns:repeat(3,1fr) !important; }
+            html body.mobile-view #notlar-page .not-folder-grid { grid-template-columns:1fr !important; }
+            html body.mobile-view .sidebar { width:100vw !important; max-width:100vw !important; }
+        }
+        @media (max-width:380px) {
+            html body.mobile-view .dash-shortcuts { grid-template-columns:repeat(2,1fr) !important; gap:4px !important; }
+            html body.mobile-view .page { padding:6px !important; }
+            html body.mobile-view .main-content { padding:6px !important; }
+            html body.mobile-view .btn { padding:8px 12px !important; font-size:12px !important; min-height:36px !important; }
+        }
