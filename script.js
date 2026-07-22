@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.27.0';
+﻿        var APP_VERSION = 'V1.28.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -12202,4 +12202,15 @@ function itDurumMetni(o) {
                 }
             }, 400);
         }
+
+        function tmMobileViewKontrol() {
+            var mobil = window.innerWidth <= 768;
+            document.body.classList.toggle('mobile-view', mobil);
+        }
+        tmMobileViewKontrol();
+        var tmMobileViewTimer = null;
+        window.addEventListener('resize', function() {
+            clearTimeout(tmMobileViewTimer);
+            tmMobileViewTimer = setTimeout(tmMobileViewKontrol, 200);
+        });
 
