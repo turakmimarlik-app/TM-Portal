@@ -24,7 +24,7 @@
             .main-content { margin-left:0; width:100%; padding:15px; overflow-x:hidden; }
             .sidebar.collapsed + .main-content { margin-left:0; width:100%; }
             .page { padding:15px; overflow-x:hidden; }
-            .row { flex-direction:column; }
+            .row { flex-direction:column; gap:12px; }
             .checkbox-group { grid-template-columns:1fr; }
             .app-table, .dash-table-widget, .ft-table, .it-tablo { display:block; overflow-x:auto; white-space:nowrap; }
             .portfolio-grid { grid-template-columns:1fr; }
@@ -96,6 +96,61 @@
             .yb-yil-tablo { font-size:11px; }
             .yb-yil-tablo th, .yb-yil-tablo td { padding:6px 6px; }
             .yb-yil-tablo .t-islem button { padding:3px 8px; font-size:9px; }
+
+            /* ========== GENEL MOBIL İYİLEŞTİRMELER ========== */
+            .btn, button:not(.sidebar-mobile-close):not(.hamburger-btn):not(.cs-option):not(.note-tb-btn) { min-height:44px; padding:10px 18px; font-size:14px; }
+            input, select, textarea, .cs-trigger { min-height:44px; font-size:14px; }
+            .filter-chips { gap:8px; }
+            .filter-chip { padding:10px 16px; font-size:13px; }
+            .modal-overlay .modal-box { width:95% !important; max-width:95% !important; padding:20px !important; }
+            .modal-overlay .modal-body { max-height:65vh !important; overflow-y:auto; }
+            .modal-overlay h2 { font-size:18px; }
+            .partner-card-actions { flex-wrap:wrap; gap:8px; }
+            .partner-card-actions-right { display:flex; gap:8px; width:100%; }
+            .partner-card-actions-right .partner-btn { flex:1; text-align:center; }
+            .portfolio-card p, .partner-card-info .partner-info-val { word-break:break-word; }
+            #dilekce-page .dilekce-form-row { flex-direction:column; gap:12px; }
+            #dilekce-page .dilekce-actions { flex-wrap:wrap; gap:8px; }
+            #dilekce-page .dilekce-actions .btn { flex:1; text-align:center; min-width:120px; }
+            #dilekce-page .dilekce-header { flex-direction:column; align-items:flex-start; gap:8px; }
+            #dilekce-page .dilekce-saved-header { flex-direction:column; gap:8px; }
+            #dilekce-page .dilekce-saved-header input { max-width:100%; }
+            .it-tablo td, .it-tablo th { padding:8px 6px; font-size:12px; }
+            .it-tablo td[style*="text-align:center"] .cs-wrapper { min-width:60px; }
+            .app-table td .cs-wrapper { min-width:70px; }
+            #teklif-olustur-page .teklif-btn-grp { flex-wrap:wrap; gap:8px; }
+            #teklif-olustur-page .teklif-btn-grp .btn { flex:1; text-align:center; }
+            #is-muhasebe-page .card-main-header, #tamamlanan-is-muhasebeleri-page .card-main-header { flex-wrap:wrap; gap:8px; }
+            .is-muh-card .card-main-header > div { flex-wrap:wrap; gap:6px; }
+            .ht-account-list { grid-template-columns:1fr; }
+            .ht-account-card { padding:12px; }
+            .ht-account-card .ac-header { font-size:13px; }
+            .ht-account-card .ac-bal { font-size:16px; }
+            #notlar-page .not-card { padding:12px; }
+            #notlar-page .not-card h4 { font-size:14px; }
+            #notlar-page .not-header { flex-wrap:wrap; gap:8px; }
+            #notlar-page .not-folder-grid { grid-template-columns:1fr 1fr; }
+            .cs-dropdown { max-height:180px; }
+            .cs-dropdown .cs-option { padding:12px 14px; font-size:14px; }
+            .tmf-excel td { white-space:normal; word-break:break-word; }
+            .tmf-excel .tmf-ex-input { min-height:36px; }
+            .ft-table td, .ft-table th { padding:8px 6px; font-size:12px; }
+            .ft-table .ft-tutar { font-size:13px; }
+            .is-muh-card .is-toplam { font-size:16px; }
+            .is-muh-card .is-header { flex-wrap:wrap; gap:6px; }
+            .is-muh-card .is-header .is-badge { font-size:11px; padding:4px 10px; }
+            .is-muh-card table td { font-size:12px; padding:6px; }
+            #nakit-odeme-page .nakit-actions { flex-wrap:wrap; gap:8px; }
+            #nakit-odeme-page .nakit-actions .btn { flex:1; text-align:center; }
+            #nakit-odeme-page .nakit-table td { font-size:12px; padding:8px 6px; }
+            .portal-user-list table td { font-size:12px; padding:8px 6px; }
+            .portal-user-list table th { font-size:11px; padding:8px 6px; }
+            #notlar-page .note-editor-toolbar { flex-wrap:wrap; }
+            #teklif-liste-page .tl-card { padding:12px; }
+            #teklif-liste-page .tl-card .tl-ust { flex-wrap:wrap; gap:6px; }
+            #teklif-liste-page .tl-card .tl-tutar { font-size:18px; }
+            .fm-header { flex-wrap:wrap; gap:8px; }
+            .fm-header h2 { font-size:18px; }
         }
         @media (max-width:600px) {
             .yb-yil-tablo th, .yb-yil-tablo td { padding:5px 4px; font-size:10px; }
@@ -139,6 +194,9 @@
             .ci-form { grid-template-columns:1fr; }
             /* Modal içerik taşma */
             .modal-overlay .modal-box { overflow-x:auto; }
+            .modal-overlay .modal-box { width:98% !important; max-width:98% !important; padding:15px !important; border-radius:8px; }
+            .modal-overlay .modal-body { padding:10px 0; }
+            .modal-overlay h2 { font-size:16px; }
             /* İş muhasebesi */
             .is-muh-card [style*="min-width:440px"] { min-width:100% !important; }
 .is-muh-card .card-main-header > div[style*="display:flex"][style*="gap:12px"] { flex-wrap:wrap; gap:8px !important; }
@@ -155,6 +213,39 @@
             .ht-ay-picker { position:fixed; top:50% !important; left:50% !important; transform:translate(-50%,-50%) !important; min-width:200px; max-width:90vw; z-index:10002; }
             /* Portföy dosya popup */
             #pbDosyaPopupOverlay .modal-body { max-height:70vh !important; }
+
+            /* ========== 480px ALT İYİLEŞTİRMELER ========== */
+            .partner-card-actions-right { flex-direction:column; }
+            .partner-card-actions-right .partner-btn { width:100%; }
+            .portfolio-card .partner-card-top { flex-wrap:wrap; gap:8px; }
+            .filter-chips { gap:6px; }
+            .filter-chip { padding:8px 14px; font-size:12px; }
+            #dilekce-page .dilekce-actions .btn { min-width:100%; }
+            #dilekce-page .dilekce-actions { flex-direction:column; }
+            .cs-wrapper { min-width:0 !important; width:100%; }
+            .cs-trigger { font-size:13px; padding:8px 10px; }
+            .app-table .cs-wrapper { min-width:50px; }
+            .bank-input-row { gap:6px; }
+            .bank-input-row input, .bank-input-row select { width:100%; }
+            .menu-item { padding:14px 16px; font-size:14px; }
+            .sidebar .menu-text { font-size:13px; }
+            .btn, button:not(.sidebar-mobile-close):not(.hamburger-btn):not(.cs-option) { min-height:40px; font-size:13px; padding:8px 14px; }
+            .partner-stat-box { padding:10px 8px; }
+            .partner-stat-value { font-size:18px; }
+            .partner-stat-label { font-size:8px; }
+            .it-gantt-wrap table { min-width:400px; }
+            .it-tablo td, .it-tablo th { padding:6px 4px; font-size:11px; }
+            .it-tablo td .cs-wrapper { min-width:40px; }
+            .it-tablo .cs-trigger { font-size:11px; padding:6px 8px; }
+            .dash-shortcut-item { padding:6px 2px; font-size:9px; }
+            .dash-shortcut-item .dash-short-icon { font-size:16px; }
+            .live-summary-card { padding:12px; }
+            .live-summary-row { font-size:13px; }
+            #notlar-page .not-folder-grid { grid-template-columns:1fr; }
+            #notlar-page .not-card { padding:10px; }
+            .yb-month-grid { grid-template-columns:repeat(3,1fr); }
+            .portal-user-list table { font-size:11px; }
+            .portal-user-list table th, .portal-user-list table td { padding:6px 4px; }
         }
         @media (max-width:380px) {
             .page { padding:6px; }
@@ -166,4 +257,14 @@
             h2 { font-size:15px !important; }
             .ft-header-left { flex-wrap:wrap; }
             .ft-header-date { font-size:11px; padding:4px 10px; }
+
+            .filter-chip { padding:6px 10px; font-size:11px; }
+            .btn, button:not(.sidebar-mobile-close):not(.hamburger-btn) { min-height:36px; font-size:12px; padding:6px 10px; }
+            input, select, textarea, .cs-trigger { min-height:36px; font-size:12px; padding:6px 8px; }
+            .page h2 { font-size:14px !important; }
+            .modal-overlay .modal-box { padding:10px !important; }
+            .dash-shortcuts { grid-template-columns:repeat(2,1fr); gap:4px; }
+            .dash-shortcut-item { font-size:8px; padding:4px 2px; }
+            .dash-shortcut-item .dash-short-icon { font-size:14px; }
+            .login-card { padding:15px; }
         }
