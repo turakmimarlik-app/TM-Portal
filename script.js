@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.29.3';
+﻿        var APP_VERSION = 'V1.30.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -338,21 +338,6 @@ function gorevMailGonder(gorev) {
             }
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
-            var sessionVar = sessionStorage.getItem("tm_session_active");
-            if (oncekiKullanici && !sessionVar) {
-                var isReload = false;
-                try {
-                    if (performance.navigation) {
-                        isReload = performance.navigation.type === 1;
-                    } else {
-                        var nav = performance.getEntriesByType('navigation')[0];
-                        isReload = nav && nav.type === 'reload';
-                    }
-                } catch(e) { console.error("Performans kontrol hatasi:", e); }
-                if (!isReload) {
-                    oncekiKullanici = null;
-                }
-            }
             function overlayGizle() { var lo = document.getElementById('tmLoadingOverlay'); if(lo) lo.style.display = 'none'; }
             function oturumuRestoreEt(u) {
                 document.getElementById("loginSection").style.display = "none";
@@ -1052,7 +1037,6 @@ function gorevMailGonder(gorev) {
             AKTIF_KULLANICI_ADI = kullanici;
             AKTIF_KULLANICI_YETKILERI = yetkiler;
             try { localStorage.setItem("tm_active_user", kullanici); } catch(e) { console.error("Oturum kaydetme hatasi:", e); }
-            try { sessionStorage.setItem("tm_session_active", "1"); } catch(e) { console.error("Session kaydetme hatasi:", e); }
             girisCikisLogla(kullanici, "GİRİŞ");
             aktiviteEkle("Giriş yaptı", "Sistem");
             try { localStorage.removeItem('tm_active_page'); } catch(e) { console.error("Sayfa temizleme hatasi:", e); }
