@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.29.1';
+﻿        var APP_VERSION = 'V1.29.3';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
