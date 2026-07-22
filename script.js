@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.93.3';
+﻿        var APP_VERSION = 'V1.93.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -2057,6 +2057,26 @@ function gorevMailGonder(gorev) {
             document.getElementById("btnMusteriCancel").style.display = "none";
         }
 
+        function musteriTipiChipGuncelle() {
+            const chipsContainer = document.getElementById("musteriTipiFilterChips");
+            if(!chipsContainer) return;
+            const db = JSON.parse(localStorage.getItem("tm_musteriler_db")) || [];
+            var mevcutTipler = [...new Set(db.map(m => m.tipi).filter(t => t && t.trim()))];
+            var seciliTip = localStorage.getItem("tm_musteri_tipi_filter") || "";
+            var html = '<span class="filter-chip filter-chip-all' + (!seciliTip ? ' active' : '') + '" onclick="musteriTipiFilterSec(\'\')">Tümü</span>';
+            mevcutTipler.forEach(function(tip) {
+                html += '<span class="filter-chip' + (seciliTip === tip ? ' active' : '') + '" onclick="musteriTipiFilterSec(\'' + tip.replace(/'/g, "\\'") + '\')">' + tip + '</span>';
+            });
+            chipsContainer.innerHTML = html;
+        }
+
+        function musteriTipiFilterSec(tip) {
+            if(tip) { localStorage.setItem("tm_musteri_tipi_filter", tip); }
+            else { localStorage.removeItem("tm_musteri_tipi_filter"); }
+            musteriTipiChipGuncelle();
+            musterileriFiltrele();
+        }
+
         function musteriKartlariniYenile() {
             const konteyner = document.getElementById("musteriKartlariKonteyner");
             if(!konteyner) return; konteyner.innerHTML = "";
@@ -2175,10 +2195,12 @@ function gorevMailGonder(gorev) {
                     </div>
                 `;
             });
+            musteriTipiChipGuncelle();
         }
 
         function musterileriFiltrele() {
             const kelime = trToUpper(document.getElementById("musteriAramaInput").value.trim());
+            const seciliTip = localStorage.getItem("tm_musteri_tipi_filter") || "";
             document.querySelectorAll("#musteriKartlariKonteyner .m-card-item").forEach((kart) => {
                 const ad = trToUpper(kart.querySelector(".m-search-ad").innerText);
                 const tipi = trToUpper(kart.querySelector(".m-search-tipi").innerText);
@@ -2187,11 +2209,10 @@ function gorevMailGonder(gorev) {
                 const kimlik = trToUpper(kart.querySelector(".m-search-kimlik").innerText);
                 const adres = trToUpper(kart.querySelector(".m-search-adres").innerText);
                 
-                if (ad.includes(kelime) || tipi.includes(kelime) || sirket.includes(kelime) || unvan.includes(kelime) || kimlik.includes(kelime) || adres.includes(kelime)) {
-                    kart.style.display = "flex";
-                } else {
-                    kart.style.display = "none";
-                }
+                var tipUygun = !seciliTip || tipi === trToUpper(seciliTip);
+                var aramaUygun = !kelime || ad.includes(kelime) || tipi.includes(kelime) || sirket.includes(kelime) || unvan.includes(kelime) || kimlik.includes(kelime) || adres.includes(kelime);
+                
+                kart.style.display = (tipUygun && aramaUygun) ? "flex" : "none";
             });
         }
 
@@ -2338,6 +2359,26 @@ function gorevMailGonder(gorev) {
             document.getElementById("btnPartnerCancel").style.display = "none";
         }
 
+        function partnerStatusChipGuncelle() {
+            const chipsContainer = document.getElementById("partnerStatusFilterChips");
+            if(!chipsContainer) return;
+            const db = JSON.parse(localStorage.getItem("tm_isortaklari_db")) || [];
+            var mevcutStatusler = [...new Set(db.map(p => p.status).filter(s => s && s.trim()))];
+            var seciliStatus = localStorage.getItem("tm_partner_status_filter") || "";
+            var html = '<span class="filter-chip filter-chip-all' + (!seciliStatus ? ' active' : '') + '" onclick="partnerStatusFilterSec(\'\')">Tümü</span>';
+            mevcutStatusler.forEach(function(st) {
+                html += '<span class="filter-chip' + (seciliStatus === st ? ' active' : '') + '" onclick="partnerStatusFilterSec(\'' + st.replace(/'/g, "\\'") + '\')">' + st + '</span>';
+            });
+            chipsContainer.innerHTML = html;
+        }
+
+        function partnerStatusFilterSec(status) {
+            if(status) { localStorage.setItem("tm_partner_status_filter", status); }
+            else { localStorage.removeItem("tm_partner_status_filter"); }
+            partnerStatusChipGuncelle();
+            partnerleriFiltrele();
+        }
+
         function isOrtaklariKartlariniYenile() {
             const konteyner = document.getElementById("isOrtaklariKartlariKonteyner");
             if(!konteyner) return; konteyner.innerHTML = "";
@@ -2463,22 +2504,26 @@ function gorevMailGonder(gorev) {
                     </div>
                 `;
             });
+            partnerStatusChipGuncelle();
         }
 
         function partnerleriFiltrele() {
             const kelime = trToUpper(document.getElementById("partnerAramaInput").value.trim());
+            const seciliStatus = localStorage.getItem("tm_partner_status_filter") || "";
             document.querySelectorAll("#isOrtaklariKartlariKonteyner .partner-card-item").forEach((kart) => {
                 const ad = trToUpper(kart.querySelector(".p-search-ad").innerText);
                 const brans = trToUpper(kart.querySelector(".p-search-brans").innerText);
                 const sirket = trToUpper(kart.querySelector(".p-search-sirket").innerText);
                 const kimlik = trToUpper(kart.querySelector(".p-search-kimlik").innerText);
                 const adres = trToUpper(kart.querySelector(".p-search-adres").innerText);
+                // Statü bilgisi: karttaki statü badge metnini al
+                var statusEl = kart.querySelector(".partner-info-val .partner-badge");
+                var kartStatus = statusEl ? statusEl.innerText.trim() : "";
                 
-                if (ad.includes(kelime) || brans.includes(kelime) || sirket.includes(kelime) || kimlik.includes(kelime) || adres.includes(kelime)) {
-                    kart.style.display = "flex";
-                } else {
-                    kart.style.display = "none";
-                }
+                var statusUygun = !seciliStatus || trToUpper(kartStatus) === trToUpper(seciliStatus);
+                var aramaUygun = !kelime || ad.includes(kelime) || brans.includes(kelime) || sirket.includes(kelime) || kimlik.includes(kelime) || adres.includes(kelime);
+                
+                kart.style.display = (statusUygun && aramaUygun) ? "flex" : "none";
             });
         }
 

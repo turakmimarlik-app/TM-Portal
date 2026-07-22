@@ -872,6 +872,15 @@
         .dash-fin-val.orange { color:#FFA726; }
         .dash-fin-val.red { color:#C62828; }
 
+        /* Filtre Chips */
+        .filter-chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; padding:0 2px; }
+        .filter-chip { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; border-radius:20px; border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-dark); font-size:11px; font-weight:600; cursor:pointer; transition:0.15s; user-select:none; }
+        .filter-chip:hover { border-color:var(--accent-red); }
+        .filter-chip.active { background:var(--accent-red); color:#fff; border-color:var(--accent-red); }
+        .filter-chip.active:hover { opacity:0.85; }
+        .filter-chip.filter-chip-all { border-style:dashed; }
+        .filter-chip.filter-chip-all.active { border-style:solid; }
+
         /* Widget Ayarları Modal */
         .dash-ayar-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border-color); }
         .dash-ayar-item:last-child { border-bottom:none; }
