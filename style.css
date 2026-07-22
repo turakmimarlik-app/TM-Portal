@@ -2257,6 +2257,11 @@ td[style*="text-align:center"]>.cs-wrapper { display:inline-block; width:auto; m
 .partner-card-brans i {
     font-size: 10px;
 }
+.etiket-badge {
+    display:inline-block; padding:2px 8px; border-radius:10px; color:#fff;
+    font-size:10px; font-weight:700; line-height:1.4; letter-spacing:0.3px;
+    white-space:nowrap; max-width:140px; overflow:hidden; text-overflow:ellipsis;
+}
 .partner-card-jobcount {
     display: flex; flex-direction: column; align-items: center;
     padding: 8px 14px;

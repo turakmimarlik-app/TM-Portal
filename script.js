@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.23.4';
+﻿        var APP_VERSION = 'V1.24.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -821,6 +821,14 @@ function gorevMailGonder(gorev) {
             if(name.includes("HALK") || name.includes("TEB")) return "#00838F";
             if(name.includes("KUVEYT") || name.includes("ALBARAKA")) return "#1B5E20";
             return "inherit";
+        }
+
+        function getEtiketRenk(etiket) {
+            if(!etiket) return '#6B7280';
+            var renkPaleti = ['#1E88E5','#43A047','#8E24AA','#FB8C00','#E53935','#00ACC1','#3949AB','#7CB342','#F4511E','#C0CA33','#5E35B1','#00BCD4','#FFB300','#6D4C41','#78909C','#D81B60','#1B5E20','#0D47A1','#4A148C','#E65100','#00897B','#F06292','#546E7A','#A1887F','#F9A825'];
+            var hash = 0;
+            for(var i = 0; i < etiket.length; i++) { hash = etiket.charCodeAt(i) + ((hash << 5) - hash); }
+            return renkPaleti[Math.abs(hash) % renkPaleti.length];
         }
 
         function tmAkilliTahminMotoru(inputElement, dbTipi) {
@@ -2066,8 +2074,10 @@ function gorevMailGonder(gorev) {
             var seciliTip = localStorage.getItem("tm_musteri_tipi_filter") || "";
             var html = '<span class="filter-chip filter-chip-all' + (!seciliTip ? ' active' : '') + '" data-tip="" onclick="musteriTipiFilterSec(this)">Tümü</span>';
             etiketler.forEach(function(tip) {
+                var renk = getEtiketRenk(tip);
                 var aktif = trToUpper(seciliTip) === trToUpper(tip) ? ' active' : '';
-                html += '<span class="filter-chip' + aktif + '" data-tip="' + tip.replace(/"/g, '&quot;').replace(/'/g, '&#39;') + '" onclick="musteriTipiFilterSec(this)">' + tip + '</span>';
+                var stil = aktif ? ('style="background:' + renk + ';border-color:' + renk + ';color:#fff;"') : ('style="border-left:3px solid ' + renk + ';"');
+                html += '<span class="filter-chip' + aktif + '" ' + stil + ' data-tip="' + tip.replace(/"/g, '&quot;').replace(/'/g, '&#39;') + '" onclick="musteriTipiFilterSec(this)">' + tip + '</span>';
             });
             chipsContainer.innerHTML = html;
         }
@@ -2140,7 +2150,7 @@ function gorevMailGonder(gorev) {
                             </div>
                             <div class="partner-card-header">
                                 <h4 class="m-search-ad">${m.ad}</h4>
-                                <div class="partner-card-brans m-search-tipi"><i class="fa-solid fa-tag"></i> ${m.tipi||''}</div>
+                                <div class="partner-card-brans m-search-tipi"><i class="fa-solid fa-tag"></i> <span class="etiket-badge" style="background:${getEtiketRenk(m.tipi)};">${m.tipi||'Belirtilmemiş'}</span></div>
                             </div>
                             <div class="partner-card-jobcount">
                                 <span class="partner-jobcount-num">${isSayisi}</span>
