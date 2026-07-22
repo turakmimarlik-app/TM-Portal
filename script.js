@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.93.5';
+﻿        var APP_VERSION = 'V1.93.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -790,6 +790,7 @@ function gorevMailGonder(gorev) {
                     SABIT_ETIKETLER.push(yeniEtiket);
                     localStorage.setItem("tm_musteri_etiketleri_v1", JSON.stringify(SABIT_ETIKETLER));
                     musteriEtiketleriniDoldur();
+                    musteriTipiChipGuncelle();
                     document.getElementById("mTipi").value = yeniEtiket;
                 }
             });
@@ -802,6 +803,7 @@ function gorevMailGonder(gorev) {
                 SABIT_ETIKETLER = SABIT_ETIKETLER.filter(e => e !== val);
                 localStorage.setItem("tm_musteri_etiketleri_v1", JSON.stringify(SABIT_ETIKETLER));
                 musteriEtiketleriniDoldur();
+                musteriTipiChipGuncelle();
                 musteriKartlariniYenile();
             });
         }
@@ -2060,11 +2062,9 @@ function gorevMailGonder(gorev) {
         function musteriTipiChipGuncelle() {
             const chipsContainer = document.getElementById("musteriTipiFilterChips");
             if(!chipsContainer) return;
-            const db = JSON.parse(localStorage.getItem("tm_musteriler_db")) || [];
-            var mevcutTipler = [...new Set(db.map(function(m){ return m.tipi; }).filter(function(t){ return t && t.trim(); }))];
             var seciliTip = localStorage.getItem("tm_musteri_tipi_filter") || "";
             var html = '<span class="filter-chip filter-chip-all' + (!seciliTip ? ' active' : '') + '" data-tip="" onclick="musteriTipiFilterSec(this)">Tümü</span>';
-            mevcutTipler.forEach(function(tip) {
+            SABIT_ETIKETLER.forEach(function(tip) {
                 var aktif = trToUpper(seciliTip) === trToUpper(tip) ? ' active' : '';
                 html += '<span class="filter-chip' + aktif + '" data-tip="' + tip.replace(/"/g, '&quot;').replace(/'/g, '&#39;') + '" onclick="musteriTipiFilterSec(this)">' + tip + '</span>';
             });
@@ -2262,6 +2262,7 @@ function gorevMailGonder(gorev) {
                     custom.push(yeni);
                     try { localStorage.setItem("tm_io_status_list", JSON.stringify(custom)); } catch(e) {}
                     ioStatusSecenekleriniDoldur();
+                    partnerStatusChipGuncelle();
                     document.getElementById("ioStatus").value = yeni;
                 }
             });
@@ -2278,6 +2279,7 @@ function gorevMailGonder(gorev) {
                 custom = custom.filter(function(s) { return s !== secilen; });
                 try { localStorage.setItem("tm_io_status_list", JSON.stringify(custom)); } catch(e) {}
                 ioStatusSecenekleriniDoldur();
+                partnerStatusChipGuncelle();
             });
         }
         function isOrtagiProfilKaydet() {
@@ -2372,11 +2374,13 @@ function gorevMailGonder(gorev) {
         function partnerStatusChipGuncelle() {
             const chipsContainer = document.getElementById("partnerStatusFilterChips");
             if(!chipsContainer) return;
-            const db = JSON.parse(localStorage.getItem("tm_isortaklari_db")) || [];
-            var mevcutStatusler = [...new Set(db.map(function(p){ return p.status; }).filter(function(s){ return s && s.trim(); }))];
+            var varsayilan = ["Sürekli Partner", "Proje Bazlı"];
+            var custom = [];
+            try { custom = JSON.parse(localStorage.getItem("tm_io_status_list")) || []; } catch(e) {}
+            var tumStatusler = varsayilan.concat(custom);
             var seciliStatus = localStorage.getItem("tm_partner_status_filter") || "";
             var html = '<span class="filter-chip filter-chip-all' + (!seciliStatus ? ' active' : '') + '" data-status="" onclick="partnerStatusFilterSec(this)">Tümü</span>';
-            mevcutStatusler.forEach(function(st) {
+            tumStatusler.forEach(function(st) {
                 var aktif = trToUpper(seciliStatus) === trToUpper(st) ? ' active' : '';
                 html += '<span class="filter-chip' + aktif + '" data-status="' + st.replace(/"/g, '&quot;').replace(/'/g, '&#39;') + '" onclick="partnerStatusFilterSec(this)">' + st + '</span>';
             });
