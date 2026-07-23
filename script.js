@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.37.0';
+﻿        var APP_VERSION = 'V1.38.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -162,11 +162,20 @@ function gorevMailGonder(gorev) {
             if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k !== "tm_yillik_butce_clean" && k !== "tm_sidebar_collapsed" && k !== "tm_submenu_open" && k.indexOf("tm_multi_logo_") !== 0) return true;
             return false;
         }
-        function fsDosyaIslem(k, raw) {
+        function fsDosyaIslem(k, raw, gelenVer) {
             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
             var curVal = localStorage.getItem(k);
             if (curVal !== strVal && !fsDirtyKeys[k]) {
+                if (gelenVer !== undefined && gelenVer !== null) {
+                    var yerelVer = parseInt(localStorage.getItem("tm_ver_" + k)) || 0;
+                    if (gelenVer <= yerelVer) return null;
+                }
+                fsSyncInProgress = true;
                 try { origSetItem(k, strVal); } catch(e) { console.error("Firebase sync local set hatasi:", e); }
+                fsSyncInProgress = false;
+                if (gelenVer !== undefined && gelenVer !== null) {
+                    origSetItem("tm_ver_" + k, String(gelenVer));
+                }
                 if (k === "tm_hesap_takip_db") { setTimeout(function(){ try { var ap=document.querySelector('.page.active'); if(ap&&ap.id==='hesap-takip-page') htSayfayiYukle(); } catch(e){} }, 100); }
                 if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") return "logo";
                 return "data";
@@ -203,7 +212,7 @@ function gorevMailGonder(gorev) {
                     if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
                     var data = doc.data();
                     if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
-                    var sonuc = fsDosyaIslem(docId, data.data);
+                    var sonuc = fsDosyaIslem(docId, data.data, data.ver);
                     if (sonuc === "logo") logoChanged = true;
                     else if (sonuc === "data") anyChanged = true;
                 });
@@ -230,7 +239,7 @@ function gorevMailGonder(gorev) {
                     if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
                     var data = doc.data();
                     if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
-                    var sonuc = fsDosyaIslem(docId, data.data);
+                    var sonuc = fsDosyaIslem(docId, data.data, data.ver);
                     if (sonuc === "logo") logoChanged = true;
                     else if (sonuc === "data") anyChanged = true;
                 });
@@ -241,6 +250,7 @@ function gorevMailGonder(gorev) {
         var fsDirtyKeys = {};
         var fsReady = false;
         var fsSentKeys = {};
+        var fsSyncInProgress = false;
         function fsSync() {
             if (!fsReady || !fdb) return;
             var dirtyList = Object.keys(fsDirtyKeys);
@@ -249,7 +259,8 @@ function gorevMailGonder(gorev) {
             dirtyList.forEach(function(k) {
                 var val;
                 try { val = JSON.parse(localStorage.getItem(k)); } catch(e) { val = localStorage.getItem(k); }
-                batch.set(fdb.collection(FS_COLLECTION).doc(k), { data: val }, { merge: true });
+                var v = parseInt(localStorage.getItem("tm_ver_" + k)) || 0;
+                batch.set(fdb.collection(FS_COLLECTION).doc(k), { data: val, ver: v }, { merge: true });
             });
             batch.commit().then(function() {
                 dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; });
@@ -257,8 +268,14 @@ function gorevMailGonder(gorev) {
         }
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
+            var oldVal = localStorage.getItem(key);
             origSetItem(key, value);
-            if (fsSyncDenetle(key)) {
+            if (fsSyncDenetle(key) && !fsSyncInProgress) {
+                if (oldVal !== value) {
+                    var v = (parseInt(localStorage.getItem("tm_fs_ver")) || 0) + 1;
+                    origSetItem("tm_fs_ver", String(v));
+                    origSetItem("tm_ver_" + key, String(v));
+                }
                 fsDirtyKeys[key] = true;
                 if (fsReady) { fsSync(); }
             }
