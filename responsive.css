@@ -120,6 +120,48 @@
             .app-table td .cs-wrapper { min-width:70px; }
             #teklif-olustur-page .teklif-btn-grp { flex-wrap:wrap; gap:8px; }
             #teklif-olustur-page .teklif-btn-grp .btn { flex:1; text-align:center; }
+            /* Mobil: Hizmet Kalemleri tablosunu kart görünümü */
+            #teklif-olustur-page .app-table { overflow-x:hidden !important; }
+            #teklif-olustur-page .app-table thead { display:none; }
+            #teklif-olustur-page .app-table tbody,
+            #teklif-olustur-page .app-table tbody tr { display:block; width:100%; }
+            #teklif-olustur-page .app-table tbody tr { background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; padding:12px; margin-bottom:12px; }
+            #teklif-olustur-page .app-table tbody td { display:flex; flex-direction:column; align-items:stretch; width:100%; padding:6px 0; border:none; text-align:left; }
+            #teklif-olustur-page .app-table tbody td::before { content:attr(data-label); font-weight:600; color:var(--text-secondary); font-size:11px; margin-bottom:3px; letter-spacing:0.3px; }
+            #teklif-olustur-page .app-table tbody td[data-label=""]::before { content:none; }
+            #teklif-olustur-page .app-table tbody td textarea,
+            #teklif-olustur-page .app-table tbody td input,
+            #teklif-olustur-page .app-table tbody td select { width:100% !important; }
+            #teklif-olustur-page .app-table tbody td button { width:100%; margin-top:4px; padding:10px !important; font-size:13px !important; }
+            /* Mobil: Teklif Geçmişi tablosunu kart görünümü */
+            #teklif-liste-page .tl-table-wrap { overflow-x:hidden !important; }
+            #teklif-liste-page .tl-table { border-collapse:separate; border-spacing:0; }
+            #teklif-liste-page .tl-table thead { display:none; }
+            #teklif-liste-page .tl-table tbody,
+            #teklif-liste-page .tl-table tbody tr { display:block; width:100%; }
+            #teklif-liste-page .tl-table tbody tr.teklif-row-header { background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; padding:12px; margin-bottom:8px; cursor:pointer; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row { display:none; width:100%; margin-bottom:12px; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row.detail-expanded-open { display:block; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row td { display:block; width:100%; padding:0; border:none; background:transparent; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row .detail-panel-inner { padding:10px; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table thead { display:table-header-group; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tr { display:table-row; border:none; padding:0; background:transparent; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table td,
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table th { display:table-cell; }
+            #teklif-liste-page .tl-table tbody td { display:flex; align-items:flex-start; width:100%; padding:4px 0; border:none; text-align:left; gap:6px; }
+            #teklif-liste-page .tl-table tbody td::before { content:attr(data-label); font-weight:600; color:var(--text-secondary); font-size:11px; min-width:90px; flex-shrink:0; letter-spacing:0.3px; }
+            #teklif-liste-page .tl-table tbody td:not([data-label]) { display:block; width:100%; padding:8px 0; border:none; text-align:center; }
+            #teklif-liste-page .tl-table tbody td:not([data-label])::before { display:none; }
+            #teklif-liste-page .tl-table tbody td[data-label="İşlemler"] { flex-direction:column; gap:6px; margin-top:6px; }
+            #teklif-liste-page .tl-table tbody td[data-label="İşlemler"]::before { content:attr(data-label); }
+            #teklif-liste-page .tl-table tbody td[data-label="İşlemler"] button { width:100%; }
+            #teklif-liste-page .tl-table tbody td[data-label="Genel Toplam"]::before { content:attr(data-label); font-weight:700; }
+            #teklif-liste-page .tl-table tbody td[data-label="ID"] { font-size:14px; }
+            #teklif-liste-page .tl-table tbody td[data-label="Müşteri / Firma"] small { display:block; font-size:12px; color:var(--text-secondary); margin-top:2px; }
+            #teklif-liste-page .tl-table tbody td[data-label="Tarih"],
+            #teklif-liste-page .tl-table tbody td[data-label="Hazırlayan"],
+            #teklif-liste-page .tl-table tbody td[data-label="İş / Proje"] { font-size:13px; }
+
             #is-muhasebe-page .card-main-header, #tamamlanan-is-muhasebeleri-page .card-main-header { flex-wrap:wrap; gap:8px; }
             .is-muh-card .card-main-header > div { flex-wrap:wrap; gap:6px; }
             .ht-account-list { grid-template-columns:1fr; }
@@ -614,6 +656,48 @@
         html body.mobile-view #notlar-page .note-editor-toolbar { flex-wrap:wrap !important; }
         html body.mobile-view #teklif-olustur-page .teklif-btn-grp { flex-wrap:wrap !important; gap:8px !important; }
         html body.mobile-view #teklif-liste-page .tl-table-wrap { overflow-x:auto !important; }
+        /* ========== TEKLIF KART GÖRÜNÜM MOBIL ========== */
+        html body.mobile-view #teklif-olustur-page .app-table { overflow-x:hidden !important; white-space:normal !important; }
+        html body.mobile-view #teklif-olustur-page .app-table thead { display:none !important; }
+        html body.mobile-view #teklif-olustur-page .app-table tbody,
+        html body.mobile-view #teklif-olustur-page .app-table tbody tr { display:block !important; width:100% !important; }
+        html body.mobile-view #teklif-olustur-page .app-table tbody tr { background:var(--card-bg) !important; border:1px solid var(--border-color) !important; border-radius:8px !important; padding:12px !important; margin-bottom:12px !important; }
+        html body.mobile-view #teklif-olustur-page .app-table tbody td { display:flex !important; flex-direction:column !important; align-items:stretch !important; width:100% !important; padding:6px 0 !important; border:none !important; text-align:left !important; }
+        html body.mobile-view #teklif-olustur-page .app-table tbody td::before { content:attr(data-label) !important; font-weight:600 !important; color:var(--text-secondary) !important; font-size:11px !important; margin-bottom:3px !important; letter-spacing:0.3px !important; }
+        html body.mobile-view #teklif-olustur-page .app-table tbody td[data-label=""]::before { display:none !important; }
+        html body.mobile-view #teklif-olustur-page .app-table tbody td textarea,
+        html body.mobile-view #teklif-olustur-page .app-table tbody td input,
+        html body.mobile-view #teklif-olustur-page .app-table tbody td select { width:100% !important; }
+        html body.mobile-view #teklif-olustur-page .app-table tbody td button { width:100% !important; margin-top:4px !important; padding:10px !important; font-size:13px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table-wrap { overflow-x:hidden !important; }
+        html body.mobile-view #teklif-liste-page .tl-table { border-collapse:separate !important; border-spacing:0 !important; }
+        html body.mobile-view #teklif-liste-page .tl-table thead { display:none !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody,
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr { display:block !important; width:100% !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.teklif-row-header { background:var(--card-bg) !important; border:1px solid var(--border-color) !important; border-radius:8px !important; padding:12px !important; margin-bottom:8px !important; cursor:pointer !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row { display:none !important; width:100% !important; margin-bottom:12px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row.detail-expanded-open { display:block !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row td { width:100% !important; padding:0 !important; border:none !important; background:transparent !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row .detail-panel-inner { padding:10px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table thead { display:table-header-group !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tr { display:table-row !important; border:none !important; padding:0 !important; background:transparent !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table td,
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table th { display:table-cell !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td { display:flex !important; align-items:flex-start !important; width:100% !important; padding:4px 0 !important; border:none !important; text-align:left !important; gap:6px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td::before { content:attr(data-label) !important; font-weight:600 !important; color:var(--text-secondary) !important; font-size:11px !important; min-width:90px !important; flex-shrink:0 !important; letter-spacing:0.3px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td:not([data-label]) { display:block !important; width:100% !important; padding:8px 0 !important; border:none !important; text-align:center !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td:not([data-label])::before { display:none !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="İşlemler"] { flex-direction:column !important; gap:6px !important; margin-top:6px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="İşlemler"]::before { content:attr(data-label) !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="İşlemler"] button { width:100% !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="Genel Toplam"]::before { content:attr(data-label) !important; font-weight:700 !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="ID"] { font-size:14px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="Müşteri / Firma"] small { display:block !important; font-size:12px !important; color:var(--text-secondary) !important; margin-top:2px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="Tarih"],
+        html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="Hazırlayan"],
+        html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="İş / Proje"] { font-size:13px !important; }
+        /* Mobil zoom fix - iOS input focus zoom engelle */
+        html body.mobile-view input, html body.mobile-view select, html body.mobile-view textarea { font-size:16px !important; }
         html body.mobile-view #is-muhasebe-page table, html body.mobile-view #tamamlanan-is-muhasebeleri-page table { display:block !important; overflow-x:auto !important; white-space:nowrap !important; }
         html body.mobile-view .yb-month-grid { grid-template-columns:repeat(4,1fr) !important; gap:4px !important; }
         html body.mobile-view .yb-sum-row { grid-template-columns:1fr !important; gap:6px !important; }

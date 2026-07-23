@@ -5,7 +5,7 @@
 <meta http-equiv="cache-control" content="max-age=0, no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TM-Portal - Ofis Yönetim Sistemi</title>
     <style>html,body{background:#212832!important;margin:0;}</style>
     <script>document.write('<div id="tmLoadingOverlay" style="display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:#212832;z-index:99999;align-items:center;justify-content:center;flex-direction:column;color:white;font-family:Montserrat,sans-serif;"><div style="border:4px solid rgba(255,255,255,0.1);border-top:4px solid #E53935;border-radius:50%;width:44px;height:44px;animation:tmSpin 1s linear infinite;margin-bottom:22px;"></div><div style="font-size:20px;font-weight:800;letter-spacing:2px;">TM-PORTAL</div><div style="font-size:13px;color:#a0aec0;margin-top:10px;font-weight:400;">Sayfa yükleniyor...</div><style>@keyframes tmSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style></div>');</script>
@@ -19,11 +19,11 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.31.0">
-    <link rel="stylesheet" href="pdf.css?v=1.31.0">
-    <link rel="stylesheet" href="responsive.css?v=1.31.0">
+    <link rel="stylesheet" href="style.css?v=1.32.0">
+    <link rel="stylesheet" href="pdf.css?v=1.32.0">
+    <link rel="stylesheet" href="responsive.css?v=1.32.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="version.js?v=1.31.0"></script>
+    <script src="version.js?v=1.32.0"></script>
     <script>console.log("TM-Portal V1.31.0");(function(){var v="V1.31.0";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
 </head>
 <body>
@@ -811,18 +811,18 @@
                     </thead>
                     <tbody id="teklifFormRows">
                         <tr>
-                            <td><textarea class="row-servis" rows="1" style="width:100%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; box-sizing:border-box;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
-                            <td style="text-align:center;"><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center;"></td>
-                            <td style="text-align:center;"><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
-                            <td style="text-align:center;"><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center; box-sizing:border-box;"></td>
-                            <td style="text-align:center;">
+                            <td data-label="Hizmet / İş Açıklaması"><textarea class="row-servis" rows="1" style="width:100%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; box-sizing:border-box;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
+                            <td data-label="Miktar" style="text-align:center;"><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center;"></td>
+                            <td data-label="Birim" style="text-align:center;"><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
+                            <td data-label="Birim Fiyat" style="text-align:center;"><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center; box-sizing:border-box;"></td>
+                            <td data-label="KDV" style="text-align:center;">
                                 <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px">
                                     <option value="20">%20</option>
                                     <option value="10">%10</option>
                                     <option value="0" selected>%0</option>
                                 </select>
                             </td>
-                            <td><button class="btn btn-danger btn-sm" onclick="teklifFormSatirSil(this)">Sil</button></td>
+                            <td data-label=""><button class="btn btn-danger btn-sm" onclick="teklifFormSatirSil(this)">Sil</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -1937,7 +1937,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.31.0"></script>
+    <script src="script.js?v=1.32.0"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
