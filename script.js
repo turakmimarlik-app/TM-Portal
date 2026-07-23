@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.41.0';
+﻿        var APP_VERSION = 'V1.42.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -164,7 +164,7 @@ function gorevMailGonder(gorev) {
             'tm-fiyatlar-page': ['tm_kategorili_fiyatlar'],
         };
         function fsSyncDenetle(k) {
-            if (k.indexOf("tm_ver_") === 0 || k.indexOf("tm_skip_guard_") === 0) return false;
+            if (k.indexOf("tm_ver_") === 0) return false;
             if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k !== "tm_yillik_butce_clean" && k !== "tm_sidebar_collapsed" && k !== "tm_submenu_open" && k.indexOf("tm_multi_logo_") !== 0) return true;
             return false;
         }
@@ -184,14 +184,49 @@ function gorevMailGonder(gorev) {
         }
         function fsApiKey() { return firebaseConfig.apiKey; }
         function fsRestUrl(path) { return FS_API_BASE + path + '?key=' + encodeURIComponent(fsApiKey()); }
+        function fsRestFieldToValue(field) {
+            if (!field) return undefined;
+            if (field.stringValue !== undefined) {
+                var s = field.stringValue;
+                if (s === 'true') return true;
+                if (s === 'false') return false;
+                if (s === '' || isNaN(s) || s.trim() === '') return s;
+                var n = Number(s);
+                if (String(n) === s) return n;
+                return s;
+            }
+            if (field.integerValue !== undefined) return parseInt(field.integerValue) || 0;
+            if (field.doubleValue !== undefined) return field.doubleValue;
+            if (field.booleanValue !== undefined) return field.booleanValue;
+            if (field.nullValue !== undefined) return null;
+            if (field.arrayValue) {
+                var arr = [];
+                if (field.arrayValue.values) {
+                    for (var ai = 0; ai < field.arrayValue.values.length; ai++) {
+                        arr.push(fsRestFieldToValue(field.arrayValue.values[ai]));
+                    }
+                }
+                return arr;
+            }
+            if (field.mapValue) {
+                var obj = {};
+                if (field.mapValue.fields) {
+                    var mapKeys = Object.keys(field.mapValue.fields);
+                    for (var mi = 0; mi < mapKeys.length; mi++) {
+                        obj[mapKeys[mi]] = fsRestFieldToValue(field.mapValue.fields[mapKeys[mi]]);
+                    }
+                }
+                return obj;
+            }
+            return undefined;
+        }
         function fsRestParseDoc(doc) {
             var fields = doc.fields;
-            if (!fields || !fields.data || !fields.data.stringValue) return null;
+            if (!fields || !fields.data) return null;
             var name = doc.name;
             var id = name.substring(name.lastIndexOf('/') + 1);
             if (id === 'all_data' || id.indexOf('multi_logo_') === 0) return null;
-            var rawData;
-            try { rawData = JSON.parse(fields.data.stringValue); } catch(e) { rawData = fields.data.stringValue; }
+            var rawData = fsRestFieldToValue(fields.data);
             return { id: id, data: rawData };
         }
         function fsRestReadAll() {
@@ -232,15 +267,14 @@ function gorevMailGonder(gorev) {
                     if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
                     var data = doc.data();
                     if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
-                    docs.push({ id: docId, data: data.data });
+                    var strData = data.data;
+                    if (typeof strData !== 'string') {
+                        try { strData = JSON.stringify(strData); } catch(e) { strData = String(strData); }
+                    }
+                    docs.push({ id: docId, data: strData });
                 });
                 return docs;
             });
-        }
-        function fsSdkWrite(key, data) {
-            if (!fdb) { try { if (typeof firebase !== 'undefined' && !firebase.apps.length) { firebase.initializeApp(firebaseConfig); } if (typeof firebase !== 'undefined') { fdb = firebase.firestore(); } } catch(e) {} }
-            if (!fdb) return Promise.reject('fdb unavailable');
-            return fdb.collection(FS_COLLECTION).doc(key).set({ data: data }, { merge: true });
         }
         function fsIsleDocs(docs) {
             var logoChanged = false;
@@ -248,7 +282,9 @@ function gorevMailGonder(gorev) {
             for (var i = 0; i < docs.length; i++) {
                 var d = docs[i];
                 if (fsSkipGuard[d.id]) continue;
-                var sonuc = fsDosyaIslem(d.id, d.data);
+                var parsedData;
+                try { parsedData = JSON.parse(d.data); } catch(e) { parsedData = d.data; }
+                var sonuc = fsDosyaIslem(d.id, parsedData);
                 if (sonuc === "logo") logoChanged = true;
                 else if (sonuc === "data") anyChanged = true;
             }
@@ -256,18 +292,18 @@ function gorevMailGonder(gorev) {
             if (anyChanged) { yenileAktifSayfa(); }
         }
         function fsLoad() {
-            fsSdkReadAll().then(function(docs) {
+            fsRestReadAll().then(function(docs) {
                 fsIsleDocs(docs);
                 fsReady = true;
                 fsSync();
             }).catch(function(e) {
-                console.warn('fsLoad SDK error:', e.message);
-                fsRestReadAll().then(function(rdocs) {
-                    fsIsleDocs(rdocs);
+                console.warn('fsLoad REST error:', e.message);
+                fsSdkReadAll().then(function(sdocs) {
+                    fsIsleDocs(sdocs);
                     fsReady = true;
                     fsSync();
                 }).catch(function(e2) {
-                    console.warn('fsLoad REST error:', e2.message);
+                    console.warn('fsLoad SDK error:', e2.message);
                     fsReady = true;
                     fsSync();
                 });
@@ -282,11 +318,11 @@ function gorevMailGonder(gorev) {
             setTimeout(fsPollSdk, 1500);
         }
         function fsPollSdk() {
-            fsSdkReadAll().then(function(docs) {
+            fsRestReadAll().then(function(docs) {
                 if (docs.length > 0) { fsIsleDocs(docs); return; }
-                fsRestReadAll().then(function(rdocs) { fsIsleDocs(rdocs); }).catch(function(e) {});
+                fsSdkReadAll().then(function(sdocs) { fsIsleDocs(sdocs); }).catch(function(e) {});
             }).catch(function() {
-                fsRestReadAll().then(function(rdocs) { fsIsleDocs(rdocs); }).catch(function(e) { console.warn('fsPollSdk error:', e.message); });
+                fsSdkReadAll().then(function(sdocs) { fsIsleDocs(sdocs); }).catch(function(e) { console.warn('fsPollSdk error:', e.message); });
             });
         }
         function fsSync() {
@@ -296,13 +332,13 @@ function gorevMailGonder(gorev) {
             var k = dirtyList[0];
             var val;
             try { val = JSON.parse(localStorage.getItem(k)); } catch(e) { val = localStorage.getItem(k); }
-            fsSdkWrite(k, val).then(function() {
+            fsRestWrite(k, val).then(function() {
                 delete fsDirtyKeys[k];
                 fsSkipGuard[k] = true;
                 setTimeout(function() { delete fsSkipGuard[k]; }, 3000);
                 if (Object.keys(fsDirtyKeys).length > 0) fsSync();
             }).catch(function() {
-                fsRestWrite(k, val).then(function() {
+                fsSdkWrite(k, val).then(function() {
                     delete fsDirtyKeys[k];
                     fsSkipGuard[k] = true;
                     setTimeout(function() { delete fsSkipGuard[k]; }, 3000);
@@ -312,6 +348,12 @@ function gorevMailGonder(gorev) {
                     setTimeout(function() { fsSync(); }, 10000);
                 });
             });
+        }
+        function fsSdkWrite(key, data) {
+            if (!fdb) { try { if (typeof firebase !== 'undefined' && !firebase.apps.length) { firebase.initializeApp(firebaseConfig); } if (typeof firebase !== 'undefined') { fdb = firebase.firestore(); } } catch(e) {} }
+            if (!fdb) return Promise.reject('fdb unavailable');
+            var strData = typeof data === 'string' ? data : JSON.stringify(data);
+            return fdb.collection(FS_COLLECTION).doc(key).set({ data: strData }, { merge: true });
         }
         function fsSyncRetryPlanla() {
             if (fsTimer) return;
