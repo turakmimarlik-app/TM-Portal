@@ -182,14 +182,17 @@ function gorevMailGonder(gorev) {
             }
             return null;
         }
+        var fsDocSayisi = 0;
+        var fsSonucSayisi = 0;
         function fsBaslikGuncelle() {
             var t = 'TM-Portal';
             if (fsBaslikDurum === 'error') t = '[HATA] ' + t;
             else if (fsBaslikDurum === 'syncing') t = '[~] ' + t;
-            else if (fsBaslikDurum === 'ok') t = '[OK] ' + t;
+            else if (fsBaslikDurum === 'ok') t = '[OK' + fsSonucSayisi + '] ' + t;
+            if (fsDocSayisi > 0) t = '(' + fsDocSayisi + 'd) ' + t;
             document.title = t;
             if (fsBaslikDurum === 'ok') {
-                setTimeout(function() { document.title = 'TM-Portal'; fsBaslikDurum = ''; }, 3000);
+                setTimeout(function() { document.title = 'TM-Portal'; fsBaslikDurum = ''; fsSonucSayisi = 0; }, 4000);
             }
         }
         function fsSdkReadAll() {
@@ -222,7 +225,7 @@ function gorevMailGonder(gorev) {
                 if (fsSkipGuard[d.id]) continue;
                 var sonuc = fsDosyaIslem(d.id, d.data);
                 if (sonuc === "logo") logoChanged = true;
-                else if (sonuc === "data") anyChanged = true;
+                else if (sonuc) anyChanged = true;
             }
             if (logoChanged) { sidebardaLogoyuGoster(); }
             if (anyChanged) { yenileAktifSayfa(); }
@@ -252,9 +255,13 @@ function gorevMailGonder(gorev) {
         }
         function fsPollSdk() {
             fsSdkReadAll().then(function(docs) {
+                fsDocSayisi = docs.length;
                 if (docs.length > 0) { fsIsleDocs(docs); return; }
+                if (fsBaslikDurum !== 'syncing' && fsBaslikDurum !== 'error') { fsBaslikGuncelle(); }
             }).catch(function(e) {
                 console.warn('fsPollSdk error:', e.message);
+                fsDocSayisi = -1;
+                fsBaslikGuncelle();
             });
         }
         function fsSync() {
