@@ -150,9 +150,7 @@
         .page-loading-bar { position:fixed; top:0; left:0; height:3px; background:var(--accent-red); z-index:10002; width:0; transition:width 0.3s ease; pointer-events:none; }
         .page-loading-bar.active { width:60%; }
         .page-loading-bar.done { width:100%; opacity:0; transition:width 0.15s ease, opacity 0.4s ease 0.15s; }
-        .fs-sync-bar { position:fixed; top:3px; left:50%; transform:translateX(-50%); z-index:10001; display:flex; align-items:center; gap:8px; padding:6px 18px; border-radius:0 0 8px 8px; font-size:12px; color:#fff; font-weight:600; box-shadow:0 2px 12px rgba(0,0,0,0.3); pointer-events:none; white-space:nowrap; transition:opacity 0.3s ease; }
-        .fs-sync-bar .fs-sync-text { white-space:nowrap; }
-        .fs-sync-bar .fs-sync-icon { font-size:13px; }
+
 
         .tm-empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; text-align:center; background:var(--bg-main); border-radius:12px; border:1px dashed var(--border-color); margin:12px 0; }
         .tm-empty-state .tm-empty-icon { font-size:42px; margin-bottom:10px; opacity:0.8; }

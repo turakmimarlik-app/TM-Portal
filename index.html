@@ -19,12 +19,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.40.0">
-    <link rel="stylesheet" href="pdf.css?v=1.40.0">
-    <link rel="stylesheet" href="responsive.css?v=1.40.0">
+    <link rel="stylesheet" href="style.css?v=1.40.1">
+    <link rel="stylesheet" href="pdf.css?v=1.40.1">
+    <link rel="stylesheet" href="responsive.css?v=1.40.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="version.js?v=1.40.0"></script>
-    <script>console.log("TM-Portal V1.40.0");(function(){var v="V1.40.0";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
+    <script src="version.js?v=1.40.1"></script>
+    <script>console.log("TM-Portal V1.40.1");(function(){var v="V1.40.1";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
 </head>
 <body>
     <div id="loginSection" class="login-wrapper">
@@ -140,7 +140,6 @@
             <div class="hamburger-btn" id="hamburgerBtn" onclick="sidebarMobileAc()">☰</div>
             <div id="tmNotif" class="tm-notif"><span id="tmNotifText"></span><button class="tm-notif-close" onclick="tmNotifKapat()"><i class="fa-solid fa-xmark"></i></button></div>
             <div id="pageLoadingBar" class="page-loading-bar"></div>
-            <div id="fsSyncBar" class="fs-sync-bar" style="display:none;"><i class="fas fa-sync-alt fa-spin fs-sync-icon"></i><span class="fs-sync-text">Senkronize ediliyor...</span></div>
             
             <div id="anasayfa-page" class="page">
     <div id="lock-anasayfa" class="page-lock-overlay"></div>
@@ -1938,7 +1937,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.40.0"></script>
+    <script src="script.js?v=1.40.1"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
