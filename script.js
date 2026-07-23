@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.35.0';
+﻿        var APP_VERSION = 'V1.36.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -4530,10 +4530,10 @@ function gorevMailGonder(gorev) {
 
                     tabloHTML += `
                         <tr>
-                            <td><b>${item.kisi}</b><br><small style="color:var(--text-light)">${item.firma}</small></td>
-                            <td>${formatliTarih}</td>
-                            <td><span style="font-weight:700; color:var(--btn-green); font-size:14px;">${formatliFiyat}</span> <small style="color:var(--text-light); font-weight:600;">(${item.birim})</small></td>
-                            <td><button class="btn-danger" onclick="piyasaVerisiSilDirekt(${globalIdx})">Sil</button></td>
+                            <td data-label="Kişi / Firma"><b>${item.kisi}</b><br><small style="color:var(--text-light)">${item.firma}</small></td>
+                            <td data-label="Tarih">${formatliTarih}</td>
+                            <td data-label="Tutar"><span style="font-weight:700; color:var(--btn-green); font-size:14px;">${formatliFiyat}</span> <small style="color:var(--text-light); font-weight:600;">(${item.birim})</small></td>
+                            <td data-label=""><button class="btn-danger" onclick="piyasaVerisiSilDirekt(${globalIdx})">Sil</button></td>
                         </tr>
                     `;
                 });

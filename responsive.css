@@ -172,6 +172,21 @@
             #teklif-liste-page .tl-table tbody td[data-label="Hazırlayan"],
             #teklif-liste-page .tl-table tbody td[data-label="İş / Proje"] { font-size:13px; }
 
+            /* Piyasa Fiyatlari mobil */
+            #piyasa-fiyatlari-page .col > div[style*="display: flex"] { flex-wrap:wrap; }
+            #piyasa-fiyatlari-page .col > div[style*="display: flex"] > select { flex:0 0 100%; width:100%; }
+            #piyasa-fiyatlari-page .col > div[style*="display: flex"] > button { flex:1; text-align:center; }
+            #piyasaGruplanmisTablolarKonteyner .app-table { overflow-x:hidden; white-space:normal; }
+            #piyasaGruplanmisTablolarKonteyner .app-table thead { display:none; }
+            #piyasaGruplanmisTablolarKonteyner .app-table tbody,
+            #piyasaGruplanmisTablolarKonteyner .app-table tbody tr { display:block; width:100%; }
+            #piyasaGruplanmisTablolarKonteyner .app-table tbody tr { background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; padding:12px; margin-bottom:8px; }
+            #piyasaGruplanmisTablolarKonteyner .app-table tbody td { display:flex; flex-direction:column; align-items:stretch; width:100%; padding:4px 0; border:none; text-align:left; white-space:normal; }
+            #piyasaGruplanmisTablolarKonteyner .app-table tbody td::before { content:attr(data-label); font-weight:600; color:var(--text-secondary); font-size:11px; margin-bottom:2px; letter-spacing:0.3px; }
+            #piyasaGruplanmisTablolarKonteyner .app-table tbody td[data-label=""]::before { display:none; }
+            #piyasaGruplanmisTablolarKonteyner .app-table tbody td[data-label=""] button { width:100%; padding:10px; }
+            #piyasaGruplanmisTablolarKonteyner .app-table tbody td small { font-size:12px; }
+
             #is-muhasebe-page .card-main-header, #tamamlanan-is-muhasebeleri-page .card-main-header { flex-wrap:wrap; gap:8px; }
             .is-muh-card .card-main-header > div { flex-wrap:wrap; gap:6px; }
             .ht-account-list { grid-template-columns:1fr; }
@@ -715,6 +730,20 @@
         html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="Tarih"],
         html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="Hazırlayan"],
         html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="İş / Proje"] { font-size:13px !important; }
+        /* ========== PIYASA FIYATLARI MOBIL ========== */
+        html body.mobile-view #piyasa-fiyatlari-page .col > div[style*="display: flex"] { flex-wrap:wrap !important; }
+        html body.mobile-view #piyasa-fiyatlari-page .col > div[style*="display: flex"] > select { flex:0 0 100% !important; width:100% !important; }
+        html body.mobile-view #piyasa-fiyatlari-page .col > div[style*="display: flex"] > button { flex:1 !important; text-align:center !important; }
+        html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table { overflow-x:hidden !important; white-space:normal !important; }
+        html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table thead { display:none !important; }
+        html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table tbody,
+        html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table tbody tr { display:block !important; width:100% !important; }
+        html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table tbody tr { background:var(--card-bg) !important; border:1px solid var(--border-color) !important; border-radius:8px !important; padding:12px !important; margin-bottom:8px !important; }
+        html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table tbody td { display:flex !important; flex-direction:column !important; align-items:stretch !important; width:100% !important; padding:4px 0 !important; border:none !important; text-align:left !important; white-space:normal !important; }
+        html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table tbody td::before { content:attr(data-label) !important; font-weight:600 !important; color:var(--text-secondary) !important; font-size:11px !important; margin-bottom:2px !important; letter-spacing:0.3px !important; }
+        html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table tbody td[data-label=""]::before { display:none !important; }
+        html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table tbody td[data-label=""] button { width:100% !important; padding:10px !important; }
+        html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table tbody td small { font-size:12px !important; }
         /* Mobil zoom fix - iOS input focus zoom engelle */
         html body.mobile-view input, html body.mobile-view select, html body.mobile-view textarea { font-size:16px !important; }
         html body.mobile-view #is-muhasebe-page table, html body.mobile-view #tamamlanan-is-muhasebeleri-page table { display:block !important; overflow-x:auto !important; white-space:nowrap !important; }
