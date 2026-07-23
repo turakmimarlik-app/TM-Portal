@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.39.1';
+﻿        var APP_VERSION = 'V1.40.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -127,7 +127,7 @@ function gorevMailGonder(gorev) {
     });
 }
 
-/* --- Firebase Sync Katmani (verileri buluta yedekler) --- */
+/* --- Firebase Sync Katmani (REST API ile) --- */
         const firebaseConfig = {
             apiKey: "AIzaSyAgKERI5UOh5urGPTS2ODRoI-Qb8H7Ro1k",
             authDomain: "tm-portal-d672a.firebaseapp.com",
@@ -139,8 +139,9 @@ function gorevMailGonder(gorev) {
         var fdb = null;
         try { firebase.initializeApp(firebaseConfig); fdb = firebase.firestore(); } catch(e) { console.error("Firebase init error:", e); }
         const FS_COLLECTION = "tm_sync";
+        const FS_API_BASE = 'https://firestore.googleapis.com/v1/projects/' + firebaseConfig.projectId + '/databases/(default)/documents';
         let fsTimer = null;
-        let fsUnsubscribe = null;
+        let fsPollTimer = null;
         const fsSayfaAnahtarlari = {
             'anasayfa-page': null,
             'yonetim-page': null,
@@ -182,104 +183,150 @@ function gorevMailGonder(gorev) {
             }
             return null;
         }
-        function fsLoad() {
-            function fsLoadIc() {
-                if (!fdb) return;
-                fdb.collection(FS_COLLECTION).doc('all_data').get().then(function(snap) {
-                    if (snap && snap.exists) {
-                        var data = snap.data();
-                        var batch = fdb.batch();
-                        var count = 0;
-                        Object.keys(data).forEach(function(k) {
-                            if (fsSyncDenetle(k)) {
-                                batch.set(fdb.collection(FS_COLLECTION).doc(k), { data: data[k] }, { merge: true });
-                                count++;
-                            }
-                        });
-                        if (count > 0) {
-                            batch.commit().then(function() {
-                                fdb.collection(FS_COLLECTION).doc('all_data').delete().catch(function(e){ console.warn('all_data silme hatasi:', e.message); });
-                            }).catch(function(e){ console.warn('Migration yazma hatasi:', e.message); });
-                        }
-                    }
-                }).catch(function(e) { console.warn('Migration okuma hatasi:', e.message); });
-                fdb.collection(FS_COLLECTION).get().then(function(snap) {
-                    var logoChanged = false;
-                    var anyChanged = false;
-                    snap.forEach(function(doc) {
-                        var docId = doc.id;
-                        if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
-                        var data = doc.data();
-                        if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
-                        var sonuc = fsDosyaIslem(docId, data.data, data.ver);
-                        if (sonuc === "logo") logoChanged = true;
-                        else if (sonuc === "data") anyChanged = true;
-                    });
-                    if (logoChanged) { sidebardaLogoyuGoster(); }
-                    if (anyChanged) { yenileAktifSayfa(); }
-                    fsReady = true;
-                }).catch(function(e) { console.warn('fsLoad', e.message); });
-            }
-            if (fdb || fsFbInit()) { fsLoadIc(); }
-            // Periyodik kontrol - Firebase sonradan baglanabilirse diye
-            setInterval(function() { fsPollSdk(); }, 30000);
-            document.addEventListener('visibilitychange', function() {
-                if (!document.hidden) fsPollSdk();
-            });
-            window.addEventListener('focus', function() {
-                setTimeout(fsPollSdk, 100);
-            });
-            setTimeout(fsPollSdk, 1000);
+        function fsApiKey() { return firebaseConfig.apiKey; }
+        function fsRestUrl(path) { return FS_API_BASE + path + '?key=' + encodeURIComponent(fsApiKey()); }
+        function fsRestParseDoc(doc) {
+            var fields = doc.fields;
+            if (!fields || !fields.data || !fields.data.stringValue || !fields.ver) return null;
+            var name = doc.name;
+            var id = name.substring(name.lastIndexOf('/') + 1);
+            if (id === 'all_data' || id.indexOf('multi_logo_') === 0) return null;
+            var rawData;
+            try { rawData = JSON.parse(fields.data.stringValue); } catch(e) { rawData = fields.data.stringValue; }
+            return { id: id, data: rawData, ver: parseInt(fields.ver.integerValue) || 0 };
         }
-        function fsPollSdk() {
-            if (!fdb && !fsFbInit()) return;
-            fdb.collection(FS_COLLECTION).get({ source: 'server' }).then(function(snap) {
-                var logoChanged = false;
-                var anyChanged = false;
+        function fsSyncGoster(durum, mesaj) {
+            var el = document.getElementById('fsSyncBar');
+            if (!el) return;
+            if (durum === 'hidden') { el.style.display = 'none'; return; }
+            el.style.display = 'flex';
+            var icon = el.querySelector('.fs-sync-icon');
+            var text = el.querySelector('.fs-sync-text');
+            if (durum === 'syncing') {
+                if (icon) icon.className = 'fas fa-sync-alt fa-spin fs-sync-icon';
+                if (text) text.textContent = mesaj || 'Senkronize ediliyor...';
+                el.style.background = 'var(--accent-red)';
+            } else if (durum === 'ok') {
+                if (icon) icon.className = 'fas fa-check-circle fs-sync-icon';
+                if (text) text.textContent = mesaj || 'Senkronize';
+                el.style.background = '#2e7d32';
+                setTimeout(function() { if (document.getElementById('fsSyncBar')) document.getElementById('fsSyncBar').style.display = 'none'; }, 2000);
+            } else if (durum === 'error') {
+                if (icon) icon.className = 'fas fa-exclamation-triangle fs-sync-icon';
+                if (text) text.textContent = mesaj || 'Senkronizasyon hatas\u0131';
+                el.style.background = '#c62828';
+            }
+        }
+        function fsRestReadAll() {
+            return fetch(fsRestUrl('/' + FS_COLLECTION + '?pageSize=100')).then(function(r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            }).then(function(data) {
+                if (!data.documents) return [];
+                var sonuc = [];
+                for (var i = 0; i < data.documents.length; i++) {
+                    var parsed = fsRestParseDoc(data.documents[i]);
+                    if (parsed) sonuc.push(parsed);
+                }
+                return sonuc;
+            });
+        }
+        function fsRestWrite(key, data, ver) {
+            var stringVal = typeof data === 'string' ? data : JSON.stringify(data);
+            var url = fsRestUrl('/' + FS_COLLECTION + '/' + encodeURIComponent(key)) + '&updateMask.fieldPaths=data&updateMask.fieldPaths=ver';
+            return fetch(url, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fields: { data: { stringValue: stringVal }, ver: { integerValue: String(ver) } } })
+            }).then(function(r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + r.statusText);
+                return r.json();
+            });
+        }
+        function fsSdkReadAll() {
+            if (!fdb) {
+                try { if (typeof firebase !== 'undefined' && !firebase.apps.length) { firebase.initializeApp(firebaseConfig); } if (typeof firebase !== 'undefined') { fdb = firebase.firestore(); } } catch(e) {}
+            }
+            if (!fdb) return Promise.reject('fdb unavailable');
+            return fdb.collection(FS_COLLECTION).get().then(function(snap) {
+                var docs = [];
                 snap.forEach(function(doc) {
                     var docId = doc.id;
                     if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
                     var data = doc.data();
                     if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
-                    var sonuc = fsDosyaIslem(docId, data.data, data.ver);
-                    if (sonuc === "logo") logoChanged = true;
-                    else if (sonuc === "data") anyChanged = true;
+                    docs.push({ id: docId, data: data.data, ver: data.ver });
                 });
-                if (logoChanged) { sidebardaLogoyuGoster(); }
-                if (anyChanged) { yenileAktifSayfa(); }
-            }).catch(function(e) { console.warn('fsPollSdk', e.message); });
+                return docs;
+            }).catch(function(e) { console.warn('fsSdkReadAll', e.message); return []; });
+        }
+        function fsIsleDocs(docs) {
+            var logoChanged = false;
+            var anyChanged = false;
+            for (var i = 0; i < docs.length; i++) {
+                var d = docs[i];
+                var sonuc = fsDosyaIslem(d.id, d.data, d.ver);
+                if (sonuc === "logo") logoChanged = true;
+                else if (sonuc === "data") anyChanged = true;
+            }
+            if (logoChanged) { sidebardaLogoyuGoster(); }
+            if (anyChanged) { yenileAktifSayfa(); }
+        }
+        function fsLoad() {
+            fsSdkReadAll().then(function(docs) {
+                fsIsleDocs(docs);
+                fsReady = true;
+                fsSync();
+            }).catch(function(e) {
+                console.warn('fsLoad error:', e.message);
+                fsReady = true;
+                fsSync();
+            });
+            // Periyodik polling (10sn) - REST API ile (SDK'den bagimsiz)
+            fsPollTimer = setInterval(function() { fsPollSdk(); }, 10000);
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) { fsPollSdk(); }
+            });
+            window.addEventListener('focus', function() {
+                setTimeout(fsPollSdk, 200);
+            });
+            setTimeout(fsPollSdk, 1500);
+        }
+        function fsPollSdk() {
+            // Once SDK ile dene, olmazsa REST API ile
+            fsSdkReadAll().then(function(docs) {
+                if (docs.length > 0) { fsIsleDocs(docs); return; }
+                fsRestReadAll().then(function(rdocs) { fsIsleDocs(rdocs); }).catch(function(e) {});
+            }).catch(function() {
+                fsRestReadAll().then(function(rdocs) { fsIsleDocs(rdocs); }).catch(function(e) { console.warn('fsPollSdk error:', e.message); });
+            });
         }
         var fsDirtyKeys = {};
         var fsReady = false;
-        var fsSentKeys = {};
         var fsSyncInProgress = false;
-        function fsFbInit() {
-            if (fdb) return true;
-            try {
-                if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                if (typeof firebase !== 'undefined') {
-                    fdb = firebase.firestore();
-                }
-                return !!fdb;
-            } catch(e) { console.warn('Firebase init retry error:', e); return false; }
-        }
         function fsSync() {
             if (!fsReady) return;
-            if (!fdb && !fsFbInit()) { fsSyncRetryPlanla(); return; }
             var dirtyList = Object.keys(fsDirtyKeys);
-            if (dirtyList.length === 0) return;
-            var batch = fdb.batch();
-            dirtyList.forEach(function(k) {
-                var val;
-                try { val = JSON.parse(localStorage.getItem(k)); } catch(e) { val = localStorage.getItem(k); }
-                var v = parseInt(localStorage.getItem("tm_ver_" + k)) || 0;
-                batch.set(fdb.collection(FS_COLLECTION).doc(k), { data: val, ver: v }, { merge: true });
+            if (dirtyList.length === 0) { fsSyncGoster('hidden'); return; }
+            fsSyncGoster('syncing');
+            var promises = [];
+            for (var i = 0; i < dirtyList.length; i++) {
+                var k = dirtyList[i];
+                (function(key) {
+                    var val;
+                    try { val = JSON.parse(localStorage.getItem(key)); } catch(e) { val = localStorage.getItem(key); }
+                    var v = parseInt(localStorage.getItem("tm_ver_" + key)) || 0;
+                    promises.push(fsRestWrite(key, val, v));
+                })(k);
+            }
+            Promise.all(promises).then(function() {
+                for (var i = 0; i < dirtyList.length; i++) { delete fsDirtyKeys[dirtyList[i]]; }
+                fsSyncGoster('ok');
+            }).catch(function(e) {
+                console.error('fsSync write error', e);
+                fsSyncGoster('error', 'Sync hatas\u0131, 10sn sonra tekrar deneniyor...');
+                setTimeout(function() { fsSync(); }, 10000);
             });
-            batch.commit().then(function() {
-                dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; });
-            }).catch(function(e){ console.error('fsSync write error', e); if (typeof tmNotify === 'function') tmNotify("Firestore sync hatası: " + e.message, "error"); });
         }
         function fsSyncRetryPlanla() {
             if (fsTimer) return;
@@ -289,7 +336,7 @@ function gorevMailGonder(gorev) {
                     fsTimer = null;
                     return;
                 }
-                if (fsFbInit() && fsReady) {
+                if (fsReady) {
                     fsSync();
                     if (Object.keys(fsDirtyKeys).length === 0) {
                         clearInterval(fsTimer);
