@@ -144,11 +144,20 @@
             #teklif-liste-page .tl-table tbody tr.detail-expanded-row { display:none; width:100%; margin-bottom:12px; }
             #teklif-liste-page .tl-table tbody tr.detail-expanded-row.detail-expanded-open { display:block; }
             #teklif-liste-page .tl-table tbody tr.detail-expanded-row td { display:block; width:100%; padding:0; border:none; background:transparent; }
-            #teklif-liste-page .tl-table tbody tr.detail-expanded-row .detail-panel-inner { padding:10px; }
-            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table thead { display:table-header-group; }
-            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tr { display:table-row; border:none; padding:0; background:transparent; }
-            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table td,
-            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table th { display:table-cell; }
+            /* Detail tablo mobil kart gorunumu */
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row .detail-panel-inner { padding:8px; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row .detail-grid-box > div:first-child { font-size:12px !important; margin-bottom:8px !important; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row .detail-grid-box > p { font-size:12px !important; margin:3px 0 !important; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table { width:100% !important; margin-top:8px !important; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table thead { display:none; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody { display:block; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr:not(.detail-summary-row) { display:block; background:var(--bg-main); border:1px solid var(--border-color); border-radius:6px; padding:8px; margin-bottom:6px; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr:not(.detail-summary-row) td { display:flex; flex-direction:column; padding:2px 0; border:none; text-align:left; white-space:normal !important; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr:not(.detail-summary-row) td::before { content:attr(data-label); font-weight:600; color:var(--text-secondary); font-size:10px; margin-bottom:1px; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr.detail-summary-row { display:flex; flex-direction:row; justify-content:space-between; align-items:center; padding:5px 6px; border-top:none !important; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr.detail-summary-row:first-child { border-top:2px solid var(--border-color) !important; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr.detail-summary-row td[colspan] { width:auto; padding:2px 4px; border:none; text-align:left !important; display:inline-block; font-size:12px; }
+            #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr.detail-summary-row td:not([colspan]) { width:auto; padding:2px 4px; border:none; text-align:right !important; display:inline-block; font-size:12px; white-space:nowrap; }
             #teklif-liste-page .tl-table tbody td { display:flex; align-items:flex-start; width:100%; padding:4px 0; border:none; text-align:left; gap:6px; }
             #teklif-liste-page .tl-table tbody td::before { content:attr(data-label); font-weight:600; color:var(--text-secondary); font-size:11px; min-width:90px; flex-shrink:0; letter-spacing:0.3px; }
             #teklif-liste-page .tl-table tbody td:not([data-label]) { display:block; width:100%; padding:8px 0; border:none; text-align:center; }
@@ -680,11 +689,19 @@
         html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row { display:none !important; width:100% !important; margin-bottom:12px !important; }
         html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row.detail-expanded-open { display:block !important; }
         html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row td { width:100% !important; padding:0 !important; border:none !important; background:transparent !important; }
-        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row .detail-panel-inner { padding:10px !important; }
-        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table thead { display:table-header-group !important; }
-        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tr { display:table-row !important; border:none !important; padding:0 !important; background:transparent !important; }
-        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table td,
-        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table th { display:table-cell !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row .detail-panel-inner { padding:8px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row .detail-grid-box > div:first-child { font-size:12px !important; margin-bottom:8px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row .detail-grid-box > p { font-size:12px !important; margin:3px 0 !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table { width:100% !important; margin-top:8px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table thead { display:none !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody { display:block !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr:not(.detail-summary-row) { display:block !important; background:var(--bg-main) !important; border:1px solid var(--border-color) !important; border-radius:6px !important; padding:8px !important; margin-bottom:6px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr:not(.detail-summary-row) td { display:flex !important; flex-direction:column !important; padding:2px 0 !important; border:none !important; text-align:left !important; white-space:normal !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr:not(.detail-summary-row) td::before { content:attr(data-label) !important; font-weight:600 !important; color:var(--text-secondary) !important; font-size:10px !important; margin-bottom:1px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr.detail-summary-row { display:flex !important; flex-direction:row !important; justify-content:space-between !important; align-items:center !important; padding:5px 6px !important; border-top:none !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr.detail-summary-row:first-child { border-top:2px solid var(--border-color) !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr.detail-summary-row td[colspan] { width:auto !important; padding:2px 4px !important; border:none !important; text-align:left !important; display:inline-block !important; font-size:12px !important; }
+        html body.mobile-view #teklif-liste-page .tl-table tbody tr.detail-expanded-row table tbody tr.detail-summary-row td:not([colspan]) { width:auto !important; padding:2px 4px !important; border:none !important; text-align:right !important; display:inline-block !important; font-size:12px !important; white-space:nowrap !important; }
         html body.mobile-view #teklif-liste-page .tl-table tbody td { display:flex !important; align-items:flex-start !important; width:100% !important; padding:4px 0 !important; border:none !important; text-align:left !important; gap:6px !important; }
         html body.mobile-view #teklif-liste-page .tl-table tbody td::before { content:attr(data-label) !important; font-weight:600 !important; color:var(--text-secondary) !important; font-size:11px !important; min-width:90px !important; flex-shrink:0 !important; letter-spacing:0.3px !important; }
         html body.mobile-view #teklif-liste-page .tl-table tbody td:not([data-label]) { display:block !important; width:100% !important; padding:8px 0 !important; border:none !important; text-align:center !important; }
