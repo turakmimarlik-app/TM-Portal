@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.32.0';
+﻿        var APP_VERSION = 'V1.33.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -4271,7 +4271,10 @@ function gorevMailGonder(gorev) {
             clone.id = 'pdf-clone-' + Date.now();
             clone.style.cssText = 'display:flex;flex-direction:column;position:fixed;left:-9999px;top:0;width:210mm;height:297mm;overflow:hidden;padding:15mm 16mm;box-sizing:border-box;background:white;font-family:Montserrat,sans-serif;text-transform:uppercase;line-height:1.5;color:#1a1a1a;';
             document.body.appendChild(clone);
-            var fname = (veri.isAdi || 'TEKLIF').replace(/[\\/:*?"<>|]/g,'_') + '_#' + String(veri.id).padStart(4,'0') + '.pdf';
+            var musterifirma = (veri.musteriAd || 'MUSTERI').replace(/[\\/:*?"<>|]/g,'_');
+            var firma = (veri.firma || '').replace(/[\\/:*?"<>|]/g,'_');
+            var isAdi = (veri.isAdi || 'TEKLIF').replace(/[\\/:*?"<>|]/g,'_');
+            var fname = musterifirma + (firma ? '_' + firma : '') + '_' + isAdi + '_' + String(veri.id).padStart(4,'0') + '.pdf';
             setTimeout(function(){
                 html2canvas(clone,{scale:6,useCORS:true}).then(function(c){
                     var u=c.toDataURL('image/jpeg',1);
