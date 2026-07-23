@@ -151,7 +151,6 @@
         .page-loading-bar.active { width:60%; }
         .page-loading-bar.done { width:100%; opacity:0; transition:width 0.15s ease, opacity 0.4s ease 0.15s; }
 
-
         .tm-empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; text-align:center; background:var(--bg-main); border-radius:12px; border:1px dashed var(--border-color); margin:12px 0; }
         .tm-empty-state .tm-empty-icon { font-size:42px; margin-bottom:10px; opacity:0.8; }
         .tm-empty-state .tm-empty-title { font-size:15px; font-weight:700; color:var(--text-dark); margin-bottom:4px; }

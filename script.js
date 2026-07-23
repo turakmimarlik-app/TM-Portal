@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.44.0';
+﻿        var APP_VERSION = 'V1.37.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -127,7 +127,7 @@ function gorevMailGonder(gorev) {
     });
 }
 
-/* --- Firebase Sync Katmani --- */
+/* --- Firebase Sync Katmani (verileri buluta yedekler) --- */
         const firebaseConfig = {
             apiKey: "AIzaSyAgKERI5UOh5urGPTS2ODRoI-Qb8H7Ro1k",
             authDomain: "tm-portal-d672a.firebaseapp.com",
@@ -140,12 +140,7 @@ function gorevMailGonder(gorev) {
         try { firebase.initializeApp(firebaseConfig); fdb = firebase.firestore(); } catch(e) { console.error("Firebase init error:", e); }
         const FS_COLLECTION = "tm_sync";
         let fsTimer = null;
-        let fsPollTimer = null;
-        var fsDirtyKeys = {};
-        var fsReady = false;
-        var fsSyncInProgress = false;
-        var fsSkipGuard = {};
-        var fsBaslikDurum = '';
+        let fsUnsubscribe = null;
         const fsSayfaAnahtarlari = {
             'anasayfa-page': null,
             'yonetim-page': null,
@@ -164,167 +159,108 @@ function gorevMailGonder(gorev) {
             'tm-fiyatlar-page': ['tm_kategorili_fiyatlar'],
         };
         function fsSyncDenetle(k) {
-            if (k.indexOf("tm_ver_") === 0) return false;
             if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_ht_clean" && k !== "tm_ft_clean" && k !== "tm_yillik_butce_clean" && k !== "tm_sidebar_collapsed" && k !== "tm_submenu_open" && k.indexOf("tm_multi_logo_") !== 0) return true;
             return false;
         }
-        function fsDosyaIslem(k, raw, serverData) {
-            if (!serverData && raw && raw._fsData) { serverData = raw; raw = raw._fsData; }
-            var serverTs = serverData ? (serverData._fsTs || 0) : 0;
-            var localTs = parseInt(localStorage.getItem(k + '_fsTs')) || 0;
-            if (localTs > 0 && (serverTs === 0 || localTs > serverTs)) return null; // local is newer, skip
+        function fsDosyaIslem(k, raw) {
             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
             var curVal = localStorage.getItem(k);
-            if (curVal !== strVal && !fsDirtyKeys[k] && !fsSkipGuard[k]) {
-                fsSkipGuard[k] = true;
-                fsSyncInProgress = true;
-                try { origSetItem(k, strVal); if (serverTs > 0) origSetItem(k + '_fsTs', String(serverTs)); } catch(e) { console.error("Firebase sync local set hatasi:", e); }
-                fsSyncInProgress = false;
+            if (curVal !== strVal && !fsDirtyKeys[k]) {
+                try { origSetItem(k, strVal); } catch(e) { console.error("Firebase sync local set hatasi:", e); }
                 if (k === "tm_hesap_takip_db") { setTimeout(function(){ try { var ap=document.querySelector('.page.active'); if(ap&&ap.id==='hesap-takip-page') htSayfayiYukle(); } catch(e){} }, 100); }
                 if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") return "logo";
                 return "data";
             }
             return null;
         }
-        var fsDocSayisi = 0;
-        var fsSonucSayisi = 0;
-        function fsBaslikGuncelle() {
-            var t = 'TM-Portal';
-            if (fsBaslikDurum === 'error') t = '[HATA] ' + t;
-            else if (fsBaslikDurum === 'syncing') t = '[~] ' + t;
-            else if (fsBaslikDurum === 'ok') t = '[OK' + fsSonucSayisi + '] ' + t;
-            if (fsDocSayisi > 0) t = '(' + fsDocSayisi + 'd) ' + t;
-            document.title = t;
-            if (fsBaslikDurum === 'ok') {
-                setTimeout(function() { document.title = 'TM-Portal'; fsBaslikDurum = ''; fsSonucSayisi = 0; }, 4000);
-            }
-        }
-        function fsSdkReadAll() {
-            if (!fdb) {
-                try { if (typeof firebase !== 'undefined' && !firebase.apps.length) { firebase.initializeApp(firebaseConfig); } if (typeof firebase !== 'undefined') { fdb = firebase.firestore(); } } catch(e) {}
-            }
-            if (!fdb) return Promise.reject('fdb unavailable');
-            return fdb.collection(FS_COLLECTION).get({ source: 'server' }).then(function(snap) {
-                var docs = [];
+        function fsLoad() {
+            if (!fdb) return;
+            // Eski all_data'dan bireysel dokümanlara geçiş (bir kere)
+            fdb.collection(FS_COLLECTION).doc('all_data').get().then(function(snap) {
+                if (snap && snap.exists) {
+                    var data = snap.data();
+                    var batch = fdb.batch();
+                    var count = 0;
+                    Object.keys(data).forEach(function(k) {
+                        if (fsSyncDenetle(k)) {
+                            batch.set(fdb.collection(FS_COLLECTION).doc(k), { data: data[k] }, { merge: true });
+                            count++;
+                        }
+                    });
+                    if (count > 0) {
+                        batch.commit().then(function() {
+                            fdb.collection(FS_COLLECTION).doc('all_data').delete().catch(function(e){ console.warn('all_data silme hatasi:', e.message); });
+                        }).catch(function(e){ console.warn('Migration yazma hatasi:', e.message); });
+                    }
+                }
+            }).catch(function(e) { console.warn('Migration okuma hatasi:', e.message); });
+            // Bireysel dokümanlardan yükle
+            fdb.collection(FS_COLLECTION).get().then(function(snap) {
+                var logoChanged = false;
+                var anyChanged = false;
                 snap.forEach(function(doc) {
                     var docId = doc.id;
                     if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
                     var data = doc.data();
                     if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
-                    docs.push({ id: docId, data: data.data, _fsTs: data._fsTs || 0 });
+                    var sonuc = fsDosyaIslem(docId, data.data);
+                    if (sonuc === "logo") logoChanged = true;
+                    else if (sonuc === "data") anyChanged = true;
                 });
-                return docs;
-            });
-        }
-        function fsSdkWrite(key, payload) {
-            if (!fdb) { try { if (typeof firebase !== 'undefined' && !firebase.apps.length) { firebase.initializeApp(firebaseConfig); } if (typeof firebase !== 'undefined') { fdb = firebase.firestore(); } } catch(e) {} }
-            if (!fdb) return Promise.reject('fdb unavailable');
-            var ts = (payload && payload._fsTs) ? payload._fsTs : Date.now();
-            var dat = (payload && payload._fsData) ? payload._fsData : payload;
-            return fdb.collection(FS_COLLECTION).doc(key).set({ data: dat, _fsTs: ts }, { merge: true });
-        }
-        function fsIsleDocs(docs) {
-            var logoChanged = false;
-            var anyChanged = false;
-            for (var i = 0; i < docs.length; i++) {
-                var d = docs[i];
-                if (fsSkipGuard[d.id]) continue;
-                var sonuc = fsDosyaIslem(d.id, d.data, d);
-                if (sonuc === "logo") logoChanged = true;
-                else if (sonuc) anyChanged = true;
-            }
-            if (logoChanged) { sidebardaLogoyuGoster(); }
-            if (anyChanged) { yenileAktifSayfa(); }
-        }
-        function fsLoad() {
-            fsSdkReadAll().then(function(docs) {
-                fsIsleDocs(docs);
+                if (logoChanged) { sidebardaLogoyuGoster(); }
+                if (anyChanged) { yenileAktifSayfa(); }
                 fsReady = true;
-                fsBaslikDurum = 'ok';
-                fsBaslikGuncelle();
-                fsSync();
-            }).catch(function(e) {
-                console.warn('fsLoad SDK error:', e.message);
-                fsReady = true;
-                fsBaslikDurum = 'error';
-                fsBaslikGuncelle();
-                fsSync();
-            });
-            fsPollTimer = setInterval(function() { fsPollSdk(); }, 10000);
+            }).catch(function(e) { console.warn('fsLoad', e.message); });
+            // Periyodik kontrol
+            setInterval(function() { fsPollSdk(); }, 30000);
             document.addEventListener('visibilitychange', function() {
-                if (!document.hidden) { fsPollSdk(); }
+                if (!document.hidden) fsPollSdk();
             });
             window.addEventListener('focus', function() {
-                setTimeout(fsPollSdk, 200);
+                setTimeout(fsPollSdk, 100);
             });
-            setTimeout(fsPollSdk, 1500);
+            setTimeout(fsPollSdk, 1000);
         }
         function fsPollSdk() {
-            fsSdkReadAll().then(function(docs) {
-                fsDocSayisi = docs.length;
-                if (docs.length > 0) { fsIsleDocs(docs); return; }
-                if (fsBaslikDurum !== 'syncing' && fsBaslikDurum !== 'error') { fsBaslikGuncelle(); }
-            }).catch(function(e) {
-                console.warn('fsPollSdk error:', e.message);
-                fsDocSayisi = -1;
-                fsBaslikGuncelle();
-            });
+            fdb.collection(FS_COLLECTION).get({ source: 'server' }).then(function(snap) {
+                var logoChanged = false;
+                var anyChanged = false;
+                snap.forEach(function(doc) {
+                    var docId = doc.id;
+                    if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
+                    var data = doc.data();
+                    if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
+                    var sonuc = fsDosyaIslem(docId, data.data);
+                    if (sonuc === "logo") logoChanged = true;
+                    else if (sonuc === "data") anyChanged = true;
+                });
+                if (logoChanged) { sidebardaLogoyuGoster(); }
+                if (anyChanged) { yenileAktifSayfa(); }
+            }).catch(function(e) { console.warn('fsPollSdk', e.message); });
         }
+        var fsDirtyKeys = {};
+        var fsReady = false;
+        var fsSentKeys = {};
         function fsSync() {
-            if (!fsReady) return;
+            if (!fsReady || !fdb) return;
             var dirtyList = Object.keys(fsDirtyKeys);
-            if (dirtyList.length === 0) { fsBaslikDurum = 'ok'; fsBaslikGuncelle(); return; }
-            fsBaslikDurum = 'syncing';
-            fsBaslikGuncelle();
-            var k = dirtyList[0];
-            var val;
-            try { val = JSON.parse(localStorage.getItem(k)); } catch(e) { val = localStorage.getItem(k); }
-            var localTs = parseInt(localStorage.getItem(k + '_fsTs')) || Date.now();
-            var payload = { _fsData: val, _fsTs: localTs };
-            fsSdkWrite(k, payload).then(function() {
-                delete fsDirtyKeys[k];
-                fsSkipGuard[k] = true;
-                setTimeout(function() { delete fsSkipGuard[k]; }, 3000);
-                if (Object.keys(fsDirtyKeys).length === 0) {
-                    fsBaslikDurum = 'ok';
-                    fsBaslikGuncelle();
-                }
-                if (Object.keys(fsDirtyKeys).length > 0) fsSync();
-            }).catch(function(e) {
-                console.error('fsSync write error:', e);
-                fsBaslikDurum = 'error';
-                fsBaslikGuncelle();
-                setTimeout(function() { fsSync(); }, 10000);
+            if (dirtyList.length === 0) return;
+            var batch = fdb.batch();
+            dirtyList.forEach(function(k) {
+                var val;
+                try { val = JSON.parse(localStorage.getItem(k)); } catch(e) { val = localStorage.getItem(k); }
+                batch.set(fdb.collection(FS_COLLECTION).doc(k), { data: val }, { merge: true });
             });
-        }
-        function fsSyncRetryPlanla() {
-            if (fsTimer) return;
-            fsTimer = setInterval(function() {
-                if (Object.keys(fsDirtyKeys).length === 0) {
-                    clearInterval(fsTimer);
-                    fsTimer = null;
-                    return;
-                }
-                if (fsReady) {
-                    fsSync();
-                    if (Object.keys(fsDirtyKeys).length === 0) {
-                        clearInterval(fsTimer);
-                        fsTimer = null;
-                    }
-                }
-            }, 10000);
+            batch.commit().then(function() {
+                dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; });
+            }).catch(function(e){ console.error('fsSync write error', e); if (typeof tmNotify === 'function') tmNotify("Firestore sync hatası: " + e.message, "error"); });
         }
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
-            var oldVal = localStorage.getItem(key);
             origSetItem(key, value);
-            if (fsSyncDenetle(key) && !fsSyncInProgress) {
-                if (oldVal === value) return; // skip if unchanged
-                origSetItem(key + '_fsTs', String(Date.now()));
+            if (fsSyncDenetle(key)) {
                 fsDirtyKeys[key] = true;
-                delete fsSkipGuard[key];
                 if (fsReady) { fsSync(); }
-                else { fsSyncRetryPlanla(); }
             }
         };
         fsLoad();
