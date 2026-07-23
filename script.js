@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.30.4';
+﻿        var APP_VERSION = 'V1.31.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -360,14 +360,9 @@ function gorevMailGonder(gorev) {
                 }
                 if (yetkiler.length > 0) {
                     AKTIF_KULLANICI_YETKILERI = yetkiler;
-                    var savedPage = localStorage.getItem('tm_active_page');
                     menuyuInsaEt(yetkiler);
                     tmOnlineHeartbeatBaslat(u);
-                    if (savedPage && savedPage !== 'anasayfa-page' && document.getElementById(savedPage)) {
-                        sayfaDegistir(savedPage, null);
-                        history.replaceState({ pageId: savedPage, yetkiKodu: savedPage.replace("-page","") }, "", "#" + savedPage);
-                    }
-                    var subMap={"teklif-submenu":"arrow-icon","portfoy-submenu":"arrow-portfoy-icon","muhasebe-submenu":"arrow-muhasebe-icon"};var openSub=localStorage.getItem("tm_submenu_open");if(openSub&&subMap[openSub]){var sm=document.getElementById(openSub);if(sm){sm.classList.add("open");var ar=document.getElementById(subMap[openSub]);if(ar)ar.innerText="^";}}if(savedPage&&savedPage!=='anasayfa-page'){var si=document.getElementById('sub-'+savedPage.replace('-page',''));if(si)si.classList.add('active');}
+                    var subMap={"teklif-submenu":"arrow-icon","portfoy-submenu":"arrow-portfoy-icon","muhasebe-submenu":"arrow-muhasebe-icon"};var openSub=localStorage.getItem("tm_submenu_open");if(openSub&&subMap[openSub]){var sm=document.getElementById(openSub);if(sm){sm.classList.add("open");var ar=document.getElementById(subMap[openSub]);if(ar)ar.innerText="^";}}
                 } else {
                     localStorage.removeItem("tm_active_user");
                     sessionStorage.removeItem("tm_session_active");
@@ -1417,7 +1412,6 @@ function gorevMailGonder(gorev) {
                 else if (pageId === 'notlar-page') { noteListele(); }
                 else if (pageId === 'gorevler-takvim-page') { asTakvimRender(); asGorevListele(); }
             } catch(e) { console.warn('sayfa yenileme hatasi', e); }
-            localStorage.setItem('tm_active_page', pageId);
             tmFormDirty = false;
             sayfaLoadingBitir();
             setTimeout(function(){ tmIkonButtonTooltipEkle(); tmScrollHintKontrol(); }, 100);
