@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.31.0';
+﻿        var APP_VERSION = 'V1.32.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -4118,18 +4118,18 @@ function gorevMailGonder(gorev) {
             const tbody = document.getElementById("teklifFormRows");
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td><textarea class="row-servis" rows="1" style="width:100%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; box-sizing:border-box;" oninput="tmAutoResizeTextarea(this)"></textarea></td>
-                <td style="text-align:center;"><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center;"></td>
-                <td style="text-align:center;"><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
-                <td style="text-align:center;"><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center; box-sizing:border-box;"></td>
-                <td style="text-align:center;">
+                <td data-label="Hizmet / İş Açıklaması"><textarea class="row-servis" rows="1" style="width:100%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; box-sizing:border-box;" oninput="tmAutoResizeTextarea(this)"></textarea></td>
+                <td data-label="Miktar" style="text-align:center;"><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center;"></td>
+                <td data-label="Birim" style="text-align:center;"><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
+                <td data-label="Birim Fiyat" style="text-align:center;"><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center; box-sizing:border-box;"></td>
+                <td data-label="KDV" style="text-align:center;">
                     <select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px">
                         <option value="20">%20</option>
                         <option value="10">%10</option>
                         <option value="0" selected>%0</option>
                     </select>
                 </td>
-                <td style="text-align:center;"><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
+                <td data-label=""><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
             `;
             tbody.appendChild(tr);
             birimListesiniYenile();
@@ -4162,12 +4162,12 @@ function gorevMailGonder(gorev) {
             document.getElementById("tTarih").value = anlikTarihGetir();
             document.getElementById("teklifFormRows").innerHTML = `
                 <tr>
-                    <td><textarea class="row-servis" rows="1" style="width:100%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; box-sizing:border-box;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
-                    <td style="text-align:center;"><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center;"></td>
-                    <td style="text-align:center;"><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
-                    <td style="text-align:center;"><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center; box-sizing:border-box;"></td>
-                    <td style="text-align:center;"><select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px"><option value="20">%20</option><option value="10">%10</option><option value="0" selected>%0</option></select></td>
-                    <td style="text-align:center;"><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
+                    <td data-label="Hizmet / İş Açıklaması"><textarea class="row-servis" rows="1" style="width:100%; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; box-sizing:border-box;" oninput="tmAutoResizeTextarea(this)">UYGULAMA PROJELER (MİMARİ/STATİK/ELEKTRİK/MEKANIK/EKB/MAR/ASS. AVAN.)</textarea></td>
+                    <td data-label="Miktar" style="text-align:center;"><input type="text" class="row-miktar" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center;"></td>
+                    <td data-label="Birim" style="text-align:center;"><select class="row-birim" style="width:90%;"><option value="">--</option></select></td>
+                    <td data-label="Birim Fiyat" style="text-align:center;"><input type="text" class="row-fiyat" value="0,00" onfocus="tmTutarFocus(this)" oninput="tmTutarFormatla(this); canliTeklifHesapla()" onblur="tmTutarBlur(this); canliTeklifHesapla()" style="width:92%; text-align:center; box-sizing:border-box;"></td>
+                    <td data-label="KDV" style="text-align:center;"><select class="row-kdv" onchange="canliTeklifHesapla()" style="width:70px"><option value="20">%20</option><option value="10">%10</option><option value="0" selected>%0</option></select></td>
+                    <td data-label=""><button class="btn-danger" onclick="teklifFormSatirSil(this)" style="font-size:10px;padding:4px 6px;">Sil</button></td>
                 </tr>
             `;
             birimListesiniYenile();
@@ -4334,13 +4334,13 @@ function gorevMailGonder(gorev) {
 
                 tbody.innerHTML += `
                     <tr class="teklif-row-item teklif-row-header" onclick="teklifDetayiniAcKapat(${t.id})">
-                        <td class="search-target-id" style="font-weight:700; color:var(--accent-red);">${formatliId}</td>
-                        <td class="search-target-date">${t.sTarih}</td>
-                        <td class="search-target-m"><b>${t.musteriAd}</b><br><small class="search-target-f">${t.firma}</small></td>
-                        <td class="search-target-j">${t.isAdi}</td>
-                        <td class="search-target-h">${t.hazirlayan}</td>
-                        <td style="color:var(--accent-red); font-weight:700;white-space:nowrap;">${t.genelTutar}</td>
-                        <td>
+                        <td data-label="ID" class="search-target-id" style="font-weight:700; color:var(--accent-red);">${formatliId}</td>
+                        <td data-label="Tarih" class="search-target-date">${t.sTarih}</td>
+                        <td data-label="Müşteri / Firma" class="search-target-m"><b>${t.musteriAd}</b><br><small class="search-target-f">${t.firma}</small></td>
+                        <td data-label="İş / Proje" class="search-target-j">${t.isAdi}</td>
+                        <td data-label="Hazırlayan" class="search-target-h">${t.hazirlayan}</td>
+                        <td data-label="Genel Toplam" style="color:var(--accent-red); font-weight:700;white-space:nowrap;">${t.genelTutar}</td>
+                        <td data-label="İşlemler">
                             <button class="btn btn-pdf-red btn-sm" onclick="event.stopPropagation(); eskiTeklifPdfUretDbId(${t.id})"><i class="fa-regular fa-file-lines"></i> PDF</button> 
                             <button class="btn-danger" onclick="event.stopPropagation(); teklifSilDbId(${t.id})">Sil</button>
                         </td>
@@ -4384,7 +4384,12 @@ function gorevMailGonder(gorev) {
 
         function teklifDetayiniAcKapat(dbId) {
             const row = document.getElementById(`detail-row-${dbId}`);
-            if(row) row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
+            if(!row) return;
+            if (window.innerWidth <= 768 || document.body.classList.contains('mobile-view')) {
+                row.classList.toggle('detail-expanded-open');
+            } else {
+                row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
+            }
         }
 
         function eskiTeklifPdfUretDbId(dbId) { 
