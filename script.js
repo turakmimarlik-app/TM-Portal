@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.34.0';
+﻿        var APP_VERSION = 'V1.35.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -4332,7 +4332,7 @@ function gorevMailGonder(gorev) {
                 let kalemHTML = "";
                 t.kalemler.forEach(k => {
                     const toplamKalem = k.miktar * k.fiyat;
-                    kalemHTML += `<tr><td style="padding:6px 8px;">${k.servis}</td><td style="text-align:center;padding:6px 8px;white-space:nowrap;">${k.miktar}</td><td style="text-align:center;padding:6px 8px;white-space:nowrap;">${k.birim||''}</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${k.fiyat.toLocaleString('tr-TR')} \u20BA</td><td style="text-align:center;padding:6px 8px;white-space:nowrap;">%${k.kdv}</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${toplamKalem.toLocaleString('tr-TR')} \u20BA</td></tr>`;
+                    kalemHTML += `<tr><td data-label="Hizmet Kalemi" style="padding:6px 8px;">${k.servis}</td><td data-label="Miktar" style="text-align:center;padding:6px 8px;white-space:nowrap;">${k.miktar}</td><td data-label="Birim" style="text-align:center;padding:6px 8px;white-space:nowrap;">${k.birim||''}</td><td data-label="Br. Fiyat" style="text-align:right;padding:6px 8px;white-space:nowrap;">${k.fiyat.toLocaleString('tr-TR')} \u20BA</td><td data-label="KDV" style="text-align:center;padding:6px 8px;white-space:nowrap;">%${k.kdv}</td><td data-label="Toplam" style="text-align:right;padding:6px 8px;white-space:nowrap;">${toplamKalem.toLocaleString('tr-TR')} \u20BA</td></tr>`;
                 });
 
                 tbody.innerHTML += `
@@ -4367,9 +4367,9 @@ function gorevMailGonder(gorev) {
                                         </thead>
                                         <tbody>
                                             ${kalemHTML}
-                                            <tr style="border-top:2px solid var(--border-color); font-weight:600;"><td colspan="5" style="text-align:right;padding:6px 8px;white-space:nowrap;">ARA TOPLAM:</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${(t.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} \u20BA</td></tr>
-                                            <tr style="font-weight:600;"><td colspan="5" style="text-align:right;padding:6px 8px;white-space:nowrap;">TOPLAM K.D.V:</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${(t.kdvTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} \u20BA</td></tr>
-                                            <tr style="font-weight:700; color:var(--accent-red); background:var(--bg-main);"><td colspan="5" style="text-align:right;padding:6px 8px;white-space:nowrap;">GENEL TOPLAM:</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${t.genelTutar}</td></tr>
+                                            <tr class="detail-summary-row" style="border-top:2px solid var(--border-color); font-weight:600;"><td colspan="5" style="text-align:right;padding:6px 8px;white-space:nowrap;">ARA TOPLAM:</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${(t.araTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} \u20BA</td></tr>
+                                            <tr class="detail-summary-row" style="font-weight:600;"><td colspan="5" style="text-align:right;padding:6px 8px;white-space:nowrap;">TOPLAM K.D.V:</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${(t.kdvTutar || 0).toLocaleString('tr-TR', {minimumFractionDigits:2})} \u20BA</td></tr>
+                                            <tr class="detail-summary-row" style="font-weight:700; color:var(--accent-red); background:var(--bg-main);"><td colspan="5" style="text-align:right;padding:6px 8px;white-space:nowrap;">GENEL TOPLAM:</td><td style="text-align:right;padding:6px 8px;white-space:nowrap;">${t.genelTutar}</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
