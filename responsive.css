@@ -174,7 +174,7 @@
 
             /* Piyasa Fiyatlari mobil */
             #piyasa-fiyatlari-page .col > div[style*="display: flex"] { flex-wrap:wrap; }
-            #piyasa-fiyatlari-page .col > div[style*="display: flex"] > select { flex:0 0 100%; width:100%; }
+            #piyasa-fiyatlari-page .col > div[style*="display: flex"] > .cs-wrapper { flex:0 0 100%; width:100%; }
             #piyasa-fiyatlari-page .col > div[style*="display: flex"] > button { flex:1; text-align:center; }
             #piyasaGruplanmisTablolarKonteyner .app-table { overflow-x:hidden; white-space:normal; }
             #piyasaGruplanmisTablolarKonteyner .app-table thead { display:none; }
@@ -732,7 +732,7 @@
         html body.mobile-view #teklif-liste-page .tl-table tbody td[data-label="İş / Proje"] { font-size:13px !important; }
         /* ========== PIYASA FIYATLARI MOBIL ========== */
         html body.mobile-view #piyasa-fiyatlari-page .col > div[style*="display: flex"] { flex-wrap:wrap !important; }
-        html body.mobile-view #piyasa-fiyatlari-page .col > div[style*="display: flex"] > select { flex:0 0 100% !important; width:100% !important; }
+        html body.mobile-view #piyasa-fiyatlari-page .col > div[style*="display: flex"] > .cs-wrapper { flex:0 0 100% !important; width:100% !important; }
         html body.mobile-view #piyasa-fiyatlari-page .col > div[style*="display: flex"] > button { flex:1 !important; text-align:center !important; }
         html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table { overflow-x:hidden !important; white-space:normal !important; }
         html body.mobile-view #piyasaGruplanmisTablolarKonteyner .app-table thead { display:none !important; }
