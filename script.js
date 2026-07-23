@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.39.0';
+﻿        var APP_VERSION = 'V1.39.1';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -304,9 +304,7 @@ function gorevMailGonder(gorev) {
             origSetItem(key, value);
             if (fsSyncDenetle(key) && !fsSyncInProgress) {
                 if (oldVal !== value) {
-                    var v = (parseInt(localStorage.getItem("tm_fs_ver")) || 0) + 1;
-                    origSetItem("tm_fs_ver", String(v));
-                    origSetItem("tm_ver_" + key, String(v));
+                    origSetItem("tm_ver_" + key, String(Date.now()));
                 }
                 fsDirtyKeys[key] = true;
                 if (fsReady) { fsSync(); }
