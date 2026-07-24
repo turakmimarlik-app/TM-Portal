@@ -165,7 +165,7 @@ function gorevMailGonder(gorev) {
         function fsDosyaIslem(k, raw) {
             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
             var curVal = localStorage.getItem(k);
-            if (curVal !== strVal && (!fsDirtyKeys[k] || (fsDirtyKeys[k] && fsDirtyTimes[k] && Date.now() - fsDirtyTimes[k] > 10000))) {
+            if (curVal !== strVal && (!fsLastLocalWrite[k] || Date.now() - fsLastLocalWrite[k] > 3000)) {
                 try { origSetItem(k, strVal); } catch(e) { console.error("Firebase sync local set hatasi:", e); }
                 if (k === "tm_hesap_takip_db") { setTimeout(function(){ try { var ap=document.querySelector('.page.active'); if(ap&&ap.id==='hesap-takip-page') htSayfayiYukle(); } catch(e){} }, 100); }
                 if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") return "logo";
@@ -210,9 +210,8 @@ function gorevMailGonder(gorev) {
                 if (logoChanged) { sidebardaLogoyuGoster(); }
                 if (anyChanged) { yenileAktifSayfa(); }
                 fsReady = true;
+                fsDinle();
             }).catch(function(e) { console.warn('fsLoad', e.message); });
-            // Gerçek zamanlı Firestore dinleyicisi (ilk yükleme başarısız olsa bile başlat)
-            try { fsDinle(); } catch(e) { console.error('fsDinle baslatma hatasi:', e); }
             // Kirli anahtarları periyodik yeniden dene (başarısız yazmalar için)
             setInterval(function() {
                 if (!fsReady) return;
@@ -242,7 +241,7 @@ function gorevMailGonder(gorev) {
             }, function(e) { console.warn('fsDinle', e.message); });
         }
         var fsDirtyKeys = {};
-        var fsDirtyTimes = {};
+        var fsLastLocalWrite = {};
         var fsReady = false;
         var fsSentKeys = {};
         // fsUnsubscribe, yukarida 'let' ile tanimlandi (satir 143)
@@ -257,7 +256,7 @@ function gorevMailGonder(gorev) {
                 batch.set(fdb.collection(FS_COLLECTION).doc(k), { data: val }, { merge: true });
             });
             batch.commit().then(function() {
-                dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; delete fsDirtyTimes[k]; });
+                dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; });
             }).catch(function(e){ console.error('fsSync write error', e); if (typeof tmNotify === 'function') tmNotify("Firestore sync hatası: " + e.message, "error"); });
         }
         var origSetItem = localStorage.setItem.bind(localStorage);
@@ -265,7 +264,7 @@ function gorevMailGonder(gorev) {
             origSetItem(key, value);
             if (fsSyncDenetle(key)) {
                 fsDirtyKeys[key] = true;
-                fsDirtyTimes[key] = Date.now();
+                fsLastLocalWrite[key] = Date.now();
                 if (fsReady) { fsSync(); }
             }
         };
