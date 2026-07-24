@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.38.0';
+﻿        var APP_VERSION = 'V1.37.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -165,7 +165,7 @@ function gorevMailGonder(gorev) {
         function fsDosyaIslem(k, raw) {
             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
             var curVal = localStorage.getItem(k);
-            if (curVal !== strVal && (!fsLastLocalWrite[k] || Date.now() - fsLastLocalWrite[k] > 3000)) {
+            if (curVal !== strVal && !fsDirtyKeys[k]) {
                 try { origSetItem(k, strVal); } catch(e) { console.error("Firebase sync local set hatasi:", e); }
                 if (k === "tm_hesap_takip_db") { setTimeout(function(){ try { var ap=document.querySelector('.page.active'); if(ap&&ap.id==='hesap-takip-page') htSayfayiYukle(); } catch(e){} }, 100); }
                 if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") return "logo";
@@ -210,41 +210,37 @@ function gorevMailGonder(gorev) {
                 if (logoChanged) { sidebardaLogoyuGoster(); }
                 if (anyChanged) { yenileAktifSayfa(); }
                 fsReady = true;
-                fsDinle();
             }).catch(function(e) { console.warn('fsLoad', e.message); });
-            // Kirli anahtarları periyodik yeniden dene (başarısız yazmalar için)
-            setInterval(function() {
-                if (!fsReady) return;
-                var kirliler = Object.keys(fsDirtyKeys);
-                if (kirliler.length > 0) fsSync();
-            }, 15000);
+            // Periyodik kontrol
+            setInterval(function() { fsPollSdk(); }, 30000);
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) fsPollSdk();
+            });
+            window.addEventListener('focus', function() {
+                setTimeout(fsPollSdk, 100);
+            });
+            setTimeout(fsPollSdk, 1000);
         }
-        function fsDinle() {
-            if (!fdb || fsUnsubscribe) return;
-            fsUnsubscribe = fdb.collection(FS_COLLECTION).onSnapshot(function(snap) {
+        function fsPollSdk() {
+            fdb.collection(FS_COLLECTION).get({ source: 'server' }).then(function(snap) {
                 var logoChanged = false;
                 var anyChanged = false;
-                snap.docChanges().forEach(function(change) {
-                    if (change.type === 'added' || change.type === 'modified') {
-                        var doc = change.doc;
-                        var docId = doc.id;
-                        if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
-                        var data = doc.data();
-                        if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
-                        var sonuc = fsDosyaIslem(docId, data.data);
-                        if (sonuc === "logo") logoChanged = true;
-                        else if (sonuc === "data") anyChanged = true;
-                    }
+                snap.forEach(function(doc) {
+                    var docId = doc.id;
+                    if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
+                    var data = doc.data();
+                    if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
+                    var sonuc = fsDosyaIslem(docId, data.data);
+                    if (sonuc === "logo") logoChanged = true;
+                    else if (sonuc === "data") anyChanged = true;
                 });
                 if (logoChanged) { sidebardaLogoyuGoster(); }
                 if (anyChanged) { yenileAktifSayfa(); }
-            }, function(e) { console.warn('fsDinle', e.message); });
+            }).catch(function(e) { console.warn('fsPollSdk', e.message); });
         }
         var fsDirtyKeys = {};
-        var fsLastLocalWrite = {};
         var fsReady = false;
         var fsSentKeys = {};
-        var fsUnsubscribe = null;
         function fsSync() {
             if (!fsReady || !fdb) return;
             var dirtyList = Object.keys(fsDirtyKeys);
@@ -264,7 +260,6 @@ function gorevMailGonder(gorev) {
             origSetItem(key, value);
             if (fsSyncDenetle(key)) {
                 fsDirtyKeys[key] = true;
-                fsLastLocalWrite[key] = Date.now();
                 if (fsReady) { fsSync(); }
             }
         };
