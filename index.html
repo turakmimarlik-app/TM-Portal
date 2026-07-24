@@ -19,12 +19,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.37.5">
-    <link rel="stylesheet" href="pdf.css?v=1.37.5">
-    <link rel="stylesheet" href="responsive.css?v=1.37.5">
+    <link rel="stylesheet" href="style.css?v=1.38.0">
+    <link rel="stylesheet" href="pdf.css?v=1.38.0">
+    <link rel="stylesheet" href="responsive.css?v=1.38.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="version.js?v=1.37.5"></script>
-    <script>console.log("TM-Portal V1.37.5");(function(){var v="V1.37.5";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
+    <script src="version.js?v=1.38.0"></script>
+    <script>console.log("TM-Portal V1.38.0");(function(){var v="V1.38.0";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
 </head>
 <body>
     <div id="loginSection" class="login-wrapper">
@@ -1218,10 +1218,11 @@
                 <div class="it-stats-bar">
                     <div class="it-stats-group">
                         <div class="it-stats-card it-stats-bekleyen">
-                            <div class="it-stats-top">
+                            <div class="it-stats-header">
                                 <span class="it-stats-label"><i class="fa-solid fa-clock"></i> BEKLEYEN İŞLER</span>
                                 <span class="it-stats-sayi" id="itBekleyenToplam">0</span>
                             </div>
+                            <div class="it-stats-divider"></div>
                             <div class="it-stats-alt">
                                 <span>Taslak: <strong id="itBekleyenTaslak">0</strong></span>
                                 <span>Uygulama Proje: <strong id="itBekleyenUP">0</strong></span>
@@ -1232,10 +1233,11 @@
                     </div>
                     <div class="it-stats-group">
                         <div class="it-stats-card it-stats-aktif">
-                            <div class="it-stats-top">
+                            <div class="it-stats-header">
                                 <span class="it-stats-label"><i class="fa-solid fa-thumbtack"></i> AKTİF İŞLER</span>
                                 <span class="it-stats-sayi" id="itAktifToplam">0</span>
                             </div>
+                            <div class="it-stats-divider"></div>
                             <div class="it-stats-alt">
                                 <span>Taslak: <strong id="itAktifTaslak">0</strong></span>
                                 <span>Uygulama Proje: <strong id="itAktifUP">0</strong></span>
@@ -1246,10 +1248,11 @@
                     </div>
                     <div class="it-stats-group">
                         <div class="it-stats-card it-stats-tamam">
-                            <div class="it-stats-top">
+                            <div class="it-stats-header">
                                 <span class="it-stats-label"><i class="fa-solid fa-circle-check"></i> TAMAMLANAN İŞLER</span>
                                 <span class="it-stats-sayi" id="itTamamToplam">0</span>
                             </div>
+                            <div class="it-stats-divider"></div>
                             <div class="it-stats-alt">
                                 <span>Taslak: <strong id="itTamamTaslak">0</strong></span>
                                 <span>Uygulama Proje: <strong id="itTamamUP">0</strong></span>
@@ -1271,7 +1274,6 @@
                     <div class="it-bolum-icerik" id="itBekleyenBolumIcerik">
                         <div class="it-sekme-bar" id="itBekleyenSekmeBar">
                             <button class="it-sekme it-sekme-aktif" data-tur="Taslak" onclick="itBekleyenSekmeDegistir('Taslak')">Taslak</button>
-                            <button class="it-sekme" data-tur="Uygulama Proje" onclick="itBekleyenSekmeDegistir('Uygulama Proje')">Uygulama Proje</button>
                             <button class="it-sekme" data-tur="3B Modelleme ve Tasarım" onclick="itBekleyenSekmeDegistir('3B Modelleme ve Tasarım')">3B Modelleme ve Tasarım</button>
                             <button class="it-sekme" data-tur="Diğer" onclick="itBekleyenSekmeDegistir('Diğer')">Diğer</button>
                         </div>
@@ -1968,7 +1970,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.37.5"></script>
+    <script src="script.js?v=1.38.0"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
