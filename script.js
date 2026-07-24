@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.37.1';
+﻿        var APP_VERSION = 'V1.37.2';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -10149,6 +10149,7 @@ function itDurumMetni(o) {
             data.forEach(function(job){
                 if (job.tahsilatOnayi === undefined) job.tahsilatOnayi = false;
                 if (job.ruhsatOnayi === undefined) job.ruhsatOnayi = false;
+                if (job.beklemede === undefined) job.beklemede = false;
                 if (job.pafta === undefined) job.pafta = "";
                 if (job.ada === undefined) job.ada = "";
                 (job.ortaklar||[]).forEach(function(o){
@@ -10307,7 +10308,7 @@ function itDurumMetni(o) {
                 var id = el.id.replace("itDetayRow_","").replace("itTamDetayRow_","");
                 if (id) acikIds.push(id);
             });
-            var liste = itDbYukle().filter(function(x){return x.tur === tur && !x.tamamlandi;});
+            var liste = itDbYukle().filter(function(x){return x.tur === tur && !x.tamamlandi && !x.beklemede;});
             var arama = (document.getElementById("itAktifAra")||{}).value||"";
             liste = itFiltreVeSirala(liste, arama, itAktifSort);
             var konteyner = document.getElementById("itAktifKartlar");
@@ -10450,7 +10451,7 @@ function itDurumMetni(o) {
         function itGanttGoster() {
             var konteyner = document.getElementById("itGanttContainer");
             itOrnekIsEkle();
-            var liste = itDbYukle().filter(function(x){return !x.tamamlandi;});
+            var liste = itDbYukle().filter(function(x){return !x.tamamlandi && !x.beklemede;});
             if (!liste.length) { konteyner.innerHTML = '<div class="it-gantt-notice"><div style="font-size:32px;margin-bottom:6px;"><i class="fa-solid fa-chart-simple"></i></div>Gantt şeması gösterilecek aktif iş bulunmamaktadır.<p>Yeni iş ekleyerek başlayın.</p></div>'; return; }
             var aylar = ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
             var minDate = Infinity, maxDate = -Infinity;
@@ -10553,7 +10554,89 @@ function itDurumMetni(o) {
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
         }
-        function itAktifSortGuncelle(col) {
+        function itBekleyenGoster() {
+            var acikIds = [];
+            document.querySelectorAll(".it-bek-row-detail.open").forEach(function(el) {
+                var id = el.id.replace("itBekDetayRow_","");
+                if (id) acikIds.push(id);
+            });
+            var liste = itDbYukle().filter(function(x){return x.beklemede && !x.tamamlandi;});
+            var arama = (document.getElementById("itBekleyenAra")||{}).value||"";
+            if (arama) {
+                var q = itTurkcely(arama.toLowerCase());
+                liste = liste.filter(function(x){
+                    return itTurkcely((x.isAdi||"").toLowerCase()).indexOf(q) !== -1 ||
+                           itTurkcely((x.firma||"").toLowerCase()).indexOf(q) !== -1 ||
+                           itTurkcely(((x.pafta||"") + " " + (x.ada||"") + " " + (x.parsel||"")).toLowerCase()).indexOf(q) !== -1;
+                });
+            }
+            liste.sort(function(a,b){ return b.id - a.id; });
+            var konteyner = document.getElementById("itBekleyenKartlar");
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-clock"></i>','Bekleyen iş bulunmamaktadır.','Yeni eklenen işler burada listelenecek.'); return; }
+            var h = '<div class="it-tablo-wrapper"><table class="it-tablo"><thead><tr>' +
+                '<th style="width:32px;"></th>' +
+                '<th style="width:40px;">#</th>' +
+                '<th>İş Adı</th>' +
+                '<th>Firma</th>' +
+                '<th>PAFTA/ADA/PARSEL</th>' +
+                '<th>Başlama</th>' +
+                '<th style="width:180px;"></th>' +
+                '</tr></thead><tbody>';
+            liste.forEach(function(is, idx) {
+                var sira = idx + 1;
+                var acik = acikIds.indexOf(String(is.id)) >= 0;
+                h += '<tr class="it-row-clickable" onclick="itBekleyenRowToggle(' + is.id + ')">' +
+                    '<td style="text-align:center;"><span class="it-expand-icon" id="itBekExpandIcon_' + is.id + '" style="font-size:10px;color:var(--text-light);user-select:none;">' + (acik ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-right"></i>') + '</span></td>' +
+                    '<td style="text-align:center;font-weight:700;color:var(--text-light);font-size:12px;">' + sira + '</td>' +
+                    '<td style="font-weight:600;">' + esc(is.isAdi || "İSİMSİZ") + '</td>' +
+                    '<td style="color:var(--text-dark);">' + esc(is.firma || "-") + '</td>' +
+                    '<td style="color:var(--text-dark);">' + esc(is.pafta || is.ada || is.parsel ? [is.pafta, is.ada, is.parsel].filter(Boolean).join("/") : "-") + '</td>' +
+                    '<td>' + (is.tarih ? tarihStr(is.tarih) : "-") + '</td>' +
+                    '<td><div style="display:flex;gap:6px;">' +
+                    '<button class="it-btn-basla" onclick="event.stopPropagation();itBekleyenIsBasla(' + is.id + ')"><i class="fa-solid fa-play"></i> İşe Başla</button>' +
+                    '<button class="it-btn-sil" onclick="event.stopPropagation();itSil(' + is.id + ')"><i class="fa-solid fa-trash-can"></i> Sil</button>' +
+                    '</div></td>' +
+                    '</tr>' +
+                    '<tr class="it-bek-row-detail' + (acik ? ' open' : '') + '" id="itBekDetayRow_' + is.id + '">' +
+                    '<td colspan="7"><div class="it-detay-panel" style="border-left-color:#78909C;"><div class="it-detay-ortaklar" style="margin-top:0;">' +
+                    '<div class="it-not-panel" style="border-color:#78909C;"><div style="padding:8px 12px;"><i class="fa-solid fa-thumbtack"></i> NOT</div></div>' +
+                    '<div style="display:flex;gap:6px;margin-top:4px;"><textarea id="itBekNot_' + is.id + '" rows="2" style="flex:1;padding:8px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-main);font-size:13px;text-transform:uppercase;resize:none;overflow:hidden;line-height:1.5;font-family:inherit;" oninput="this.style.height=\'\';this.style.height=this.scrollHeight+\'px\'">' + esc(is.not||"") + '</textarea>' +
+                    '<button class="btn btn-save-green btn-sm" onclick="event.stopPropagation();itBekleyenNotKaydet(' + is.id + ')" style="align-self:flex-end;"><i class="fa-solid fa-floppy-disk"></i></button></div>' +
+                    '</div></div></td></tr>';
+            });
+            h += '</tbody></table></div>';
+            konteyner.innerHTML = h;
+        }
+
+        function itBekleyenRowToggle(id) {
+            var row = document.getElementById("itBekDetayRow_" + id);
+            var icon = document.getElementById("itBekExpandIcon_" + id);
+            if (row) {
+                row.classList.toggle("open");
+                if (icon) icon.innerHTML = row.classList.contains("open") ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-right"></i>';
+            }
+        }
+
+        function itBekleyenIsBasla(id) {
+            var liste = itDbYukle();
+            var idx = liste.findIndex(function(x){return x.id === id;});
+            if (idx === -1) return;
+            liste[idx].beklemede = false;
+            itDbKaydet(liste);
+            itGoster();
+            tmNotify("İş aktif işlere taşındı.", "success");
+            aktiviteEkle("İş başlatıldı: " + (liste[idx].isAdi || ""), "İş Takibi");
+        }
+
+        function itBekleyenNotKaydet(id) {
+            var not = document.getElementById("itBekNot_" + id).value.trim().toUpperCase();
+            var liste = itDbYukle();
+            var idx = liste.findIndex(function(x){return x.id === id;});
+            if (idx === -1) return;
+            liste[idx].not = not;
+            itDbKaydet(liste);
+            tmNotify("Not kaydedildi.", "success");
+        }
             if (itAktifSort.col === col) { itAktifSort.dir = itAktifSort.dir === "asc" ? "desc" : "asc"; }
             else { itAktifSort.col = col; itAktifSort.dir = "asc"; }
             itAktifKartlariGoster(document.querySelector("#itAktifSekmeBar .it-sekme-aktif").getAttribute("data-tur"));
@@ -10592,14 +10675,18 @@ function itDurumMetni(o) {
             var sayac = document.getElementById("itSayac");
             var liste = itDbYukle();
             if (sayac) sayac.innerText = liste.length + " kayıt";
-            var aktif = liste.filter(function(x){return !x.tamamlandi;});
+            var bekleyen = liste.filter(function(x){return x.beklemede && !x.tamamlandi;});
+            var aktif = liste.filter(function(x){return !x.beklemede && !x.tamamlandi;});
             var tamam = liste.filter(function(x){return x.tamamlandi;});
             var turler = ["Taslak","Uygulama Proje","3B Modelleme ve Tasarım","Diğer"];
+            var bekleyenIds = ["itBekleyenTaslak","itBekleyenUP","itBekleyen3B","itBekleyenDiger"];
             var aktifIds = ["itAktifTaslak","itAktifUP","itAktif3B","itAktifDiger"];
             var tamamIds = ["itTamamTaslak","itTamamUP","itTamam3B","itTamamDiger"];
+            document.getElementById("itBekleyenToplam").innerText = bekleyen.length;
             document.getElementById("itAktifToplam").innerText = aktif.length;
             document.getElementById("itTamamToplam").innerText = tamam.length;
             turler.forEach(function(t,i){
+                document.getElementById(bekleyenIds[i]).innerText = bekleyen.filter(function(x){return x.tur===t;}).length;
                 document.getElementById(aktifIds[i]).innerText = aktif.filter(function(x){return x.tur===t;}).length;
                 document.getElementById(tamamIds[i]).innerText = tamam.filter(function(x){return x.tur===t;}).length;
             });
@@ -10612,6 +10699,7 @@ function itDurumMetni(o) {
             var acikOrtakEkleIds = [];
             document.querySelectorAll("[id^='itOrtakEkleBody_']").forEach(function(el){ if (el.style.display !== 'none') acikOrtakEkleIds.push(el.id); });
             itSayaciGuncelle();
+            itBekleyenGoster();
             var aktifTur = document.querySelector("#itAktifSekmeBar .it-sekme-aktif");
             itAktifKartlariGoster(aktifTur ? aktifTur.getAttribute("data-tur") : "Taslak");
             var tamamlananTur = document.querySelector("#itTamamlananSekmeBar .it-sekme-aktif");
@@ -11263,7 +11351,7 @@ function itDurumMetni(o) {
                 if (idx !== -1) { liste[idx].tur = tur; liste[idx].isAdi = isAdi; liste[idx].firma = firma; liste[idx].pafta = pafta; liste[idx].ada = ada; liste[idx].parsel = parsel; liste[idx].tarih = tarih; liste[idx].not = not; }
             } else {
                 var maxId = liste.reduce(function(m,x){return Math.max(m,x.id);},0);
-                liste.push({ id:maxId+1, tur:tur, isAdi:isAdi, firma:firma, pafta:pafta, ada:ada, parsel:parsel, tarih:tarih, not:not, tamamlandi:false, tahsilatOnayi:false, ruhsatOnayi:false, bitisTarihi:"", ortaklar:[] });
+                liste.push({ id:maxId+1, tur:tur, isAdi:isAdi, firma:firma, pafta:pafta, ada:ada, parsel:parsel, tarih:tarih, not:not, tamamlandi:false, beklemede:true, tahsilatOnayi:false, ruhsatOnayi:false, bitisTarihi:"", ortaklar:[] });
             }
             itDbKaydet(liste);
             tmLoadingGizle();
