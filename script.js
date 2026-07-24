@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.37.5';
+﻿        var APP_VERSION = 'V1.38.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -10177,11 +10177,13 @@ function itDurumMetni(o) {
             document.querySelectorAll("#itTamamlananSekmeBar .it-sekme").forEach(function(b){b.classList.remove("it-sekme-aktif");});
             var btn = document.querySelector('#itTamamlananSekmeBar .it-sekme[data-tur="'+tur+'"]');
             if (btn) btn.classList.add("it-sekme-aktif");
+            itTamamPage = 0;
             itTamamlananTablosuGoster(tur);
         }
 
         var itAktifSort = { col:"id", dir:"desc" };
         var itTamamlananSort = { col:"id", dir:"desc" };
+        var itTamamPage = 0;
 
         function itSortCompare(a, b, col, dir) {
             var va = col === "id" ? a.id : (a[col]||"");
@@ -10367,6 +10369,12 @@ function itDurumMetni(o) {
             liste = itFiltreVeSirala(liste, arama, itTamamlananSort);
             var konteyner = document.getElementById("itTamamlananTablo");
             if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-solid fa-check"></i>','Bu bölümde tamamlanan iş bulunmamaktadır.','Tamamlanan iş kayıtları burada görüntülenecek.'); return; }
+            var kSayfa = 10;
+            var maxPage = Math.ceil(liste.length / kSayfa) - 1;
+            if (itTamamPage > maxPage) itTamamPage = 0;
+            var basla = itTamamPage * kSayfa;
+            var bitir = Math.min(basla + kSayfa, liste.length);
+            var sayfaListe = liste.slice(basla, bitir);
             var isTaslak = tur === "Taslak";
             var isUygulamaProje = tur === "Uygulama Proje";
             var showActionCol = isTaslak || isUygulamaProje;
@@ -10375,12 +10383,12 @@ function itDurumMetni(o) {
                 '<th></th><th class="th-sortable" onclick="itTamamlananSortGuncelle(\'id\')">#<span id="itTamSortId">'+itSortOk("id",itTamamlananSort)+'</span></th><th>İş Adı</th><th>Firma</th><th>PAFTA/ADA/PARSEL</th><th class="th-sortable" onclick="itTamamlananSortGuncelle(\'tarih\')">Başlama<span id="itTamSortTarih">'+itSortOk("tarih",itTamamlananSort)+'</span></th><th class="th-sortable" onclick="itTamamlananSortGuncelle(\'bitisTarihi\')">Bitiş<span id="itTamSortBitis">'+itSortOk("bitisTarihi",itTamamlananSort)+'</span></th>' +
                 (showActionCol ? '<th></th>' : '') +
                 '</tr></thead><tbody>';
-            liste.forEach(function(is, idx) {
-                var sira = itTamamlananSort.dir === "asc" ? idx+1 : liste.length-idx;
+            sayfaListe.forEach(function(is, idx) {
+                var sira = itTamamlananSort.dir === "asc" ? basla+idx+1 : basla+idx+1;
                 var acik = acikIds.indexOf(String(is.id)) >= 0;
                 h += '<tr class="it-row-clickable" onclick="itRowToggle(' + is.id + ')">' +
                     '<td style="width:28px;text-align:center;"><span class="it-expand-icon" id="itTamExpandIcon_' + is.id + '">' + (acik ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-right"></i>') + '</span></td>' +
-                    '<td style="text-align:center;font-weight:700;color:var(--text-light);font-size:12px;">' + sira + '</td>' +
+                    '<td style="text-align:center;font-weight:700;color:var(--text-light);font-size:12px;">' + (basla + idx + 1) + '</td>' +
                     '<td style="font-weight:600;">' + esc(is.isAdi || "İSİMSİZ") + '</td>' +
                     '<td>' + esc(is.firma || "-") + '</td>' +
                     '<td>' + esc(is.pafta || is.ada || is.parsel ? [is.pafta, is.ada, is.parsel].filter(Boolean).join("/") : "-") + '</td>' +
@@ -10399,6 +10407,15 @@ function itDurumMetni(o) {
                     '</div></div></td></tr>';
             });
             h += '</tbody></table>';
+            if (maxPage > 0) {
+                h += '<div class="it-sayfala">';
+                h += '<button class="it-sayfala-btn" onclick="itTamamPage=' + (itTamamPage-1) + ';itTamamlananTablosuGoster(\'' + tur + '\')" ' + (itTamamPage <= 0 ? 'disabled' : '') + '><i class="fa-solid fa-chevron-left"></i></button>';
+                for (var p = 0; p <= maxPage; p++) {
+                    h += '<button class="it-sayfala-btn' + (p === itTamamPage ? ' it-sayfala-aktif' : '') + '" onclick="itTamamPage=' + p + ';itTamamlananTablosuGoster(\'' + tur + '\')">' + (p+1) + '</button>';
+                }
+                h += '<button class="it-sayfala-btn" onclick="itTamamPage=' + (itTamamPage+1) + ';itTamamlananTablosuGoster(\'' + tur + '\')" ' + (itTamamPage >= maxPage ? 'disabled' : '') + '><i class="fa-solid fa-chevron-right"></i></button>';
+                h += '</div>';
+            }
             konteyner.innerHTML = h;
         }
 
@@ -10655,6 +10672,7 @@ function itDurumMetni(o) {
         function itTamamlananSortGuncelle(col) {
             if (itTamamlananSort.col === col) { itTamamlananSort.dir = itTamamlananSort.dir === "asc" ? "desc" : "asc"; }
             else { itTamamlananSort.col = col; itTamamlananSort.dir = "asc"; }
+            itTamamPage = 0;
             itTamamlananTablosuGoster(document.querySelector("#itTamamlananSekmeBar .it-sekme-aktif").getAttribute("data-tur"));
         }
 
