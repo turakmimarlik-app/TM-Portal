@@ -244,7 +244,7 @@ function gorevMailGonder(gorev) {
         var fsLastLocalWrite = {};
         var fsReady = false;
         var fsSentKeys = {};
-        // fsUnsubscribe, yukarida 'let' ile tanimlandi (satir 143)
+        var fsUnsubscribe = null;
         function fsSync() {
             if (!fsReady || !fdb) return;
             var dirtyList = Object.keys(fsDirtyKeys);
@@ -343,8 +343,6 @@ function gorevMailGonder(gorev) {
             }
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
-            // Güvenlik: 4 saniye sonra loading ekranını zorla kapat (Firestore gecikmelerine karşı)
-            setTimeout(function() { try { var lo = document.getElementById('tmLoadingOverlay'); if(lo) lo.style.display = 'none'; } catch(e){} }, 4000);
             function overlayGizle() { var lo = document.getElementById('tmLoadingOverlay'); if(lo) lo.style.display = 'none'; }
             function oturumuRestoreEt(u) {
                 document.getElementById("loginSection").style.display = "none";
