@@ -256,7 +256,7 @@ function gorevMailGonder(gorev) {
                 fdb.collection(FS_COLLECTION).doc(k).set({ data: val }, { merge: true }).then(function() {
                     delete fsDirtyKeys[k];
                     delete fsDirtyTimes[k];
-                }).catch(function(e){ console.error('fsSync error ' + k, e.message); if (k === dirtyList[dirtyList.length-1] && typeof tmNotify === 'function') tmNotify("Senkronizasyon hatası, yeniden deneniyor...", "error"); });
+                }).catch(function(e){ console.error('fsSync error ' + k, e.message); });
             });
         }
         var origSetItem = localStorage.setItem.bind(localStorage);
