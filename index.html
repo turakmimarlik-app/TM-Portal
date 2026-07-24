@@ -21,10 +21,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="style.css?v=1.37.0">
     <link rel="stylesheet" href="pdf.css?v=1.37.0">
-    <link rel="stylesheet" href="responsive.css?v=1.37.1">
+    <link rel="stylesheet" href="responsive.css?v=1.37.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="version.js?v=1.37.1"></script>
-    <script>console.log("TM-Portal V1.37.1");(function(){var v="V1.37.1";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
+    <script src="version.js?v=1.37.2"></script>
+    <script>console.log("TM-Portal V1.37.2");(function(){var v="V1.37.2";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
 </head>
 <body>
     <div id="loginSection" class="login-wrapper">
@@ -1217,6 +1217,20 @@
 
                 <div class="it-stats-bar">
                     <div class="it-stats-group">
+                        <div class="it-stats-card it-stats-bekleyen">
+                            <div class="it-stats-top">
+                                <span class="it-stats-label"><i class="fa-solid fa-clock"></i> BEKLEYEN İŞLER</span>
+                                <span class="it-stats-sayi" id="itBekleyenToplam">0</span>
+                            </div>
+                            <div class="it-stats-alt">
+                                <span>Taslak: <strong id="itBekleyenTaslak">0</strong></span>
+                                <span>Uygulama Proje: <strong id="itBekleyenUP">0</strong></span>
+                                <span>3B Modelleme: <strong id="itBekleyen3B">0</strong></span>
+                                <span>Diğer: <strong id="itBekleyenDiger">0</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="it-stats-group">
                         <div class="it-stats-card it-stats-aktif">
                             <div class="it-stats-top">
                                 <span class="it-stats-label"><i class="fa-solid fa-thumbtack"></i> AKTİF İŞLER</span>
@@ -1247,6 +1261,17 @@
                 </div>
 
                 <button class="it-btn-yeni-is" onclick="itFormAc()"><i class="fa-solid fa-plus"></i> Yeni İş Ekle</button>
+
+                <!-- Bekleyen İşler -->
+                <div class="it-section-group" id="itBekleyenBolum">
+                    <h3 class="it-bolum-baslik-bekleyen" onclick="itBolumToggle('itBekleyenBolum')">
+                        <span><span class="it-bolum-ok" id="itBekleyenBolumOk">▼</span> <i class="fa-solid fa-clock"></i> Bekleyen İşler</span>
+                        <input type="text" id="itBekleyenAra" class="search-box" placeholder="Ara..." onclick="event.stopPropagation()" oninput="this.value=this.value.toUpperCase();itBekleyenGoster()" style="margin:0;margin-left:auto;max-width:260px;padding:5px 10px;font-size:12px;height:auto;text-transform:uppercase;">
+                    </h3>
+                    <div class="it-bolum-icerik" id="itBekleyenBolumIcerik">
+                        <div id="itBekleyenKartlar"></div>
+                    </div>
+                </div>
 
                 <!-- Aktif İşler -->
                 <div class="it-section-group" id="itAktifBolum">
@@ -1937,7 +1962,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.37.1"></script>
+    <script src="script.js?v=1.37.2"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
