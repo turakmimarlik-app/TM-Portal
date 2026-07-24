@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.41.0';
+﻿        var APP_VERSION = 'V1.37.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -165,7 +165,7 @@ function gorevMailGonder(gorev) {
         function fsDosyaIslem(k, raw) {
             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
             var curVal = localStorage.getItem(k);
-            if (curVal !== strVal) {
+            if (curVal !== strVal && !fsDirtyKeys[k]) {
                 try { origSetItem(k, strVal); } catch(e) { console.error("Firebase sync local set hatasi:", e); }
                 if (k === "tm_hesap_takip_db") { setTimeout(function(){ try { var ap=document.querySelector('.page.active'); if(ap&&ap.id==='hesap-takip-page') htSayfayiYukle(); } catch(e){} }, 100); }
                 if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") return "logo";
@@ -211,60 +211,55 @@ function gorevMailGonder(gorev) {
                 if (anyChanged) { yenileAktifSayfa(); }
                 fsReady = true;
             }).catch(function(e) { console.warn('fsLoad', e.message); });
-            // Gerçek zamanlı Firestore dinleyicisi (ilk yükleme başarısız olsa bile başlat)
-            try { fsDinle(); } catch(e) { console.error('fsDinle baslatma hatasi:', e); }
-            // Kirli anahtarları periyodik yeniden dene (başarısız yazmalar için)
-            setInterval(function() {
-                if (!fsReady) return;
-                var kirliler = Object.keys(fsDirtyKeys);
-                if (kirliler.length > 0) fsSync();
-            }, 5000);
+            // Periyodik kontrol
+            setInterval(function() { fsPollSdk(); }, 30000);
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) fsPollSdk();
+            });
+            window.addEventListener('focus', function() {
+                setTimeout(fsPollSdk, 100);
+            });
+            setTimeout(fsPollSdk, 1000);
         }
-        function fsDinle() {
-            if (!fdb || fsUnsubscribe) return;
-            fsUnsubscribe = fdb.collection(FS_COLLECTION).onSnapshot(function(snap) {
+        function fsPollSdk() {
+            fdb.collection(FS_COLLECTION).get({ source: 'server' }).then(function(snap) {
                 var logoChanged = false;
                 var anyChanged = false;
-                snap.docChanges().forEach(function(change) {
-                    if (change.type === 'added' || change.type === 'modified') {
-                        var doc = change.doc;
-                        var docId = doc.id;
-                        if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
-                        var data = doc.data();
-                        if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
-                        var sonuc = fsDosyaIslem(docId, data.data);
-                        if (sonuc === "logo") logoChanged = true;
-                        else if (sonuc === "data") anyChanged = true;
-                    }
+                snap.forEach(function(doc) {
+                    var docId = doc.id;
+                    if (docId === 'all_data' || docId.indexOf('multi_logo_') === 0) return;
+                    var data = doc.data();
+                    if (!data || data.data === undefined || !fsSyncDenetle(docId)) return;
+                    var sonuc = fsDosyaIslem(docId, data.data);
+                    if (sonuc === "logo") logoChanged = true;
+                    else if (sonuc === "data") anyChanged = true;
                 });
                 if (logoChanged) { sidebardaLogoyuGoster(); }
                 if (anyChanged) { yenileAktifSayfa(); }
-            }, function(e) { console.warn('fsDinle', e.message); });
+            }).catch(function(e) { console.warn('fsPollSdk', e.message); });
         }
         var fsDirtyKeys = {};
-        var fsDirtyTimes = {};
         var fsReady = false;
         var fsSentKeys = {};
-        // fsUnsubscribe, yukarida 'let' ile tanimlandi (satir 143)
         function fsSync() {
             if (!fsReady || !fdb) return;
             var dirtyList = Object.keys(fsDirtyKeys);
             if (dirtyList.length === 0) return;
+            var batch = fdb.batch();
             dirtyList.forEach(function(k) {
                 var val;
                 try { val = JSON.parse(localStorage.getItem(k)); } catch(e) { val = localStorage.getItem(k); }
-                fdb.collection(FS_COLLECTION).doc(k).set({ data: val }, { merge: true }).then(function() {
-                    delete fsDirtyKeys[k];
-                    delete fsDirtyTimes[k];
-                }).catch(function(e){ console.error('fsSync error ' + k, e.message); if (k === dirtyList[dirtyList.length-1] && typeof tmNotify === 'function') tmNotify("Senkronizasyon hatası, yeniden deneniyor...", "error"); });
+                batch.set(fdb.collection(FS_COLLECTION).doc(k), { data: val }, { merge: true });
             });
+            batch.commit().then(function() {
+                dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; });
+            }).catch(function(e){ console.error('fsSync write error', e); if (typeof tmNotify === 'function') tmNotify("Firestore sync hatası: " + e.message, "error"); });
         }
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
             origSetItem(key, value);
             if (fsSyncDenetle(key)) {
                 fsDirtyKeys[key] = true;
-                fsDirtyTimes[key] = Date.now();
                 if (fsReady) { fsSync(); }
             }
         };
@@ -343,8 +338,6 @@ function gorevMailGonder(gorev) {
             }
 
             var oncekiKullanici = localStorage.getItem("tm_active_user");
-            // Güvenlik: 4 saniye sonra loading ekranını zorla kapat (Firestore gecikmelerine karşı)
-            setTimeout(function() { try { var lo = document.getElementById('tmLoadingOverlay'); if(lo) lo.style.display = 'none'; } catch(e){} }, 4000);
             function overlayGizle() { var lo = document.getElementById('tmLoadingOverlay'); if(lo) lo.style.display = 'none'; }
             function oturumuRestoreEt(u) {
                 document.getElementById("loginSection").style.display = "none";
