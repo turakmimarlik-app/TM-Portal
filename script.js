@@ -165,7 +165,7 @@ function gorevMailGonder(gorev) {
         function fsDosyaIslem(k, raw) {
             var strVal = (typeof raw === 'string') ? raw : JSON.stringify(raw);
             var curVal = localStorage.getItem(k);
-            if (curVal !== strVal) {
+            if (curVal !== strVal && (!fsDirtyKeys[k] || (fsDirtyKeys[k] && fsDirtyTimes[k] && Date.now() - fsDirtyTimes[k] > 10000))) {
                 try { origSetItem(k, strVal); } catch(e) { console.error("Firebase sync local set hatasi:", e); }
                 if (k === "tm_hesap_takip_db") { setTimeout(function(){ try { var ap=document.querySelector('.page.active'); if(ap&&ap.id==='hesap-takip-page') htSayfayiYukle(); } catch(e){} }, 100); }
                 if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") return "logo";
@@ -218,7 +218,7 @@ function gorevMailGonder(gorev) {
                 if (!fsReady) return;
                 var kirliler = Object.keys(fsDirtyKeys);
                 if (kirliler.length > 0) fsSync();
-            }, 5000);
+            }, 15000);
         }
         function fsDinle() {
             if (!fdb || fsUnsubscribe) return;
@@ -250,14 +250,15 @@ function gorevMailGonder(gorev) {
             if (!fsReady || !fdb) return;
             var dirtyList = Object.keys(fsDirtyKeys);
             if (dirtyList.length === 0) return;
+            var batch = fdb.batch();
             dirtyList.forEach(function(k) {
                 var val;
                 try { val = JSON.parse(localStorage.getItem(k)); } catch(e) { val = localStorage.getItem(k); }
-                fdb.collection(FS_COLLECTION).doc(k).set({ data: val }, { merge: true }).then(function() {
-                    delete fsDirtyKeys[k];
-                    delete fsDirtyTimes[k];
-                }).catch(function(e){ console.error('fsSync error ' + k, e.message); });
+                batch.set(fdb.collection(FS_COLLECTION).doc(k), { data: val }, { merge: true });
             });
+            batch.commit().then(function() {
+                dirtyList.forEach(function(k) { delete fsDirtyKeys[k]; delete fsDirtyTimes[k]; });
+            }).catch(function(e){ console.error('fsSync write error', e); if (typeof tmNotify === 'function') tmNotify("Firestore sync hatası: " + e.message, "error"); });
         }
         var origSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = function(key, value) {
