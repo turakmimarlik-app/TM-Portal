@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.37.3';
+﻿        var APP_VERSION = 'V1.37.4';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -10594,14 +10594,16 @@ function itDurumMetni(o) {
                     '<td>' + (is.tarih ? tarihStr(is.tarih) : "-") + '</td>' +
                     '<td><div style="display:flex;gap:6px;">' +
                     '<button class="it-btn-basla" onclick="event.stopPropagation();itBekleyenIsBasla(' + is.id + ')"><i class="fa-solid fa-play"></i> İşe Başla</button>' +
-                    '<button class="it-btn-sil" onclick="event.stopPropagation();itSil(' + is.id + ')"><i class="fa-solid fa-trash-can"></i> Sil</button>' +
+                    '<button class="it-btn-bek-sil" onclick="event.stopPropagation();itSil(' + is.id + ')"><i class="fa-solid fa-trash-can"></i></button>' +
                     '</div></td>' +
                     '</tr>' +
                     '<tr class="it-bek-row-detail' + (acik ? ' open' : '') + '" id="itBekDetayRow_' + is.id + '">' +
-                    '<td colspan="7"><div class="it-detay-panel" style="border-left-color:#78909C;"><div class="it-detay-ortaklar" style="margin-top:0;">' +
-                    '<div class="it-not-panel" style="border-color:#78909C;"><div style="padding:8px 12px;"><i class="fa-solid fa-thumbtack"></i> NOT</div></div>' +
-                    '<div style="display:flex;gap:6px;margin-top:4px;"><textarea id="itBekNot_' + is.id + '" rows="2" style="flex:1;padding:8px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-main);font-size:13px;text-transform:uppercase;resize:none;overflow:hidden;line-height:1.5;font-family:inherit;" oninput="this.style.height=\'\';this.style.height=this.scrollHeight+\'px\'">' + esc(is.not||"") + '</textarea>' +
-                    '<button class="btn btn-save-green btn-sm" onclick="event.stopPropagation();itBekleyenNotKaydet(' + is.id + ')" style="align-self:flex-end;"><i class="fa-solid fa-floppy-disk"></i></button></div>' +
+                    '<td colspan="7"><div class="it-detay-panel" style="border-left-color:#78909C;"><div style="margin:0;">' +
+                    '<div class="it-bek-not-alani">' +
+                    '<div class="it-bek-not-header"><i class="fa-regular fa-note-sticky"></i> NO₺AR</div>' +
+                    '<div class="it-bek-not-body"><textarea id="itBekNot_' + is.id + '" rows="2" oninput="this.style.height=\'\';this.style.height=this.scrollHeight+\'px\'">' + esc(is.not||"") + '</textarea></div>' +
+                    '<div class="it-bek-not-actions"><button class="it-btn-bek-kaydet" onclick="event.stopPropagation();itBekleyenNotKaydet(' + is.id + ')"><i class="fa-solid fa-floppy-disk"></i> KAYDET</button></div>' +
+                    '</div>' +
                     '</div></div></td></tr>';
             });
             h += '</tbody></table></div>';
