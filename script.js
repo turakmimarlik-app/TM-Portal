@@ -10637,6 +10637,7 @@ function itDurumMetni(o) {
             itDbKaydet(liste);
             tmNotify("Not kaydedildi.", "success");
         }
+        function itAktifSortGuncelle(col) {
             if (itAktifSort.col === col) { itAktifSort.dir = itAktifSort.dir === "asc" ? "desc" : "asc"; }
             else { itAktifSort.col = col; itAktifSort.dir = "asc"; }
             itAktifKartlariGoster(document.querySelector("#itAktifSekmeBar .it-sekme-aktif").getAttribute("data-tur"));
