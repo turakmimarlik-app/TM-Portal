@@ -1215,7 +1215,26 @@ function gorevMailGonder(gorev) {
                 document.querySelector('.sidebar').classList.add('collapsed');
                 document.getElementById('sidebarToggle').innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
             }
-            sayfaDegistir('anasayfa-page', document.getElementById('menu-anasayfa'));
+            var sonSayfa = localStorage.getItem("tm_active_page");
+            if (!sonSayfa || !document.getElementById(sonSayfa)) {
+                if (location.hash && location.hash.length > 1) {
+                    sonSayfa = location.hash.substring(1);
+                }
+                if (!sonSayfa || !document.getElementById(sonSayfa)) sonSayfa = 'anasayfa-page';
+            }
+            var pageToEl = {
+                'anasayfa-page':'menu-anasayfa','gorevler-takvim-page':'menu-gorevler-takvim',
+                'teklif-olustur-page':'sub-teklif-olustur','teklif-liste-page':'sub-teklif-liste',
+                'piyasa-fiyatlari-page':'sub-piyasa-fiyatlari','tm-fiyatlar-page':'sub-tm-fiyatlar',
+                'dilekce-page':'menu-dilekce','istakibi-page':'menu-istakibi',
+                'musteriler-page':'sub-musteriler','isortaklari-page':'sub-isortaklari',
+                'nakit-dekont-page':'sub-nakit-dekont','is-muhasebe-olustur-page':'sub-is-muhasebe-olustur',
+                'is-muhasebe-page':'sub-is-muhasebe','tamamlanan-is-muhasebeleri-page':'sub-tamamlanan-is-muhasebe',
+                'hesap-takip-page':'sub-hesap-takip','fatura-takip-page':'sub-fatura-takip',
+                'yillik-butce-page':'sub-yillik-butce','notlar-page':'menu-notlar','yonetim-page':'menu-yonetim'
+            };
+            var sonElem = document.getElementById(pageToEl[sonSayfa] || 'menu-anasayfa');
+            sayfaDegistir(sonSayfa, sonElem);
             kullaniciListesiniYenile();
             sidebarKullanicilariYenile();
             teklifListesiniYenile();
@@ -1353,6 +1372,7 @@ function gorevMailGonder(gorev) {
             sidebarMobileKapat();
             sayfaDegistir(pageId, element);
             history.pushState({ pageId: pageId, yetkiKodu: yetkiKodu }, "", "#" + pageId);
+            try { localStorage.setItem("tm_active_page", pageId); } catch(e) {}
         }
         function kapatLockPopup() { document.getElementById("lockPopupOverlay").classList.remove("active"); }
 
@@ -1415,6 +1435,7 @@ function gorevMailGonder(gorev) {
             tmFormDirty = false;
             sayfaLoadingBitir();
             setTimeout(function(){ tmIkonButtonTooltipEkle(); tmScrollHintKontrol(); }, 100);
+            try { localStorage.setItem("tm_active_page", pageId); } catch(e) {}
         }
         function yenileAktifSayfa() {
             try {
