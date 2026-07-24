@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.37.4';
+﻿        var APP_VERSION = 'V1.37.5';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -10554,13 +10554,20 @@ function itDurumMetni(o) {
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
         }
-        function itBekleyenGoster() {
+        function itBekleyenSekmeDegistir(tur) {
+            document.querySelectorAll("#itBekleyenSekmeBar .it-sekme").forEach(function(b){b.classList.remove("it-sekme-aktif");});
+            var btn = document.querySelector('#itBekleyenSekmeBar .it-sekme[data-tur="'+tur+'"]');
+            if (btn) btn.classList.add("it-sekme-aktif");
+            itBekleyenGoster(tur);
+        }
+
+        function itBekleyenGoster(tur) {
             var acikIds = [];
             document.querySelectorAll(".it-bek-row-detail.open").forEach(function(el) {
                 var id = el.id.replace("itBekDetayRow_","");
                 if (id) acikIds.push(id);
             });
-            var liste = itDbYukle().filter(function(x){return x.beklemede && !x.tamamlandi;});
+            var liste = itDbYukle().filter(function(x){return x.beklemede && !x.tamamlandi && x.tur === tur;});
             var arama = (document.getElementById("itBekleyenAra")||{}).value||"";
             if (arama) {
                 var q = itTurkcely(arama.toLowerCase());
@@ -10572,7 +10579,7 @@ function itDurumMetni(o) {
             }
             liste.sort(function(a,b){ return b.id - a.id; });
             var konteyner = document.getElementById("itBekleyenKartlar");
-            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-clock"></i>','Bekleyen iş bulunmamaktadır.','Yeni eklenen işler burada listelenecek.'); return; }
+            if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-clock"></i>','Bekleyen iş bulunmamaktadır.','Farklı bir sekme seçin veya yeni bir iş ekleyin.'); return; }
             var h = '<div class="it-tablo-wrapper"><table class="it-tablo"><thead><tr>' +
                 '<th style="width:32px;"></th>' +
                 '<th style="width:40px;">#</th>' +
@@ -10702,7 +10709,8 @@ function itDurumMetni(o) {
             var acikOrtakEkleIds = [];
             document.querySelectorAll("[id^='itOrtakEkleBody_']").forEach(function(el){ if (el.style.display !== 'none') acikOrtakEkleIds.push(el.id); });
             itSayaciGuncelle();
-            itBekleyenGoster();
+            var bekleyenTur = document.querySelector("#itBekleyenSekmeBar .it-sekme-aktif");
+            itBekleyenGoster(bekleyenTur ? bekleyenTur.getAttribute("data-tur") : "Taslak");
             var aktifTur = document.querySelector("#itAktifSekmeBar .it-sekme-aktif");
             itAktifKartlariGoster(aktifTur ? aktifTur.getAttribute("data-tur") : "Taslak");
             var tamamlananTur = document.querySelector("#itTamamlananSekmeBar .it-sekme-aktif");

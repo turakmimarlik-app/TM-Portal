@@ -1266,9 +1266,15 @@
                 <div class="it-section-group" id="itBekleyenBolum">
                     <h3 class="it-bolum-baslik-bekleyen" onclick="itBolumToggle('itBekleyenBolum')">
                         <span><span class="it-bolum-ok" id="itBekleyenBolumOk">▼</span> <i class="fa-solid fa-clock"></i> Bekleyen İşler</span>
-                        <input type="text" id="itBekleyenAra" class="search-box" placeholder="Ara..." onclick="event.stopPropagation()" oninput="this.value=this.value.toUpperCase();itBekleyenGoster()" style="margin:0;margin-left:auto;max-width:260px;padding:5px 10px;font-size:12px;height:auto;text-transform:uppercase;">
+                        <input type="text" id="itBekleyenAra" class="search-box" placeholder="Ara..." onclick="event.stopPropagation()" oninput="this.value=this.value.toUpperCase();itBekleyenSekmeDegistir(document.querySelector('#itBekleyenSekmeBar .it-sekme-aktif').getAttribute('data-tur'))" style="margin:0;margin-left:auto;max-width:260px;padding:5px 10px;font-size:12px;height:auto;text-transform:uppercase;">
                     </h3>
                     <div class="it-bolum-icerik" id="itBekleyenBolumIcerik">
+                        <div class="it-sekme-bar" id="itBekleyenSekmeBar">
+                            <button class="it-sekme it-sekme-aktif" data-tur="Taslak" onclick="itBekleyenSekmeDegistir('Taslak')">Taslak</button>
+                            <button class="it-sekme" data-tur="Uygulama Proje" onclick="itBekleyenSekmeDegistir('Uygulama Proje')">Uygulama Proje</button>
+                            <button class="it-sekme" data-tur="3B Modelleme ve Tasarım" onclick="itBekleyenSekmeDegistir('3B Modelleme ve Tasarım')">3B Modelleme ve Tasarım</button>
+                            <button class="it-sekme" data-tur="Diğer" onclick="itBekleyenSekmeDegistir('Diğer')">Diğer</button>
+                        </div>
                         <div id="itBekleyenKartlar"></div>
                     </div>
                 </div>
