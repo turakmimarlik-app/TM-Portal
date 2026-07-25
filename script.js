@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.40.0';
+﻿        var APP_VERSION = 'V1.41.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -10584,11 +10584,6 @@ function itDurumMetni(o) {
         }
 
         function itBekleyenGoster(tur) {
-            var acikIds = [];
-            document.querySelectorAll(".it-bek-row-detail.open").forEach(function(el) {
-                var id = el.id.replace("itBekDetayRow_","");
-                if (id) acikIds.push(id);
-            });
             var liste = itDbYukle().filter(function(x){return x.beklemede && !x.tamamlandi && x.tur === tur;});
             var arama = (document.getElementById("itBekleyenAra")||{}).value||"";
             if (arama) {
@@ -10603,49 +10598,31 @@ function itDurumMetni(o) {
             var konteyner = document.getElementById("itBekleyenKartlar");
             if (!liste.length) { konteyner.innerHTML = tmEmptyStateHTML('<i class="fa-regular fa-clock"></i>','Bekleyen iş bulunmamaktadır.','Farklı bir sekme seçin veya yeni bir iş ekleyin.'); return; }
             var h = '<div class="it-tablo-wrapper"><table class="it-tablo"><thead><tr>' +
-                '<th style="width:32px;"></th>' +
                 '<th style="width:40px;">#</th>' +
                 '<th>İş Adı</th>' +
                 '<th>Firma</th>' +
                 '<th>PAFTA/ADA/PARSEL</th>' +
                 '<th>Başlama</th>' +
-                '<th style="width:180px;"></th>' +
+                '<th style="width:200px;"></th>' +
                 '</tr></thead><tbody>';
             liste.forEach(function(is, idx) {
                 var sira = idx + 1;
-                var acik = acikIds.indexOf(String(is.id)) >= 0;
-                h += '<tr class="it-row-clickable" onclick="itBekleyenRowToggle(' + is.id + ')">' +
-                    '<td style="text-align:center;"><span class="it-expand-icon" id="itBekExpandIcon_' + is.id + '" style="font-size:10px;color:var(--text-light);user-select:none;">' + (acik ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-right"></i>') + '</span></td>' +
+                var hasNot = (is.not||"").trim().length > 0;
+                h += '<tr>' +
                     '<td style="text-align:center;font-weight:700;color:var(--text-light);font-size:12px;">' + sira + '</td>' +
                     '<td style="font-weight:600;">' + esc(is.isAdi || "İSİMSİZ") + '</td>' +
                     '<td style="color:var(--text-dark);">' + esc(is.firma || "-") + '</td>' +
                     '<td style="color:var(--text-dark);">' + esc(is.pafta || is.ada || is.parsel ? [is.pafta, is.ada, is.parsel].filter(Boolean).join("/") : "-") + '</td>' +
                     '<td>' + (is.tarih ? tarihStr(is.tarih) : "-") + '</td>' +
                     '<td><div style="display:flex;gap:6px;">' +
+                    '<button class="it-bek-not-btn' + (hasNot ? ' has-not' : '') + '" id="itBekNotBtn_' + is.id + '" onclick="event.stopPropagation();itNotPopupAc(' + is.id + ')"><i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:var(--accent-red);"><i class="fa-solid fa-circle"></i></span>' : '') + '</button>' +
                     '<button class="it-btn-basla" onclick="event.stopPropagation();itBekleyenIsBasla(' + is.id + ')"><i class="fa-solid fa-play"></i> İşe Başla</button>' +
                     '<button class="it-btn-bek-sil" onclick="event.stopPropagation();itSil(' + is.id + ')"><i class="fa-solid fa-trash-can"></i></button>' +
                     '</div></td>' +
-                    '</tr>' +
-                    '<tr class="it-bek-row-detail' + (acik ? ' open' : '') + '" id="itBekDetayRow_' + is.id + '">' +
-                    '<td colspan="7"><div class="it-detay-panel" style="border-left-color:#78909C;"><div style="margin:0;">' +
-                    '<div class="it-bek-not-alani">' +
-                    '<div class="it-bek-not-header"><i class="fa-regular fa-note-sticky"></i> NO₺AR</div>' +
-                    '<div class="it-bek-not-body"><textarea id="itBekNot_' + is.id + '" rows="2" oninput="tmBekleyenNotDirty=true;this.style.height=\'\';this.style.height=this.scrollHeight+\'px\'">' + esc(is.not||"") + '</textarea></div>' +
-                    '<div class="it-bek-not-actions"><button class="it-btn-bek-kaydet" onclick="event.stopPropagation();itBekleyenNotKaydet(' + is.id + ')"><i class="fa-solid fa-floppy-disk"></i> KAYDET</button></div>' +
-                    '</div>' +
-                    '</div></div></td></tr>';
+                    '</tr>';
             });
             h += '</tbody></table></div>';
             konteyner.innerHTML = h;
-        }
-
-        function itBekleyenRowToggle(id) {
-            var row = document.getElementById("itBekDetayRow_" + id);
-            var icon = document.getElementById("itBekExpandIcon_" + id);
-            if (row) {
-                row.classList.toggle("open");
-                if (icon) icon.innerHTML = row.classList.contains("open") ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-right"></i>';
-            }
         }
 
         function itBekleyenIsBasla(id) {
@@ -10663,16 +10640,6 @@ function itDurumMetni(o) {
             aktiviteEkle("İş başlatıldı: " + (liste[idx].isAdi || ""), "İş Takibi");
         }
 
-        function itBekleyenNotKaydet(id) {
-            var not = document.getElementById("itBekNot_" + id).value.trim().toUpperCase();
-            var liste = itDbYukle();
-            var idx = liste.findIndex(function(x){return x.id === id;});
-            if (idx === -1) return;
-            liste[idx].not = not;
-            itDbKaydet(liste);
-            tmBekleyenNotDirty = false;
-            tmNotify("Not kaydedildi.", "success");
-        }
         function itAktifSortGuncelle(col) {
             if (itAktifSort.col === col) { itAktifSort.dir = itAktifSort.dir === "asc" ? "desc" : "asc"; }
             else { itAktifSort.col = col; itAktifSort.dir = "asc"; }
@@ -11346,9 +11313,14 @@ function itDurumMetni(o) {
             document.getElementById("itNotPopupJobId").value = jobId;
             document.getElementById("itNotPopupText").value = is.not || "";
             document.getElementById("itNotPopup").classList.add("active");
+            tmBekleyenNotDirty = false;
         }
 
         function itNotPopupKapat() {
+            if (tmBekleyenNotDirty) {
+                if (!confirm("Notta kaydedilmemiş değişiklikler var. Kaydetmeden kapatmak istediğinize emin misiniz?")) return;
+                tmBekleyenNotDirty = false;
+            }
             document.getElementById("itNotPopup").classList.remove("active");
         }
 
@@ -11361,13 +11333,19 @@ function itDurumMetni(o) {
             liste[idx].not = not;
             itDbKaydet(liste);
             itNotPopupKapat();
+            var hasNot = not.length > 0;
             var panel = document.querySelector('#itDetayRow_' + jobId + ' .it-not-panel, #itTamDetayRow_' + jobId + ' .it-not-panel');
             if (panel) {
-                var hasNot = not.length > 0;
                 panel.className = 'it-not-panel' + (hasNot ? ' has-not' : '');
                 var div = panel.querySelector('div');
                 if (div) div.innerHTML = '<i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:var(--accent-red);"><i class="fa-solid fa-circle"></i></span>' : '');
             }
+            var bekBtn = document.getElementById("itBekNotBtn_" + jobId);
+            if (bekBtn) {
+                bekBtn.className = 'it-bek-not-btn' + (hasNot ? ' has-not' : '');
+                bekBtn.innerHTML = '<i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:var(--accent-red);"><i class="fa-solid fa-circle"></i></span>' : '');
+            }
+            tmBekleyenNotDirty = false;
             tmNotify("Notlar güncellendi.", "success");
         }
 
