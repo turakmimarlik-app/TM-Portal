@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.39.5';
+﻿        var APP_VERSION = 'V1.39.6';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -2963,8 +2963,34 @@ function gorevMailGonder(gorev) {
                             sayac++;
                         }
                     });
-                    document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-check"></i> ' + sayac + ' veri geri yüklendi. Sayfa yenileniyor...';
-                    setTimeout(function() { location.reload(); }, 1500);
+                    document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-check"></i> ' + sayac + ' veri geri yüklendi. Firebase\'e senkronize ediliyor...';
+                    // Firebase'e de yaz ki sync gelince ezilmesin
+                    if (fdb && sayac > 0) {
+                        var batch = fdb.batch();
+                        var bs = 0;
+                        Object.keys(data).forEach(function(k) {
+                            if (k.startsWith("tm_") && k !== "tm_active_user" && k !== "tm_theme" && k !== "tm_active_page" && k !== "tm_sidebar_collapsed" && k !== "tm_submenu_open" && k.indexOf("tm_multi_logo_") !== 0) {
+                                var val = data[k];
+                                try { val = JSON.parse(val); } catch(e) {}
+                                batch.set(fdb.collection(FS_COLLECTION).doc(k), { data: val }, { merge: true });
+                                bs++;
+                                if (bs >= 400) { batch.commit().catch(function(){}); batch = fdb.batch(); bs = 0; }
+                            }
+                        });
+                        if (bs > 0) {
+                            batch.commit().then(function() {
+                                document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-check"></i> ' + sayac + ' veri geri yüklendi ve Firebase\'e kaydedildi. Sayfa yenileniyor...';
+                                setTimeout(function() { location.reload(); }, 1000);
+                            }).catch(function(err) {
+                                console.warn("Firebase yazma hatasi:", err);
+                                setTimeout(function() { location.reload(); }, 1000);
+                            });
+                        } else {
+                            setTimeout(function() { location.reload(); }, 1000);
+                        }
+                    } else {
+                        setTimeout(function() { location.reload(); }, 1500);
+                    }
                 } catch(err) {
                     document.getElementById("yedekMsg").innerHTML = '<i class="fa-solid fa-xmark"></i> Hata: Geçersiz dosya.';
                 }
