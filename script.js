@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.39.9';
+﻿        var APP_VERSION = 'V1.39.10';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -176,7 +176,7 @@ function gorevMailGonder(gorev) {
             var curVal = localStorage.getItem(k);
             if (curVal !== strVal && !fsDirtyKeys[k]) {
                 try { origSetItem(k, strVal); } catch(e) { console.error("Firebase sync local set hatasi:", e); }
-                if (k === "tm_hesap_takip_db") { setTimeout(function(){ try { var ap=document.querySelector('.page.active'); if(ap&&ap.id==='hesap-takip-page') htSayfayiYukle(); } catch(e){} }, 100); }
+                if (k === "tm_hesap_takip_db") { setTimeout(function(){ try { var ap=document.querySelector('.page.active'); if(ap&&ap.id==='hesap-takip-page'){if(HT_AKTIF_DETAY_HESAP!==null&&HT_AKTIF_DETAY_HESAP!==undefined){htHesapKartlariGoster();htNakitKartGoster();htDurumGuncelle();}else{htSayfayiYukle();}} } catch(e){} }, 100); }
                 if (k === "tm_sirket_logo" || k === "tm_multi_logo_3") return "logo";
                 return "data";
             }
@@ -7622,6 +7622,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             return 'rgba('+r+','+g+','+b+','+alpha+')';
         }
         function htHesapDetayGoster(hesapId) {
+            if (HT_AKTIF_DETAY_HESAP === hesapId) return;
             HT_AKTIF_DETAY_HESAP = hesapId;
             var db = htVeriYukle();
             document.getElementById("htAnaSayfa").style.display = "none";
@@ -7644,8 +7645,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             document.getElementById("htDetayBaslik").innerHTML = baslik;
             document.getElementById("htDetayBilgi").innerHTML = detayBilgi;
             var detayAlan = document.getElementById("htHesapDetayAlan");
-            detayAlan.style.background = 'linear-gradient(135deg, ' + htRenkRgba(detayRenk, 0.20) + ' 0%, ' + htRenkRgba(detayRenk, 0.08) + ' 60%, transparent 100%)';
-            detayAlan.style.border = '1px solid ' + htRenkRgba(detayRenk, 0.25);
+            detayAlan.style.background = htRenkRgba(detayRenk, 0.50);
+            detayAlan.style.border = '1px solid ' + htRenkRgba(detayRenk, 0.40);
             detayAlan.style.borderRadius = "12px";
             detayAlan.style.padding = "20px";
             detayAlan.style.marginTop = "10px";
