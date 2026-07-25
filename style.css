@@ -149,7 +149,7 @@
         .page-loading-bar.active { width:60%; }
         .page-loading-bar.done { width:100%; opacity:0; transition:width 0.15s ease, opacity 0.4s ease 0.15s; }
         .watermark-bg { position:fixed; top:0; left:var(--sidebar-width); width:calc(100% - var(--sidebar-width)); height:100%; pointer-events:none; z-index:5; background-repeat:no-repeat; background-position:center center; background-size:60% auto; opacity:0; transition:left 0.3s ease, width 0.3s ease, opacity 0.6s ease; }
-        .watermark-bg.show { opacity:0.06; }
+        .watermark-bg.show { opacity:0.05; }
         .watermark-bg.login { left:0; width:100%; }
         .sidebar.collapsed + .main-content .watermark-bg { left:60px; width:calc(100% - 60px); }
 
