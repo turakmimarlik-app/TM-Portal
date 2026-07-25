@@ -2788,15 +2788,15 @@ function gorevMailGonder(gorev) {
             var reader = new FileReader();
             reader.onload = function(e) {
                 var data = e.target.result;
-                if (num === 2) {
-                    localStorage.setItem("tm_multi_logo_2", data);
-                    document.getElementById("mlPreview2").innerHTML = '<img src="' + data + '" alt="Logo 2">';
+                if (num === 6) {
+                    localStorage.setItem("tm_multi_logo_6", data);
+                    document.getElementById("mlPreview6").innerHTML = '<img src="' + data + '" alt="Logo 6">';
                     watermarkGuncelle();
                     if (fdb) {
-                        fdb.collection("tm_sync").doc("multi_logo_2").set({ data: data }).then(function() {
-                            tmNotify("Logo #2 Firestore'a yedeklendi.", "success");
+                        fdb.collection("tm_sync").doc("multi_logo_6").set({ data: data }).then(function() {
+                            tmNotify("Logo #6 Firestore'a yedeklendi.", "success");
                         }).catch(function(e) {
-                            tmNotify("Logo #2 Firestore yedekleme hatası: " + e.message, "error");
+                            tmNotify("Logo #6 Firestore yedekleme hatası: " + e.message, "error");
                         });
                     }
                     return;
@@ -2835,7 +2835,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("mlPreview" + num).innerHTML = '<div class="logo-placeholder">Logo #' + num + ' yüklemek için tıklayın</div>';
             if (num === 3) sidebardaLogoyuGoster();
             if (num === 5) tmFaviconGuncelle();
-            if (num === 2) watermarkGuncelle();
+            if (num === 6) watermarkGuncelle();
         }
         function tmFaviconGuncelle() {
             var logoData = localStorage.getItem("tm_multi_logo_5");
@@ -2866,7 +2866,7 @@ function gorevMailGonder(gorev) {
                                 if (preview) preview.innerHTML = '<img src="' + raw + '" alt="Logo ' + idx + '">';
                                 if (idx === 3) { sidebardaLogoyuGoster(); }
                                 if (idx === 5) { tmFaviconGuncelle(); }
-                                if (idx === 2) { watermarkGuncelle(); }
+                                if (idx === 6) { watermarkGuncelle(); }
                             }
                         }
                     }).catch(function(e){ console.error("multiLogolariFirebaseCek", idx, e); });
@@ -2875,7 +2875,7 @@ function gorevMailGonder(gorev) {
         }
 
         function watermarkGuncelle() {
-            var logoData = localStorage.getItem("tm_multi_logo_2");
+            var logoData = localStorage.getItem("tm_multi_logo_6");
             var els = [document.getElementById("watermarkBg"), document.getElementById("watermarkBgLogin")];
             for (var i = 0; i < els.length; i++) {
                 var el = els[i];
