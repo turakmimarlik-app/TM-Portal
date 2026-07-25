@@ -1,0 +1,5 @@
+Uygulama (ana sayfa)				: https://turakmimarlik-app.github.io/TM-Portal/
+GitHub Repo (dosyaların durduğu yer)		: https://github.com/turakmimarlik-app/TM-Portal
+Firebase Console (veritabanı)			: https://console.firebase.google.com/project/tm-portal-d672a/firestore
+emailjs (Otomatik görev e-mail)			: https://dashboard.emailjs.com/admin
+cloudinary.com (pdf dosya yükleme deposu)	: https://console.cloudinary.com/app/c-16639e55bb362171bb06d21706ccae/assets/media_library/search?q=&view_mode=mosaic

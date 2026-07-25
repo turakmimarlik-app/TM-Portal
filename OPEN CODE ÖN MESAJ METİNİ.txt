@@ -1,0 +1,14 @@
+Uygulama (ana sayfa)			: https://turakmimarlik-app.github.io/TM-Portal/
+GitHub Repo (dosyaların durduğu yer)	: https://github.com/turakmimarlik-app/TM-Portal
+Firebase Console (veritabanı)		: https://console.firebase.google.com/project/tm-portal-d672a/firestore
+cloudinary (dosya depolama)		: https://console.cloudinary.com/app/c-16639e55bb362171bb06d21706ccae/assets/media_library/search?q=&view_mode=mosaic
+
+bu uygulamayı gönderdiğim linklerdeki uygulamaları kullanarak seninle birlikte inşa ettik. bu mesajı sürekli konuşma sıkıştırıldığı için ve geçmiş konuşmaları unuttuğun için hatırlatma amacı ile sana yazıyorum.
+
+Turak Mimarlık isimli Mimarlık ofisimdeki işlerde ben ve iş arkadaşlarımın ortak kullanabileceği, bilgi ve verilerimizi istediğimiz yerden istediğimiz cihazdan alıp veya yeni belge veya bilgi veri eklememiz için. ben kodlama işini hiç bilmiyorum sen bana ne yapmam gerektiğini tek tek anlatarak uygulamayı buralara getirdik.
+
+Uygulamanın versiyon sayacını yaptığımız değişikliklere göre her bir yüklemede sen güncelle.
+
+lütfen Türkçe konuşalım.
+
+yapacağımız tüm değişikliklerde değişikliğin boyutuna göre versiyon güncellemesi yap ve bana yeni versiyonu bildir ve her zaman push etme işlemini sen yap.
