@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.39.8';
+﻿        var APP_VERSION = 'V1.39.9';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7617,6 +7617,10 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             htHesapKartlariGoster();
         }
 
+        function htRenkRgba(hex, alpha) {
+            var r = parseInt(hex.slice(1,3), 16), g = parseInt(hex.slice(3,5), 16), b = parseInt(hex.slice(5,7), 16);
+            return 'rgba('+r+','+g+','+b+','+alpha+')';
+        }
         function htHesapDetayGoster(hesapId) {
             HT_AKTIF_DETAY_HESAP = hesapId;
             var db = htVeriYukle();
@@ -7640,7 +7644,8 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             document.getElementById("htDetayBaslik").innerHTML = baslik;
             document.getElementById("htDetayBilgi").innerHTML = detayBilgi;
             var detayAlan = document.getElementById("htHesapDetayAlan");
-            detayAlan.style.background = 'linear-gradient(135deg, ' + detayRenk + '11 0%, ' + detayRenk + '08 60%, transparent 100%)';
+            detayAlan.style.background = 'linear-gradient(135deg, ' + htRenkRgba(detayRenk, 0.20) + ' 0%, ' + htRenkRgba(detayRenk, 0.08) + ' 60%, transparent 100%)';
+            detayAlan.style.border = '1px solid ' + htRenkRgba(detayRenk, 0.25);
             detayAlan.style.borderRadius = "12px";
             detayAlan.style.padding = "20px";
             detayAlan.style.marginTop = "10px";
@@ -7653,6 +7658,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             HT_AKTIF_DETAY_HESAP = null;
             var detayAlan = document.getElementById("htHesapDetayAlan");
             detayAlan.style.background = "";
+            detayAlan.style.border = "";
             detayAlan.style.borderRadius = "";
             detayAlan.style.padding = "";
             detayAlan.style.marginTop = "";
