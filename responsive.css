@@ -23,6 +23,7 @@
             .sidebar.collapsed .menu-item span[id$="-icon"] { display:inline; }
             .main-content { margin-left:0; width:100%; padding:15px; overflow-x:hidden; }
             .sidebar.collapsed + .main-content { margin-left:0; width:100%; }
+            .watermark-bg { left:0 !important; width:100% !important; }
             .page { padding:15px; overflow-x:hidden; }
             .row { flex-direction:column; gap:12px; }
             .checkbox-group { grid-template-columns:1fr; }
