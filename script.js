@@ -2647,14 +2647,19 @@ function gorevMailGonder(gorev) {
                     fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/" + rt + "/destroy", {
                         method: "POST", body: fd
                     }).then(function(r) { return r.json(); }).then(function(j) {
-                        if (j.result === "ok") {
-                            tmNotify("Dosya Cloudinary'den de silindi.", "success");
+                        if (j.result !== "ok") {
+                            console.warn("Cloudinary silinemedi, dashboard'dan manuel silin:", f.publicId);
                         }
                     }).catch(function(err) {
                         console.error("Cloudinary silme hatasi:", err);
                     });
                 }
-                tmNotify("Dosya silindi.", "success");
+                tmNotify("Dosya portföyden kaldırıldı.", "success");
+                if (f.publicId) {
+                    setTimeout(function() {
+                        tmNotify("Cloudinary'den tamamen silmek icin Medya Kutuphanesi'ne girin: https://console.cloudinary.com", "info");
+                    }, 500);
+                }
                 pbDosyaPopupGuncelle(kartId, tur);
             });
         }
