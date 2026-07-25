@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.39.7';
+﻿        var APP_VERSION = 'V1.39.8';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7621,12 +7621,13 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
             HT_AKTIF_DETAY_HESAP = hesapId;
             var db = htVeriYukle();
             document.getElementById("htAnaSayfa").style.display = "none";
-            var baslik = "", detayBilgi = "";
+            var baslik = "", detayBilgi = "", detayRenk = "#1a2a3a";
             var bakiyeEl = document.getElementById("htDetayBakiye");
             if(hesapId === -1) {
                 baslik = '<i class="fa-solid fa-money-bill-wave"></i> Nakit Hesabı';
                 detayBilgi = "Fiziki Nakit Para";
                 bakiyeEl.innerHTML = '<span style="color:#4CAF50">' + htTl(db.nakit) + '</span>';
+                detayRenk = "#2a2a1a";
             } else {
                 var hs = db.hesaplar.find(function(h){return h.id===hesapId;});
                 if(!hs) { tmNotify("Hesap bulunamadı!", "error"); return; }
@@ -7634,17 +7635,28 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 detayBilgi = '<span title="IBAN">📘 '+htIbanGoster(hs.iban)+'</span> &nbsp;|&nbsp; Kart: '+trToUpper(hs.kartSifre||'-')+' &nbsp;|&nbsp; Net: '+trToUpper(hs.internetSifre||'-');
                 var bak = hs.bakiye || 0;
                 bakiyeEl.innerHTML = (bak >= 0 ? '<span style="color:#4CAF50">' : '<span style="color:#f44336">') + htTl(bak) + '</span>';
+                detayRenk = htBankaRenk(hs.bankaAdi);
             }
             document.getElementById("htDetayBaslik").innerHTML = baslik;
             document.getElementById("htDetayBilgi").innerHTML = detayBilgi;
-            document.getElementById("htHesapDetayAlan").style.display = "block";
+            var detayAlan = document.getElementById("htHesapDetayAlan");
+            detayAlan.style.background = 'linear-gradient(135deg, ' + detayRenk + '11 0%, ' + detayRenk + '08 60%, transparent 100%)';
+            detayAlan.style.borderRadius = "12px";
+            detayAlan.style.padding = "20px";
+            detayAlan.style.marginTop = "10px";
+            detayAlan.style.display = "block";
             htDetayIslemleriGoster();
             history.pushState({ pageId:'hesap-takip-page', htDetay:hesapId }, "", "#hesap-takip-page");
         }
 
         function htHesapDetayKapat(skipHistory) {
             HT_AKTIF_DETAY_HESAP = null;
-            document.getElementById("htHesapDetayAlan").style.display = "none";
+            var detayAlan = document.getElementById("htHesapDetayAlan");
+            detayAlan.style.background = "";
+            detayAlan.style.borderRadius = "";
+            detayAlan.style.padding = "";
+            detayAlan.style.marginTop = "";
+            detayAlan.style.display = "none";
             document.getElementById("htAnaSayfa").style.display = "";
             htHesapKartlariGoster();
             htNakitKartGoster();
