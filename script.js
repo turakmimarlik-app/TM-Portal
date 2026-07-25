@@ -1768,7 +1768,7 @@ function gorevMailGonder(gorev) {
                 }
             }
 
-            // GRAFİK
+            // GRAFİK (Gelir/Gider/Şirket Bakiyesi)
             try {
                 if (typeof Chart !== 'undefined') {
                     var ctx = document.getElementById('dashAylikChart');
@@ -1788,21 +1788,25 @@ function gorevMailGonder(gorev) {
                             }
                             gelirAylik.push(g); giderAylik.push(gd);
                         }
+                        var bakiye = (kayit && kayit.baslangicBakiye) || 0;
+                        var bir = bakiye;
+                        var bakiyeAylik = gelirAylik.map(function(g, i) { bir += g - giderAylik[i]; return bir; });
                         Chart.defaults.font.family = "'Segoe UI','Segoe UI Symbol',Arial,sans-serif";
                         if (window._dashChart) window._dashChart.destroy();
                         window._dashChart = new Chart(ctx, {
-                            type: 'bar',
+                            type: 'line',
                             data: {
                                 labels: aylar,
                                 datasets: [
-                                    { label: 'Gelir', data: gelirAylik, backgroundColor: '#2E7D32', borderRadius: 4 },
-                                    { label: 'Gider', data: giderAylik, backgroundColor: '#C62828', borderRadius: 4 }
+                                    { label: 'Gelir', data: gelirAylik, borderColor: '#2E7D32', backgroundColor: 'rgba(46,125,50,0.05)', fill: false, tension: 0.3, pointRadius: 3, pointHoverRadius: 5 },
+                                    { label: 'Gider', data: giderAylik, borderColor: '#9E2A2B', backgroundColor: 'rgba(158,42,43,0.05)', fill: false, tension: 0.3, pointRadius: 3, pointHoverRadius: 5 },
+                                    { label: 'Şirket Bakiyesi', data: bakiyeAylik, borderColor: '#F57C00', backgroundColor: 'rgba(245,124,0,0.08)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4, pointHoverRadius: 6 }
                                 ]
                             },
                             options: {
                                 responsive: true, maintainAspectRatio: true,
-                                plugins: { legend: { labels: { font: {size:11} } }, datalabels: { display: false } },
-                                scales: { y: { beginAtZero: true, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' ₺'; } } } }
+                                plugins: { legend: { position: 'top', labels: { font: { size: 10, weight: 'bold' } } }, datalabels: { display: false } },
+                                scales: { y: { beginAtZero: false, ticks: { callback: function(v){ return v.toLocaleString('tr-TR') + ' ₺'; } } } }
                             }
                         });
                     }
