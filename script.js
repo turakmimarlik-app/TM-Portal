@@ -101,6 +101,7 @@ function gorevMailGonder(gorev) {
     try { master = JSON.parse(localStorage.getItem("tm_admin_creds_final")) || {}; } catch(e) { master = {}; }
     var atanan = gorev.atanan;
     var atananArr = Array.isArray(atanan) ? atanan : [atanan];
+    var promises = [];
     atananArr.forEach(function(usr){
         var u = kullanicilar.find(function(x){ return x.usr === usr; });
         var email = u ? u.email : null;
@@ -114,17 +115,25 @@ function gorevMailGonder(gorev) {
             task_msg: gorev.mesaj || "",
             task_date: gorev.tarih || ""
         };
-        fetch("https://api.emailjs.com/api/v1.0/email/send", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                service_id: EMAILJS_CONFIG.serviceId,
-                template_id: EMAILJS_CONFIG.templateId,
-                user_id: EMAILJS_CONFIG.publicKey,
-                template_params: templateParams
-            })
-        });
+        promises.push(
+            fetch("https://api.emailjs.com/api/v1.0/email/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    service_id: EMAILJS_CONFIG.serviceId,
+                    template_id: EMAILJS_CONFIG.templateId,
+                    user_id: EMAILJS_CONFIG.publicKey,
+                    template_params: templateParams
+                })
+            }).then(function(r) { return r.ok; }).catch(function() { return false; })
+        );
     });
+    if (promises.length > 0) {
+        Promise.all(promises).then(function(results) {
+            var basarili = results.filter(function(v) { return v === true; }).length;
+            if (basarili > 0) tmNotify(basarili + " kullaniciya e-posta bildirimi gonderildi.", "success");
+        });
+    }
 }
 
 /* --- Firebase Sync Katmani (verileri buluta yedekler) --- */
@@ -2607,7 +2616,7 @@ function gorevMailGonder(gorev) {
                     if (j.secure_url) {
                         var fileId = Date.now() + "_" + Math.random().toString(36).substr(2, 6);
                         var db = pbDosyaVerileriniYukle();
-                        db.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, downloadURL: j.secure_url, fileSize: j.bytes, uploadDate: new Date().toISOString() });
+                        db.push({ id: fileId, kartId: kartId, tur: tur, fileName: file.name, downloadURL: j.secure_url, fileSize: j.bytes, publicId: j.public_id || '', resourceType: j.resource_type || 'image', uploadDate: new Date().toISOString() });
                         pbDosyaVerileriniKaydet(db);
                         tmNotify("Dosya basariyla yuklendi: " + file.name, "success");
                         pbDosyaPopupGuncelle(kartId, tur);
@@ -2630,6 +2639,21 @@ function gorevMailGonder(gorev) {
             tmConfirm("Bu dosyayi silmek istediginize emin misiniz?", function() {
                 db = pbDosyaVerileriniYukle().filter(function(x) { return !(x.id === fileId && x.kartId === kartId && x.tur === tur); });
                 pbDosyaVerileriniKaydet(db);
+                if (f.publicId) {
+                    var rt = f.resourceType || 'image';
+                    var fd = new FormData();
+                    fd.append("public_id", f.publicId);
+                    fd.append("upload_preset", PB_UPLOAD_PRESET);
+                    fetch("https://api.cloudinary.com/v1_1/" + PB_CLOUD_NAME + "/" + rt + "/destroy", {
+                        method: "POST", body: fd
+                    }).then(function(r) { return r.json(); }).then(function(j) {
+                        if (j.result === "ok") {
+                            tmNotify("Dosya Cloudinary'den de silindi.", "success");
+                        }
+                    }).catch(function(err) {
+                        console.error("Cloudinary silme hatasi:", err);
+                    });
+                }
                 tmNotify("Dosya silindi.", "success");
                 pbDosyaPopupGuncelle(kartId, tur);
             });
