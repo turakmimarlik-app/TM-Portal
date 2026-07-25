@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.39.10';
+﻿        var APP_VERSION = 'V1.39.11';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -7632,7 +7632,7 @@ function tmTl(v) { return (v||0).toLocaleString('tr-TR', {minimumFractionDigits:
                 baslik = '<i class="fa-solid fa-money-bill-wave"></i> Nakit Hesabı';
                 detayBilgi = "Fiziki Nakit Para";
                 bakiyeEl.innerHTML = '<span style="color:#4CAF50">' + htTl(db.nakit) + '</span>';
-                detayRenk = "#2a2a1a";
+                detayRenk = "#2d1b4e";
             } else {
                 var hs = db.hesaplar.find(function(h){return h.id===hesapId;});
                 if(!hs) { tmNotify("Hesap bulunamadı!", "error"); return; }
