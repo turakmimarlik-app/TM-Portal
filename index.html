@@ -19,12 +19,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css?v=1.40.0">
-    <link rel="stylesheet" href="pdf.css?v=1.40.0">
-    <link rel="stylesheet" href="responsive.css?v=1.40.0">
+    <link rel="stylesheet" href="style.css?v=1.41.0">
+    <link rel="stylesheet" href="pdf.css?v=1.41.0">
+    <link rel="stylesheet" href="responsive.css?v=1.41.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="version.js?v=1.40.0"></script>
-    <script>console.log("TM-Portal V1.40.0");(function(){var v="V1.40.0";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
+    <script src="version.js?v=1.41.0"></script>
+    <script>console.log("TM-Portal V1.41.0");(function(){var v="V1.41.0";var s=localStorage.getItem("tm_ver");if(s!==v){localStorage.setItem("tm_ver",v);var u=new URL(window.location.href);if(!u.searchParams.has("_t")){u.searchParams.set("_t",Date.now());window.location.replace(u.toString());}}})();</script>
 </head>
 <body>
     <div id="loginSection" class="login-wrapper">
@@ -161,7 +161,7 @@
                 <div class="dash-stat-box" onclick="yetkiSayfaAc('isortaklari')?menudenSayfaAc('isortaklari','isortaklari-page',document.getElementById('sub-isortaklari')):null" style="cursor:pointer;" data-perm="isortaklari"><div class="icon"><i class="fa-solid fa-handshake"></i></div><div class="num" id="dashStatPartner">0</div><div class="lbl">İŞ ORTAKLARI</div></div>
                 <div class="dash-stat-box" onclick="yetkiSayfaAc('is-muhasebe')?menudenSayfaAc('is-muhasebe','is-muhasebe-page',document.getElementById('sub-is-muhasebe')):null" style="cursor:pointer;" data-perm='["is-muhasebe","tamamlanan-is-muhasebe"]'><div class="icon"><i class="fa-solid fa-helmet-safety"></i></div><div class="num" id="dashStatAktifIsMuh">0</div><div class="lbl">AKTİF İŞ MUHASEBESİ</div></div>
                 <div class="dash-stat-box" onclick="yetkiSayfaAc('tamamlanan-is-muhasebe')?menudenSayfaAc('tamamlanan-is-muhasebe','tamamlanan-is-muhasebeleri-page',document.getElementById('sub-tamamlanan-is-muhasebe')):null" style="cursor:pointer;" data-perm='["tamamlanan-is-muhasebe","is-muhasebe"]'><div class="icon"><i class="fa-solid fa-circle-check"></i></div><div class="num" id="dashStatTamamlananMuh">0</div><div class="lbl">TAMAMLANAN İŞ MUHASEBESİ</div></div>
-                <div class="dash-stat-box" onclick="menudenSayfaAc('notlar','notlar-page',document.getElementById('menu-notlar'))" style="cursor:pointer;"><div class="icon"><i class="fa-regular fa-note-sticky"></i></div><div class="num" id="dashStatNotlar">0</div><div class="lbl">NO₺AR</div></div>
+                <div class="dash-stat-box" onclick="menudenSayfaAc('notlar','notlar-page',document.getElementById('menu-notlar'))" style="cursor:pointer;"><div class="icon"><i class="fa-regular fa-note-sticky"></i></div><div class="num" id="dashStatNotlar">0</div><div class="lbl">NOTLAR</div></div>
             </div>
             <div id="dashFinSection" class="dash-fin-row" data-perm='["hesap-takip","yillik-butce"]'>
                 <div class="dash-fin-card dfc-bakiye"><i class="fa-solid fa-wallet" style="font-size:22px;color:#2E7D32;margin-bottom:6px;"></i><div class="dash-fin-label">ŞİRKET BAKİYESİ</div><div class="dash-fin-val green" id="dashFinBakiye">0,00 ₺</div></div>
@@ -1373,9 +1373,9 @@
                 <!-- Notlar Popup -->
                 <div id="itNotPopup" class="it-not-popup" onclick="if(event.target===this)itNotPopupKapat()">
                     <div class="it-not-card">
-                        <h4><i class="fa-solid fa-thumbtack"></i> NO₺AR</h4>
+                        <h4><i class="fa-solid fa-thumbtack"></i> NOTLAR</h4>
                         <input type="hidden" id="itNotPopupJobId" value="">
-                        <textarea id="itNotPopupText" placeholder="NO₺ARINIZI BURAYA YAZIN..."></textarea>
+                        <textarea id="itNotPopupText" placeholder="NOTLARINIZI BURAYA YAZIN..." oninput="tmBekleyenNotDirty=true"></textarea>
                         <div class="it-not-actions">
                             <button class="btn btn-save-green" onclick="itNotKaydet()"><i class="fa-solid fa-floppy-disk"></i> KAYDET</button>
                             <button class="btn btn-clear-gray" onclick="itNotPopupKapat()">KAPAT</button>
@@ -1964,7 +1964,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.40.0"></script>
+    <script src="script.js?v=1.41.0"></script>
 
 <div id="lockPopupOverlay" class="lock-popup-overlay" onclick="kapatLockPopup()">
     <div class="lock-popup" onclick="event.stopPropagation()">
