@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.41.0';
+﻿        var APP_VERSION = 'V1.42.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -1388,11 +1388,6 @@ function gorevMailGonder(gorev) {
             setTimeout(function(){ bar.classList.remove('done'); bar.style.width = '0'; }, 600);
         }
         function sayfaDegistir(pageId, element) {
-            if (tmBekleyenNotDirty) {
-                var onay = confirm("Bekleyen İşler notunda kaydedilmemiş değişiklikler var. Kaydetmeden çıkmak istediğinize emin misiniz?");
-                if (!onay) { return; }
-                tmBekleyenNotDirty = false;
-            }
             window.scrollTo(0, 0);
             sayfaLoadingGoster();
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -10185,10 +10180,6 @@ function itDurumMetni(o) {
         var itAktifSort = { col:"id", dir:"desc" };
         var itTamamlananSort = { col:"id", dir:"desc" };
         var itTamamPage = 0;
-        var tmBekleyenNotDirty = false;
-        window.addEventListener("beforeunload", function(e) {
-            if (tmBekleyenNotDirty) { e.preventDefault(); e.returnValue = ""; }
-        });
 
         function itSortCompare(a, b, col, dir) {
             var va = col === "id" ? a.id : (a[col]||"");
@@ -10626,10 +10617,6 @@ function itDurumMetni(o) {
         }
 
         function itBekleyenIsBasla(id) {
-            if (tmBekleyenNotDirty) {
-                if (!confirm("Notta kaydedilmemiş değişiklikler var. Yine de işi başlatmak istiyor musunuz?")) return;
-                tmBekleyenNotDirty = false;
-            }
             var liste = itDbYukle();
             var idx = liste.findIndex(function(x){return x.id === id;});
             if (idx === -1) return;
@@ -11313,14 +11300,9 @@ function itDurumMetni(o) {
             document.getElementById("itNotPopupJobId").value = jobId;
             document.getElementById("itNotPopupText").value = is.not || "";
             document.getElementById("itNotPopup").classList.add("active");
-            tmBekleyenNotDirty = false;
         }
 
         function itNotPopupKapat() {
-            if (tmBekleyenNotDirty) {
-                if (!confirm("Notta kaydedilmemiş değişiklikler var. Kaydetmeden kapatmak istediğinize emin misiniz?")) return;
-                tmBekleyenNotDirty = false;
-            }
             document.getElementById("itNotPopup").classList.remove("active");
         }
 
@@ -11345,7 +11327,6 @@ function itDurumMetni(o) {
                 bekBtn.className = 'it-bek-not-btn' + (hasNot ? ' has-not' : '');
                 bekBtn.innerHTML = '<i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:var(--accent-red);"><i class="fa-solid fa-circle"></i></span>' : '');
             }
-            tmBekleyenNotDirty = false;
             tmNotify("Notlar güncellendi.", "success");
         }
 
