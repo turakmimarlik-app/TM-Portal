@@ -1215,12 +1215,10 @@ function gorevMailGonder(gorev) {
                 document.querySelector('.sidebar').classList.add('collapsed');
                 document.getElementById('sidebarToggle').innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
             }
-            var sonSayfa = localStorage.getItem("tm_active_page");
-            if (!sonSayfa || !document.getElementById(sonSayfa)) {
-                if (location.hash && location.hash.length > 1) {
-                    sonSayfa = location.hash.substring(1);
-                }
-                if (!sonSayfa || !document.getElementById(sonSayfa)) sonSayfa = 'anasayfa-page';
+            var sonSayfa = 'anasayfa-page';
+            if (location.hash && location.hash.length > 1) {
+                var h = location.hash.substring(1);
+                if (document.getElementById(h)) sonSayfa = h;
             }
             var pageToEl = {
                 'anasayfa-page':'menu-anasayfa','gorevler-takvim-page':'menu-gorevler-takvim',
@@ -1372,7 +1370,6 @@ function gorevMailGonder(gorev) {
             sidebarMobileKapat();
             sayfaDegistir(pageId, element);
             history.pushState({ pageId: pageId, yetkiKodu: yetkiKodu }, "", "#" + pageId);
-            try { localStorage.setItem("tm_active_page", pageId); } catch(e) {}
         }
         function kapatLockPopup() { document.getElementById("lockPopupOverlay").classList.remove("active"); }
 
@@ -1435,7 +1432,6 @@ function gorevMailGonder(gorev) {
             tmFormDirty = false;
             sayfaLoadingBitir();
             setTimeout(function(){ tmIkonButtonTooltipEkle(); tmScrollHintKontrol(); }, 100);
-            try { localStorage.setItem("tm_active_page", pageId); } catch(e) {}
         }
         function yenileAktifSayfa() {
             try {
