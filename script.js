@@ -343,6 +343,7 @@ function gorevMailGonder(gorev) {
                 document.getElementById("loginSection").style.display = "none";
                 document.getElementById("portalSection").style.display = "block";
                 sidebardaLogoyuGoster();
+                watermarkGuncelle();
                 var yetkiler;
                 if (u === "TUGAYTURAK") {
                     yetkiler = (function(){
@@ -1189,6 +1190,7 @@ function gorevMailGonder(gorev) {
             const collapsed = sidebar.classList.contains('collapsed');
             btn.innerHTML = collapsed ? '<i class="fa-solid fa-chevron-right"></i>' : '<i class="fa-solid fa-chevron-left"></i>';
             localStorage.setItem('tm_sidebar_collapsed', collapsed ? '1' : '0');
+            watermarkGuncelle();
         }
         function sidebarMobileAc() {
             document.querySelector('.sidebar').classList.add('mobile-open');
@@ -2811,6 +2813,7 @@ function gorevMailGonder(gorev) {
                     document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
             if (num === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
             if (num === 5) { tmFaviconGuncelle(); }
+            if (num === 2) { watermarkGuncelle(); }
                     if (fdb) {
                         fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
                             tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
@@ -2828,6 +2831,7 @@ function gorevMailGonder(gorev) {
             document.getElementById("mlPreview" + num).innerHTML = '<div class="logo-placeholder">Logo #' + num + ' yüklemek için tıklayın</div>';
             if (num === 3) sidebardaLogoyuGoster();
             if (num === 5) tmFaviconGuncelle();
+            if (num === 2) watermarkGuncelle();
         }
         function tmFaviconGuncelle() {
             var logoData = localStorage.getItem("tm_multi_logo_5");
@@ -2858,10 +2862,24 @@ function gorevMailGonder(gorev) {
                                 if (preview) preview.innerHTML = '<img src="' + raw + '" alt="Logo ' + idx + '">';
                                 if (idx === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
                                 if (idx === 5) { tmFaviconGuncelle(); }
+                                if (idx === 2) { watermarkGuncelle(); }
                             }
                         }
                     }).catch(function(e){ console.error("multiLogolariFirebaseCek", idx, e); });
                 })(i);
+            }
+        }
+
+        function watermarkGuncelle() {
+            var el = document.getElementById("watermarkBg");
+            if (!el) return;
+            var logoData = localStorage.getItem("tm_multi_logo_2");
+            if (logoData && logoData !== "null" && logoData.length > 100) {
+                el.style.backgroundImage = "url('" + logoData + "')";
+                el.classList.add("show");
+            } else {
+                el.style.backgroundImage = "none";
+                el.classList.remove("show");
             }
         }
 
@@ -12323,5 +12341,6 @@ function itDurumMetni(o) {
         window.addEventListener('resize', function() {
             clearTimeout(tmMobileViewTimer);
             tmMobileViewTimer = setTimeout(tmMobileViewKontrol, 200);
+            watermarkGuncelle();
         });
 
