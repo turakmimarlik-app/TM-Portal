@@ -1,4 +1,4 @@
-﻿        var APP_VERSION = 'V1.39.0';
+﻿        var APP_VERSION = 'V1.40.0';
 
         /* Production - console loglari kapat */
         console.log=function(){}; console.warn=function(){}; // console.error acik tutuluyor (debug)
@@ -1388,6 +1388,11 @@ function gorevMailGonder(gorev) {
             setTimeout(function(){ bar.classList.remove('done'); bar.style.width = '0'; }, 600);
         }
         function sayfaDegistir(pageId, element) {
+            if (tmBekleyenNotDirty) {
+                var onay = confirm("Bekleyen İşler notunda kaydedilmemiş değişiklikler var. Kaydetmeden çıkmak istediğinize emin misiniz?");
+                if (!onay) { return; }
+                tmBekleyenNotDirty = false;
+            }
             window.scrollTo(0, 0);
             sayfaLoadingGoster();
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -10180,6 +10185,10 @@ function itDurumMetni(o) {
         var itAktifSort = { col:"id", dir:"desc" };
         var itTamamlananSort = { col:"id", dir:"desc" };
         var itTamamPage = 0;
+        var tmBekleyenNotDirty = false;
+        window.addEventListener("beforeunload", function(e) {
+            if (tmBekleyenNotDirty) { e.preventDefault(); e.returnValue = ""; }
+        });
 
         function itSortCompare(a, b, col, dir) {
             var va = col === "id" ? a.id : (a[col]||"");
@@ -10621,7 +10630,7 @@ function itDurumMetni(o) {
                     '<td colspan="7"><div class="it-detay-panel" style="border-left-color:#78909C;"><div style="margin:0;">' +
                     '<div class="it-bek-not-alani">' +
                     '<div class="it-bek-not-header"><i class="fa-regular fa-note-sticky"></i> NO₺AR</div>' +
-                    '<div class="it-bek-not-body"><textarea id="itBekNot_' + is.id + '" rows="2" oninput="this.style.height=\'\';this.style.height=this.scrollHeight+\'px\'">' + esc(is.not||"") + '</textarea></div>' +
+                    '<div class="it-bek-not-body"><textarea id="itBekNot_' + is.id + '" rows="2" oninput="tmBekleyenNotDirty=true;this.style.height=\'\';this.style.height=this.scrollHeight+\'px\'">' + esc(is.not||"") + '</textarea></div>' +
                     '<div class="it-bek-not-actions"><button class="it-btn-bek-kaydet" onclick="event.stopPropagation();itBekleyenNotKaydet(' + is.id + ')"><i class="fa-solid fa-floppy-disk"></i> KAYDET</button></div>' +
                     '</div>' +
                     '</div></div></td></tr>';
@@ -10640,6 +10649,10 @@ function itDurumMetni(o) {
         }
 
         function itBekleyenIsBasla(id) {
+            if (tmBekleyenNotDirty) {
+                if (!confirm("Notta kaydedilmemiş değişiklikler var. Yine de işi başlatmak istiyor musunuz?")) return;
+                tmBekleyenNotDirty = false;
+            }
             var liste = itDbYukle();
             var idx = liste.findIndex(function(x){return x.id === id;});
             if (idx === -1) return;
@@ -10657,6 +10670,7 @@ function itDurumMetni(o) {
             if (idx === -1) return;
             liste[idx].not = not;
             itDbKaydet(liste);
+            tmBekleyenNotDirty = false;
             tmNotify("Not kaydedildi.", "success");
         }
         function itAktifSortGuncelle(col) {
