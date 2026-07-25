@@ -10606,7 +10606,7 @@ function itDurumMetni(o) {
                     '<td style="color:var(--text-dark);">' + esc(is.pafta || is.ada || is.parsel ? [is.pafta, is.ada, is.parsel].filter(Boolean).join("/") : "-") + '</td>' +
                     '<td>' + (is.tarih ? tarihStr(is.tarih) : "-") + '</td>' +
                     '<td><div style="display:flex;gap:6px;">' +
-                    '<button class="it-bek-not-btn' + (hasNot ? ' has-not' : '') + '" id="itBekNotBtn_' + is.id + '" onclick="event.stopPropagation();itNotPopupAc(' + is.id + ')"><i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:var(--accent-red);"><i class="fa-solid fa-circle"></i></span>' : '') + '</button>' +
+                    '<button class="it-bek-not-btn' + (hasNot ? ' has-not' : '') + '" id="itBekNotBtn_' + is.id + '" onclick="event.stopPropagation();itNotPopupAc(' + is.id + ')"><i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:#E67E22;"><i class="fa-solid fa-circle"></i></span>' : '') + '</button>' +
                     '<button class="it-btn-basla" onclick="event.stopPropagation();itBekleyenIsBasla(' + is.id + ')"><i class="fa-solid fa-play"></i> İşe Başla</button>' +
                     '<button class="it-btn-bek-sil" onclick="event.stopPropagation();itSil(' + is.id + ')"><i class="fa-solid fa-trash-can"></i></button>' +
                     '</div></td>' +
@@ -11325,7 +11325,7 @@ function itDurumMetni(o) {
             var bekBtn = document.getElementById("itBekNotBtn_" + jobId);
             if (bekBtn) {
                 bekBtn.className = 'it-bek-not-btn' + (hasNot ? ' has-not' : '');
-                bekBtn.innerHTML = '<i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:var(--accent-red);"><i class="fa-solid fa-circle"></i></span>' : '');
+                bekBtn.innerHTML = '<i class="fa-solid fa-thumbtack"></i> NOTLAR' + (hasNot ? ' <span style="font-size:10px;color:#E67E22;"><i class="fa-solid fa-circle"></i></span>' : '');
             }
             tmNotify("Notlar güncellendi.", "success");
         }
