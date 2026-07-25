@@ -2787,6 +2787,20 @@ function gorevMailGonder(gorev) {
             if (!file) return;
             var reader = new FileReader();
             reader.onload = function(e) {
+                var data = e.target.result;
+                if (num === 2) {
+                    localStorage.setItem("tm_multi_logo_2", data);
+                    document.getElementById("mlPreview2").innerHTML = '<img src="' + data + '" alt="Logo 2">';
+                    watermarkGuncelle();
+                    if (fdb) {
+                        fdb.collection("tm_sync").doc("multi_logo_2").set({ data: data }).then(function() {
+                            tmNotify("Logo #2 Firestore'a yedeklendi.", "success");
+                        }).catch(function(e) {
+                            tmNotify("Logo #2 Firestore yedekleme hatası: " + e.message, "error");
+                        });
+                    }
+                    return;
+                }
                 var img = new Image();
                 img.onload = function() {
                     var canvas = document.createElement("canvas");
@@ -2796,22 +2810,23 @@ function gorevMailGonder(gorev) {
                     if (h > MAX_H) { w = w * MAX_H / h; h = MAX_H; }
                     canvas.width = w; canvas.height = h;
                     var ctx = canvas.getContext("2d");
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
                     ctx.drawImage(img, 0, 0, w, h);
-                    var data = canvas.toDataURL("image/png");
-                    localStorage.setItem("tm_multi_logo_" + num, data);
-                    document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
+                    var resized = canvas.toDataURL("image/png");
+                    localStorage.setItem("tm_multi_logo_" + num, resized);
+                    document.getElementById("mlPreview" + num).innerHTML = '<img src="' + resized + '" alt="Logo ' + num + '">';
             if (num === 3) { sidebardaLogoyuGoster(); }
             if (num === 5) { tmFaviconGuncelle(); }
-            if (num === 2) { watermarkGuncelle(); }
                     if (fdb) {
-                        fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: data }).then(function() {
+                        fdb.collection("tm_sync").doc("multi_logo_" + num).set({ data: resized }).then(function() {
                             tmNotify("Logo #" + num + " Firestore'a yedeklendi.", "success");
                         }).catch(function(e) {
                             tmNotify("Logo #" + num + " Firestore yedekleme hatası: " + e.message, "error");
                         });
                     }
                 };
-                img.src = e.target.result;
+                img.src = data;
             };
             reader.readAsDataURL(file);
         }
