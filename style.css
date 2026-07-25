@@ -1478,8 +1478,8 @@
         .it-stats-bekleyen .it-stats-label { color:#546E7A; }
         .it-stats-divider { height:1px; background:var(--border-color); margin:0 0 8px 0; opacity:0.5; }
         .it-stats-alt { display:flex; flex-wrap:wrap; gap:4px; justify-content:center; }
-        .it-stats-alt span { background:var(--bg-main); padding:3px 8px; border-radius:4px; font-size:10px; color:var(--text-light); display:inline-flex; align-items:center; gap:3px; font-weight:500; white-space:nowrap; }
-        .it-stats-alt strong { color:var(--text-dark); font-weight:800; font-size:11px; }
+        .it-stats-alt span { background:var(--bg-main); padding:4px 10px; border-radius:4px; font-size:12px; color:var(--text-light); display:inline-flex; align-items:center; gap:4px; font-weight:500; white-space:nowrap; }
+        .it-stats-alt strong { color:var(--text-dark); font-weight:800; font-size:13px; }
         .it-tablo { border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
         .it-tablo th { padding:10px 12px; font-size:11px; letter-spacing:0.3px; }
         .it-tablo td { padding:10px 12px; font-size:13px; vertical-align:middle; }
