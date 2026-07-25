@@ -23,7 +23,7 @@
             .sidebar.collapsed .menu-item span[id$="-icon"] { display:inline; }
             .main-content { margin-left:0; width:100%; padding:15px; overflow-x:hidden; }
             .sidebar.collapsed + .main-content { margin-left:0; width:100%; }
-            .watermark-bg { left:0 !important; width:100% !important; }
+            .watermark-bg:not(.login) { left:0 !important; width:100% !important; }
             .page { padding:15px; overflow-x:hidden; }
             .row { flex-direction:column; gap:12px; }
             .checkbox-group { grid-template-columns:1fr; }
@@ -39,8 +39,6 @@
             .as-grid { flex-direction:column; }
             .live-summary-card { width:100%; margin-left:0; }
             .login-wrapper { flex-direction:column; padding:30px 20px; overflow-y:auto; gap:20px; }
-            .login-logo-left { position:static; transform:none; text-align:center; margin-bottom:0; }
-            .login-logo-left img { max-width:85vw; max-height:120px; width:auto; height:auto; }
             .login-card { padding:25px; max-width:100%; width:100%; }
             .yb-header-row { flex-direction:column; align-items:flex-start; gap:4px; }
             .yb-view-pills { margin-left:0; }
@@ -361,8 +359,6 @@
            body.mobile-view eklendiğinde devreye girer
            =========================================================== */
         .mobile-view .login-wrapper { flex-direction:column; padding:20px; gap:15px; justify-content:flex-start; overflow-y:auto; }
-        .mobile-view .login-logo-left { position:static; transform:none; text-align:center; margin:10px 0; }
-        .mobile-view .login-logo-left img { max-width:80vw; max-height:100px; width:auto; height:auto; }
         .mobile-view .login-card { max-width:100%; width:100%; padding:20px; }
         .mobile-view .login-card h2 { font-size:20px; }
         .mobile-view .login-form-group label { font-size:13px; }
@@ -627,7 +623,6 @@
            Inline style'lari ezmek icin yuksek specificity + !important
            Sadece html body.mobile-view aktifken gecerli */
         html body.mobile-view .login-wrapper { flex-direction:column !important; padding:20px 16px !important; gap:15px !important; overflow-y:auto !important; }
-        html body.mobile-view .login-logo-left { position:static !important; transform:none !important; text-align:center !important; margin:10px 0 !important; }
         html body.mobile-view .login-card { max-width:100% !important; width:100% !important; padding:20px 16px !important; }
         html body.mobile-view .sidebar { transform:translateX(-100%) !important; left:0 !important; z-index:11 !important; }
         html body.mobile-view .sidebar.mobile-open { transform:translateX(0) !important; }

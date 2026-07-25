@@ -1481,18 +1481,8 @@ function gorevMailGonder(gorev) {
         document.documentElement.setAttribute('data-theme', 'dark');
         localStorage.setItem("tm_theme", "dark");
 
-        function loginLogoyuGoster() {
-            var logoData = localStorage.getItem("tm_multi_logo_3");
-            var el = document.getElementById("loginLogo");
-            if (!el) return;
-            if (logoData && logoData !== "null" && logoData.length > 100) {
-                el.innerHTML = '<img src="' + logoData + '" alt="Logo">';
-            } else {
-                el.innerHTML = '';
-            }
-        }
         multiLogolariFirebaseCek();
-        loginLogoyuGoster();
+        watermarkGuncelle();
         tmFaviconGuncelle();
         tmOnlinePullBaslat();
         window.addEventListener("beforeunload", function() {
@@ -1648,7 +1638,6 @@ function gorevMailGonder(gorev) {
                                     toplamOdenen += (k.odenenTutar || 0);
                                 }
             });
-            if (typeof loginLogoyuGoster === 'function') loginLogoyuGoster();
         }
                         const kalan = toplamVerecek - toplamOdenen;
                         jobsBody.innerHTML += '<div class="dash-mini-job">' +
@@ -2801,7 +2790,7 @@ function gorevMailGonder(gorev) {
                 var img = new Image();
                 img.onload = function() {
                     var canvas = document.createElement("canvas");
-                    var MAX_W = 200, MAX_H = 80;
+                    var MAX_W = 1200, MAX_H = 480;
                     var w = img.width, h = img.height;
                     if (w > MAX_W) { h = h * MAX_W / w; w = MAX_W; }
                     if (h > MAX_H) { w = w * MAX_H / h; h = MAX_H; }
@@ -2811,7 +2800,7 @@ function gorevMailGonder(gorev) {
                     var data = canvas.toDataURL("image/png");
                     localStorage.setItem("tm_multi_logo_" + num, data);
                     document.getElementById("mlPreview" + num).innerHTML = '<img src="' + data + '" alt="Logo ' + num + '">';
-            if (num === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
+            if (num === 3) { sidebardaLogoyuGoster(); }
             if (num === 5) { tmFaviconGuncelle(); }
             if (num === 2) { watermarkGuncelle(); }
                     if (fdb) {
@@ -2860,7 +2849,7 @@ function gorevMailGonder(gorev) {
                                 localStorage.setItem("tm_multi_logo_" + idx, raw);
                                 var preview = document.getElementById("mlPreview" + idx);
                                 if (preview) preview.innerHTML = '<img src="' + raw + '" alt="Logo ' + idx + '">';
-                                if (idx === 3) { sidebardaLogoyuGoster(); loginLogoyuGoster(); }
+                                if (idx === 3) { sidebardaLogoyuGoster(); }
                                 if (idx === 5) { tmFaviconGuncelle(); }
                                 if (idx === 2) { watermarkGuncelle(); }
                             }
@@ -2871,15 +2860,18 @@ function gorevMailGonder(gorev) {
         }
 
         function watermarkGuncelle() {
-            var el = document.getElementById("watermarkBg");
-            if (!el) return;
             var logoData = localStorage.getItem("tm_multi_logo_2");
-            if (logoData && logoData !== "null" && logoData.length > 100) {
-                el.style.backgroundImage = "url('" + logoData + "')";
-                el.classList.add("show");
-            } else {
-                el.style.backgroundImage = "none";
-                el.classList.remove("show");
+            var els = [document.getElementById("watermarkBg"), document.getElementById("watermarkBgLogin")];
+            for (var i = 0; i < els.length; i++) {
+                var el = els[i];
+                if (!el) continue;
+                if (logoData && logoData !== "null" && logoData.length > 100) {
+                    el.style.backgroundImage = "url('" + logoData + "')";
+                    el.classList.add("show");
+                } else {
+                    el.style.backgroundImage = "none";
+                    el.classList.remove("show");
+                }
             }
         }
 
